@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+  <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+  http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" 
+version="3.1"> 
+  <display-name>Teleonome</display-name>
+  <description>
+	Teleonome
+    </description>
+  <servlet>
+    <servlet-name>TeleonomeServlet</servlet-name>
+    <servlet-class>com.teleonome.webapp.servlet.TeleonomeServlet</servlet-class>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TeleonomeServlet</servlet-name>
+    <url-pattern>/TeleonomeServlet</url-pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>20</session-timeout>
+  </session-config>
+  <listener>
+    <listener-class>
+            com.teleonome.webapp.servlet.WebAppContextListener
+        </listener-class>
+  </listener>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+</web-app>

@@ -1,0 +1,137 @@
+		<div class="OperationalData">
+			<div class="row">
+				<div class="col-xs-12" style="height: 1px;"></div>
+			</div>
+			<Form id="Resignal" name="ReSignal"  id="MainForm" method="POST" action="MonoNannyServlet">
+			
+			<div class="row">
+				<div class="col-xs-12" style="height: 30px;"></div>
+			</div>
+		<div id="SelfMode">
+		<center>
+		<div class="row">
+				<label id="CurrentESSID"></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<label id="CurrentIPAddress"></label>
+			</div>
+			<div class="row">
+				<div class="col-xs-12" style="height: 20px;"></div>
+			</div>
+		<div class="row">
+		<label class="RadioLabel">Enable Host Mode</label><br>
+		<input class="BSswitch" id="EnableHostMode" name="EnableHostMode"
+		type="checkbox" data-on-text="Yes" "Enable Host Mode"  data-off-text="No" value="Yes"> 
+		<!-- 
+		<input type="Checkbox" name="EnableHostMode" value="Yes">Enable Host Mode
+		 -->	
+		</div>
+		<div class="row">
+				<div class="col-xs-12" style="height: 20px;"></div>
+			</div>
+			</center>
+		</div>
+		
+		
+		
+		<div id="NetworkMode">
+		<center>
+			<div class="row">
+			<label class="RadioLabel">Enable Network Mode</label><br>
+			<input class="BSswitch" id="EnableNetworkMode" name="EnableNetworkMode"
+		type="checkbox" data-on-text="Yes" "Enable Host Mode"  data-off-text="No" value="Yes"> 
+		
+			<!-- 
+				<input type="Checkbox" name="EnableNetworkMode" id="EnableNetworkMode" value="Yes">Enable Network Mode
+			-->
+			</div>
+			
+			<div class="row">
+				<div class="col-xs-12" style="height: 20px;"></div>
+			</div>
+
+			<div class="row">
+				<div id="AvailableNetworkSection">
+					<label>Available Networks:</label><br>
+					<select id="AvailableNetworks" name="AvailableNetworks"></select>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-xs-12" style="height: 30px;"></div>
+			</div>
+			<div class="row">
+			<div id="ssidPassword">
+			
+				<label>Input Password:</label><br>
+				<input type="password" id="password" name="password"></select>
+			</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12" style="height: 30px;"></div>
+			</div>
+			</center>
+		</div>
+		
+		
+		<input type="Hidden" name="formName" value="ReSignal">
+		<div class="row"><div class="col-xs-12" style="height: 100px;"></div></div>
+		<div class="row">
+		<center>
+		<input class="btn btn-primary  btn-lg" type="Submit" onclick="return confirmMessage('Are you sure you want to reboot the Teleonome?')" name="action" id="RebootButton" value="Reboot">
+		<input class="btn btn-primary  btn-lg" type="Submit" onclick="return confirmMessage('Are you sure you want to shutdown the Teleonome?')"  name="action" id="ShutdownButton" value="Shutdown">
+		</center>
+		</div>
+		</form>	
+		
+		
+		
+		<div class="row">
+				<div class="col-xs-12" style="height: 50px;"></div>
+			</div>
+			<div class="row">
+			<div id="ConnectedClients">
+			
+			<label>Connected Clients:</label><br>
+				<table id="ClientsTable" class="table table-striped">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>IPAddress</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				</div>
+			</div>
+		</div>
+		
+	<div class="row">
+		<div class="col-xs-8 col-lg-4"></div>
+		<div id="WaitingWheel" class="col-xs-6 col-lg-2">
+
+			<img src="130.gif"/ >
+			<div id="WaitingText">In Pulse...</div>
+
+		</div>
+	</div>
+	<div class="modal fade" id="showModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalTitle">Modal title</h4>
+				</div>
+				<div id="modalText" class="modal-body">This is the modal</div>
+				<div id="modal-data"></div>
+				<div class="modal-footer">
+					<button type="button" id="RejectAction" class="btn btn-default"
+						data-dismiss="modal">No</button>
+					<button type="button" id="ConfirmAction" class="btn btn-primary">Yes</button>
+				</div>
+			</div>
+		</div>
+	</div>
