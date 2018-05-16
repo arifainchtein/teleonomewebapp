@@ -148,17 +148,6 @@
   <build>
   <finalName>ROOT</finalName>
    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-         <outputDirectory>../../tomcat/webapps</outputDirectory>
-          <archive>
-            <manifestEntries>
-            </manifestEntries>
-          </archive>
-        </configuration>
-      </plugin>
    <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
@@ -192,7 +181,9 @@
   <groupId>org.apache.maven.plugins</groupId>
   <artifactId>maven-war-plugin</artifactId>
   <configuration>
-    <webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>        
+    <webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>      
+     <warName>ROOT.war</warName>
+     <outputDirectory>../../tomcat/webapps/</outputDirectory>  
   </configuration>
 </plugin>
    <plugin>
