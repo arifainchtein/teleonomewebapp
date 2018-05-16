@@ -7,6 +7,7 @@ var pageToDisplay = -1;
 var identityFactory;
 var i,j,k,l;
 var availableSSIDSArray;
+var refreshInterfaceAfterModalNeeded=false;
 
 //the humanInterfaceDeneChainIndex is a key value pair
 //the key is the pointer and the value is the actual denechain
@@ -181,7 +182,15 @@ function loadDenomeRefreshInterface(denomeFileInString) {
 	
 	$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
 	pulseJSONObject= JSON.parse(denomeFileInString);
-	RefreshInterface();
+	if(!$('#bannerformmodal').hasClass('in')){
+		RefreshInterface();
+	}else{
+		//
+		// we are not refreshing the interface
+		// because there is a modal window open,
+		// set the flag so that closing it will refreshinterface
+		refreshInterfaceAfterModalNeeded=true;
+	}
 }
 
 function RefreshInterface(){
@@ -957,10 +966,20 @@ function renderPageToDisplay(){
 				panelHTML += "</div>";    // closing row
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_DENEWORD_TABLE){
 				
+				var panelDeneWords = denes[0].DeneWords;
+				for(var i34=0;i34<panelDeneWords.length;i34++){
+					processingDeneWord = panelDeneWords[i34];
+					processingDeneWordName = processingDeneWord.Name;
+					if(processingDeneWordName === PANEL_TITLE){
+						panelTitle = processingDeneWord.Value;
+					}
+				}
+				
 				panelHTML += "<div class=\"col-lg-6\">";
 				panelHTML += "<div class=\"bs-component\">";
 				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
+				//panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
+				panelHTML += " <div class=\"panel-heading\"><h4>"+panelTitle+"</h4></div>";
 				panelHTML += "<div class=\"panel-body text-center\">";
 				panelHTML += "<div class=\"row\">";
 				panelHTML += "<table class=\"table table-stripped text-center\"><tbody>";
@@ -975,12 +994,13 @@ function renderPageToDisplay(){
 				var renderedDeneWordRow;
 				for(k2=0;k2<denes.length;k2++){
 					dene = denes[k2];
-					deneWordRows = getDeneWordAttributeByDeneWordTypeFromDene(dene,DENEWORD_TYPE_DISPLAY_TABLE_DENEWORD_POINTER,DENEWORD_VALUE_ATTRIBUTE);				panelHTML += "<table class=\"table table-stripped\">";
+					deneWordRows = getAllDeneWordAttributeByDeneWordTypeFromDene(dene,DENEWORD_TYPE_DISPLAY_TABLE_DENEWORD_POINTER,DENEWORD_VALUE_ATTRIBUTE);				panelHTML += "<table class=\"table table-stripped\">";
 					if(deneWordRows.length>0){
 						
-						for(l2=0; l2<deneWordRows.length;l2++) {
+						for(var l2=0; l2<deneWordRows.length;l2++) {
 							deneWordRowPointer = deneWordRows[l2];
-							renderedDeneWordRow = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
+							renderedDeneWordRow = getDeneWordByIdentityPointer(deneWordRowPointer, COMPLETE);
+							console.log("deneWordRowPointer=" + deneWordRowPointer +  " renderedDeneWordRow=" + renderedDeneWordRow)
 							panelHTML += "<tr><td>"+ renderedDeneWordRow.Name +"</td><td>" + renderedDeneWordRow.Value +"</td></tr>";
 						}
 					}
@@ -1845,14 +1865,15 @@ function renderPageToDisplay(){
 								}else if(deneWord.Name ==PATHOLOGY_LOCATION){
 									pathologyLocation = deneWord.Value;
 								}else {
-									variableData = variableData.concat(deneWord.Name + "=" + deneWord.Value + "<br>");
+									variableData = variableData.concat(deneWord.Name + "=" + deneWord.Value + "<br>");		
+									
 								}	
 							}
 							panelHTML += "<tr><td>"+processingDeneName +"</td><td>"+ pathologyCause +"</td><td>"+pathologyLocation+"</td><td>"+variableData +"</td></tr>";				
 						}
 					}
 					
-				
+					
 					
 					if(mnemosynePathologyDenes.length){
 						for(i32=0;i32<mnemosynePathologyDenes.length;i32++){
@@ -1867,7 +1888,12 @@ function renderPageToDisplay(){
 								}else if(deneWord.Name ==PATHOLOGY_LOCATION){
 									pathologyLocation = deneWord.Value;
 								}else {
-									variableData = variableData.concat(deneWord.Name + "=" + deneWord.Value + "<br>");
+									if( $(window).width() > 960 && deneWord.Name == PATHOLOGY_EVENT_MILLISECONDS){
+										var deneWordValueText = "<a href=\"#bannerformmodal\" data-toggle=\"modal\" data-dirname=\""+deneWord.Value+"\" class=\"pathology-showLogsLink\" data-target=\"#bannerformmodal\">"+deneWord.Value+"</a>"; 
+										variableData = variableData.concat(deneWord.Name + "=" + deneWordValueText + "<br>");
+									}else{
+										variableData = variableData.concat(deneWord.Name + "=" + deneWord.Value + "<br>");		
+									}
 								}	
 							}
 							panelHTML += "<tr><th>"+processingDeneName +"</th><th>"+ pathologyLocation +"</th><th>"+pathologyCause+"</th><th>"+variableData +"</th></tr>";				
@@ -1876,6 +1902,42 @@ function renderPageToDisplay(){
 					
 					panelHTML += "</table>";
 				}
+				
+				//
+				// now add the div which represents the model
+				// it will be hidden first
+				//
+				panelHTML += "<div class=\"modal fade bannerformmodal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"bannerformmodal\" aria-hidden=\"true\" id=\"bannerformmodal\">";
+				panelHTML += "<div class=\"modal-dialog modal-xl\">";
+				panelHTML += "<div class=\"modal-content\">";
+				panelHTML += "<div class=\"modal-content\">";
+				panelHTML += "<div class=\"modal-header \">";
+				panelHTML += "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" id=\"dismissbannerformmodal\">&times;</button>";
+				panelHTML += "<h4 class=\"modal-title\" id=\"myModalLabel\">";
+				
+				panelHTML += "<ul class=\"nav nav-pills pathology-file-list\">";
+//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"DenomeManager\">DenomeManager</a></li>";
+//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"Heart\">Heart</a></li>";
+//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"Medula\">Medula</a></li>";
+//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"MnemosyneManager\">MnemosyneManager</a></li>";
+//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"ObserverThread\">ObserverThread</a></li>";
+//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"PublisherListener\">PublisherListener</a></li>";
+//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"PulseThread\">PulseThread</a></li>";
+//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"SubscriberThread\">SubscriberThread.txt</a></li>";
+//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"TeleonomeHypothalamus\">TeleonomeHypothalamus</a></li>";
+				panelHTML += "</ul>";
+				panelHTML += "</h4>";
+				panelHTML += "</div>";
+				panelHTML += "<div class=\"modal-body pathology-modal-body\">";
+				panelHTML += "</div>";
+				panelHTML += "<div class=\"modal-footer\">";
+				panelHTML += "</div>  ";      
+				panelHTML += "</div>";
+				panelHTML += "</div>";
+				panelHTML += "</div>";
+				panelHTML += " </div>";
+				//
+				// ends the code for modal widnow
 				
 				var eventTimestamp;
 				if(allExogenousMethamorphosisEvents.length>0){
@@ -2380,8 +2442,26 @@ function getDeneWordAttributeByDeneWordTypeFromDene(controlParameterDene, deneWo
 			}
 		}
 	}
+	return null;
+}
 
-	return "";
+
+function getAllDeneWordAttributeByDeneWordTypeFromDene(controlParameterDene, deneWordType, whatToReturn){
+	var deneWords = controlParameterDene["DeneWords"];
+	var toReturn = []; 
+	var l7=0;
+	for( l7=0;l7<deneWords.length;l7++){
+		var deneWord = deneWords[l7];
+		if(deneWord["DeneWord Type"]===deneWordType){
+			if(whatToReturn===COMPLETE){
+				toReturn.push(deneWord);
+			}else if(whatToReturn===DENEWORD_VALUE_ATTRIBUTE){
+				toReturn.push(deneWord["Value"]);
+			}
+		}
+	}
+
+	return toReturn;
 }
 
 var HashMap = function(){

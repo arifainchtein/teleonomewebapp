@@ -1,4 +1,10 @@
-
+//
+// the ports for the exoZeroNetwork
+//
+var EXOZERO_PULSE_PORT=5563;
+var EXOZERO_MNEMOSYNE_MANAGER_PORT=5564;
+	
+	
 var TELEONOME_STATUS_ACTIVE = "OK";
 var TELEONOME_STATUS_DISCOVERED = "Discovered";
 var TELEONOME_STATUS_MISSED_PULSE = "Missed Pulse";
@@ -87,6 +93,7 @@ var DENE_TYPE_VITAL = "Vital";
 var DENE_TYPE_CODON_ELEMENT = "Codon Element";
 var DENE_TYPE_ON_LOAD_MUTATION = "On Load";
 var DENE_TYPE_DENEWORD_CARRIER= "DeneWord Carrier";
+
 var DENE_TYPE_ACTION_LIST= "Action List";
 
 var DENE_TYPE_HUMAN_INTERFACE_STATE_VARIABLES= "Human Interface State Variables";
@@ -708,6 +715,7 @@ var SPERM_PURPOSE_NAME="Name";
 var SPERM_PURPOSE_DESCRIPTION="Description";
 var SPERM_HOMEOBOX_INDEX="Homeobox Index";
 var SPERM_DENE_TYPE_DENEWORD_CARRIER="DeneWord Carrier";
+var SPERM_DENE_TYPE_DENEWORD_REMOVER="DeneWord Remover";
 var SPERM_DENE_TYPE_HOMEOBOX_METADATA="HomeoBox Metadata";
 var SPERM_DATE_FORMAT="ddMMyyyy_HHmm";
 

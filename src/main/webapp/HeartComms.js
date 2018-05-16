@@ -25,7 +25,7 @@ function HeartConnect() {
 	
 	
 	console.log('invoking mqttconnect');
-	host="Ra.local";
+	host="Icarus.local";
 	port=9999; 
 	mqtt = new Paho.MQTT.Client( host, port, "web_" + parseInt(Math.random() * 100));
 	mqtt.onConnect = onConnect;

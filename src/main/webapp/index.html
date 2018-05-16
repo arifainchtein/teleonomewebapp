@@ -152,6 +152,13 @@ input:valid {
   border: 1px solid green;
 }
 
+@media (min-width: 768px) {
+  .modal-xl {
+    width: 90%;
+   
+  }
+}
+
 </style>
 </head>
 
@@ -254,7 +261,79 @@ input:valid {
 			$(document).ready(function() {
 				HeartConnect();
 				
+			
+
+				//
+				// before we actually connect ask the server for the visualizer
+				//	
+				$(document).on("click", '.pathology-log-link', function(e) {
+					e.preventDefault();
+					var ref = this.getAttribute('href');
+					$('.pathology-modal-body').html("");
+					$.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:"GetLogFile", logFileName:ref},
+						success: function (data) {
+							console.log("data=" + data);
+							$('.pathology-modal-body').html(data);
+						},
+						error: function(data){
+							console.log("error getting log file:" + JSON.stringify(data));
+							alert("Error getting log:" + JSON.stringify(data));
+							return false;
+						}
+					});	
+				});
 				
+				$(document).on("click", ".dismissbannerformmodal", function () {
+					if(refreshInterfaceAfterModalNeeded){
+						refreshInterfaceAfterModalNeeded=false;
+						RefreshInterface();
+					}
+				});
+				
+				
+                $(document).on("click", ".pathology-showLogsLink", function () {
+                    var dirName = $(this).attr("data-dirname");
+                    
+                    
+                    
+                    $.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:"GetLogFileNames", dirName:dirName},
+						success: function (data) {
+							console.log("data=" + data);
+							
+							$(".pathology-file-list").empty(); 
+							var array =  data.split(",");
+							var arrayLength = array.length;
+							for (var i = 0; i < arrayLength; i++) {
+							    $(".pathology-file-list").append('<li><a href=\"logs/'+ dirName + '/'+array[i]+'.txt\" class=\"pathology-log-link\" id=\"'+array[i]+'\">'+ array[i] +'</a></li>');   
+							}
+							
+						},
+						error: function(data){
+							console.log("error getting log file:" + JSON.stringify(data));
+							alert("Error getting log:" + JSON.stringify(data));
+							return false;
+						}
+					});	
+                    
+                   
+                   /*  $("#DenomeManager").prop("href", "logs/"+ dirName + "/DenomeManager.txt");
+                    $("#Heart").prop("href", "logs/"+ dirName + "/Heart.txt");
+                     $("#MnemosyneManager").prop("href", "logs/"+ dirName + "/MnemosyneManager.txt");
+                    $("#ObserverThread").prop("href", "logs/"+ dirName + "/ObserverThread.txt");
+                     $("#PublisherListener").prop("href", "logs/"+ dirName + "/PublisherListener.txt");
+                    $("#PulseThread").prop("href", "logs/"+ dirName + "/PulseThread.txt");
+                     $("#SubscriberThread").prop("href", "logs/"+ dirName + "/SubscriberThread.txt");
+                    $("#TeleonomeHypothalamus").prop("href", "logs/"+ dirName + "/TeleonomeHypothalamus.txt");
+                    $("#MedulaLog").prop("href", "logs/"+ dirName + "/Medula.txt");
+                    $('.pathology-modal-body').html(""); */
+                });
+                
 				
 				$(document).on('click', '.btn',function(e){
 					 // e.preventDefault();

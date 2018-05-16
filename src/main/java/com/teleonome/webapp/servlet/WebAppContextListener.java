@@ -21,7 +21,7 @@ import com.teleonome.framework.utils.Utils;
 public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
 	ServletContext servletContext=null;
-	public final static String BUILD_NUMBER="28/04/2018 09:31";
+	public final static String BUILD_NUMBER="14/05/2018 08:27";
 	
 	public void contextInitialized(ServletContextEvent sce) {
 		String fileName =  Utils.getLocalDirectory() + "lib/Log4J.properties";
