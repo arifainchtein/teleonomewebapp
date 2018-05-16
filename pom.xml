@@ -182,7 +182,7 @@
   <artifactId>maven-war-plugin</artifactId>
   <configuration>
     <webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>      
-     <warName>ROOT.war</warName>
+     <warName>ROOT</warName>
      <outputDirectory>../../tomcat/webapps/</outputDirectory>  
   </configuration>
 </plugin>
