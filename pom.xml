@@ -155,7 +155,6 @@
          <outputDirectory>../../tomcat/webapps</outputDirectory>
           <archive>
             <manifestEntries>
-              <Premain-Class>com.teleonome.objectsizer.ObjectSizeFetcher</Premain-Class>
             </manifestEntries>
           </archive>
         </configuration>
