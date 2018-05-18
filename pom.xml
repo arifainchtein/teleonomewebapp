@@ -11,7 +11,7 @@
         <version>1.0.0</version>
         <relativePath>../organbuilder/pom.xml</relativePath>
     </parent>
-  <name>framework</name>
+  <name>TeleonomeWebApp</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
