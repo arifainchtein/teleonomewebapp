@@ -31,6 +31,12 @@ var DENEOWRD_TYPE_PROCESSOR_POINTER = "Processor Pointer";
 var DENE_TYPE_PROCESSOR = "Processor";
 
 //
+// the different kinds of deneword operations
+//
+var DENE_TYPE_DENEWORD_OPERATION_EXPRESSION_EVALUATION = "Expression Evaluation";
+var DENE_TYPE_DENEWORD_OPERATION_EXPRESSION_SWITCH = "Expression Switch";
+
+//
 // the value of the teleonome Identity
 //
 var DENEWORD_TYPE_INITIAL_IDENTITY_MODE = "Initial Identity Mode";
@@ -54,6 +60,9 @@ var DATATYPE_DOUBLE = "double";
 var DATATYPE_INTEGER = "int";
 var DATATYPE_STRING = "String";
 var DATATYPE_JSONARRAY = "JSONArray";
+var DATATYPE_IMAGE_FILE = "Image File";
+var DATATYPE_AUDIO_FILE = "Audio File";
+var DATATYPE_VIDEO_FILE = "Video File";
 
 var DATATYPE_DENE_POINTER = "Dene Pointer";
 var DATATYPE_TIMESTAMP = "Timestamp";
@@ -144,6 +153,8 @@ var DENECHAIN_CONTROL_PARAMETERS = "Control Parameters";
 
 var DENECHAIN_EXTERNAL_DATA = "External Data";
 var DENECHAIN_ACTUATOR_LOGIC_PROCESSING ="Actuator Logic Processing";
+var DENE_TYPE_ACTUATOR_DENE_OPERATION_EVALUATION_PROCESSING="Actuator Action Dene Operation Evaluation Processing";
+
 var DENECHAIN_PATHOLOGY ="Pathology";
 var DENECHAIN_MNEMOSYNE_PATHOLOGY ="Mnemosyne Pathology";
 var DENECHAIN_MNEMOSYNE_PULSE ="Mnemosyne Pulse";
@@ -183,6 +194,7 @@ var VITAL_DENEWORD_PERSIST_DATA="Persist Data";
 //
 // the command embedded as values
 //
+var COMMANDS_ELAPSED_TIME_STRING = "$ElapsedTimeString";
 var COMMANDS_CURRENT_HOUR = "$Current_Hour";
 var COMMANDS_PUBLISH_TELEONOME_PULSE="$Teleonome_Pulse";
 
@@ -446,7 +458,7 @@ var SORTING_ORDER="Sorting Order";
 var PANEL_TITLE="Panel Title";
 
 
-var DENE_DENE_NAMEE_ATTRIBUTE = "Name";
+var DENE_DENE_NAME_ATTRIBUTE = "Name";
 var DENE_DENE_TYPE_ATTRIBUTE = "Dene Type";
 var DENE_TYPE_EXTERNAL_DATA_SOURCE = "External Data Source";
 //
@@ -474,6 +486,9 @@ var PULSE_FINISHED_MAPPED_BUS_MESSAGE="Pulse Finished";
 var PULSE_SIZE_MESSAGE="Pulse Size";
 var PULSE_TIMESTAMP="Pulse Timestamp";
 var PULSE_TIMESTAMP_MILLISECONDS="Pulse Timestamp in Milliseconds";
+var PULSE_CREATION_DURATION_MILLIS="Pulse Creation Duration Millis";
+
+
 //
 // The record size must be at least big enough to contain a pulse
 //
@@ -504,7 +519,8 @@ var DENEWORD_MNEMOSYNE_ANALYSIS_PROFILE="Mnemosyne Analysis Profile";
 var DENEWORD_TYPE_MNEMOSYNE_PROCESSING_INTERVAL="Mnemosyne Processing Interval";
 var DENEWORD_TYPE_MNEMOSYNE_PROCESSING_INTERVAL_START="Mnemosyne Processing Interval Start";
 var DENEWORD_TYPE_MNEMOSYNE_PROCESSING_INTERVAL_END="Mnemosyne Processing Interval End";
-
+var MNEMOSYNE_RECURRENCE_ONE_TIME="One Time";
+var MNEMOSYNE_RECURRENCE_RECURRENT="Recurrent";
 var DENEWORD_TYPE_MNEMOSYNE_PROCESSING_INTERVAL_TYPE="Mnemosyne Processing Interval Type";
 var MNEMOSYNE_PROCESSING_INTERVAL_TODAY="Today";
 var MNEMOSYNE_PROCESSING_INTERVAL_TYPE_RANGE="Range";
@@ -601,13 +617,22 @@ var MNEMOSYNE_DENEWORD_TARGET_POSITION="Target Position";
 
 var MNEMOSYNE_CREATE_DENEWORD_ADD_TO_DENE_OPERATION="Create DeneWord Add To Dene";
 var MNEMOSYNE_DENEWORD_AGGREGATION_OPERATION="DeneWord Aggregation";
+var MNEMOSYNE_DENEWORD_TRANSFORMATION_OPERATION="DeneWord Transformation";
+
+var MNEMOSYNE_DENEWORD_TYPE_TRANSFORMATION_DATA_SOURCE="Transformation Data Source";
+var MNEMOSYNE_DENEWORD_TRANSFORMATION_OPERATION_FUNCTION="DeneWord Transformation Function";
+var MNEMOSYNE_DENEWORD_TRANSFORMATION_OPERATION_FUNCTION_ELAPSED_TIME="Transformation Function Seconds To Elapsed Time";
+
 var MNEMOSYNE_DENEWORD_AGGREGATION_OPERATION_AGGREGATE_TO="Aggregate To";
 var MNEMOSYNE_DENEWORD_AGGREGATION_OPERATION_AGGREGATE_Value="Aggregate Value";
 
 
 var DENEWORD_TYPE_MNEMOSYNE_PROCESSING_FUNCTION="Mnemosyne Function";
-
 var DENEWORD_TYPE_MNEMOSYNE_SAMPLE_FREQUENCY="Mnemosyne Sample Frequency Seconds";
+var DENEWORD_TYPE_MNEMOSYCON_REMEMBERED_DENEWORD="Remembered DeneWord";
+var DENE_TYPE_MNEMOSYCON_DENEWORDS_TO_REMEMBER="DeneWords To Remember";
+
+
 
 var VISUALIZATION_OBJECT_TABLE="Table";
 var VISUALIZATION_OBJECT_LINE_GRAPH="Line Graph";
@@ -734,6 +759,14 @@ var SPERM_ACTION_DENE_TARGET="Target";
 var SPERM_HOX_DENE_TARGET="Target";
 var SPERM_HOX_DENE_POINTER="Hox Dene Pointer";
 var SPERM_VALIDATED="Sperm Validated";
+
+//
+// Variables for Sertoli
+//
+var HOMEOBOX_DEFINITION_TYPE="Homeobox Definition Type";
+var HOMEOBOX_DEFINITION_SENSOR="Sensor";
+var HUMAN_INTERFACE_PANEL = "Human Interface Panel";
+var IN_PANEL_POSITION=  "In Panel Position";
 
 //
 // the denetypes to make the human interface

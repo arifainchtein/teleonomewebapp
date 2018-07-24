@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 
@@ -13,7 +14,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 
+import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.framework.utils.Utils;
 
 import javax.servlet.http.HttpServlet;
@@ -24,14 +27,12 @@ public class TeleonomeServlet extends HttpServlet {
 
 
 	Logger logger;
-
+	private PostgresqlPersistenceManager aDBManager=null;
+	
 public void init() {
 	logger = Logger.getLogger(getClass());
+	aDBManager = PostgresqlPersistenceManager.instance();
 }
-
-
-
-
 
 
 	public void  doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{		
@@ -70,9 +71,23 @@ public void init() {
 			out.print(toReturn.toString());
 			out.flush();
 			out.close();
+		}else if(formName.equals("RememberDeneWord")) {
+			String identityPointer = req.getParameter("identity");
+			TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
+			long from = Long.parseLong(req.getParameter("from"));
+			long until = Long.parseLong(req.getParameter("until"));
+			
+			JSONArray toReturn = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, from, until);
+			
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(toReturn.toString());
+			out.flush();
+			out.close();
 		}
 		
 	}
+	
 	public void  doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
 		String errorMessage="";
 		HttpSession session = req.getSession(true);
@@ -83,6 +98,7 @@ public void init() {
 	}
 
 
+	
 	public String getServletInfo() {
 		return "Teleonome Servlet";
 	}
