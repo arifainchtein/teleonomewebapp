@@ -15,7 +15,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
+import com.teleonome.framework.TeleonomeConstants;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.framework.utils.Utils;
 
@@ -77,8 +79,24 @@ public void init() {
 			long from = Long.parseLong(req.getParameter("from"));
 			long until = Long.parseLong(req.getParameter("until"));
 			
-			JSONArray toReturn = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, from, until);
+			JSONArray values = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, from, until);
 			
+			JSONObject toReturn = new JSONObject();
+			toReturn.put("Values", values);
+			
+			JSONObject deneWordsToRemember = (JSONObject) getServletContext().getAttribute("DeneWordsToRemember");
+			JSONObject deneWordToRemember = deneWordsToRemember.getJSONObject(identityPointer);
+			String units="N.A.";
+			if(deneWordToRemember.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
+				units = deneWordToRemember.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+			}
+			double minimum=0.0;
+			if(deneWordToRemember.has(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE)) {
+				minimum = deneWordToRemember.getDouble(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+			}
+			
+			toReturn.put("Units", units);
+			toReturn.put("Minimum", minimum);
 			res.setContentType("application/json;charset=UTF-8");
 			PrintWriter out = res.getWriter();
 			out.print(toReturn.toString());
