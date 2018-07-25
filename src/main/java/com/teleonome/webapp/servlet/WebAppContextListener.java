@@ -24,6 +24,7 @@ import com.teleonome.framework.TeleonomeConstants;
 import com.teleonome.framework.denome.DenomeUtils;
 import com.teleonome.framework.denome.Identity;
 import com.teleonome.framework.exception.InvalidDenomeException;
+import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.framework.utils.Utils;
 
 
@@ -33,6 +34,7 @@ public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
 	ServletContext servletContext=null;
 	public final static String BUILD_NUMBER="14/05/2018 08:27";
+	private PostgresqlPersistenceManager aDBManager=null;
 	
 	public void contextInitialized(ServletContextEvent sce) {
 		String fileName =  Utils.getLocalDirectory() + "lib/Log4J.properties";
@@ -54,6 +56,8 @@ public class WebAppContextListener implements ServletContextListener {
 		// start the thread
 		servletContext = sce.getServletContext();
 		TimeZone timeZone=null;
+		aDBManager = PostgresqlPersistenceManager.instance();
+		servletContext.setAttribute("DBManager", aDBManager);
 		try {
 			timeZone = getTimeZone();
 			servletContext.setAttribute("TimeZone", timeZone);
@@ -97,6 +101,12 @@ public class WebAppContextListener implements ServletContextListener {
 	        	JSONObject deneWordsToRemember =  getDeneWordsToRemember();
 				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 				
+				
+				logger.warn("Refreshing, autocompleteValues");
+	        	JSONObject autoCompleteValues =  getAutoCompleteValues();
+				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
+				
+				
 		        try {
 					Thread.sleep(1000*60);
 				} catch (InterruptedException e) {
@@ -113,6 +123,40 @@ public class WebAppContextListener implements ServletContextListener {
 		// stop the thread
 	}
 
+	private JSONObject getAutoCompleteValues() {
+		JSONObject toReturn = new JSONObject();
+		
+		JSONArray teleonomeNames = aDBManager.getTeleonomeNamesInOrganism();
+		String teleonomeName, nucleusName, deneChainName, deneName, deneWordName;
+		JSONArray level0 = new JSONArray();
+		JSONArray level1 = new JSONArray();
+		JSONArray level2 = new JSONArray();
+		JSONArray nucleiNames, deneChainNames;
+		String SEP=":";
+		for(int i=0;i<teleonomeNames.length();i++) {
+			teleonomeName = (String) teleonomeNames.get(i);
+			logger.debug("teleonomeName=" + teleonomeName);
+			level0.put(teleonomeName);
+			nucleiNames = aDBManager.getNucleiNamesForTeleonomeInOrganism( teleonomeName);
+			for(int j=0;j<nucleiNames.length();j++) {
+				nucleusName = (String) nucleiNames.get(j);
+				level1.put(teleonomeName + SEP + nucleusName);
+				logger.debug("nuc=" + teleonomeName + SEP + nucleusName);
+				deneChainNames = aDBManager.getDeneChainNamesForTeleonomeInOrganism( teleonomeName, nucleusName);
+				for(int k=0;k<deneChainNames.length();k++) {
+					deneChainName = (String) deneChainNames.get(j);
+					level2.put(teleonomeName + SEP + nucleusName + SEP + deneChainName);
+					//deneNames = aDBManager.getDeneNamesForTeleonomeInOrganism( teleonomeName, nucleusName, deneChainName);
+					logger.debug("chain=" + teleonomeName + SEP + nucleusName+ SEP + deneChainName);
+				}
+			}
+		}
+		
+		//
+		
+		return toReturn;
+	}
+	
 	public String getTeleonomeName() {
 		String teleonomeName="";
 		try {

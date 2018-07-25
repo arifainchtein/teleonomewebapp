@@ -33,11 +33,11 @@ public class TeleonomeServlet extends HttpServlet {
 
 
 	Logger logger;
-	private PostgresqlPersistenceManager aDBManager=null;
+	
 	
 public void init() {
 	logger = Logger.getLogger(getClass());
-	aDBManager = PostgresqlPersistenceManager.instance();
+	
 }
 
 
@@ -117,6 +117,7 @@ public void init() {
 			
 			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
 			logger.debug("for search teleonomeName :" + teleonomeName + " identity.getTeleonomeName()=" + identity.getTeleonomeName());
+			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 			
 			JSONArray values = null;
 			if(identity.getTeleonomeName().equals(teleonomeName)) {
@@ -161,6 +162,7 @@ public void init() {
 			TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
 			long from = Long.parseLong(req.getParameter("from"));
 			long until = Long.parseLong(req.getParameter("until"));
+			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 			
 			JSONArray values = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, from, until);
 			
