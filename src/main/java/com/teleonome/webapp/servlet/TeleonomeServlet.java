@@ -115,6 +115,7 @@ public void init() {
 			long until = Long.parseLong(req.getParameter("until"));
 			
 			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
+			logger.debug("for search teleonomeName :" + teleonomeName + " identity.getTeleonomeName()=" + identity.getTeleonomeName());
 			
 			JSONArray values = null;
 			if(identity.getTeleonomeName().equals(teleonomeName)) {
@@ -123,13 +124,14 @@ public void init() {
 				values = aDBManager.getOrganismDeneWordTimeSeriesByIdentity( identity,  from,  until);
 			}
 			
-			
+			logger.debug("After search for :" + identity + " values length=" + values.length());
 			
 			JSONObject toReturn = new JSONObject();
 			toReturn.put("Value", values);
 			//
 			// to get the units and the minimum, get the last pulse
 			JSONObject otherTelenomeLastPulse = aDBManager.getLastPulse(identity.getTeleonomeName());
+			logger.debug("After search otherTelenomeLastPulse :" + otherTelenomeLastPulse.getJSONObject("Denome").getString("Name"));
 			JSONObject identityDeneWord;
 			String units="N.A.";
 			double minimum=0.0;
@@ -143,7 +145,7 @@ public void init() {
 				}
 			} catch (InvalidDenomeException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.warn(Utils.getStringException(e));
 			}
 			
 			
