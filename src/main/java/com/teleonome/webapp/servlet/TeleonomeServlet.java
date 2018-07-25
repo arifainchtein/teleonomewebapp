@@ -136,7 +136,10 @@ public void init() {
 			//String units = (String) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
 			//double minimum = (double) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
 			pg = (PGobject) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
-			double minimum = Double.parseDouble(pg.getValue());
+			double minimum = 0.0;
+			if(pg!=null && pg.getValue()!=null) {
+				minimum = Double.parseDouble(pg.getValue());
+			}
 			
 			logger.debug("After search otherTelenomeLastPulse :" + units + " minimum=" + minimum);
 			
