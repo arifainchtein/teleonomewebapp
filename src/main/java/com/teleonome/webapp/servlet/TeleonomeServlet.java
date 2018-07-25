@@ -96,8 +96,13 @@ public void init() {
 				
 				toReturn.put("option"+counter, jo);
 				counter++;
-				
 			}
+			
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(toReturn.toString());
+			out.flush();
+			out.close();
 			
 		}else if(formName.equals("RememberDeneWord")) {
 			String identityPointer = req.getParameter("identity");
