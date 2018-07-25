@@ -82,7 +82,7 @@ public void init() {
 			JSONArray values = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, from, until);
 			
 			JSONObject toReturn = new JSONObject();
-			toReturn.put("Values", values);
+			toReturn.put("Value", values);
 			
 			JSONObject deneWordsToRemember = (JSONObject) getServletContext().getAttribute("DeneWordsToRemember");
 			JSONObject deneWordToRemember = deneWordsToRemember.getJSONObject(identityPointer);
