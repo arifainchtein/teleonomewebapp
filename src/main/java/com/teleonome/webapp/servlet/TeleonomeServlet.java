@@ -18,7 +18,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.teleonome.framework.TeleonomeConstants;
+import com.teleonome.framework.denome.DenomeUtils;
 import com.teleonome.framework.denome.Identity;
+import com.teleonome.framework.exception.InvalidDenomeException;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.framework.utils.Utils;
 
@@ -104,7 +106,60 @@ public void init() {
 			out.flush();
 			out.close();
 			
-		}else if(formName.equals("RememberDeneWord")) {
+		}else if(formName.equals("LookUpDeneWord")) {
+			
+			String identityPointer = req.getParameter("identity");
+			Identity identity = new Identity(identityPointer);
+			TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
+			long from = Long.parseLong(req.getParameter("from"));
+			long until = Long.parseLong(req.getParameter("until"));
+			
+			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
+			
+			JSONArray values = null;
+			if(identity.getTeleonomeName().equals(teleonomeName)) {
+				values = aDBManager.getDeneWordTimeSeriesByIdentity( identity,  from,  until);
+			}else {
+				values = aDBManager.getOrganismDeneWordTimeSeriesByIdentity( identity,  from,  until);
+			}
+			
+			
+			
+			JSONObject toReturn = new JSONObject();
+			toReturn.put("Value", values);
+			//
+			// to get the units and the minimum, get the last pulse
+			JSONObject otherTelenomeLastPulse = aDBManager.getLastPulse(identity.getTeleonomeName());
+			JSONObject identityDeneWord;
+			String units="N.A.";
+			double minimum=0.0;
+			try {
+				identityDeneWord = (JSONObject) DenomeUtils.getDeneWordByIdentity(otherTelenomeLastPulse, identity, TeleonomeConstants.COMPLETE);
+				if(identityDeneWord.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
+					units = identityDeneWord.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+				}
+				if(identityDeneWord.has(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE)) {
+					minimum = identityDeneWord.getDouble(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+				}
+			} catch (InvalidDenomeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+			
+			toReturn.put("Units", units);
+			toReturn.put("Minimum", minimum);
+			
+			
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(toReturn.toString());
+			out.flush();
+			out.close();
+			
+	    }else if(formName.equals("RememberDeneWord")) {
 			String identityPointer = req.getParameter("identity");
 			TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
 			long from = Long.parseLong(req.getParameter("from"));

@@ -59,6 +59,8 @@ public class WebAppContextListener implements ServletContextListener {
 			servletContext.setAttribute("TimeZone", timeZone);
 			JSONObject deneWordsToRemember =  getDeneWordsToRemember();
 			servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
+			servletContext.setAttribute("TeleonomeName", getTeleonomeName());
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			logger.warn(Utils.getStringException(e));
@@ -111,6 +113,16 @@ public class WebAppContextListener implements ServletContextListener {
 		// stop the thread
 	}
 
+	public String getTeleonomeName() {
+		String teleonomeName="";
+		try {
+			teleonomeName = new JSONObject(FileUtils.readFileToString(new File("Teleonome.denome"))).getJSONObject("Denome").getString("Name");
+		} catch (JSONException | IOException e) {
+			// TODO Auto-generated catch block
+			logger.warn(Utils.getStringException(e));
+		}
+		return teleonomeName;
+	}
 	/**
 	 * Generates a JSONObject that will contain as key the pointer to the remembered deneword and as a value the actual complete deneword
 	 *  this is used o get units and minimums (if avaliable) for each deneword
