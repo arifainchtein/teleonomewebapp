@@ -173,7 +173,7 @@ var	chart1 = d3.select("#"+id)
 
 //
 // graphtitle
-d3.svg.append("text")
+chart1.append("text")
 .attr("x", (width / 2))             
 .attr("y", 0 - (margin.top / 2))
 .attr("text-anchor", "middle")  
