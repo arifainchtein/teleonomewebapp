@@ -142,7 +142,7 @@ public class WebAppContextListener implements ServletContextListener {
 			Identity rememberedDeneWordIdentity;
 			//ArrayList teleonomeRememeberedWordsArrayList;
 			JSONArray mnemosyconDenesJSONArray;
-			logger.info("in denomemagager anMnemosyconsDeneChainJSONObject= " + anMnemosyconsDeneChainJSONObject);
+			logger.debug("in denomemagager anMnemosyconsDeneChainJSONObject= " + anMnemosyconsDeneChainJSONObject);
 			if(anMnemosyconsDeneChainJSONObject!=null){
 				
 				JSONArray denes = anMnemosyconsDeneChainJSONObject.getJSONArray("Denes");
@@ -156,11 +156,11 @@ public class WebAppContextListener implements ServletContextListener {
 						active = (boolean)  DenomeUtils.getDeneWordAttributeByDeneWordNameFromDene( rememberedWordsMnemosyconJSONObject , TeleonomeConstants.DENEWORD_ACTIVE, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
 						if(active) {
 							rememberedDeneWordsJSONArray = getAllDeneWordAttributeByDeneWordTypeFromDene(rememberedWordsMnemosyconJSONObject, TeleonomeConstants.DENEWORD_TYPE_MNEMOSYCON_REMEMBERED_DENEWORD, TeleonomeConstants.COMPLETE);
-							logger.info("rememberedDeneWordsJSONArray= " + rememberedDeneWordsJSONArray);
+							logger.debug("rememberedDeneWordsJSONArray= " + rememberedDeneWordsJSONArray);
 							for(int j=0;j<rememberedDeneWordsJSONArray.length();j++) {
 								rememberedDeneWordJSONObject = rememberedDeneWordsJSONArray.getJSONObject(j);
 								rememberedDeneWordPointer= rememberedDeneWordJSONObject.getString(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
-								logger.info( " rememberedDeneWordPointer= " + rememberedDeneWordPointer + " rememberedDeneWordJSONObject=" + rememberedDeneWordJSONObject.toString(4) );
+								logger.debug( " rememberedDeneWordPointer= " + rememberedDeneWordPointer + " rememberedDeneWordJSONObject=" + rememberedDeneWordJSONObject.toString(4) );
 								toReturn.put(rememberedDeneWordPointer, rememberedDeneWordJSONObject);
 							}
 						}
