@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.teleonome.framework.TeleonomeConstants;
+import com.teleonome.framework.denome.Identity;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.framework.utils.Utils;
 
@@ -73,6 +74,31 @@ public void init() {
 			out.print(toReturn.toString());
 			out.flush();
 			out.close();
+		}else if(formName.equals("GetRememberDeneWordList")) {
+			//
+			// is expeting of the form
+			// items={option1:{value:1,text:1},option2:{value:2,text:2}}
+			//
+			JSONObject deneWordsToRemember = (JSONObject) getServletContext().getAttribute("DeneWordsToRemember");
+			Iterator it = deneWordsToRemember.keys();
+			int counter=1;
+			JSONObject toReturn = new JSONObject();
+			JSONObject jo;
+			
+			while(it.hasNext()) {
+				String identityPointer = (String) it.next();
+				Identity identity = new Identity(identityPointer);
+				String deneWordName = identity.getDeneWordName();
+				String teleonomeName = identity.getTeleonomeName();
+				jo = new JSONObject();
+				jo.put("text", teleonomeName + "-" + deneWordName);
+				jo.put("vallue", identityPointer);
+				
+				toReturn.put("option"+counter, jo);
+				counter++;
+				
+			}
+			
 		}else if(formName.equals("RememberDeneWord")) {
 			String identityPointer = req.getParameter("identity");
 			TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");

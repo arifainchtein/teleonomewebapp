@@ -90,6 +90,11 @@ public class WebAppContextListener implements ServletContextListener {
 	    			// TODO Auto-generated catch block
 	    			e1.printStackTrace();
 	    		}
+	        	
+	        	logger.warn("Refreshing, deneWordsToRemember");
+	        	JSONObject deneWordsToRemember =  getDeneWordsToRemember();
+				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
+				
 		        try {
 					Thread.sleep(1000*60);
 				} catch (InterruptedException e) {
