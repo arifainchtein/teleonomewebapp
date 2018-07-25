@@ -173,13 +173,13 @@ var	chart1 = d3.select("#"+id)
 
 //
 // graphtitle
-chart1.append("text")
-.attr("x", (width / 2))             
-.attr("y", 0 - (margin.top / 2))
-.attr("text-anchor", "middle")  
-.style("font-size", "16px") 
-.style("text-decoration", "underline")  
-.text("Value vs Date Graph");
+//chart1.append("text")
+//.attr("x", (width / 2))             
+//.attr("y", 0 - (margin.top / 2))
+//.attr("text-anchor", "middle")  
+//.style("font-size", "16px") 
+//.style("text-decoration", "underline")  
+//.text(graphTitle);
 
 
 chart1.append("text")
