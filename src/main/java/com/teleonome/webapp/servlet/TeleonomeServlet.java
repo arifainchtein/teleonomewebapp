@@ -92,7 +92,7 @@ public void init() {
 				String teleonomeName = identity.getTeleonomeName();
 				jo = new JSONObject();
 				jo.put("text", teleonomeName + "-" + deneWordName);
-				jo.put("vallue", identityPointer);
+				jo.put("value", identityPointer);
 				
 				toReturn.put("option"+counter, jo);
 				counter++;
