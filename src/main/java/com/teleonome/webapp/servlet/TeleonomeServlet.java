@@ -130,23 +130,11 @@ public void init() {
 			toReturn.put("Value", values);
 			//
 			// to get the units and the minimum, get the last pulse
-			JSONObject otherTelenomeLastPulse = aDBManager.getLastPulse(identity.getTeleonomeName());
-			logger.debug("After search otherTelenomeLastPulse :" + otherTelenomeLastPulse.getJSONObject("Denome").getString("Name"));
-			JSONObject identityDeneWord;
-			String units="N.A.";
-			double minimum=0.0;
-			try {
-				identityDeneWord = (JSONObject) DenomeUtils.getDeneWordByIdentity(otherTelenomeLastPulse, identity, TeleonomeConstants.COMPLETE);
-				if(identityDeneWord.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
-					units = identityDeneWord.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
-				}
-				if(identityDeneWord.has(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE)) {
-					minimum = identityDeneWord.getDouble(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
-				}
-			} catch (InvalidDenomeException e) {
-				// TODO Auto-generated catch block
-				logger.warn(Utils.getStringException(e));
-			}
+			String units = (String) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+			double minimum = (double) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
+			
+			
+			logger.debug("After search otherTelenomeLastPulse :" + units + " minimum=" + minimum);
 			
 			
 			
