@@ -142,19 +142,19 @@ public class WebAppContextListener implements ServletContextListener {
 		String SEP=":";
 		for(int i=0;i<teleonomeNames.length();i++) {
 			teleonomeName = (String) teleonomeNames.get(i);
-			logger.debug(teleonomeName);
+			//logger.debug(teleonomeName);
 			level0.put(teleonomeName);
 			nucleiNames = aDBManager.getNucleiNamesForTeleonomeInOrganism( teleonomeName);
 			for(int j=0;j<nucleiNames.length();j++) {
 				nucleusName = (String) nucleiNames.get(j);
 				level1.put(teleonomeName + SEP + nucleusName);
-				logger.debug(teleonomeName + SEP + nucleusName);
+				//logger.debug(teleonomeName + SEP + nucleusName);
 				deneChainNames = aDBManager.getDeneChainNamesForTeleonomeInOrganism( teleonomeName, nucleusName);
 				for(int k=0;k<deneChainNames.length();k++) {
 					deneChainName = (String) deneChainNames.get(k);
 					level2.put(teleonomeName + SEP + nucleusName + SEP + deneChainName);
 					deneNames = aDBManager.getDeneNamesForTeleonomeInOrganism( teleonomeName, nucleusName, deneChainName);
-					logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName);
+					logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName + " deneNames=" + deneNames.toString(4));
 					for(int l=0;l<deneNames.length();l++) {
 						deneName = (String) deneNames.get(l);
 						level3.put(teleonomeName + SEP + nucleusName + SEP + deneChainName + SEP + deneName);
