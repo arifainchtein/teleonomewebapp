@@ -64,6 +64,10 @@ public class WebAppContextListener implements ServletContextListener {
 			JSONObject deneWordsToRemember =  getDeneWordsToRemember();
 			servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 			servletContext.setAttribute("TeleonomeName", getTeleonomeName());
+			logger.warn("Refreshing, autocompleteValues");
+        	JSONObject autoCompleteValues =  getAutoCompleteValues();
+			servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
+			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -135,19 +139,19 @@ public class WebAppContextListener implements ServletContextListener {
 		String SEP=":";
 		for(int i=0;i<teleonomeNames.length();i++) {
 			teleonomeName = (String) teleonomeNames.get(i);
-			logger.debug("teleonomeName=" + teleonomeName);
+			logger.debug(teleonomeName);
 			level0.put(teleonomeName);
 			nucleiNames = aDBManager.getNucleiNamesForTeleonomeInOrganism( teleonomeName);
 			for(int j=0;j<nucleiNames.length();j++) {
 				nucleusName = (String) nucleiNames.get(j);
 				level1.put(teleonomeName + SEP + nucleusName);
-				logger.debug("nuc=" + teleonomeName + SEP + nucleusName);
+				logger.debug(teleonomeName + SEP + nucleusName);
 				deneChainNames = aDBManager.getDeneChainNamesForTeleonomeInOrganism( teleonomeName, nucleusName);
 				for(int k=0;k<deneChainNames.length();k++) {
-					deneChainName = (String) deneChainNames.get(j);
+					deneChainName = (String) deneChainNames.get(k);
 					level2.put(teleonomeName + SEP + nucleusName + SEP + deneChainName);
 					//deneNames = aDBManager.getDeneNamesForTeleonomeInOrganism( teleonomeName, nucleusName, deneChainName);
-					logger.debug("chain=" + teleonomeName + SEP + nucleusName+ SEP + deneChainName);
+					logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName);
 				}
 			}
 		}
