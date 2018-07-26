@@ -68,10 +68,9 @@ public class WebAppContextListener implements ServletContextListener {
         	long now = System.currentTimeMillis();
         	JSONObject autoCompleteValues =  getAutoCompleteValues();
         	logger.warn("it took " + ((System.currentTimeMillis()-now)/1000)+ " seconds to generate the autocomplete values");
+        	servletContext.setAttribute("AutoCompleteValues", autoCompleteValues);
         	
         	
-        	
-			servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 			
 			
 		} catch (IOException e) {
