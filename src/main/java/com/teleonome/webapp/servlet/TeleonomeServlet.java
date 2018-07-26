@@ -139,6 +139,7 @@ public void init() {
 			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
 			String anyTeleonomeName = req.getParameter("TeleonomeName");
 			String nucleus = req.getParameter("Nucleus");
+			logger.debug("GetDeneChainNames, anyTeleonomeName=" + anyTeleonomeName + " nucleus=" + nucleus);
 			JSONArray data=null;
 			if(teleonomeName.equals(anyTeleonomeName)) {
 				JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
@@ -160,6 +161,7 @@ public void init() {
 			String anyTeleonomeName = req.getParameter("TeleonomeName");
 			String nucleus = req.getParameter("Nucleus");
 			String deneChain = req.getParameter("DeneChain");
+			logger.debug("GetDeneNamed, anyTeleonomeName=" + anyTeleonomeName + " nucleus=" + nucleus + " deneChain=" + deneChain);
 			JSONArray data=null;
 			if(teleonomeName.equals(anyTeleonomeName)) {
 				JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
@@ -181,6 +183,8 @@ public void init() {
 			String nucleus = req.getParameter("Nucleus");
 			String deneChain = req.getParameter("DeneChain");
 			String dene = req.getParameter("Dene");
+			logger.debug("GetDeneWordNames, anyTeleonomeName=" + anyTeleonomeName + " nucleus=" + nucleus + " deneChain=" + deneChain + " dene=" + dene);
+			
 			JSONArray data=null;
 			if(teleonomeName.equals(anyTeleonomeName)) {
 				JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
