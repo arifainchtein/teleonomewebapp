@@ -135,7 +135,10 @@ public class WebAppContextListener implements ServletContextListener {
 		JSONArray level0 = new JSONArray();
 		JSONArray level1 = new JSONArray();
 		JSONArray level2 = new JSONArray();
-		JSONArray nucleiNames, deneChainNames;
+		JSONArray level3 = new JSONArray();
+		JSONArray level4 = new JSONArray();
+		
+		JSONArray nucleiNames, deneChainNames, deneNames,deneWordNames;
 		String SEP=":";
 		for(int i=0;i<teleonomeNames.length();i++) {
 			teleonomeName = (String) teleonomeNames.get(i);
@@ -150,8 +153,19 @@ public class WebAppContextListener implements ServletContextListener {
 				for(int k=0;k<deneChainNames.length();k++) {
 					deneChainName = (String) deneChainNames.get(k);
 					level2.put(teleonomeName + SEP + nucleusName + SEP + deneChainName);
-					//deneNames = aDBManager.getDeneNamesForTeleonomeInOrganism( teleonomeName, nucleusName, deneChainName);
+					deneNames = aDBManager.getDeneNamesForTeleonomeInOrganism( teleonomeName, nucleusName, deneChainName);
 					logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName);
+					for(int l=0;l<deneNames.length();l++) {
+						deneName = (String) deneNames.get(l);
+						level3.put(teleonomeName + SEP + nucleusName + SEP + deneChainName + SEP + deneName);
+						deneWordNames = aDBManager.getDeneWordNamesForTeleonomeInOrganism( teleonomeName, nucleusName, deneChainName, deneName);
+						logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName+ SEP + deneName);
+						for(int m=0;m<deneWordNames.length();m++) {
+							deneWordName = (String) deneWordNames.get(m);
+							level4.put(teleonomeName + SEP + nucleusName + SEP + deneChainName + SEP + deneName + SEP + deneWordName);
+							logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName);
+						}
+					}
 				}
 			}
 		}
