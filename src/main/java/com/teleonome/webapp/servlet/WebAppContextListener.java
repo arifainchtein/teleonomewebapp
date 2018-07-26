@@ -163,7 +163,7 @@ public class WebAppContextListener implements ServletContextListener {
 						for(int m=0;m<deneWordNames.length();m++) {
 							deneWordName = (String) deneWordNames.get(m);
 							level4.put(teleonomeName + SEP + nucleusName + SEP + deneChainName + SEP + deneName + SEP + deneWordName);
-							logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName);
+							logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName+ SEP + deneName+ SEP + deneWordName);
 						}
 					}
 				}
