@@ -145,7 +145,7 @@ public void init() {
 				JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
 				data = DenomeUtils.getAllDeneChainsForNucleus(pulse, nucleus);
 			}else {
-				data = aDBManager.getDeneChainNamesForTeleonomeInOrganism(teleonomeName, nucleus);
+				data = aDBManager.getDeneChainNamesForTeleonomeInOrganism(anyTeleonomeName, nucleus);
 			}
 			
 					
@@ -167,7 +167,7 @@ public void init() {
 				JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
 				data = DenomeUtils.getAllDenesForDeneChain(pulse, nucleus, deneChain);
 			}else {
-				data = aDBManager.getDeneNamesForTeleonomeInOrganism(teleonomeName, nucleus, deneChain);
+				data = aDBManager.getDeneNamesForTeleonomeInOrganism(anyTeleonomeName, nucleus, deneChain);
 			}
 				
 			res.setContentType("application/json;charset=UTF-8");
@@ -190,7 +190,7 @@ public void init() {
 				JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
 				data = DenomeUtils.getAllDeneWordsForDene(pulse, nucleus, deneChain, dene);
 			}else {
-				data = aDBManager.getDeneWordNamesForTeleonomeInOrganism(teleonomeName, nucleus, deneChain, dene);
+				data = aDBManager.getDeneWordNamesForTeleonomeInOrganism(anyTeleonomeName, nucleus, deneChain, dene);
 			}
 				
 			res.setContentType("application/json;charset=UTF-8");
