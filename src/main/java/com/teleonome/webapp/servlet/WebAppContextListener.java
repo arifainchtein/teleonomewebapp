@@ -115,7 +115,7 @@ public class WebAppContextListener implements ServletContextListener {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
+				servletContext.setAttribute("AutoCompleteValues", autoCompleteValues);
 				
 				
 		        try {

@@ -107,6 +107,14 @@ public void init() {
 			out.flush();
 			out.close();
 			
+		}else if(formName.equals("GetAutoCompleteValues")) {
+			JSONObject autoCompleteValues = (JSONObject) getServletContext().getAttribute("AutoCompleteValues");
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(autoCompleteValues.toString());
+			out.flush();
+			out.close();
+			
 		}else if(formName.equals("LookUpDeneWord")) {
 			
 			String identityPointer = req.getParameter("identity");
