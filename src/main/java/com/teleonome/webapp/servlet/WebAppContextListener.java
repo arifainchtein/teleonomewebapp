@@ -178,7 +178,7 @@ public class WebAppContextListener implements ServletContextListener {
 						}else {
 							ar = level3.getJSONArray(teleonomeName+SEP+nucleusName+SEP+deneChainName);
 						}
-						ar.put(deneChainName);
+						ar.put(deneName);
 						level3.put(teleonomeName+SEP+nucleusName+SEP+deneChainName,ar);
 						deneWordNames = aDBManager.getDeneWordNamesForTeleonomeInOrganism( teleonomeName, nucleusName, deneChainName, deneName);
 						//logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName+ SEP + deneName);
@@ -189,7 +189,7 @@ public class WebAppContextListener implements ServletContextListener {
 							}else {
 								ar = level4.getJSONArray(teleonomeName+SEP+nucleusName+SEP+deneChainName +SEP +deneName);
 							}
-							ar.put(deneChainName);
+							ar.put(deneWordName);
 							level4.put(teleonomeName+SEP+nucleusName+SEP+deneChainName+SEP+deneName,ar);
 							//logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName+ SEP + deneName+ SEP + deneWordName);
 						}
