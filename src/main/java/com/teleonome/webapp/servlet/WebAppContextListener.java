@@ -108,6 +108,7 @@ public class WebAppContextListener implements ServletContextListener {
 				
 				logger.warn("Refreshing, autocompleteValues");
 	        	JSONObject autoCompleteValues =  getAutoCompleteValues();
+	        	logger.debug("autoCompleteValues=" + autoCompleteValues.toString(4));
 				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 				
 				
@@ -133,11 +134,11 @@ public class WebAppContextListener implements ServletContextListener {
 		JSONArray teleonomeNames = aDBManager.getTeleonomeNamesInOrganism();
 		String teleonomeName, nucleusName, deneChainName, deneName, deneWordName;
 		JSONArray level0 = new JSONArray();
-		JSONArray level1 = new JSONArray();
-		JSONArray level2 = new JSONArray();
-		JSONArray level3 = new JSONArray();
-		JSONArray level4 = new JSONArray();
-		
+		JSONObject level1 = new JSONObject();
+		JSONObject level2 = new JSONObject();
+		JSONObject level3 = new JSONObject();
+		JSONObject level4 = new JSONObject();
+		JSONArray ar;
 		JSONArray nucleiNames, deneChainNames, deneNames,deneWordNames;
 		String SEP=":";
 		for(int i=0;i<teleonomeNames.length();i++) {
@@ -147,28 +148,60 @@ public class WebAppContextListener implements ServletContextListener {
 			nucleiNames = aDBManager.getNucleiNamesForTeleonomeInOrganism( teleonomeName);
 			for(int j=0;j<nucleiNames.length();j++) {
 				nucleusName = (String) nucleiNames.get(j);
-				level1.put(teleonomeName + SEP + nucleusName);
+				if(!level1.has(teleonomeName)) {
+					ar = new JSONArray();
+				}else {
+					ar = level1.getJSONArray(teleonomeName);
+				}
+				ar.put(nucleusName);
+				level1.put(teleonomeName,ar);
 				//logger.debug(teleonomeName + SEP + nucleusName);
 				deneChainNames = aDBManager.getDeneChainNamesForTeleonomeInOrganism( teleonomeName, nucleusName);
 				for(int k=0;k<deneChainNames.length();k++) {
 					deneChainName = (String) deneChainNames.get(k);
-					level2.put(teleonomeName + SEP + nucleusName + SEP + deneChainName);
+					
+					if(!level2.has(teleonomeName+SEP+nucleusName)) {
+						ar = new JSONArray();
+					}else {
+						ar = level2.getJSONArray(teleonomeName+SEP+nucleusName);
+					}
+					ar.put(deneChainName);
+					level2.put(teleonomeName+SEP+nucleusName,ar);
+					
 					deneNames = aDBManager.getDeneNamesForTeleonomeInOrganism( teleonomeName, nucleusName, deneChainName);
-					logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName + " deneNames=" + deneNames.toString(4));
+					//logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName + " deneNames=" + deneNames.toString(4));
 					for(int l=0;l<deneNames.length();l++) {
 						deneName = (String) deneNames.get(l);
-						level3.put(teleonomeName + SEP + nucleusName + SEP + deneChainName + SEP + deneName);
+						
+						if(!level3.has(teleonomeName+SEP+nucleusName+SEP+deneChainName)) {
+							ar = new JSONArray();
+						}else {
+							ar = level3.getJSONArray(teleonomeName+SEP+nucleusName+SEP+deneChainName);
+						}
+						ar.put(deneChainName);
+						level3.put(teleonomeName+SEP+nucleusName+SEP+deneChainName,ar);
 						deneWordNames = aDBManager.getDeneWordNamesForTeleonomeInOrganism( teleonomeName, nucleusName, deneChainName, deneName);
-						logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName+ SEP + deneName);
+						//logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName+ SEP + deneName);
 						for(int m=0;m<deneWordNames.length();m++) {
 							deneWordName = (String) deneWordNames.get(m);
-							level4.put(teleonomeName + SEP + nucleusName + SEP + deneChainName + SEP + deneName + SEP + deneWordName);
-							logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName+ SEP + deneName+ SEP + deneWordName);
+							if(!level4.has(teleonomeName+SEP+nucleusName+SEP+deneChainName +SEP +deneName)) {
+								ar = new JSONArray();
+							}else {
+								ar = level4.getJSONArray(teleonomeName+SEP+nucleusName+SEP+deneChainName +SEP +deneName);
+							}
+							ar.put(deneChainName);
+							level4.put(teleonomeName+SEP+nucleusName+SEP+deneChainName+SEP+deneName,ar);
+							//logger.debug(teleonomeName + SEP + nucleusName+ SEP + deneChainName+ SEP + deneName+ SEP + deneWordName);
 						}
 					}
 				}
 			}
 		}
+		toReturn.put("Level0", level0);
+		toReturn.put("Level1", level1);
+		toReturn.put("Level2", level2);
+		toReturn.put("Level3", level3);
+		toReturn.put("Level4", level4);
 		
 		//
 		
