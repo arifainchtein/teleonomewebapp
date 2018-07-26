@@ -65,7 +65,12 @@ public class WebAppContextListener implements ServletContextListener {
 			servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 			servletContext.setAttribute("TeleonomeName", getTeleonomeName());
 			logger.warn("Refreshing, autocompleteValues");
+        	long now = System.currentTimeMillis();
         	JSONObject autoCompleteValues =  getAutoCompleteValues();
+        	logger.warn("it took " + ((System.currentTimeMillis()-now)/1000)+ " seconds to generate the autocomplete values");
+        	
+        	
+        	
 			servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 			
 			
@@ -108,18 +113,18 @@ public class WebAppContextListener implements ServletContextListener {
 				
 				logger.warn("Refreshing, autocompleteValues");
 				long now = System.currentTimeMillis();
-	        	JSONObject autoCompleteValues =  getAutoCompleteValues();
+	        //	JSONObject autoCompleteValues =  getAutoCompleteValues();
 	        	
 	        	logger.warn("it took " + ((System.currentTimeMillis()-now)/1000)+ " seconds to generate the autocomplete values");
 	        	
-	        	logger.debug("autoCompleteValues=" + autoCompleteValues.toString(4));
+	        	//logger.debug("autoCompleteValues=" + autoCompleteValues.toString(4));
 //	        	try {
 //					FileUtils.writeStringToFile(new File("denomictree.txt"), autoCompleteValues.toString(4));
 //				} catch (JSONException | IOException e1) {
 //					// TODO Auto-generated catch block
 //					e1.printStackTrace();
 //				}
-				servletContext.setAttribute("AutoCompleteValues", autoCompleteValues);
+			//	servletContext.setAttribute("AutoCompleteValues", autoCompleteValues);
 				
 				
 		        try {
