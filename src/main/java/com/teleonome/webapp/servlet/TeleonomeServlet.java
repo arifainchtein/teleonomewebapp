@@ -107,6 +107,94 @@ public void init() {
 			out.flush();
 			out.close();
 			
+		}else if(formName.equals("GetTeleonomeNames")) {
+			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
+			
+			JSONArray data = aDBManager.getTeleonomeNamesInOrganism();
+			
+			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
+			data.put(teleonomeName);
+			
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(data.toString());
+			out.flush();
+			out.close();
+			
+		}else if(formName.equals("GetNucleiNames")) {
+			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
+			String anyTeleonomeName = req.getParameter("TeleonomeName");
+			JSONArray data = new JSONArray();			
+			data.put(TeleonomeConstants.NUCLEI_MNEMOSYNE);
+			data.put(TeleonomeConstants.NUCLEI_PURPOSE);
+					
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(data.toString());
+			out.flush();
+			out.close();
+			
+		}else if(formName.equals("GetDeneChainNames")) {
+			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
+			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
+			String anyTeleonomeName = req.getParameter("TeleonomeName");
+			String nucleus = req.getParameter("Nucleus");
+			JSONArray data=null;
+			if(teleonomeName.equals(anyTeleonomeName)) {
+				JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
+				data = DenomeUtils.getAllDeneChainsForNucleus(pulse, nucleus);
+			}else {
+				data = aDBManager.getDeneChainNamesForTeleonomeInOrganism(teleonomeName, nucleus);
+			}
+			
+					
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(data.toString());
+			out.flush();
+			out.close();
+			
+		}else if(formName.equals("GetDeneNames")) {
+			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
+			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
+			String anyTeleonomeName = req.getParameter("TeleonomeName");
+			String nucleus = req.getParameter("Nucleus");
+			String deneChain = req.getParameter("DeneChain");
+			JSONArray data=null;
+			if(teleonomeName.equals(anyTeleonomeName)) {
+				JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
+				data = DenomeUtils.getAllDenesForDeneChain(pulse, nucleus, deneChain);
+			}else {
+				data = aDBManager.getDeneNamesForTeleonomeInOrganism(teleonomeName, nucleus, deneChain);
+			}
+				
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(data.toString());
+			out.flush();
+			out.close();
+			
+		}else if(formName.equals("GetDeneWordNames")) {
+			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
+			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
+			String anyTeleonomeName = req.getParameter("TeleonomeName");
+			String nucleus = req.getParameter("Nucleus");
+			String deneChain = req.getParameter("DeneChain");
+			String dene = req.getParameter("Dene");
+			JSONArray data=null;
+			if(teleonomeName.equals(anyTeleonomeName)) {
+				JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
+				data = DenomeUtils.getAllDeneWordsForDene(pulse, nucleus, deneChain, dene);
+			}else {
+				data = aDBManager.getDeneWordNamesForTeleonomeInOrganism(teleonomeName, nucleus, deneChain, dene);
+			}
+				
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(data.toString());
+			out.flush();
+			out.close();
+			
 		}else if(formName.equals("GetAutoCompleteValues")) {
 			JSONObject autoCompleteValues = (JSONObject) getServletContext().getAttribute("AutoCompleteValues");
 			res.setContentType("application/json;charset=UTF-8");

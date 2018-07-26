@@ -66,9 +66,9 @@ public class WebAppContextListener implements ServletContextListener {
 			servletContext.setAttribute("TeleonomeName", getTeleonomeName());
 			logger.warn("Refreshing, autocompleteValues");
         	long now = System.currentTimeMillis();
-        	JSONObject autoCompleteValues =  getAutoCompleteValues();
-        	logger.warn("it took " + ((System.currentTimeMillis()-now)/1000)+ " seconds to generate the autocomplete values");
-        	servletContext.setAttribute("AutoCompleteValues", autoCompleteValues);
+        	//JSONObject autoCompleteValues =  getAutoCompleteValues();
+        	//logger.warn("it took " + ((System.currentTimeMillis()-now)/1000)+ " seconds to generate the autocomplete values");
+        	//servletContext.setAttribute("AutoCompleteValues", autoCompleteValues);
         	
         	
 			
@@ -109,6 +109,16 @@ public class WebAppContextListener implements ServletContextListener {
 	        	JSONObject deneWordsToRemember =  getDeneWordsToRemember();
 				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 				
+				try {
+					JSONObject pulse = new JSONObject(FileUtils.readFileToString(new File("Teleonome.denome")));
+					servletContext.setAttribute("LastPulse", pulse);
+				} catch (JSONException | IOException e) {
+					// TODO Auto-generated catch block
+					logger.warn(Utils.getStringException(e));
+				}
+				
+				
+				
 				
 				logger.warn("Refreshing, autocompleteValues");
 				long now = System.currentTimeMillis();
@@ -142,7 +152,7 @@ public class WebAppContextListener implements ServletContextListener {
 		// stop the thread
 	}
 
-	private JSONObject getAutoCompleteValues() {
+	private JSONObject getAutoCompleteValues1() {
 		JSONObject toReturn = new JSONObject();
 		
 		JSONArray teleonomeNames = aDBManager.getTeleonomeNamesInOrganism();
