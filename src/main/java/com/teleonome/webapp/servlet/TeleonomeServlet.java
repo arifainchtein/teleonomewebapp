@@ -107,6 +107,27 @@ public void init() {
 			out.flush();
 			out.close();
 			
+		}else if(formName.equals("GetTeleonomeDateAvailable")) {
+			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
+			
+			JSONArray data = aDBManager.getTeleonomeDataAvailableInOrganism();
+			
+			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
+			JSONArray minMaxArray = aDBManager.getTeleonomeDataAvailableRanges();
+			JSONObject j2 = minMaxArray.getJSONObject(0);
+			JSONObject j = new JSONObject();
+			j.put("Name", teleonomeName);
+			j.put("TimeMin", j2.get("TimeMin"));
+			j.put("TimeMax", j2.get("TimeMax"));
+			
+			data.put(j);
+			
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(data.toString());
+			out.flush();
+			out.close();
+			
 		}else if(formName.equals("GetTeleonomeNames")) {
 			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
 			

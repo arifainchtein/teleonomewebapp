@@ -134,7 +134,14 @@ legendG.append("text") // add the text
 //}
 
 
-function drawTimeSeriesLineChart(id, dataSource){
+	
+function drawTimeSeriesLineChart(id, dataSource, graphTitle){
+	
+		  if (arguments.length == 2) {
+			  graphTitle="";
+		  }
+
+	
 // Set the dimensions of the canvas / graph
 var	margin = {top: 30, right: 20, bottom: 30, left: 50},
 //	width = 540 - margin.left - margin.right,
@@ -173,13 +180,14 @@ var	chart1 = d3.select("#"+id)
 
 //
 // graphtitle
-//chart1.append("text")
-//.attr("x", (width / 2))             
-//.attr("y", 0 - (margin.top / 2))
-//.attr("text-anchor", "middle")  
-//.style("font-size", "16px") 
-//.style("text-decoration", "underline")  
-//.text(graphTitle);
+//
+ chart1.append("text")
+.attr("x", (width / 2))             
+.attr("y", 0 - (margin.top / 2))
+.attr("text-anchor", "middle")  
+.style("font-size", "16px") 
+.style("text-decoration", "underline")  
+.text(graphTitle);
 
 
 chart1.append("text")
