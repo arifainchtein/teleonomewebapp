@@ -117,8 +117,12 @@ public void init() {
 			JSONObject j2 = minMaxArray.getJSONObject(0);
 			JSONObject j = new JSONObject();
 			j.put("Name", teleonomeName);
-			j.put("TimeMin", j2.get("TimeMin"));
-			j.put("TimeMax", j2.get("TimeMax"));
+			if(j2.has("TimeMin")){
+				j.put("TimeMin", j2.get("TimeMin"));
+			}
+			if(j2.has("TimeMax")){
+				j.put("TimeMax", j2.get("TimeMax"));
+			}
 			
 			data.put(j);
 			
