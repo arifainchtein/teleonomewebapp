@@ -116,7 +116,7 @@ public void init() {
 				PrintWriter out = res.getWriter();
 				out.print(pulseJSONObject.toString(4));
 				out.flush();
-				out.close();
+				out.close(); 
 		}else if(formName.equals("GetTeleonomeDateAvailable")) {
 			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
 			
