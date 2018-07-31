@@ -18,6 +18,7 @@ function IdentityFactory() {
        identity.deneWordName="";
          teleonomeName=tokens[0];  
          if(teleonomeName.substring(0,1)=="@")teleonomeName=tokens[0].substring(1);
+         identity.teleonomeName=teleonomeName;
         if(tokens.length>1)identity.nucleusName=tokens[1];
         if(tokens.length>2)identity.deneChainName=tokens[2];
         if(tokens.length>3)identity.deneName=tokens[3];

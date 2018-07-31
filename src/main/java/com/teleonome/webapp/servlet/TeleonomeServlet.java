@@ -107,6 +107,16 @@ public void init() {
 			out.flush();
 			out.close();
 			
+		}else if(formName.equals("getOrganismPulseByTeleonomeNameAndTimestamp")) {
+			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
+			String teleonomeName = req.getParameter("TeleonomeName");
+			long timemillis = Long.parseLong(req.getParameter("PulseMillis"));
+			 JSONObject pulseJSONObject = aDBManager.getOrganismPulseByTeleonomeNameAndTimestamp( teleonomeName,  timemillis);
+			 res.setContentType("application/json;charset=UTF-8");
+				PrintWriter out = res.getWriter();
+				out.print(pulseJSONObject.toString(4));
+				out.flush();
+				out.close();
 		}else if(formName.equals("GetTeleonomeDateAvailable")) {
 			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
 			
