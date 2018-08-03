@@ -143,7 +143,7 @@ function drawTimeSeriesLineChart(id, dataSource, graphTitle){
 
 	
 // Set the dimensions of the canvas / graph
-var	margin = {top: 30, right: 20, bottom: 30, left: 50},
+var	margin = {top: 30, right: 20, bottom: 30, left: 70},
 //	width = 540 - margin.left - margin.right,
 //	height = 247 - margin.top - margin.bottom;
 width = parseInt(d3.select("#"+id).style("width")) - margin.left - margin.right,

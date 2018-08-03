@@ -3,6 +3,9 @@ package com.teleonome.webapp.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
@@ -87,14 +90,30 @@ public void init() {
 			int counter=1;
 			JSONObject toReturn = new JSONObject();
 			JSONObject jo;
-			
+			//
+			// sort them by teleonome name first and then by deneword name
+			//
+			List list = new ArrayList();
+			Hashtable h = new Hashtable();
 			while(it.hasNext()) {
 				String identityPointer = (String) it.next();
 				Identity identity = new Identity(identityPointer);
 				String deneWordName = identity.getDeneWordName();
 				String teleonomeName = identity.getTeleonomeName();
+				 list.add(teleonomeName + "-" + deneWordName);
+				 h.put(teleonomeName + "-" + deneWordName, identityPointer);
+			}
+			 Collections.sort(list);
+		      
+		      it = list.iterator();
+			while(it.hasNext()) {
+				String text=(String) it.next();
+				String identityPointer = (String) h.get(text); ;
+				Identity identity = new Identity(identityPointer);
+				String deneWordName = identity.getDeneWordName();
+				String teleonomeName = identity.getTeleonomeName();
 				jo = new JSONObject();
-				jo.put("text", teleonomeName + "-" + deneWordName);
+				jo.put("text", text);
 				jo.put("value", identityPointer);
 				
 				toReturn.put("option"+counter, jo);
@@ -119,9 +138,7 @@ public void init() {
 				out.close(); 
 		}else if(formName.equals("GetTeleonomeDateAvailable")) {
 			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
-			
 			JSONArray data = aDBManager.getTeleonomeDataAvailableInOrganism();
-			
 			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
 			JSONArray minMaxArray = aDBManager.getTeleonomeDataAvailableRanges();
 			JSONObject j2 = minMaxArray.getJSONObject(0);
