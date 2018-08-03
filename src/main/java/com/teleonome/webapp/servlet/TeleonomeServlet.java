@@ -95,6 +95,7 @@ public void init() {
 			//
 			List list = new ArrayList();
 			Hashtable h = new Hashtable();
+			logger.debug("before sorting");
 			while(it.hasNext()) {
 				String identityPointer = (String) it.next();
 				Identity identity = new Identity(identityPointer);
@@ -102,6 +103,7 @@ public void init() {
 				String teleonomeName = identity.getTeleonomeName();
 				 list.add(teleonomeName + "-" + deneWordName);
 				 h.put(teleonomeName + "-" + deneWordName, identityPointer);
+				 logger.debug("before sorting, storing " + identityPointer);
 			}
 			 Collections.sort(list);
 		      
@@ -109,9 +111,10 @@ public void init() {
 			while(it.hasNext()) {
 				String text=(String) it.next();
 				String identityPointer = (String) h.get(text); ;
-				Identity identity = new Identity(identityPointer);
-				String deneWordName = identity.getDeneWordName();
-				String teleonomeName = identity.getTeleonomeName();
+				logger.debug("after sorting, storing " + identityPointer);
+				//Identity identity = new Identity(identityPointer);
+				//String deneWordName = identity.getDeneWordName();
+				//String teleonomeName = identity.getTeleonomeName();
 				jo = new JSONObject();
 				jo.put("text", text);
 				jo.put("value", identityPointer);
