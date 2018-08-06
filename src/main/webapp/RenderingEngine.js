@@ -485,7 +485,7 @@ function renderPageToDisplay(){
 
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_SETTINGS_INFO){
 				 var settingsInfo = new SettingsInfo();
-				 panelHTML += settingsInfo.process('Self');
+				 panelHTML += settingsInfo.process();
 				    
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_NETWORK_MODE_SELECTOR){
 				
@@ -863,7 +863,7 @@ function renderPageToDisplay(){
 						panelTitle = processingDeneWord.Value;
 					}
 				}
-				DeneWordTable deneWordTable = new DeneWordTable();
+				var deneWordTable = new DeneWordTable();
 				panelHTML += deneWordTable.process(panelTitle, denes);
 				
 //				panelHTML += "<div class=\"col-lg-6\">";

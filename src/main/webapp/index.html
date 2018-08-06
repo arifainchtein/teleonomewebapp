@@ -159,6 +159,20 @@ input:valid {
   }
 }
 
+
+.glyphicon.glyphicon-signal,  .glyphicon.glyphicon-tasks, .glyphicon.glyphicon-info-sign{
+    font-size: 20px;
+    margin-top:-25px;
+   
+}
+.SettingBar{
+    text-align: center;
+}
+
+.SettingBar:hover {
+    color:salmon;
+}
+
 </style>
 </head>
 
@@ -257,10 +271,15 @@ input:valid {
 		<script type="text/javascript" src="GeneralFunctions.js"></script>
 		<!-- Make sure that DenomeFunctions.js is loaded before the templates -->
 		<script type="text/javascript" src="DenomeFunctions.js"></script>
-		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
-		<script type="text/javascript" src="templates/SystemInfo.js"></script>
+		<!-- The templates, make sure they are loaded after the two Functions files -->
+		<script type="text/javascript" src="templates/SettingsInfo.js"></script>
 		<script type="text/javascript" src="templates/DeneWordTable.js"></script>
+		<script type="text/javascript" src="templates/DeviceInfo.js"></script>
+		<script type="text/javascript" src="templates/Networking.js"></script>
+		<script type="text/javascript" src="templates/UpdateParams.js"></script>
+		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
 		<script type="text/javascript" src="RenderingEngine.js"></script>
+		<!-- The Heart Communication is tbe the last one to be loaded -->
 		<script type="text/javascript" src="HeartComms.js"></script>
 
 		<script>
@@ -339,8 +358,25 @@ input:valid {
                     $("#MedulaLog").prop("href", "logs/"+ dirName + "/Medula.txt");
                     $('.pathology-modal-body').html(""); */
                 });
-                
 				
+				$(document).on('click', '#Wifi',function(e){
+					var n = new Networking();
+					var html = n.process('Self');
+					$('#SettingsWorkArea').html(html);
+					$('#SettingsWorkArea').show();
+				});
+				$(document).on('click', '#UpdateParams',function(e){
+					var n = new UpdateParams();
+					var html = n.process();
+					$('#SettingsWorkArea').html(html);
+					$('#SettingsWorkArea').show();
+				});
+				$(document).on('click', '#DeviceInfo',function(e){
+					var n = new DeviceInfo();
+					var html = n.process();
+					$('#SettingsWorkArea').html(html);
+					$('#SettingsWorkArea').show();
+				});
 				$(document).on('click', '.btn',function(e){
 					 // e.preventDefault();
 					  var source = event.target || event.srcElement;
