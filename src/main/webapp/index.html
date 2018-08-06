@@ -253,7 +253,14 @@ input:valid {
 		<script type="text/javascript" src="Identity.js"></script>
 		<script type="text/javascript" src="D3Chart.js"></script>
 		<script type="text/javascript" src="CSVMultiLineChart.js"></script>
-		<script type="text/javascript" src="DenomeUtils.js"></script>
+		<!-- Make sure that GeneralFunctions.js is loaded before the DenomeFunctions.js -->
+		<script type="text/javascript" src="GeneralFunctions.js"></script>
+		<!-- Make sure that DenomeFunctions.js is loaded before the templates -->
+		<script type="text/javascript" src="DenomeFunctions.js"></script>
+		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
+		<script type="text/javascript" src="templates/SystemInfo.js"></script>
+		<script type="text/javascript" src="templates/DeneWordTable.js"></script>
+		<script type="text/javascript" src="RenderingEngine.js"></script>
 		<script type="text/javascript" src="HeartComms.js"></script>
 
 		<script>
