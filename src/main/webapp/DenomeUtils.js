@@ -598,6 +598,10 @@ function renderPageToDisplay(){
 				refreshOrganismView();
 		
 
+			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_SETTINGS_INFO){
+				 var settingsInfo = new SettingsInfo();
+				 panelHTML += settingsInfo.process('Self');
+				    
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_NETWORK_MODE_SELECTOR){
 				
 				panelHTML += "<div class=\"col-lg-12\">";
@@ -1916,15 +1920,6 @@ function renderPageToDisplay(){
 				panelHTML += "<h4 class=\"modal-title\" id=\"myModalLabel\">";
 				
 				panelHTML += "<ul class=\"nav nav-pills pathology-file-list\">";
-//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"DenomeManager\">DenomeManager</a></li>";
-//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"Heart\">Heart</a></li>";
-//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"Medula\">Medula</a></li>";
-//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"MnemosyneManager\">MnemosyneManager</a></li>";
-//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"ObserverThread\">ObserverThread</a></li>";
-//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"PublisherListener\">PublisherListener</a></li>";
-//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"PulseThread\">PulseThread</a></li>";
-//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"SubscriberThread\">SubscriberThread.txt</a></li>";
-//				panelHTML += "<li><a href=\"\" class=\"pathology-log-link\" id=\"TeleonomeHypothalamus\">TeleonomeHypothalamus</a></li>";
 				panelHTML += "</ul>";
 				panelHTML += "</h4>";
 				panelHTML += "</div>";
