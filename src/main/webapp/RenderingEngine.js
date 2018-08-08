@@ -302,6 +302,14 @@ function renderPageToDisplay(){
 						if(pageToDisplay===pagePosition){
 							pageDefinintionPointer = getDeneWordAttributeByDeneWordTypeFromDene(controlParameterDene, DENEWORD_TYPE_WEB_PAGE_VIEW_DEFINITION_POINTER,DENEWORD_VALUE_ATTRIBUTE);
 							//console.log("pageDefinintionPointer=" +pageDefinintionPointer);
+							//
+							// if this is not the first page, hide
+							// the PulseInfo
+							if(pageToDisplay==1){
+								$('#PulseInfo').show();
+							}else{
+								$('#PulseInfo').hide();
+							}	
 							renderPageByPointer(pageDefinintionPointer);
 						}
 					}
@@ -338,7 +346,7 @@ function renderPageToDisplay(){
 		var panelExternalDataSourcePointer, panelExternalTimestampDataSourcePointer;
 		var panelPointerExternalDataSourcePointerHashMap = new HashMap();
 		var panelPointerExternalTimestampDataSourcePointerHashMap = new HashMap();
-		
+		var panelVisibleHashMap = new HashMap();
 		
 		//
 		// re initialize the charts data holders
@@ -351,6 +359,7 @@ function renderPageToDisplay(){
 		var denePanel;
 		var panelVisualizationStyle;
 		var dataDene;
+		var panelVisible;
 		//console.log("renderPageByPointer denePanelArray.length=" +denePanelArray.length);
 		var i2=0, j2=0,k2=0;
 		for(i2=0;i2<denePanelArray.length;i2++){
@@ -363,7 +372,7 @@ function renderPageToDisplay(){
 			panelVisualStyle="";
 			panelExternalDataSourcePointer="";
 			panelExternalTimestampDataSourcePointer="";
-			
+			panelVisible=false;
 			for(j2=0;j2<deneWords.length;j2++){
 				deneWord = deneWords[j2];
 				//
@@ -378,6 +387,9 @@ function renderPageToDisplay(){
 					panelExternalDataSourcePointer = deneWord["Value"];
 				}else if(deneWord.hasOwnProperty("DeneWord Type") && deneWord["DeneWord Type"]===DENEWORD_TYPE_EXTERNAL_TIMESTAMP_DATA_SOURCE_DENE){
 					panelExternalTimestampDataSourcePointer = deneWord["Value"];
+				}else if(deneWord.Name===DENEWORD_VISIBLE){
+					panelVisible = deneWord["Value"];
+					panelVisibleHashMap.put(panelDeneChainPointer,panelVisible);
 				}
 			}
 			//
@@ -443,7 +455,7 @@ function renderPageToDisplay(){
 		var obj2 = panelPointerVisualStyleHashMap["_map"];
 		var obj3 = panelPointerExternalDataSourcePointerHashMap["_map"];
 		var obj4 = panelPointerExternalTimestampDataSourcePointerHashMap["_map"];
-		
+		var obj5 = panelVisibleHashMap["_map"];
 		//
 		// after every two panels put a new row
 		// open the first one
@@ -454,6 +466,8 @@ function renderPageToDisplay(){
 		for(var property in obj) {
 			deneChainPointer= obj[property];
 			panelCounter++;
+			panelVisible = obj5[deneChainPointer];
+			if(!panelVisible)continue;
 			mainPanelVisualStyle= obj2[deneChainPointer];
 			panelExternalDataSourcePointer = obj3[deneChainPointer];
 			panelExternalTimestampDataSourcePointer = obj4[deneChainPointer];
@@ -484,8 +498,30 @@ function renderPageToDisplay(){
 		
 
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_SETTINGS_INFO){
+				//
+				// in this case, denes will contain one dene,
+				// which in turn will contain 3 denewords
+				// the value of each of these denewords is a pointer
+				// to the denechain panel for the info, wifi and update parameteres
+				// using the pointers, get the chains and store them in localStorage
+				// since the classes will use them later
+				var systemInfoPointers = denes[0]['DeneWords'];
+				var pointer;
+				var systemInfoChain;
+				var systemInfoDeneChainPanelJSON={};
+				
+				for( var q=0;q<systemInfoPointers.length;q++){
+					pointer = systemInfoPointers[q].Value;
+					systemInfoChain = humanInterfaceDeneChainIndex["_map"][pointer];
+					systemInfoDeneChainPanelJSON[pointer] = systemInfoChain;
+					
+				}
+
+				localStorage.setItem("SystemInfo", JSON.stringify(systemInfoDeneChainPanelJSON));
+				
 				 var settingsInfo = new SettingsInfo();
 				 panelHTML += settingsInfo.process();
+				 
 				    
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_NETWORK_MODE_SELECTOR){
 				

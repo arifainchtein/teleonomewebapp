@@ -14,6 +14,8 @@
 
 <!-- Bootstrap core CSS -->
 <link href="bootstrap.min.css" rel="stylesheet">
+<link href="css/UpdateParams.css" rel="stylesheet">
+
 
 
 
@@ -360,26 +362,39 @@ input:valid {
                 });
 				
 				$(document).on('click', '#Wifi',function(e){
+					var panelPointer  = $(this).data("panelpointer");
 					var n = new Networking();
-					var html = n.process('Self');
+					var html = n.process(panelPointer);
 					$('#SettingsWorkArea').html(html);
 					$('#SettingsWorkArea').show();
 				});
 				$(document).on('click', '#UpdateParams',function(e){
+					var panelPointer  = $(this).data("panelpointer");
 					var n = new UpdateParams();
-					var html = n.process();
+					var html = n.process(panelPointer);
 					$('#SettingsWorkArea').html(html);
 					$('#SettingsWorkArea').show();
 				});
 				$(document).on('click', '#DeviceInfo',function(e){
+					var panelPointer  = $(this).data("panelpointer");
 					var n = new DeviceInfo();
 					var html = n.process();
 					$('#SettingsWorkArea').html(html);
 					$('#SettingsWorkArea').show();
 				});
-				$(document).on('click', '.btn',function(e){
+				$(document).on('click', '.UpdateParamBtn',function(e){
 					 // e.preventDefault();
 					  var source = event.target || event.srcElement;
+					  
+					  var passwd = prompt("Please enter the password", "");
+					  if(isNaN(passwd)){
+						alert("Password must be 6 numbers");
+						  return false;
+					  }
+					  if(passwd.length!=6){
+						  alert("Password must be 6 numbers");
+						  return false;
+					  }
 					  $(source).prop('disabled', true);
 					  $(source).text('Pending');
 					  var data = $.parseJSON($(this).attr('data-form'));
@@ -395,9 +410,9 @@ input:valid {
 					    console.log("error=" + err);
 					}
 					 var jsonData = {};
-					 jsonData["Identity"] = data.identity;
-					 jsonData["Value"] = selected;
-					 
+					 jsonData[TELEONOME_IDENTITY_LABEL] = data.identity;
+					 jsonData[DENEWORD_VALUE_ATTRIBUTE] = selected;
+					 jsonData[COMMAND_REQUEST_PASSWORD] = passwd;
 					var message = new Paho.MQTT.Message(JSON.stringify(jsonData));
 					message.destinationName = HEART_TOPIC_UPDATE_FORM_REQUEST;
 					mqtt.send(message);

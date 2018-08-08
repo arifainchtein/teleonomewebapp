@@ -386,6 +386,7 @@ var DENEWORD_OPERATIONAL_STATUS_GREEN_VALUE="Operational Status Green Value";
 var DENEWORD_OPERATIONAL_STATUS_BLUE_VALUE="Operational Status Blue Value";
 var DENEWORD_OPERATIONAL_STATUS_BLINK_VALUE="Operational Status Blink Value";
 var DENEWORD_ACTIVE="Active";
+var DENEWORD_VISIBLE="Visible";
 var DENEWORD_TYPE_POINTER="Dene Pointer";
 var DENEWORD_MOTHER_MICROCONTROLER="Mother Microcontroller";
 var DENEWORD_ACTION_PROCESSING_RESULT="Action Processing Result";
