@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 import javax.servlet.ServletException;
@@ -25,6 +27,7 @@ import com.teleonome.framework.TeleonomeConstants;
 import com.teleonome.framework.denome.DenomeUtils;
 import com.teleonome.framework.denome.Identity;
 import com.teleonome.framework.exception.InvalidDenomeException;
+import com.teleonome.framework.network.NetworkUtilities;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.framework.utils.Utils;
 
@@ -50,7 +53,92 @@ public void init() {
 		String formName = req.getParameter("formName");
 		boolean waitForResponse=true;
 		logger.debug("Do Get formaName=" + formName);
-		if(formName.equals("GetLogFile")) {
+		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
+		if(formName.equals(TeleonomeConstants.HEART_TOPIC_UPDATE_FORM_REQUEST)) {
+			
+			String identityPointer = req.getParameter(TeleonomeConstants.TELEONOME_IDENTITY_LABEL);
+			Object value = req.getParameter(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+			String password = req.getParameter(TeleonomeConstants.COMMAND_REQUEST_PASSWORD);
+			
+			
+			
+    		logger.warn("about to apply mutation identityPointer=" + identityPointer + " value=" + value);
+    		
+    		JSONObject payLoadParentJSONObject = new JSONObject();
+    		JSONObject payLoadJSONObject = new JSONObject();
+    		payLoadParentJSONObject.put("Mutation Name","UpdateControlParameters");
+    		payLoadParentJSONObject.put("Payload", payLoadJSONObject);
+    		JSONArray updatesArray = new JSONArray();
+    		payLoadJSONObject.put("Updates"	, updatesArray);
+
+    		JSONObject updateJSONObject =  new JSONObject();
+    		updateJSONObject.put("Target","@On Load:Update DeneWord:Update DeneWord");
+    		updateJSONObject.put("MutationTargetNewValue",identityPointer);
+    		updateJSONObject.put("Value",value);
+    		updatesArray.put(updateJSONObject);
+    			
+    		
+    		
+    		
+    		String command="SetParameters";
+    		String payLoad=payLoadParentJSONObject.toString();
+    		
+    		int commandId = aDBManager.requestCommandToExecute(command,payLoad);
+      		logger.debug("sent command=" + command  + " commandId=" + commandId);	
+      		res.setContentType("text/html;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(commandId);
+			out.flush();
+			out.close();
+			
+		}else if(formName.equals("GetConnectedClients")) {
+			JSONArray clientsJSONArray=new JSONArray();
+			LinkedHashMap linkedMap = null;
+			try {
+				linkedMap = NetworkUtilities.getConnectedClients();
+			}catch(Exception e) {
+				logger.warn("Exceptin getting the connected clients, e=" + e.getMessage());
+				System.out.println("Exceptin getting the connected clients, e=" + e.getMessage());
+			}
+			if(linkedMap!=null) {
+				Set set = linkedMap.keySet();
+				Iterator it = set.iterator();
+				String name, ipaddress;
+
+				JSONObject client;
+				while(it.hasNext()){
+					name=(String)it.next();
+					ipaddress = (String) linkedMap.get(name);
+					//System.out.println("name=" + name + "  ipaddress=" + ipaddress);	
+					client = new JSONObject();
+					client.put("name", name);
+					client.put("ipaddress", ipaddress);
+
+					clientsJSONArray.put(client);
+				} 
+			}
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(clientsJSONArray);
+			out.flush();
+			out.close();
+			
+		}else if(formName.equals("GetSSIDs")){
+			JSONArray ssidJSONArray = NetworkUtilities.getSSID(true);
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(ssidJSONArray);
+			out.flush();
+			out.close();
+		}else if(formName.equals("GetDenome")) {
+			String fileInString = FileUtils.readFileToString(new File("Teleonome.denome"));
+			res.setContentType("text/html;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(fileInString);
+			out.flush();
+			out.close();
+			
+		}else if(formName.equals("GetLogFile")) {
 			String logFileName = req.getParameter("logFileName");
 			File logFile = new File(Utils.getLocalDirectory() + "tomcat/webapps/ROOT/" + logFileName);
 			List<String> logLines = FileUtils.readLines(logFile);
@@ -130,7 +218,7 @@ public void init() {
 			out.close();
 			
 		}else if(formName.equals("getOrganismPulseByTeleonomeNameAndTimestamp")) {
-			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
+			
 			String teleonomeName = req.getParameter("TeleonomeName");
 			long timemillis = Long.parseLong(req.getParameter("PulseMillis"));
 			 JSONObject pulseJSONObject = aDBManager.getOrganismPulseByTeleonomeNameAndTimestamp( teleonomeName,  timemillis);
@@ -140,7 +228,6 @@ public void init() {
 				out.flush();
 				out.close(); 
 		}else if(formName.equals("GetTeleonomeDateAvailable")) {
-			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
 			JSONArray data = aDBManager.getTeleonomeDataAvailableInOrganism();
 			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
 			JSONArray minMaxArray = aDBManager.getTeleonomeDataAvailableRanges();
@@ -163,7 +250,6 @@ public void init() {
 			out.close();
 			
 		}else if(formName.equals("GetTeleonomeNames")) {
-			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
 			
 			JSONArray data = aDBManager.getTeleonomeNamesInOrganism();
 			
@@ -177,7 +263,6 @@ public void init() {
 			out.close();
 			
 		}else if(formName.equals("GetNucleiNames")) {
-			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
 			String anyTeleonomeName = req.getParameter("TeleonomeName");
 			JSONArray data = new JSONArray();			
 			data.put(TeleonomeConstants.NUCLEI_MNEMOSYNE);
@@ -190,7 +275,6 @@ public void init() {
 			out.close();
 			
 		}else if(formName.equals("GetDeneChainNames")) {
-			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
 			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
 			String anyTeleonomeName = req.getParameter("TeleonomeName");
 			String nucleus = req.getParameter("Nucleus");
@@ -211,7 +295,6 @@ public void init() {
 			out.close();
 			
 		}else if(formName.equals("GetDeneNames")) {
-			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
 			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
 			String anyTeleonomeName = req.getParameter("TeleonomeName");
 			String nucleus = req.getParameter("Nucleus");
@@ -232,7 +315,6 @@ public void init() {
 			out.close();
 			
 		}else if(formName.equals("GetDeneWordNames")) {
-			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager" );
 			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
 			String anyTeleonomeName = req.getParameter("TeleonomeName");
 			String nucleus = req.getParameter("Nucleus");
@@ -272,7 +354,6 @@ public void init() {
 			
 			String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
 			logger.debug("for search teleonomeName :" + teleonomeName + " identity.getTeleonomeName()=" + identity.getTeleonomeName());
-			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 			
 			JSONArray values = null;
 			if(identity.getTeleonomeName().equals(teleonomeName)) {
@@ -320,7 +401,6 @@ public void init() {
 			TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
 			long from = Long.parseLong(req.getParameter("from"));
 			long until = Long.parseLong(req.getParameter("until"));
-			PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 			
 			JSONArray values = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, from, until);
 			

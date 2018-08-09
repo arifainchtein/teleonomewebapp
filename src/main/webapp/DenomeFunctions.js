@@ -360,7 +360,7 @@ function extraLowerNavInfo(deneChainPanel){
 				glyphIcon = deneWord["Value"];
 			}
 		}
-		returnText+="<div class=\"col-xs-2 text-center\">";
+		returnText+="<div class=\"col-xs-2 text-center LowerNavFunction\">";
 		returnText+="<a href=\"javascript:setPageToDisplay("+ pageInNavPosition+")\"><i class=\""+ glyphIcon +"\"></i><br>"+pageTitle+"</a>";
 		returnText+="</div>";
 		

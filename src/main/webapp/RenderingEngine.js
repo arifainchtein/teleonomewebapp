@@ -8,7 +8,7 @@ var identityFactory;
 var i,j,k,l;
 var availableSSIDSArray;
 var refreshInterfaceAfterModalNeeded=false;
-
+var rowPanelCounter=0;
 //the humanInterfaceDeneChainIndex is a key value pair
 //the key is the pointer and the value is the actual denechain
 //the pointer is of the form @teleonomeName:Human Interface:Home Page
@@ -65,23 +65,36 @@ function monitorBetweenPulses() {
 				// set the status to blinking yellow
 				//
 				
+				if ($(window).width() < 480) {
+					$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-danger');
+				}else{
+					$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-danger');
+				}
+
 				
-				$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-danger');
+				
 				
 			
 			}else if(timeSinceLastPulse>timeBeforeLate/2){
 				
-				$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-warning');
 				 
-			
+				if ($(window).width() < 480) {
+					$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-warning');
+				}else{
+					$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-warning');
+				}
 
 			}else{
 				//
 				// set the status to blinking yellow
 				//
 				
-				$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
 				
+				if ($(window).width() < 480) {
+					$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-success');
+				}else{
+					$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
+				}
 				
 
 			}
@@ -90,6 +103,30 @@ function monitorBetweenPulses() {
 
 } 
 
+function receivedCommandResponse(commandId){
+	//
+	// text contains the numerical id of the command
+	// that was completed,
+	// now ask for the server to send you a new version 
+	// of the Teleonome.denome that would have been 
+	// updated.  Note that this will come from tomcat
+	// not the heart
+	$.ajax({
+		type: "GET",
+		url: "/TeleonomeServlet",
+		data: {formName:"GetDenome", },
+		success: function (data) {
+			console.log("data=" + data);
+			loadDenomeRefreshInterface(data);
+		},
+		error: function(data){
+			var errorText = "error receiving updated Denome after command response, error was:" + JSON.stringify(data);
+			console.log(errorText);
+			alert(errorText);
+			return false;
+		}
+	});	
+}
 
 function asyncUpdate(text){
 	//
@@ -179,8 +216,12 @@ function refreshOrganismView(){
 function loadDenomeRefreshInterface(denomeFileInString) {
 	console.log("pulse arrive at " + new Date() );
 	if(betweenPulseInterval!= undefined)clearInterval(betweenPulseInterval);
-	
-	$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
+	if ($(window).width() < 480) {
+		$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-success');
+	}else{
+		$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
+	}
+
 	pulseJSONObject= JSON.parse(denomeFileInString);
 	if(!$('#bannerformmodal').hasClass('in')){
 		RefreshInterface();
@@ -427,7 +468,16 @@ function renderPageToDisplay(){
 			$("#WPSInfo").html(operationalMode);
 		//}
 		$("#TimeSinceLastPulse").html(timeStringSinceLastPulse);
-		$('#TeleonomeStatus').removeClass().addClass('label label-lg label-' + teleonomeStatusBootstrapValue);
+		
+		if ($(window).width() < 480) {
+			$('#TeleonomeStatus').removeClass().addClass('label label-xs label-' + teleonomeStatusBootstrapValue);
+
+		}else{
+			$('#TeleonomeStatus').removeClass().addClass('label label-lg label-' + teleonomeStatusBootstrapValue);
+
+		}
+
+
 		if(currentPathologyDeneCount>0){
 			$('#TeleonomeStatus').html("&nbsp;&nbsp;" + currentPathologyDeneCount + "&nbsp;&nbsp;");
 		}else {
@@ -449,7 +499,7 @@ function renderPageToDisplay(){
 		}
 
 		panelHTML ="";
-		var rowPanelCounter=1;
+		
 		var numberOfPanelsPerRow=2;
 		var obj =  sorted["_map"];
 		var obj2 = panelPointerVisualStyleHashMap["_map"];
@@ -488,12 +538,8 @@ function renderPageToDisplay(){
 			//
 			if(mainPanelVisualStyle===PANEL_VISUALIZATION_ORGANISM_VIEW){
 				
-				panelHTML += "<div class=\"col-lg-12\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div id=\"OrganismView\" class=\"row\">";
+				var organismView = new organismView();
+				panelHTML += organismView.process();
 				refreshOrganismView();
 		
 
@@ -525,370 +571,35 @@ function renderPageToDisplay(){
 				    
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_NETWORK_MODE_SELECTOR){
 				
-				panelHTML += "<div class=\"col-lg-12\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div class=\"row\">";
-				panelHTML += "<Form id=\"Resignal\" name=\"ReSignal\"  id=\"MainForm\" method=\"POST\" action=\"MonoNannyServlet\">";
-				
-				var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
-				var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
-				if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
-					panelHTML += "<div id=\"NetworkMode\">";
-					panelHTML += "<center>";
-					panelHTML += "<div class=\"row\">";
-					panelHTML += "<label class=\"RadioLabel\">Enable Network Mode</label><br>";
-					panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 20px;\"></div></div>";
-	
-					panelHTML += "<div class=\"row\">";
-					panelHTML += "<div id=\"AvailableNetworkSection\">";
-					panelHTML += "<label>Available Networks:</label><br>";
-					panelHTML += "<select id=\"AvailableNetworks\" name=\"AvailableNetworks\"></select>";
-					panelHTML += "<option value=\"\">Select SSID</option>";
-					//
-					// set up the available ssids
-					//
-					var availableSSIDs = [];//currentOperationalData["Available SSIDs"];
-					for(var i = 0; i < availableSSIDs.length; i++) {
-					    var item = availableSSIDs[i];
-					    var security="";
-				    	if(item["Authentication"]!=null && item["Authentication"].indexOf("PSK")>-1)security="Password";
-				    	var key = item["SSID"]+ "-" + item["Signal"] + " " + security;
-				    	var value=item["SSID"] ;
-				    	panelHTML += "<option value=\""+ value+"\">"+ key +"</option>";
-					}	
-					panelHTML += "</select>";
-					panelHTML += "</div>";
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 30px;\"></div></div>";
-					panelHTML += "<div class=\"row\">";
-					panelHTML += "<div id=\"ssidPassword\">";
-					
-					panelHTML += "<label>Input Password:</label><br>";
-					panelHTML += "<input type=\"password\" id=\"password\" name=\"password\"></select>";
-					panelHTML += "</div>";
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"row\">";
-					panelHTML += "<div class=\"col-xs-12\" style=\"height: 30px;\"></div>";
-					panelHTML += "</div>";
-					panelHTML += "</center>";
-					panelHTML += "</div>";
-				}else{
-					panelHTML += "<div id=\"SelfMode\">";
-					panelHTML += "<center>";
-					panelHTML += "<div class=\"row\">";
-					panelHTML += "<label id=\"CurrentESSID\"></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-					panelHTML += "<label id=\"CurrentIPAddress\"></label>";
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"row\">";
-					panelHTML += "<div class=\"col-xs-12\" style=\"height: 20px;\"></div>";
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"row\">";
-					panelHTML += "<label class=\"RadioLabel\">Enable Host Mode</label><br>";
-					panelHTML += "<input class=\"BSswitch\" id=\"EnableHostMode\" name=\"EnableHostMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\"> ";
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"row\">";
-					panelHTML += "<div class=\"col-xs-12\" style=\"height: 20px;\"></div>";
-					panelHTML += "</div>";
-					panelHTML += "</center>";
-					panelHTML += "</div>";
-				}
-				
-				
-				panelHTML += "<input type=\"Hidden\" name=\"formName\" value=\"ReSignal\">";
-				panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 100px;\"></div></div>";
-				panelHTML += "<div class=\"row\">";
-				panelHTML += "<center>";
-				panelHTML += "<input class=\"btn btn-primary  btn-lg\" type=\"Submit\" onclick=\"return confirmMessage('Are you sure you want to reboot the Teleonome?')\" name=\"action\" id=\"RebootButton\" value=\"Reboot\">";
-				panelHTML += "<input class=\"btn btn-primary  btn-lg\" type=\"Submit\" onclick=\"return confirmMessage('Are you sure you want to shutdown the Teleonome?')\"  name=\"action\" id=\"ShutdownButton\" value=\"Shutdown\">";
-				panelHTML += "</center>";
-				panelHTML += "</div>";
-				panelHTML += "</form>";	
-				
-				if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
-					//
-					// layout the connected clients
-					//
-					panelHTML += "<div class=\"row\">";
-					panelHTML += "<div id=\"ConnectedClients\">";
-					
-					panelHTML += "<label>Connected Clients:</label><br>";
-					panelHTML += "	<table id=\"ClientsTable\" class=\"table table-striped\">";
-					panelHTML += "<thead>";
-					panelHTML += "<tr> <th>Name</th> <th>IPAddress</th></tr>";
-					panelHTML += "</thead>";
-					panelHTML += "<tbody>";
-					
-					var connectedClients = [];//currentOperationalData["Connected Clients"];
-					for(var i = 0; i < connectedClients.length; i++) {
-					    var obj = connectedClients[i];
-					    panelHTML += "<tr><td>" + obj.name + "</td><td>"+obj.ipaddress+"</td></tr>";
-					}					
-					panelHTML += "</tbody>";
-					panelHTML += "</table>";
-					panelHTML += "</div>";
-					panelHTML += "</div>";
-					
-				}
-				
-				
+				var aaNetworking = new Networking();
+				panelHTML += aNetworking.process();
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_ACTION_EVALUATION_REPORT){
 				
+				var anActionEvaluationReport = new ActionEvaluationReport();
+				panelHTML += anActionEvaluationReport.process();
 				
-				var sourceDataPointer = denes[0].DeneWords[0].Value;
-				//var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(sourceDataPointer);
-				var actionDene = getDeneByIdentityPointer(sourceDataPointer);
-				var actionName = actionDene.Name;
-				
-				// the sourceDataPointerIdentity contains something like: @Sento:Internal:Actuators:Turn Pump On 
-				// note that this points to a dene,
-				var actionCodonPointer = sourceDataPointer + ":" + "Codon";
-				//var actionCodonPointerIdentity = identityFactory.createIdentityByPointer(actionCodonPointer);
-				var codonName = getDeneWordByIdentityPointer(actionCodonPointer, DENEWORD_VALUE_ATTRIBUTE);
-				
-				// we need to construct the address of the processing dene based on the convention:
-				// teleonomeName:Purpose:Actuator Logic Processing:CodonName + ActionName + Processing
-				var processingDataPointer = "@" + teleonomeName + ":Purpose:Actuator Logic Processing:" + codonName + " " + actionName + " Processing" 
-				console.log("processingDataPointer=" + processingDataPointer);
-				//
-				// the dene words in this dene have fixed names so get the values directly
-				var actionProcessingResultPointer = processingDataPointer + ":" + DENEWORD_ACTION_PROCESSING_RESULT;
-				//var actionProcessingResultIdentity = identityFactory.createIdentityByPointer(actionProcessingResultPointer);
-				var actionProcessingResult = getDeneWordByIdentityPointer(actionProcessingResultPointer, DENEWORD_VALUE_ATTRIBUTE);
-				
-				var actionExpressionIdentityPointer = processingDataPointer + ":" + DENEWORD_ACTION_EXPRESSION;
-				//var actionExpressionIdentity = identityFactory.createIdentityByPointer(actionExpressionIdentityPointer);
-				var actionExpression = getDeneWordByIdentityPointer(actionExpressionIdentityPointer, DENEWORD_VALUE_ATTRIBUTE);
-				
-				
-				panelHTML += "<div class=\"col-lg-12 hidden-xs\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading\"><h4>Action Evaluation -" + actionName +"</h4></div>";
-				panelHTML += "<div class=\"panel-body\">";
-				panelHTML += "<h4>Result: <strong>" + actionProcessingResult +"</strong></h4>";
-				panelHTML += "<h6>Expression: " + actionExpression+ "</h6><br>";
-				panelHTML += "<table class=\"table table-stripped\">";
-				panelHTML += "<tr><th>Condition</th><th>Result</th><th>Expression</th><th>Variables</th></tr>";
-				//
-				// now process the conditions data, to get this data, the logic is as follows
-				// all the conditions denes are in the chain 
-				//  "@" + teleonomeName + ":Purpose:Actuator Logic Processing:" + codonName + " " + actionName + " Processing" 
-				//
-				// and are of type Actuator Condition Processing
-				// so loop over all the denes in the chain and get the type, if the type of a dene is Actuator Condition Processing
-				// and the name of the dene begins with 
-				var	processingDeneChainPointer = "@" + teleonomeName + ":Purpose:Actuator Logic Processing:";
-				//var processingDeneChainIdentity = identityFactory.createIdentityByPointer(processingDeneChainPointer);
-				var  processingDeneChain = getDeneChainByIdentityPointer(processingDeneChainPointer);
-				
-				var denePanelArray = processingDeneChain["Denes"];
-				var processingDene;
-				var processingDeneName="";
-				var actuatorConditionDeneWords;
-				var actuatorConditionDeneWord;
-				var conditionExpression;
-				var conditionName;
-				var conditionResult;
-				var variableData;
-				var i32=0;
-				var t1=false;
-				var t2=false;
-				var t3=false;
-				for(i32=0;i32<denePanelArray.length;i32++){
-					processingDene = denePanelArray[i32];
-					processingDeneName = processingDene.Name;
-					
-					t1= processingDene.hasOwnProperty("Dene Type");
-					t2= processingDene["Dene Type"]===DENE_TYPE_ACTUATOR_CONDITION_PROCESSING;
-					t3=processingDeneName.startsWith(codonName + " " + actionName);
-					
-					if(t1 && t2 && t3){
-						actuatorConditionDeneWords = processingDene["DeneWords"];
-						variableData="";
-						for(j2=0;j2<actuatorConditionDeneWords.length;j2++){
-							actuatorConditionDeneWord = actuatorConditionDeneWords[j2];
-							if(actuatorConditionDeneWord.Name ==DENEWORD_CONDITION_EXPRESSION){
-								conditionExpression = actuatorConditionDeneWord.Value;
-							}else if(actuatorConditionDeneWord.Name ==CONDITION_NAME){
-								conditionName = actuatorConditionDeneWord.Value;
-							}else if(actuatorConditionDeneWord.Name ==DENEWORD_CONDITION_PROCESSING_RESULT){
-								conditionResult = actuatorConditionDeneWord.Value;
-							}else if(actuatorConditionDeneWord.hasOwnProperty("DeneWord Type") && actuatorConditionDeneWord["DeneWord Type"]===DENEWORD_TYPE_EVALUATED_VARIABLE){
-								variableData = variableData.concat(actuatorConditionDeneWord.Name + "=" + actuatorConditionDeneWord.Value + "<br>");
-								
-							}	
-						}
-					
-						panelHTML += "<tr><th>"+conditionName +"</th><th>"+ conditionResult +"</th><th>"+conditionExpression+"</th><th>"+variableData +"</th></tr>";				
-					}
-				}
-				
-				panelHTML += "</table>";
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_COMPLETE_WIDTH){
 				
-				panelHTML += "<div class=\"col-lg-12\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div class=\"row\">";
+				var aSingleValuePanel = new SingleValuePanel();
+				panelHTML += aSingleValuePanel.process(true);
+
 
 				
-				
-				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-				var object = panelPositionInPanelHashMap["_map"];
-				var nameToDisplay;
-				var renderedDataSourceDene;
-				//console.log("about to start going ver the rpoerties, object=" + object);
-				
-				
-				for(var property in object) {
-					//
-					//after every three panels 
-					dataDene = object[property];   
-					panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE)
-					
-					
-					var hasVisible=deneHasDeneWordProperty(dataDene, "Visible");
-					//
-					// if there is no deneword, then show it
-					visible=true;
-					if(hasVisible){
-						//
-						// visible could be false, that way you could hide the value by actuator
-						visible=getDeneWordAttributeByDeneWordNameFromDene(dataDene, "Visible", DENEWORD_VALUE_ATTRIBUTE);
-					}
-					if(visible){
-
-						nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE)
-						console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
-						renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
-						var unitsText=renderedDataSourceDeneWord["Units"];
-						if(unitsText==="" || unitsText===undefined)unitsText="&nbsp;&nbsp;&nbsp;&nbsp;";
-
-						panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-4 col-xs-4\">";
-						panelHTML += "<div class=\"panel panel-default\">";
-						panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
-						var valueData = renderedDataSourceDeneWord["Value"];
-						panelHTML += "<div class=\"panel-body text-center\">";
-						if(valueData.length>10){
-							panelHTML += "<h4>"+valueData +"</h4>";
-						}else{
-							panelHTML += "<h3>"+valueData +"</h3>";
-						}
-
-						panelHTML += "</div>";
-						panelHTML += "<div class=\"panel-footer\">";
-						panelHTML += "<h5>"+ unitsText  +"</h5>";
-						panelHTML += "</div>";    
-						panelHTML += "</div>";// closing <div class="panel panel-default">
-						panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
-					}// if visible
-
-				}
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SHORT_TERM_WEATHER_FORECAST){
-				panelHTML += "<div class=\"col-lg-6\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div class=\"row\">";
-
 				var sourceDataPointer = denes[0].DeneWords[0].Value;
+				var title = panelDeneChain["Name"];
+				var aShortTermWeatherForecast = new ShortTermWeatherForecast();
+				panelHTML += aShortTermWeatherForecast.process(title, sourceDataPointer);
+
 				
-				//console.log("in complete dene sourceDataPointer=" + sourceDataPointer)
-				renderedDataSourceDene = getDeneByIdentityPointer(sourceDataPointer);
-				//console.log("in complete dene renderedDataSourceDene=" + renderedDataSourceDene.toString(4))
-				
-				var deneWordMap = getDeneWordMapByDeneWordName(renderedDataSourceDene);
-				var shortTermTime, shortTermTemp,shortTermHumidity,shortTermdescription,shortTermCloudiness;
-				var shortTermRain,shortTermWindSpeed, shortTermWindDirection;
-				
-				
-				for(k2=1;k2<9;k2++){
-					//
-					// get all the values for each term 
-					
-					shortTermTime = deneWordMap.get("Short Term Forecast Period " + k2 +" TimeZoneTimestamp")["Value"];
-					shortTermTemp = Math.ceil(deneWordMap.get("Short Term Forecast Period " + k2 +" Temperature")["Value"]);
-					shortTermHumidity = deneWordMap.get("Short Term Forecast Period " + k2 +" Humidity")["Value"];
-					shortTermdescription = deneWordMap.get("Short Term Forecast Period " + k2 +" Description")["Value"].split(" ");
-					shortTermCloudiness = deneWordMap.get("Short Term Forecast Period " + k2 +" Cloudiness")["Value"];
-					shortTermRain = deneWordMap.get("Short Term Forecast Period " + k2 +" Rain")["Value"];
-					shortTermWindSpeed = deneWordMap.get("Short Term Forecast Period " + k2 +" Wind Speed")["Value"];
-					shortTermWindDirection = deneWordMap.get("Short Term Forecast Period " + k2 +" Wind Direction")["Value"];
-					
-					
-					panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm6 col-xs-6\">";
-					panelHTML += "<div class=\"panel panel-default\">";
-					panelHTML += "<div class=\"panel-heading\"><h6>"+shortTermTime+"</h6></div>";
-					panelHTML += "<div class=\"panel-body text-center\">";
-					panelHTML += "<h3>"+shortTermTemp +"&deg;C</h3><br><h4>"+shortTermdescription[0] +"<br>"+ shortTermdescription[1] +"</h4>";
-					
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"panel-footer\">";
-					panelHTML += "<h5>Rain:"+ shortTermRain +"mm<br> Humidity:"+ shortTermHumidity+"%<br>Cloudiness:"+ shortTermCloudiness +"%<br>Wind:"+ shortTermWindSpeed +"m/s "+ shortTermWindDirection +" &deg;</h5>";
-					panelHTML += "</div>";
-					panelHTML += "</div>";// closing <div class="panel panel-default">
-					panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
-				}
-				panelHTML += "</div>";    // closing row
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_DAILY_WEATHER_FORECAST){
-				panelHTML += "<div class=\"col-lg-6\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div class=\"row\">";
-
 				var sourceDataPointer = denes[0].DeneWords[0].Value;
-				
-				//console.log("in complete dene sourceDataPointer=" + sourceDataPointer)
-				renderedDataSourceDene = getDeneByIdentityPointer(sourceDataPointer);
-				//console.log("in complete dene renderedDataSourceDene=" + renderedDataSourceDene.toString(4))
-				
-				var deneWordMap = getDeneWordMapByDeneWordName(renderedDataSourceDene);
-				var dailyTermTime, dailyTermMinTemp, dailyTermMaxTemp,dailyTermHumidity,dailyTermdescription,dailyTermCloudiness;
-				var dailyTermRain,dailyTermWindSpeed, dailyTermWindDirection;
-				
-				
-				for(k2=1;k2<5;k2++){
-					//
-					// get all the values for each term 
-					
-					dailyTermTime = deneWordMap.get("Daily Forecast Day " + k2 +" TimeZoneTimestamp")["Value"];
-					dailyTermMaxTemp = Math.ceil(deneWordMap.get("Daily Forecast Day " + k2 +" Maximum Temperature")["Value"]);
-					dailyTermMinTemp = Math.ceil(deneWordMap.get("Daily Forecast Day " + k2 +" Minimum Temperature")["Value"]);
-					dailyTermHumidity = deneWordMap.get("Daily Forecast Day " + k2 +" Humidity")["Value"];
-					dailyTermdescription = deneWordMap.get("Daily Forecast Day " + k2 +" Description")["Value"].split(" ");
-					
-					dailyTermCloudiness = deneWordMap.get("Daily Forecast Day " + k2 +" Cloudiness")["Value"];
-					dailyTermRain = deneWordMap.get("Daily Forecast Day " + k2 +" Rain")["Value"];
-					dailyTermWindSpeed = deneWordMap.get("Daily Forecast Day " + k2 +" Wind Speed")["Value"];
-					dailyTermWindDirection = deneWordMap.get("Daily Forecast Day " + k2 +" Wind Direction")["Value"];
-					
-					
-					panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm6 col-xs-6\">";
-					panelHTML += "<div class=\"panel panel-default\">";
-					panelHTML += "<div class=\"panel-heading\"><h6>"+dailyTermTime+"</h6></div>";
-					panelHTML += "<div class=\"panel-body text-center\">";
-					panelHTML += "<h4>"+dailyTermMinTemp +"&deg;C - "+dailyTermMaxTemp +"&deg;C<br>"+dailyTermdescription[0]+"<br>"+ dailyTermdescription[1] +"</h4>";
-					
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"panel-footer\">";
-					panelHTML += "<h5>Rain:"+ dailyTermRain +"mm<br> Humidity:"+ dailyTermHumidity+"%<br>Cloudiness:"+ dailyTermCloudiness +"%<br>Wind:"+ dailyTermWindSpeed +"m/s "+ dailyTermWindDirection +" &deg;</h5>";
-					panelHTML += "</div>";
-					panelHTML += "</div>";// closing <div class="panel panel-default">
-					panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
-				}
-				panelHTML += "</div>";    // closing row
+				var title = panelDeneChain["Name"];
+				var aDailyWeatherForecast = new DailyWeatherForecast();
+				panelHTML += aDailyWeatherForecast.process(title, sourceDataPointer);
+			   
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_DENEWORD_TABLE){
 				
 				var panelDeneWords = denes[0].DeneWords;
@@ -901,560 +612,43 @@ function renderPageToDisplay(){
 				}
 				var deneWordTable = new DeneWordTable();
 				panelHTML += deneWordTable.process(panelTitle, denes);
-				
-//				panelHTML += "<div class=\"col-lg-6\">";
-//				panelHTML += "<div class=\"bs-component\">";
-//				panelHTML += "<div class=\"panel panel-default\">";
-//				//panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
-//				panelHTML += " <div class=\"panel-heading\"><h4>"+panelTitle+"</h4></div>";
-//				panelHTML += "<div class=\"panel-body text-center\">";
-//				panelHTML += "<div class=\"row\">";
-//				panelHTML += "<table class=\"table table-stripped text-center\"><tbody>";
-//				
-//				//
-//				// the denechain that has this  panel  style always has two denes, one that describes the panel 
-//				// and one that has the denewords that will go into the table.  Because of that, all we need to do
-//				// to discover the dene that has the denewords is to pass  each dene to the function below
-//				var dene;
-//				var deneWordRows;
-//				var deneWordRowPointer;
-//				var renderedDeneWordRow;
-//				for(k2=0;k2<denes.length;k2++){
-//					dene = denes[k2];
-//					deneWordRows = getAllDeneWordAttributeByDeneWordTypeFromDene(dene,DENEWORD_TYPE_DISPLAY_TABLE_DENEWORD_POINTER,DENEWORD_VALUE_ATTRIBUTE);				panelHTML += "<table class=\"table table-stripped\">";
-//					if(deneWordRows.length>0){
-//						
-//						for(var l2=0; l2<deneWordRows.length;l2++) {
-//							deneWordRowPointer = deneWordRows[l2];
-//							renderedDeneWordRow = getDeneWordByIdentityPointer(deneWordRowPointer, COMPLETE);
-//							console.log("deneWordRowPointer=" + deneWordRowPointer +  " renderedDeneWordRow=" + renderedDeneWordRow)
-//							panelHTML += "<tr><td>"+ renderedDeneWordRow.Name +"</td><td>" + renderedDeneWordRow.Value +"</td></tr>";
-//						}
-//					}
-//				}
-//							
-//				panelHTML += "</tbody></table>";
-//				panelHTML += "</div>";    // closing row
-				
-				
+			
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL){
 				
-				panelHTML += "<div class=\"col-lg-6\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div class=\"row\">";
+				var aSingleValuePanel = new SingleValuePanel();
+				panelHTML += aSingleValuePanel.process(false);
 
-				
-				
-				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-				var object = panelPositionInPanelHashMap["_map"];
-				var nameToDisplay;
-				var renderedDataSourceDene;
-				//console.log("about to start going ver the rpoerties, object=" + object);
-				
-				for(var property in object) {
-					//
-					//after every three panels 
-					dataDene = object[property];
-					if(deneWord.hasOwnProperty("DeneWord Type") && deneWord["DeneWord Type"]===deneWordType){
-						panelDataSourcePointer = deneWord["Value"];
-					}
-					
-					
-					var hasVisible=deneHasDeneWordProperty(dataDene, "Visible");
-					//
-					// if there is no deneword, then show it
-					visible=true;
-					if(hasVisible){
-						//
-						// visible could be false, that way you could hide the value by actuator
-						visible=getDeneWordAttributeByDeneWordNameFromDene(dataDene, "Visible", DENEWORD_VALUE_ATTRIBUTE);
-					}
-					if(visible){
-						panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE);
-						nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE);
-						renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
-						var unitsText=renderedDataSourceDeneWord["Units"];
-						if(unitsText==="" || unitsText===undefined)unitsText="&nbsp;&nbsp;&nbsp;&nbsp;";
-
-						panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm4 col-xs-4\">";
-						panelHTML += "<div class=\"panel panel-default\">";
-						panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
-						var valueData = renderedDataSourceDeneWord["Value"];
-						panelHTML += "<div class=\"panel-body text-center\">";
-						if(valueData.length>10){
-							panelHTML += "<h4>"+valueData +"</h4>";
-						}else{
-							panelHTML += "<h3>"+valueData +"</h3>";
-						}
-
-						panelHTML += "</div>";
-						panelHTML += "<div class=\"panel-footer\">";
-						panelHTML += "<h5>"+ unitsText  +"</h5>";
-						panelHTML += "</div>";    
-						panelHTML += "</div>";// closing <div class="panel panel-default">
-						panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
-					}
-					
-				} //if(visible)
-				panelHTML += "</div>";    // closing row
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_COMPLETE_DENE_STYLE_SINGLE_VALUE_PANEL){
-				panelHTML += "<div class=\"col-lg-6\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div class=\"row\">";
+				var aCompleteDeneSingleValuePanel = new CompleteDeneSingleValuePanel();
+				panelHTML += aCompleteDeneSingleValuePanel.process();
 
-				//
-				// if we are here, then the Panel Dene Chain only has one dene
-				//  in the case of PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL
-				// every dene in the chain represents one value like the Humidity
-				// and the pointer points to a specific deneword
-				// in this case there is only one dene, and the pointer points to a dene
-				// rather than a deneword.  this is so that for example  you are in the sunflower
-				// and the sunflower  have some external data in purpose, then you would paint the entire
-				// external data dene (ie singlower:purpose:external data:Ra) onto a panel,
-				// in this case the for loop for(var property in object) { only iterates once
-				// which brings us here.  its in here where we will take the pointer and get a dene
-				// and then get the denewords for that dene and iterate over those
-				// the variable denes[0] contains something like:
-
-//				{
-//				"Denes": [{
-//				"Type": "Reporting",
-//				"DeneWords": [{
-//				"Required": "true",
-//				"DeneWord Type": "Panel Data Source Pointer",
-//				"Value": "@Sunflower:Purpose:External Data:Ra",
-//				"Name": "Ambient Temperature",
-//				"Value Type": "Dene Pointer"
-//				}],
-//				"Name": "Dene Data Source"
-//				}],
-//				"Name": "Ra"
-//				}
-
-//
-
-				var sourceDataPointer = denes[0].DeneWords[0].Value;
-
-				//console.log("in complete dene sourceDataPointer=" + sourceDataPointer)
-				renderedDataSourceDene = getDeneByIdentityPointer(sourceDataPointer);
-				//console.log("in complete dene renderedDataSourceDene=" + renderedDataSourceDene.toString(4))
-				deneWords = renderedDataSourceDene.DeneWords;
-				for(k2=0;k2<deneWords.length;k2++){
-					deneWord = deneWords[k2];
-					////console.log("in complete dene deneWord=" + deneWord.toString(4))
-					var unitsText=deneWord["Units"];
-					if(unitsText==="" || unitsText===undefined)unitsText="&nbsp;&nbsp;&nbsp;&nbsp;";
-
-					nameToDisplay = deneWord["Name"];
-					nameToDisplay = deneWord["Name"].trim().replace( /([A-Z])/g, ' $1' );
-					if(nameToDisplay.length>14){
-						nameToDisplay="<span style=\"font-size:1em;\">"+nameToDisplay+"</span>"
-					}
-					//
-					// nw see if you can break them into space
-//					var words=nameToDisplay.split(" ");
-//					if(words.length>1){
-//						//
-//						// there are more than one word
-//						// make sure that each word does not have more than 7
-//						nameToDisplay="";
-//						var l8=0;
-//						for( l8=0;l8<words.length;l8++){
-//							if(words[l8]<9)nameToDisplay+=words[l8];
-//							else nameToDisplay+=words[l8].substring(0,9);
-//							nameToDisplay+=" ";
-//						}
-//
-//					}
-					panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm3 col-xs-4\">";
-					panelHTML += "<div class=\"panel panel-default\">";
-					panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
-					panelHTML += "<div class=\"panel-body text-center\">";
-					var valueData = deneWord["Value"];
-					if(valueData.length>10){
-						panelHTML += "<h4>"+valueData +"</h4>";
-					}else{
-						panelHTML += "<h3>"+valueData +"</h3>";
-					}
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"panel-footer\">";
-					panelHTML += "<h5>"+ unitsText  +"</h5>";
-					panelHTML += "</div>";
-					panelHTML += "</div>";// closing <div class="panel panel-default">
-					panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
-				}
-				panelHTML += "</div>";    // closing row
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_WELL_SINGLE_VALUE_PANEL){
-				
 				var sourceDataPointer = denes[0].DeneWords[0].Value;
-				//var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(sourceDataPointer);
-				var valueToDisplay = getDeneWordByIdentityPointer(sourceDataPointer, DENEWORD_VALUE_ATTRIBUTE);
-				var nameToDisplay = getDeneWordByIdentityPointer(sourceDataPointer, DENEWORD_NAME_ATTRIBUTE);
-				panelHTML += "<div class=\"col-lg-12\">";
-				panelHTML += "<div  class=\"well well-sm\">";
-				panelHTML += "<h5>"+nameToDisplay+":<strong>"+valueToDisplay +"</strong></h5>";
-				panelHTML += "</div>";
-				panelHTML += "</div>";
+				var aWellSingleValuePanel = new WellSingleValuePanel();
+				panelHTML += aWellSingleValuePanel.process(sourceDataPointer);
+				
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_TIMESTAMP){
-				var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(panelExternalTimestampDataSourcePointer);
+				var aSingleValuePanelExternalTimestamp = new SingleValuePanelExternalTimestamp();
+				panelHTML += aSingleValuePanelExternalTimestamp.process();
+
 
 				
-				//
-			    // 2)statusMessage - A string description of the status
-				var dataTimestampPointer = "@" +teleonomeName + ":" + sourceDataPointerIdentity.nucleusName + ":" +sourceDataPointerIdentity.deneChainName + ":" + sourceDataPointerIdentity.deneName + ":" +DENEWORD_RECORD_TIMESTAMP;
-				//console.log("statusMessagePointer=" + statusMessagePointer);
-				var dataTimestamp = getDeneWordByIdentityPointer(dataTimestampPointer, DENEWORD_VALUE_ATTRIBUTE);
-				//console.log("statusMessage=" + statusMessage);
-				
-				panelHTML += "<div class=\"col-lg-6\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading row\">";
-				
-				panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
-				panelHTML += "<h4>" + panelDeneChain["Name"] + "</h4>"; 
-				panelHTML +="</div>";// close col lg-4
-				
-				panelHTML += "<div class=\"col-lg-8 col-md-8 col-sm-8 col-xs-8\">";
-				panelHTML += "<h4>" + dataTimestamp+ "</h4>"; 
-				panelHTML +="</div>";// close col lg-4
-				panelHTML +="</div>"
-				
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div class=\"row\">";
-
-				
-				
-				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-				var object = panelPositionInPanelHashMap["_map"];
-				var nameToDisplay;
-				var renderedDataSourceDene;
-				//console.log("about to start going ver the rpoerties, object=" + object);
-				
-				
-				for(var property in object) {
-					//
-					//after every three panels 
-					dataDene = object[property];   
-					panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE)
-					
-					//
-					// dont render the timestamp again
-					//
-					if(dataTimestampPointer!=panelDataSourcePointer){
-						nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE)
-						//console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
-						renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
-						if(nameToDisplay.startsWith("@")){
-							//
-							// this is a pointer, so render it
-							nameToDisplay = getDeneWordByIdentityPointer(nameToDisplay, DENEWORD_VALUE_ATTRIBUTE);
-						}
-						
-						var unitsText=renderedDataSourceDeneWord["Units"];
-						if(unitsText==="" || unitsText===undefined)unitsText="&nbsp;&nbsp;&nbsp;&nbsp;";
-
-						panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
-						panelHTML += "<div class=\"panel panel-default\">";
-						panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
-						var valueData = renderedDataSourceDeneWord["Value"];
-						panelHTML += "<div class=\"panel-body text-center\">";
-						if(valueData.length>10){
-							panelHTML += "<h4>"+valueData +"</h4>";
-						}else{
-							panelHTML += "<h3>"+valueData +"</h3>";
-						}
-
-						panelHTML += "</div>";
-						panelHTML += "<div class=\"panel-footer\">";
-						panelHTML += "<h5>"+ unitsText  +"</h5>";
-						panelHTML += "</div>";    
-						panelHTML += "</div>";// closing <div class="panel panel-default">
-						panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
-					}
-				}
-				panelHTML += "</div>";    // closing row
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_DATA){
-				var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(panelExternalDataSourcePointer);
+				var aSingleValuePanelExternalData = new SingleValuePanelExternalData();
+				panelHTML += aSingleValuePanelExternalData.process(false);
 
-				var externalDataStatusPointer = "@" +teleonomeName + ":" + sourceDataPointerIdentity.nucleusName + ":" +sourceDataPointerIdentity.deneChainName + ":" + sourceDataPointerIdentity.deneName + ":" +EXTERNAL_DATA_STATUS;
-				//console.log("externalDataStatusPointer=" + externalDataStatusPointer);
-				var externalDataStatus = getDeneWordByIdentityPointer(externalDataStatusPointer, DENEWORD_VALUE_ATTRIBUTE);
-			//	console.log("externalDataStatus=" + externalDataStatus);
-
-				//
-			    // 2)statusMessage - A string description of the status
-				var statusMessagePointer = "@" +teleonomeName + ":" + sourceDataPointerIdentity.nucleusName + ":" +sourceDataPointerIdentity.deneChainName + ":" + sourceDataPointerIdentity.deneName + ":" +DENEWORD_STATUS;
-				//console.log("statusMessagePointer=" + statusMessagePointer);
-				var statusMessage = getDeneWordByIdentityPointer(statusMessagePointer, DENEWORD_VALUE_ATTRIBUTE);
-				//console.log("statusMessage=" + statusMessage);
-				
-				panelHTML += "<div class=\"col-lg-6\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading row\">";
-				
-				panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
-				panelHTML += "<h4>" + panelDeneChain["Name"] + "</h4>"; 
-				panelHTML +="</div>";// close col lg-4
-				
-				panelHTML += "<div class=\"col-lg-5 col-md-5 col-sm-5 col-xs-5\">";
-				panelHTML += "<h4>" + statusMessage+ "</h4>"; 
-				panelHTML +="</div>";// close col lg-4
-				
-				panelHTML += "<div class=\"col-lg-3 col-md-3 col-sm-3 col-xs-3\">";	
-				panelHTML +="<h3   class=\"label label-lg label-"+ externalDataStatus +"\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>";
-				panelHTML +="</div>";// close col lg-4
-				panelHTML +="</div>";
-				
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div class=\"row\">";
-
-				
-				
-				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-				var object = panelPositionInPanelHashMap["_map"];
-				var nameToDisplay;
-				var renderedDataSourceDene;
-				//console.log("about to start going ver the rpoerties, object=" + object);
-				
-				
-				for(var property in object) {
-					//
-					//after every three panels 
-					dataDene = object[property];   
-					panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE)
-					nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE)
-					//console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
-					renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
-					if(nameToDisplay.startsWith("@")){
-						//
-						// this is a pointer, so render it
-						nameToDisplay = getDeneWordByIdentityPointer(nameToDisplay, DENEWORD_VALUE_ATTRIBUTE);
-					}
-					
-					var unitsText=renderedDataSourceDeneWord["Units"];
-					if(unitsText==="" || unitsText===undefined)unitsText="&nbsp;&nbsp;&nbsp;&nbsp;";
-
-					panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
-					panelHTML += "<div class=\"panel panel-default\">";
-					panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
-					var valueData = renderedDataSourceDeneWord["Value"];
-					panelHTML += "<div class=\"panel-body text-center\">";
-					if(valueData.length>10){
-						panelHTML += "<h4>"+valueData +"</h4>";
-					}else{
-						panelHTML += "<h3>"+valueData +"</h3>";
-					}
-
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"panel-footer\">";
-					panelHTML += "<h5>"+ unitsText  +"</h5>";
-					panelHTML += "</div>";    
-					panelHTML += "</div>";// closing <div class="panel panel-default">
-					panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
-				}
-				panelHTML += "</div>";    // closing row
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_COMPLETE_WIDTH_EXTERNAL_DATA){
 				
-				var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(panelExternalDataSourcePointer);
+				var aSingleValuePanelExternalData = new SingleValuePanelExternalData();
+				panelHTML += aSingleValuePanelExternalData.process(true);
 				
-				
-				var externalDataStatusPointer = "@" +teleonomeName + ":" + sourceDataPointerIdentity.nucleusName + ":" +sourceDataPointerIdentity.deneChainName + ":" + sourceDataPointerIdentity.deneName + ":" +EXTERNAL_DATA_STATUS;
-				//console.log("externalDataStatusPointer=" + externalDataStatusPointer);
-				var externalDataStatus = getDeneWordByIdentityPointer(externalDataStatusPointer, DENEWORD_VALUE_ATTRIBUTE);
-			//	console.log("externalDataStatus=" + externalDataStatus);
-
-				//
-			    // 2)statusMessage - A string description of the status
-				var statusMessagePointer = "@" +teleonomeName + ":" + sourceDataPointerIdentity.nucleusName + ":" +sourceDataPointerIdentity.deneChainName + ":" + sourceDataPointerIdentity.deneName + ":" +DENEWORD_STATUS;
-				//console.log("statusMessagePointer=" + statusMessagePointer);
-				var statusMessage = getDeneWordByIdentityPointer(statusMessagePointer, DENEWORD_VALUE_ATTRIBUTE);
-				//console.log("statusMessage=" + statusMessage);
-				
-				panelHTML += "<div class=\"col-lg-12\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading row\">";
-				
-				panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
-				panelHTML += "<h4>" + panelDeneChain["Name"] + "</h4>"; 
-				panelHTML +="</div>";// close col lg-4
-				
-				panelHTML += "<div class=\"col-lg-5 col-md-5 col-sm-5 col-xs-5\">";
-				panelHTML += "<h4>" + statusMessage+ "</h4>"; 
-				panelHTML +="</div>";// close col lg-4
-				
-				panelHTML += "<div class=\"col-lg-3 col-md-3 col-sm-3 col-xs-3\">";	
-				panelHTML +="<h3   class=\"label label-lg label-"+ externalDataStatus +"\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>";
-				panelHTML +="</div>";// close col lg-4
-				panelHTML +="</div>";
-				
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div class=\"row\">";
-
-				
-				
-				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-				var object = panelPositionInPanelHashMap["_map"];
-				var nameToDisplay;
-				var renderedDataSourceDene;
-				//console.log("about to start going ver the rpoerties, object=" + object);
-				
-				
-				for(var property in object) {
-					//
-					//after every three panels 
-					dataDene = object[property];   
-					panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE)
-					nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE)
-					//console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
-					renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
-					if(nameToDisplay.startsWith("@")){
-						//
-						// this is a pointer, so render it
-						nameToDisplay = getDeneWordByIdentityPointer(nameToDisplay, DENEWORD_VALUE_ATTRIBUTE);
-					}
-					
-					var unitsText=renderedDataSourceDeneWord["Units"];
-					if(unitsText==="" || unitsText===undefined)unitsText="&nbsp;&nbsp;&nbsp;&nbsp;";
-
-					panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-4 col-xs-4\">";
-					panelHTML += "<div class=\"panel panel-default\">";
-					panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
-					var valueData = renderedDataSourceDeneWord["Value"];
-					panelHTML += "<div class=\"panel-body text-center\">";
-					if(valueData.length>10){
-						panelHTML += "<h4>"+valueData +"</h4>";
-					}else{
-						panelHTML += "<h3>"+valueData +"</h3>";
-					}
-
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"panel-footer\">";
-					panelHTML += "<h5>"+ unitsText  +"</h5>";
-					panelHTML += "</div>";    
-					panelHTML += "</div>";// closing <div class="panel panel-default">
-					panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
-				}
-				panelHTML += "</div>";    // closing row
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_COMPLETE_DENE_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_DATA){
 			
-				
-				var sourceDataPointer = denes[0].DeneWords[0].Value;
-				var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(sourceDataPointer);
-
-	
-				
-				//
-				// the logic here is the same as in the PANEL_VISUALIZATION_COMPLETE_DENE_STYLE_SINGLE_VALUE_PANEL
-				//
-				// the nly difference is that since we know is a dene from external data, there  are two variables
-				// that are used to display status, so dont paint them as data but out it in the title
-				// the two variables are:
-				//
-				// 1)externalDataStatusPointer- this variable has a bootstrap level value like warning or danger or success
-				// that signify that the pacemaker processed all the denewords of this external source and everything was ok
-				//
-				var externalDataStatusPointer = "@" +teleonomeName + ":" + sourceDataPointerIdentity.nucleusName + ":" +sourceDataPointerIdentity.deneChainName + ":" + sourceDataPointerIdentity.deneName + ":" +EXTERNAL_DATA_STATUS;
-				//console.log("externalDataStatusPointer=" + externalDataStatusPointer);
-				var externalDataStatus = getDeneWordByIdentityPointer(externalDataStatusPointer, DENEWORD_VALUE_ATTRIBUTE);
-				//console.log("externalDataStatus=" + externalDataStatus);
-
-				//
-			    // 2)statusMessage - A string description of the status
-				var statusMessagePointer = "@" +teleonomeName + ":" + sourceDataPointerIdentity.nucleusName + ":" +sourceDataPointerIdentity.deneChainName + ":" + sourceDataPointerIdentity.deneName + ":" +DENEWORD_STATUS;
-			//	console.log("statusMessagePointer=" + statusMessagePointer);
-				var statusMessage = getDeneWordByIdentityPointer(statusMessagePointer, DENEWORD_VALUE_ATTRIBUTE);
-			//	console.log("statusMessage=" + statusMessage);
-
-				panelHTML += "<div class=\"col-lg-6\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading row\">"
-					
-				
-				panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
-				panelHTML += "<h4>" + panelDeneChain["Name"] + "</h4>"; 
-				panelHTML +="</div>";// close col lg-4
-				
-				panelHTML += "<div class=\"col-lg-5 col-md-5 col-sm-5 col-xs-5\">";
-				panelHTML += "<h4>" + statusMessage+ "</h4>"; 
-				panelHTML +="</div>";// close col lg-4
-				
-				panelHTML += "<div class=\"col-lg-3 col-md-3 col-sm-3 col-xs-3\">";	
-				panelHTML +="<h3   class=\"label label-lg label-"+ externalDataStatus +"\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>";
-				panelHTML +="</div>";// close col lg-4
+				var aCompleteDeneSingleValuePanelExternalData = new CompleteDeneSingleValuePanelExternalData();
+				panelHTML += aCompleteDeneSingleValuePanelExternalData.process();
 				
 				
-				
-				panelHTML +="</div>";
-				panelHTML += "<div class=\"panel-body text-center\">";
-				panelHTML += "<div class=\"row\">";
-
-				
-				
-				
-
-				//console.log("in complete dene sourceDataPointer=" + sourceDataPointer)
-				renderedDataSourceDene = getDeneByIdentityPointer(sourceDataPointer);
-				//console.log("in complete dene renderedDataSourceDene=" + renderedDataSourceDene.toString(4))
-				deneWords = renderedDataSourceDene.DeneWords;
-				for(k2=0;k2<deneWords.length;k2++){
-					deneWord = deneWords[k2];
-					if(deneWord.Name === EXTERNAL_DATA_STATUS || deneWord.Name===DENEWORD_STATUS){continue;}
-					////console.log("in complete dene deneWord=" + deneWord.toString(4))
-					var unitsText=deneWord["Units"];
-					if(unitsText==="" || unitsText===undefined)unitsText="&nbsp;&nbsp;&nbsp;&nbsp;";
-
-					// set the name to replace camel case with spaces
-					nameToDisplay = deneWord["Name"].trim().replace( /([A-Z])/g, ' $1' );
-					if(nameToDisplay.length>14){
-						nameToDisplay="<span style=\"font-size:1em;\">"+nameToDisplay+"</span>"
-					}
-					
-					
-					//
-					// nw see if you can break them into space
-//					var words=nameToDisplay.split(" ");
-//					if(words.length>1){
-//						//
-//						// there are more than one word
-//						// make sure that each word does not have more than 7
-//						nameToDisplay="";
-//						var l2=0;
-//						for( l2=0;l2<words.length;l2++){
-//							if(words[l2]<7)nameToDisplay+=words[l2];
-//							else nameToDisplay+=words[l2].substring(0,7);
-//							nameToDisplay+=" ";
-//						}
-//
-//					}
-					panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm3 col-xs-4\">";
-					panelHTML += "<div class=\"panel panel-default\">";
-					panelHTML += "<div class=\"panel-heading\"><h6>" + nameToDisplay +"</h6></div>";
-					panelHTML += "<div class=\"panel-body text-center\">";
-					var valueData = deneWord["Value"];
-					if(valueData.length>10){
-						panelHTML += "<h4>"+valueData +"</h4>";
-					}else{
-						panelHTML += "<h3>"+valueData +"</h3>";
-					}
-					panelHTML += "</div>";
-					panelHTML += "<div class=\"panel-footer\">";
-					panelHTML += "<h5>"+ unitsText  +"</h5>";
-					panelHTML += "</div>";
-					panelHTML += "</div>";// closing <div class="panel panel-default">
-					panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
-				}
-				panelHTML += "</div>";    // closing row
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART ||
 					mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART||
 					mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PIE_CHART
@@ -1495,391 +689,16 @@ function renderPageToDisplay(){
 				
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MNEMOSYNE_TABLE){
-			
-				//
-				// the info for this panel is stored in a denechain that contains one dene, that dene
-				// has the following denewords
-				//
-				var processingDeneWord;
-				var processingDeneWordName;
+				var aMnemosyneTable = new MnemosyneTable();
+				panelHTML += aMnemosyneTable.process();
 
-				var panelDeneWords = denes[0].DeneWords;
-				var i34=0;
-				var sortingOrder="Descending";
-				var dataSourcePointer="";
-				var tDClassInfo="";
-				var columnDefinitionPointer;
-				var columnDefinitionDene;
-				var sortingParameter;
-				var columnDefinitions=[];
-				var panelTitle="";
-				var columnInTablePosition;
-				var columnHeader;
-				var k6;
-				var denewWords;
-				var deneWord;
-				var columnDefinitionHeaderDenesHashMap = new HashMap();
-				var columnDefinitionDataSourcePointerHashMap = new HashMap();
-				var columnDefinitionTDClassInfoHashMap = new HashMap();
-				
-				var columnDefinitionDenesHashMap = new HashMap();
-				for(i34=0;i34<panelDeneWords.length;i34++){
-					processingDeneWord = panelDeneWords[i34];
-					processingDeneWordName = processingDeneWord.Name;
-					if(processingDeneWordName === SORTING_ORDER){
-						sortingOrder = processingDeneWord.Value;
-					}else if(processingDeneWordName === SORTING_PARAMETER){
-						sortingParameter = processingDeneWord.Value;
-					}else if(processingDeneWordName === PANEL_TITLE){
-						panelTitle = processingDeneWord.Value;
-					}else{
-						if(processingDeneWord.hasOwnProperty(DENEWORD_DENEWORD_TYPE_ATTRIBUTE)){
-							if(processingDeneWord[DENEWORD_DENEWORD_TYPE_ATTRIBUTE]===DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER){
-								dataSourcePointer=processingDeneWord.Value;
-							}else if(processingDeneWord[DENEWORD_DENEWORD_TYPE_ATTRIBUTE]===DENEWORD_DISPLAY_TABLE_COLUMN_DEFINITION_POINTER){
-								columnDefinitionPointer=processingDeneWord.Value;
-								columnDefinitionDene = getDeneByIdentityPointer(columnDefinitionPointer);
-								deneWords = columnDefinitionDene["DeneWords"];
-								columnInTablePosition=-1;
-								
-								for(k6=0;k6<deneWords.length;k6++){
-									deneWord = deneWords[k6];
-									if(deneWord.hasOwnProperty(DENEWORD_DENEWORD_TYPE_ATTRIBUTE) && deneWord[DENEWORD_DENEWORD_TYPE_ATTRIBUTE]===DENEWORD_TYPE_COLUMN_IN_TABLE_POSITION){
-										columnInTablePosition = deneWord["Value"];
-									}else if(deneWord.hasOwnProperty(DENEWORD_DENEWORD_TYPE_ATTRIBUTE) && deneWord[DENEWORD_DENEWORD_TYPE_ATTRIBUTE]===DENEWORD_TYPE_COLUMN_HEADER){
-										columnHeader = deneWord["Value"];
-									}else if(deneWord.hasOwnProperty(DENEWORD_DENEWORD_TYPE_ATTRIBUTE) && deneWord[DENEWORD_DENEWORD_TYPE_ATTRIBUTE]===DENEWORD_TYPE_COLUMN_DATA_SOURCE_POINTER){
-										dataSourcePointer = deneWord["Value"];
-									}else if(deneWord.hasOwnProperty(DENEWORD_DENEWORD_TYPE_ATTRIBUTE) && deneWord[DENEWORD_DENEWORD_TYPE_ATTRIBUTE]===DENEWORD_TYPE_COLUMN_TD_CLASS_INFO){
-										tDClassInfo  = deneWord["Value"];
-									}
-								}
-								
-								if(columnInTablePosition!=-1 ){
-									columnDefinitionHeaderDenesHashMap.put(columnInTablePosition,columnHeader);
-									columnDefinitionDataSourcePointerHashMap.put(columnInTablePosition,dataSourcePointer);
-									columnDefinitionTDClassInfoHashMap.put(columnInTablePosition,tDClassInfo);
-								}
-								
-							}
-						}
-					}
-				}
-				
-								
-				//
-				// sortedColumnDefinitionDenesHashMap is an array that will contain the information for every column in the table
-				// the dene looks like:
-//				 {
-//                     "DeneWords": [
-//                     {
-//                         "Required": "true",
-//                         "DeneWord Type": "Column Data Source Pointer",
-//                         "Value": "@Sento:Mnemosyine:Mnemosyne Today:Run Completed:Last Run Pump Start Time",
-//                         "Name": "Turn Pump Off",
-//                         "Value Type": "Dene Pointer"
-//                     },
-//                     {
-//                         "Required": "true",
-//                         "Value": 1,
-//                         "Name": "Column Position",
-//                         "Value Type": "int"
-//                     },
-//                     {
-//                         "Required": "true",
-//                         "Value": "Start",
-//                         "Name": "Column Header",
-//                         "Value Type": "String"
-//                     },
-//					   {
-//              			"Required": "true",
-//                          "Value": "visible-md visible-lg",
-//                          "Name": "TDClassInfo",
-//                          "Value Type": "String"
-//                     }
 				
 				
-				
-//						],
-//                     "Name": "Today Pumping History Col 1"
-//                  }
-				
-				
-				
-	
-				
-				panelHTML += "<div class=\"col-lg-12\">";
-				panelHTML += "<div class=\"bs-component\">";
-				panelHTML += "<div class=\"panel panel-default\">";
-				panelHTML += " <div class=\"panel-heading\"><h4>" + panelTitle +"</h4></div>";
-				panelHTML += "<div class=\"panel-body\">";
-				panelHTML += "<table class=\"table table-stripped\">";
-				var sortedColumnDefinitionHeaderDenesHashMap= sortHashMap(columnDefinitionHeaderDenesHashMap);
-				var sortedColumnDefinitionDataSourcePointerHashMap= sortHashMap(columnDefinitionDataSourcePointerHashMap);
-				var sortedColumnDefinitionTDClassInfoHashMap= sortHashMap(columnDefinitionTDClassInfoHashMap);
-				
-				var object2 = sortedColumnDefinitionHeaderDenesHashMap["_map"];
-				var sortedColumnDefinitionTDClassInfoMap = sortedColumnDefinitionTDClassInfoHashMap["_map"];
-				
-				panelHTML += "<tr>";
-				for(var property in object2) {
-					panelHTML += "<th class=\"text-center  "+ sortedColumnDefinitionTDClassInfoMap[property] +" \">"+ object2[property]+"</th>";
-				}
-				panelHTML += "</tr><tbody>";
-				//
-				// at this point we know the source of data, and how it is expected to be sorted
-				// first get the data
-				var mnemosyneDataSortedArray = getMnemosyneTableData(dataSourcePointer, sortingParameter, sortingOrder);
-				
-				var mnemosyneDataSortedArrayMap = mnemosyneDataSortedArray["_map"];
-				var dataDene;
-				var dataDeneWords;
-				var dataDeneWord;
-				var columnDefinitionDataSourcePointer;
-				for(var property in mnemosyneDataSortedArrayMap) {
-					//
-					//after every three panels 
-					dataDene = mnemosyneDataSortedArrayMap[property];   
-					dataDeneWords = dataDene.DeneWords;
-					//
-					// now get the column data sorce pointer in the right order
-					 object2 = sortedColumnDefinitionDataSourcePointerHashMap["_map"];
-					panelHTML += "<tr>";
-					for(var property in object2) {
-						columnDefinitionDataSourcePointer = object2[property]; 
-						tDClassInfo=sortedColumnDefinitionTDClassInfoMap[property];
-						//
-						// from here we just want the deneword part of the pointer, because it is the same to the name of the denewrd where the data is
-						//
-						var identity = identityFactory.createIdentityByPointer(columnDefinitionDataSourcePointer);
-						for(k6=0;k6<dataDeneWords.length;k6++){
-							dataDeneWord = dataDeneWords[k6];
-							if(dataDeneWord.Name===identity.deneWordName){
-								panelHTML += "<td class=\"text-center "+ tDClassInfo +" \">"+ dataDeneWord.Value+"</td>";
-							}
-						}
-					}
-					panelHTML += "</tr>";
-					
-				}
-				
-				panelHTML += "</tbody></table>";
-				
-			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_UPDATE_MULTIPLE_DENEWORDS_FORM){
-	
-//				panelHTML += "<div class=\"col-lg-12 col-xs-12\">";
-//				panelHTML += "<div class=\"bs-component\">";
-//				panelHTML += "<div class=\"panel panel-default\">";
-//				panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
-//				panelHTML += "<div class=\"panel-body\">";
-//				
-				
-//				var prettyNamesList = getFormPrettyNameOrdered(panelDeneChain);
-//				var prettyNamesListObject = prettyNamesList["_map"];
-//				var prettyNameListCounter=0;
-//				var prettyName;
-//				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-//				var object = panelPositionInPanelHashMap["_map"];
-//				var nameToDisplay;
-//				var renderedDataSourceDene;
-//				//console.log("about to start going ver the rpoerties, object=" + object);
-//
-//				for(var property in object) {
-//					//
-//					//after every three panels 
-//					dataDene = object[property];   
-//					panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE)
-//					nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE)
-//					
-//					//panelDataSourcePointer = object[property];    
-//					//console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
-//					
-//					prettyName = prettyNamesList[prettyNameListCounter];
-//					prettyNameListCounter++;
-//					
-//					renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
-//					nameToDisplay = renderedDataSourceDeneWord["Name"];
-//					
-//					var unitsText=renderedDataSourceDeneWord["Units"];
-//					var valueData = renderedDataSourceDeneWord["Value"];
-//					var valueType = renderedDataSourceDeneWord["Value Type"];
-//					var fieldType	="";
-//					var minValueText="";
-//					var maxValueText="";
-//					panelHTML += "<form class=\"form-inline\" id=\"" + nameToDisplay + "UpdateForm\">";
-//					panelHTML += "<div class=\"form-group\">";
-//				
-//					if(valueType==="int" || valueType==="double"){
-//						fieldType="number";
-//						
-//						if(renderedDataSourceDeneWord.hasOwnProperty("Maximum")){
-//							maxValueText = "max=\""+ renderedDataSourceDeneWord["Maximum"] + "\"";
-//						}
-//						if(renderedDataSourceDeneWord.hasOwnProperty("Minimum")){
-//							minValueText = "min=\""+ renderedDataSourceDeneWord["Minimum"] + "\"";
-//						}
-//						
-//						panelHTML += "<label class=\"control-label\"  for=\""+ nameToDisplay +"\"><h5><span id=\""+ nameToDisplay+"Label\">"+ prettyName +"&nbsp;("+ valueData +" " + unitsText +") &nbsp;&nbsp;</span></h5></label>";
-//						panelHTML += "<input style=\"font-size:20px;\" class=\"form-control\" type=\""+ fieldType +"\" "+ maxValueText +" "+ minValueText +" id=\""+ nameToDisplay +"\" placeholder=\"\" value=\""+ valueData +"\"  required>";
-//						
-//					}else if(valueType==="boolean" ){
-//						
-//						panelHTML += "<label  for=\""+ nameToDisplay +"\"><h5><span id=\""+ nameToDisplay+"Label\">"+ prettyName +"&nbsp;&nbsp;</span></h5></label>";
-//						panelHTML += "<div class=\"input-group\">";
-//						panelHTML += "<div id=\""+ nameToDisplay +"\" class=\"btn-group\">";
-//						panelHTML += "<a class=\"btn btn-primary btn-sm active\" id=\""+ nameToDisplay +"_true\" data-toggle=\""+nameToDisplay+"\" data-title=\"Y\">YES</a>";
-//						panelHTML += "<a class=\"btn btn-primary btn-sm notActive\" id=\""+nameToDisplay+"_false\" data-toggle=\""+nameToDisplay+"\" data-title=\"N\">NO</a>";
-//						panelHTML += "</div>";
-//						panelHTML += "<input style=\"font-size:20px;\" type=\"hidden\" name=\""+ nameToDisplay+"\" id=\""+ nameToDisplay +"\">";
-//						panelHTML += "</div>"
-//					}
-//					
-//				panelHTML += "</div>";
-//					panelHTML += "<div class=\"form-group\"> ";
-//					panelHTML += "<button type=\"submit\" data-form='{\"field\":\"" + nameToDisplay + "\", \"identity\":\""+panelDataSourcePointer+"\"}'class=\"btn btn-primary col-sm-offset-5\">Submit</button>";
-//					panelHTML += "</div>";		
-//					panelHTML += "</form>";	
-//
-//					
-//				}
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PATHOLOGY){
-				var	pathologyDeneChainPointer = "@" + teleonomeName + ":Purpose:Pathology:";
-				var  pathologyDeneChain = getDeneChainByIdentityPointer(pathologyDeneChainPointer);
-				//
-				// get the pointer to where the exogenous events are stored
-				// these exogenous events are problems related to network, ie i am supposed to be
-				// part of an organism but could not find the network so i switched to
-				// host mode
-				//
-				var identitySwitchDeneChainPointer = "@" + teleonomeName +":Internal:Descriptive:Identity Switch Control Parameters:Identity Switch Events Mnemosyne Destination";
-				var allExogenousMethamorphosisEvents = getMnemosyneExogenousEventsByPointer(identitySwitchDeneChainPointer, DENE_TYPE_EXOGENUS_METAMORPHOSIS_EVENT);
-				var mnemosynePathologyDenes  = getMnemosynePathologyDenes();
+				var aPathologyPanel = new PathologyPanel();
+				panelHTML += aPathologyPanel.process();
+
 				
-				
-				var denePanelArray = pathologyDeneChain["Denes"];
-				var processingDene;
-				var deneName="";
-				var deneWords;
-				var actuatorConditionDeneWord;
-				var conditionExpression;
-				var pathologyCause;
-				var pathologyLocation;
-				var conditionResult;
-				var variableData;
-				var i32=0;
-				var j2=0;
-				
-				if(denePanelArray.length>0 || mnemosynePathologyDenes.length>0 || allExogenousMethamorphosisEvents.length>0){
-					panelHTML += "<div class=\"col-lg-12\">";
-					panelHTML += "<div class=\"bs-component\">";
-					panelHTML += "<div class=\"panel panel-default\">";
-					panelHTML += " <div class=\"panel-heading\"><h4>Pathology</h4></div>";
-					panelHTML += "<div class=\"panel-body\">";
-					panelHTML += "<h4></h4>";
-					panelHTML += "<h6></h6><br>";
-					panelHTML += "<table class=\"table table-stripped\">";
-					panelHTML += "<tr><th>Type</th><th>Location</th><th>Cause</th><th>Details</th></tr>";
-					
-					if(denePanelArray.length){
-						for(i32=0;i32<denePanelArray.length;i32++){
-							processingDene = denePanelArray[i32];
-							processingDeneName = processingDene.Name;
-							deneWords = processingDene["DeneWords"];
-							variableData="";
-							for(j2=0;j2<deneWords.length;j2++){
-								deneWord = deneWords[j2];
-								if(deneWord.Name ==PATHOLOGY_CAUSE){
-									pathologyCause = deneWord.Value;
-								}else if(deneWord.Name ==PATHOLOGY_LOCATION){
-									pathologyLocation = deneWord.Value;
-								}else {
-									variableData = variableData.concat(deneWord.Name + "=" + deneWord.Value + "<br>");		
-									
-								}	
-							}
-							panelHTML += "<tr><td>"+processingDeneName +"</td><td>"+ pathologyCause +"</td><td>"+pathologyLocation+"</td><td>"+variableData +"</td></tr>";				
-						}
-					}
-					
-					
-					
-					if(mnemosynePathologyDenes.length){
-						for(i32=0;i32<mnemosynePathologyDenes.length;i32++){
-							processingDene = mnemosynePathologyDenes[i32];
-							processingDeneName = processingDene.Name;
-							deneWords = processingDene["DeneWords"];
-							variableData="";
-							for(j2=0;j2<deneWords.length;j2++){
-								deneWord = deneWords[j2];
-								if(deneWord.Name ==PATHOLOGY_CAUSE){
-									pathologyCause = deneWord.Value;
-								}else if(deneWord.Name ==PATHOLOGY_LOCATION){
-									pathologyLocation = deneWord.Value;
-								}else {
-									if( $(window).width() > 960 && deneWord.Name == PATHOLOGY_EVENT_MILLISECONDS){
-										var deneWordValueText = "<a href=\"#bannerformmodal\" data-toggle=\"modal\" data-dirname=\""+deneWord.Value+"\" class=\"pathology-showLogsLink\" data-target=\"#bannerformmodal\">"+deneWord.Value+"</a>"; 
-										variableData = variableData.concat(deneWord.Name + "=" + deneWordValueText + "<br>");
-									}else{
-										variableData = variableData.concat(deneWord.Name + "=" + deneWord.Value + "<br>");		
-									}
-								}	
-							}
-							panelHTML += "<tr><th>"+processingDeneName +"</th><th>"+ pathologyLocation +"</th><th>"+pathologyCause+"</th><th>"+variableData +"</th></tr>";				
-						}
-					}
-					
-					panelHTML += "</table>";
-				}
-				
-				//
-				// now add the div which represents the model
-				// it will be hidden first
-				//
-				panelHTML += "<div class=\"modal fade bannerformmodal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"bannerformmodal\" aria-hidden=\"true\" id=\"bannerformmodal\">";
-				panelHTML += "<div class=\"modal-dialog modal-xl\">";
-				panelHTML += "<div class=\"modal-content\">";
-				panelHTML += "<div class=\"modal-content\">";
-				panelHTML += "<div class=\"modal-header \">";
-				panelHTML += "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" id=\"dismissbannerformmodal\">&times;</button>";
-				panelHTML += "<h4 class=\"modal-title\" id=\"myModalLabel\">";
-				
-				panelHTML += "<ul class=\"nav nav-pills pathology-file-list\">";
-				panelHTML += "</ul>";
-				panelHTML += "</h4>";
-				panelHTML += "</div>";
-				panelHTML += "<div class=\"modal-body pathology-modal-body\">";
-				panelHTML += "</div>";
-				panelHTML += "<div class=\"modal-footer\">";
-				panelHTML += "</div>  ";      
-				panelHTML += "</div>";
-				panelHTML += "</div>";
-				panelHTML += "</div>";
-				panelHTML += " </div>";
-				//
-				// ends the code for modal widnow
-				
-				var eventTimestamp;
-				if(allExogenousMethamorphosisEvents.length>0){
-					
-					panelHTML += "<h6></h6><br>";
-					panelHTML += "<table class=\"table table-stripped\">";
-					panelHTML += "<tr><th>Type</th><th>Time</th><th>Cause</th><th>Details</th></tr>";
-					
-					for(i32=0;i32<allExogenousMethamorphosisEvents.length;i32++){
-						processingDene = allExogenousMethamorphosisEvents[i32];
-						processingDeneName = processingDene.Name;
-						deneWords = processingDene["DeneWords"];
-						variableData="";
-						for(j2=0;j2<deneWords.length;j2++){
-							deneWord = deneWords[j2];
-							if(deneWord.Name ==METAMORPHOSIS_EVENT_TIMESTAMP){
-								eventTimestamp = deneWord.Value;
-							}	
-						}
-						panelHTML += "<tr><td>Identity Switch</td><td>"+ eventTimestamp +"</td></tr>";				
-					}
-					panelHTML += "</table>";
-				}
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MANUAL_ACTION_WITH_TIMER){
 			}else{
 			
@@ -1892,25 +711,21 @@ function renderPageToDisplay(){
 			panelHTML += "</div>";    // closing <div class=\"bs-component\"
 			//panelHTML += "</div>";    // closing <div class=\"col-lg-6\"
 
+			console.log("rowPanelCounter=" + rowPanelCounter + " numberOfPanelsPerRow=" + numberOfPanelsPerRow);
+			if(rowPanelCounter===numberOfPanelsPerRow){
 
-//			//console.log("rowPanelCounter=" + rowPanelCounter + " numberOfPanelsPerRow=" + numberOfPanelsPerRow);
-//			if(rowPanelCounter===numberOfPanelsPerRow){
-//
-//				//
-//				// close the current row of panels
-//				//
-//				panelHTML += "</div>";    // closing <div class=\"row top-buffer\"
-//
-//				//
-//				// and start a new one
-//				//
-//				panelHTML += "<div class=\"row top-buffer\">";				
-//				rowPanelCounter=1;
-//				//console.log("added new row to the panels");
-//			}else{
-//				rowPanelCounter+=1;
-//				//console.log("increased panel counter");
-//			}
+				//
+				// close the current row of panels
+				//
+				panelHTML += "</div>";    // closing <div class=\"row top-buffer\"
+
+				//
+				// and start a new one
+				//
+				panelHTML += "<div class=\"row top-buffer\">";				
+				rowPanelCounter=0;
+				//console.log("added new row to the panels");
+			}
 		}
 		//
 		//close the last row of the page panels

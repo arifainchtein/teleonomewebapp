@@ -175,6 +175,16 @@ input:valid {
     color:salmon;
 }
 
+.label{
+	font-size:45%;
+}
+.LowerNavFunction{
+	
+}
+
+.SettingsMenu{
+	cursor: pointer;
+}
 </style>
 </head>
 
@@ -186,28 +196,31 @@ input:valid {
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="row">
-					<div id="status" class="col-lg-4 col-md-4 col-sm-3 col-xs-3">
+					<div id="status" class="col-lg-4 col-md-4 col-sm-6 col-xs-5">
 						<h3>
 							<div style="padding-left: 5px;" id="teleonomeName">Connecting .....</div>
 						</h3>
 					</div>
 
-					<div id="Pathology" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 label label-lg label-danger text-white top-buffer"  style="display: none;">
+					<div id="Pathology" class="col-lg-3 col-md-3 col-sm-2 col-xs-2 label label-lg label-danger text-white top-buffer"  style="display: none;">
 						<h5><span id="ErrorText" style="color:white;" ></span></h5>
 					</div>
 		
-					<div id="status" class="col-lg-2 col-md-2 col-sm-3 col-xs-3 col-xs-offset-1">
+					<div id="status" class="hidden-lg hidden-md hidden-sm col-xs-1"></div>
+
+					<div id="status" class="col-lg-2 col-md-2 col-sm-1 col-xs-2 col-xs-offset-2">
 						<h3>
 							<span id="TeleonomeDataStatus"
-								class=" label label-lg label-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								class=" label label-sm label-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 						</h3>
-						<h6>Data Status</h6>
+						<h6>Data</h6>
 					</div>
-					<div id="status" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+					<div id="status" class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
+					<div id="status" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
 						<h3>
-							<span id="TeleonomeStatus" class="label label-lg label-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+							<span id="TeleonomeStatus" class="label label-sm label-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 						</h3>
-						<h6>Teleonome</h6>
+						<h6>Status</h6>
 					</div>
 				</div>
 			</div>
@@ -279,6 +292,17 @@ input:valid {
 		<script type="text/javascript" src="templates/DeviceInfo.js"></script>
 		<script type="text/javascript" src="templates/Networking.js"></script>
 		<script type="text/javascript" src="templates/UpdateParams.js"></script>
+		<script type="text/javascript" src="templates/WellSingleValuePanel.js"></script>
+		<script type="text/javascript" src="templates/DailyWeatherForecast.js"></script>
+		<script type="text/javascript" src="templates/ShortTermWeatherForecast.js"></script>
+		<script type="text/javascript" src="templates/MnemosyneTable.js"></script>
+		<script type="text/javascript" src="templates/CompleteDeneSingleValuePanelExternalData.js"></script>
+		<script type="text/javascript" src="templates/SingleValuePanelExternalData.js"></script>
+		<script type="text/javascript" src="templates/SingleValuePanelExternalTimestamp.js"></script>
+		<script type="text/javascript" src="templates/PathologyPanel.js"></script>
+		<script type="text/javascript" src="templates/CompleteDeneSingleValuePanel.js"></script>
+		<script type="text/javascript" src="templates/ActionEvaluationReport.js"></script>
+		<script type="text/javascript" src="templates/OrganismView.js"></script>
 		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
 		<script type="text/javascript" src="RenderingEngine.js"></script>
 		<!-- The Heart Communication is tbe the last one to be loaded -->
@@ -409,18 +433,34 @@ input:valid {
 					}catch(err){
 					    console.log("error=" + err);
 					}
-					 var jsonData = {};
-					 jsonData[TELEONOME_IDENTITY_LABEL] = data.identity;
-					 jsonData[DENEWORD_VALUE_ATTRIBUTE] = selected;
-					 jsonData[COMMAND_REQUEST_PASSWORD] = passwd;
-					var message = new Paho.MQTT.Message(JSON.stringify(jsonData));
-					message.destinationName = HEART_TOPIC_UPDATE_FORM_REQUEST;
-					mqtt.send(message);
+
+					$.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:HEART_TOPIC_UPDATE_FORM_REQUEST, TELEONOME_IDENTITY_LABEL: data.identity, DENEWORD_VALUE_ATTRIBUTE: selected, COMMAND_REQUEST_PASSWORD : passwd },
+						success: function (commandIddata) {
+							console.log("commandId=" + data);
+							
+						},
+						error: function(data){
+							console.log("error getting log file:" + JSON.stringify(data));
+							alert("Error getting log:" + JSON.stringify(data));
+							return false;
+						}
+					});	
+
+					//  var jsonData = {};
+					//  jsonData[TELEONOME_IDENTITY_LABEL] = data.identity;
+					//  jsonData[DENEWORD_VALUE_ATTRIBUTE] = selected;
+					//  jsonData[COMMAND_REQUEST_PASSWORD] = passwd;
+					// var message = new Paho.MQTT.Message(JSON.stringify(jsonData));
+					// message.destinationName = HEART_TOPIC_UPDATE_FORM_REQUEST;
+					// mqtt.send(message);
 					  
 					//message.setPayload(jsonData.getBytes());
 					//mqtt.publish(HEART_TOPIC_UPDATE_FORM_REQUEST, message);
 					 
-					  alert(field + " " + data.identity + " " + selected);
+					 // alert(field + " " + data.identity + " " + selected);
 					});
 				
 				

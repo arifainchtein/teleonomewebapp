@@ -50,6 +50,7 @@ function onConnect() {
 	mqtt.subscribe(HEART_TOPIC_UPDATE_FORM_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_ASYNC_CYCLE_UPDATE, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
+	mqtt.subscribe(HEART_TOPIC_UPDATE_FORM_RESPONSE, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	
 	
 	
@@ -107,5 +108,7 @@ console.log("message arrived");
 		setAvailableSSIDs(payload);
 	}else if(topic==HEART_TOPIC_ASYNC_CYCLE_UPDATE){
 		asyncUpdate(payload);
-	}      
+	}else if(topic==HEART_TOPIC_UPDATE_FORM_RESPONSE){
+		receivedCommandResponse(payload);
+	}       
 };
