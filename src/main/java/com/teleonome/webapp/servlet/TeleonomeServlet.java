@@ -434,6 +434,7 @@ public void init() {
 				JSONObject dataElement = data.getJSONObject(i);
 				logger.debug("Refreshcurrent virew, processing:" + dataElement.toString(4));
 				String formName2 = dataElement.getString("formName");
+				String chartTitle = dataElement.getString("chartTitle");
 				String identityPointer =  dataElement.getString("identity");
 				TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
 				long from = dataElement.getLong("from");
@@ -459,6 +460,7 @@ public void init() {
 						minimum = deneWordToRemember.getDouble(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
 					}
 					
+					toReturnElement.put("chartTitle", chartTitle);
 					toReturnElement.put("Units", units);
 					toReturnElement.put("Minimum", minimum);
 					toReturn.put(toReturnElement);
@@ -500,7 +502,7 @@ public void init() {
 					
 					
 					
-					
+					toReturnElement.put("chartTitle", chartTitle);
 					toReturnElement.put("Units", units);
 					toReturnElement.put("Minimum", minimum);
 					toReturn.put(toReturnElement);
