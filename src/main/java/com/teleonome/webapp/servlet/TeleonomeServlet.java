@@ -401,7 +401,7 @@ public void init() {
 			TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
 			long from = Long.parseLong(req.getParameter("from"));
 			long until = Long.parseLong(req.getParameter("until"));
-			
+			logger.debug("identityPointer=" + identityPointer);
 			JSONArray values = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, from, until);
 			
 			JSONObject toReturn = new JSONObject();

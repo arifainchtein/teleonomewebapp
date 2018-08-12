@@ -15,8 +15,7 @@
 <!-- Bootstrap core CSS -->
 <link href="bootstrap.min.css" rel="stylesheet">
 <link href="css/UpdateParams.css" rel="stylesheet">
-
-
+<link href="bs/css/bootstrap-switch.css" rel="stylesheet">
 
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -29,6 +28,7 @@
 .top-buffer {
 	margin-top: 20px;
 }
+
 
 .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2,
 	.col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3,
@@ -278,6 +278,8 @@ input:valid {
 			type="text/javascript"></script>
  		
 		<script type="text/javascript" src="TeleonomeConstants.js"></script>
+		<script src="bs/js/bootstrap-switch.js"></script>
+
 		<script type="text/javascript" src="HashMap.js"></script>
 		<script type="text/javascript" src="Identity.js"></script>
 		<script type="text/javascript" src="D3Chart.js"></script>
@@ -387,7 +389,7 @@ input:valid {
 				
 				$(document).on('click', '#Wifi',function(e){
 					var panelPointer  = $(this).data("panelpointer");
-					var n = new Networking();
+					var n = new Networking(panelPointer);
 					var html = n.process(panelPointer);
 					$('#SettingsWorkArea').html(html);
 					$('#SettingsWorkArea').show();

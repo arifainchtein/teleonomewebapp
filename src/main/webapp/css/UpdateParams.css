@@ -1,0 +1,14 @@
+.UpdateParamsGroup{
+    -ms-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    -webkit-box-sizing:content-box; 
+    box-sizing:content-box;
+    padding-left:30px;
+    padding-right:30px;
+}
+
+.SingleForm{
+	padding-top:30px;
+    padding-bottom:30px;
+    margin:30px;
+}
