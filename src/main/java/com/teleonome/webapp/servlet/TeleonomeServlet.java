@@ -425,6 +425,91 @@ public void init() {
 			out.print(toReturn.toString());
 			out.flush();
 			out.close();
+		}else if(formName.equals("RefreshCurrentView")) {
+			JSONArray toReturn = new JSONArray();
+			String rawData = req.getParameter("data");
+			logger.debug("Refreshcurrent virew, received:" + rawData);
+			JSONArray data = new JSONArray(rawData);
+			for(int i =0;i<data.length();i++) {
+				JSONObject dataElement = data.getJSONObject(i);
+				String formName2 = dataElement.getString("formName");
+				String identityPointer =  dataElement.getString("identity");
+				TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
+				long from = dataElement.getLong("from");
+				long until = dataElement.getLong("until");
+				
+				if(formName2.equals("RememberDeneWord")) {
+					
+					
+					logger.debug("identityPointer=" + identityPointer);
+					JSONArray values = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, from, until);
+					
+					JSONObject toReturnElement = new JSONObject();
+					toReturnElement.put("Value", values);
+					
+					JSONObject deneWordsToRemember = (JSONObject) getServletContext().getAttribute("DeneWordsToRemember");
+					JSONObject deneWordToRemember = deneWordsToRemember.getJSONObject(identityPointer);
+					String units="N.A.";
+					if(deneWordToRemember.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
+						units = deneWordToRemember.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+					}
+					double minimum=0.0;
+					if(deneWordToRemember.has(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE)) {
+						minimum = deneWordToRemember.getDouble(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+					}
+					
+					toReturnElement.put("Units", units);
+					toReturnElement.put("Minimum", minimum);
+					toReturn.put(toReturnElement);
+					
+				}else if(formName.equals("LookUpDeneWord")){
+					
+					Identity identity = new Identity(identityPointer);
+					
+					String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
+					logger.debug("for search teleonomeName :" + teleonomeName + " identity.getTeleonomeName()=" + identity.getTeleonomeName());
+					
+					JSONArray values = null;
+					if(identity.getTeleonomeName().equals(teleonomeName)) {
+						values = aDBManager.getDeneWordTimeSeriesByIdentity( identity,  from,  until);
+					}else {
+						values = aDBManager.getOrganismDeneWordTimeSeriesByIdentity( identity,  from,  until);
+					}
+					
+					logger.debug("After search for :" + identity + " values length=" + values.length());
+					
+					JSONObject toReturnElement = new JSONObject();
+					toReturnElement.put("Value", values);
+					//
+					// to get the units and the minimum, get the last pulse
+					org.postgresql.util.PGobject pg = (PGobject) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+					String units = "";
+					if(pg!=null) {
+						units = pg.toString();
+					}
+					//String units = (String) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+					//double minimum = (double) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
+					pg = (PGobject) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
+					double minimum = 0.0;
+					if(pg!=null && pg.getValue()!=null) {
+						minimum = Double.parseDouble(pg.getValue());
+					}
+					
+					logger.debug("After search otherTelenomeLastPulse :" + units + " minimum=" + minimum);
+					
+					
+					
+					
+					toReturnElement.put("Units", units);
+					toReturnElement.put("Minimum", minimum);
+					toReturn.put(toReturnElement);
+					
+				}
+			}
+			PrintWriter out = res.getWriter();
+			out.print(toReturn.toString());
+			out.flush();
+			out.close();
 		}
 		
 	}
