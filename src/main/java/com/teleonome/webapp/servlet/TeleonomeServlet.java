@@ -432,6 +432,7 @@ public void init() {
 			JSONArray data = new JSONArray(rawData);
 			for(int i =0;i<data.length();i++) {
 				JSONObject dataElement = data.getJSONObject(i);
+				logger.debug("Refreshcurrent virew, processing:" + dataElement.toString(4));
 				String formName2 = dataElement.getString("formName");
 				String identityPointer =  dataElement.getString("identity");
 				TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
@@ -506,6 +507,8 @@ public void init() {
 					
 				}
 			}
+			
+			
 			PrintWriter out = res.getWriter();
 			out.print(toReturn.toString());
 			out.flush();
