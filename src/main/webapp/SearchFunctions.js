@@ -49,7 +49,7 @@ class SearchFunctions{
 	        }
 	    }
 	 
-	 function generateAllGraphs(){
+	generateAllGraphs(){
 		    var allGraphs = localStorageManager.getAllStorageForComponent(localStorageSearchKey);
 
 		    if(allGraphs.length>0){
