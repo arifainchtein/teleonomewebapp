@@ -17,7 +17,7 @@ function CopyToClipboard(containerid) {
 }
 
 function generateAllGraphs(){
-    var allGraphs = allSearchStorage();
+    var allGraphs = localStorageManager.getAllStorageForComponent(localStorageSearchKey);
 
     if(allGraphs.length>0){
         //
