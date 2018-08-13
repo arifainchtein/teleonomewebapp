@@ -297,7 +297,6 @@ input:valid {
 		<script type="text/javascript" src="templates/DailyWeatherForecast.js"></script>
 		<script type="text/javascript" src="templates/ShortTermWeatherForecast.js"></script>
 		<script type="text/javascript" src="templates/MnemosyneTable.js"></script>
-		<script type="text/javascript" src="templates/CompleteDeneSingleValuePanelExternalData.js"></script>
 		<script type="text/javascript" src="templates/SingleValuePanelExternalData.js"></script>
 		<script type="text/javascript" src="templates/SingleValuePanelExternalTimestamp.js"></script>
 		<script type="text/javascript" src="templates/PathologyPanel.js"></script>
@@ -316,9 +315,11 @@ input:valid {
 	     var search_RefreshCounterInterval;
 	     var refreshCounter=30;
 	     var refreshCounterStatus=true;
-	     var localStorageSearchComponentKey="Search";
+	     var localStorageSearchKey="Search";
+	    var localStorageManager;
 	    
 			$(document).ready(function() {
+				localStorageManager = new localStorageManager();
 				HeartConnect();
 				
 			

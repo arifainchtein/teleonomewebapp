@@ -645,8 +645,11 @@ function renderPageToDisplay(){
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_COMPLETE_DENE_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_DATA){
 			
+				var sourceDataPointer = denes[0].DeneWords[0].Value;
+
+				
 				var aCompleteDeneSingleValuePanelExternalData = new CompleteDeneSingleValuePanelExternalData();
-				panelHTML += aCompleteDeneSingleValuePanelExternalData.process();
+				panelHTML += aCompleteDeneSingleValuePanelExternalData.process(sourceDataPointer);
 				
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_SEARCH_PANEL){
