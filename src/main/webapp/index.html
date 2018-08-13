@@ -283,8 +283,11 @@ input:valid {
 		<script type="text/javascript" src="Identity.js"></script>
 		<script type="text/javascript" src="D3Chart.js"></script>
 		<script type="text/javascript" src="CSVMultiLineChart.js"></script>
-		<!-- Make sure that LocalStorageManager.js is loaded before the eneralFunctions.js -->
+		<!-- Make sure that LocalStorageManager.js is loaded before the SearchFunctions.js -->
 		<script type="text/javascript" src="LocalStorageManager.js"></script>
+		<!-- Make sure that SearchFunctions.js.js is loaded before the GeneralFunctions.js -->
+		<script type="text/javascript" src="SearchFunctions.js"></script>
+		
 		<!-- Make sure that GeneralFunctions.js is loaded before the DenomeFunctions.js -->
 		<script type="text/javascript" src="GeneralFunctions.js"></script>
 		<!-- Make sure that DenomeFunctions.js is loaded before the templates -->
@@ -318,10 +321,12 @@ input:valid {
 	     var refreshCounter=30;
 	     var refreshCounterStatus=true;
 	     var localStorageSearchKey="Search";
-	    var localStorageManager;
-	    
+	     var localStorageManager;
+	     var searchFunctions;
+	     
 			$(document).ready(function() {
 				localStorageManager = new LocalStorageManager();
+				searchFunctions = new SearchFunctions();
 				HeartConnect();
 				
 			
@@ -512,8 +517,8 @@ input:valid {
             // the search panel
             //
             
-            search_RefreshInterval =  setInterval(refreshSearchPage, 30000); //NOTE: period is passed in milliseconds
-        	search_RefreshCounterInterval = setInterval(refreshCounterUpdate, 1 * 1000);
+            search_RefreshInterval =  setInterval(searchFunctions.refreshSearchPage, 30000); //NOTE: period is passed in milliseconds
+        	search_RefreshCounterInterval = setInterval(searchFunctions.refreshCounterUpdate, 1 * 1000);
             
             $('#WaitingText').html("Please Wait...");
 	        $('#WaitingWheel').show();
