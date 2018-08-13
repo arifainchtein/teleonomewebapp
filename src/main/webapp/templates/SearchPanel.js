@@ -60,7 +60,6 @@ class SearchPanel{
         panelHTML += "                                        <input type=\"DATE\" name=\"untilDate\" id=\"untilDate\">    <input type=\"time\" name=\"untilTime\" id=\"untilTime\">";
         panelHTML += "                                    </div>";
         panelHTML += "                                </div>";
-        panelHTML += "
         panelHTML += "                                <div class=\"form-row\">";
         panelHTML += "                                    <div class=\"form-group col-md-6\">";
         panelHTML += "                                            <label for=\"VisualisationType\">View As</label>";
