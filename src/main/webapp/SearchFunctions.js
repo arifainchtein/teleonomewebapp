@@ -97,7 +97,7 @@ class SearchFunctions{
 		            success: function (dataString) {
 		                console.log("receiving data for refresh" );
 		               // if(!appendChart){
-		                    $("#EntryPoint").empty();
+		                    $("#SearchGraphArea").empty();
 		                //} 
 		                var allData = JSON.parse(dataString);
 		                var panelHTML="";
