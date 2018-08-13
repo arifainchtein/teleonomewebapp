@@ -37,7 +37,7 @@ class SearchFunctions{
 	            $("#RefreshCounterMessage").html("Click to Start");
 	            return false;
 	        }
-	        var allGraphs = allSearchStorage();
+	        var allGraphs = localStorageManager.getAllStorageForComponent(localStorageSearchKey);
 	        refreshCounter--;
 	        
 	        if(allGraphs.length==0){
