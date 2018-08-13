@@ -202,4 +202,72 @@ class SearchFunctions{
 
 		    }
 		}
+	
+	
+	loadNewVisualizerData(){
+		$('#WaitingText').html("Please Wait...");
+        $('#WaitingWheel').show();
+        $("#SearchConfigurator").hide();
+        $.ajax({
+            type: "GET",
+            url: "/TeleonomeServlet",
+            data: {formName:"GetRememberDeneWordList"},
+            success: function (data) {
+               // console.log("data=" + JSON.stringify(data));
+                $('#Identity').append($('<option>', {
+                        value: "",
+                        text : "Remember a DeneWord"
+                    }));
+                var number=  count(data);
+                for(var i=0;i<number;i++){
+                    var item = data["option" + (i+1)];
+                    $('#Identity').append($('<option>', {
+                        value: item.value,
+                        text : item.text
+                    }));
+                }    
+                // $.each(data, function (i, item) {
+                //     $('#Identity').append($('<option>', {
+                //         value: item.value,
+                //         text : item.text
+                //     }));
+                // });
+            },
+            error: function(data){
+                console.log("error getting remembered denewords list:" + JSON.stringify(data));
+                alert("Error getting list:" + JSON.stringify(data));
+                return false;
+            }
+        });
+    
+        $.ajax({
+            type: "GET",
+            url: "/TeleonomeServlet",
+            data: {formName:"GetTeleonomeDateAvailable"},
+            success: function (data) {
+                $('#Teleonome').append($('<option>', {
+                        value: "",
+                        text : "Select A Teleonome"
+                    }));
+    
+                $.each(data, function (i, item) {
+                    var textValue = item.Name;
+                    if(item.hasOwnProperty('TimeMin') && item.hasOwnProperty('TimeMax')){
+                        var minDate = convertUTCDateToLocalDate(new Date(item.TimeMin));
+                        var maxDate = convertUTCDateToLocalDate(new Date(item.TimeMax));
+                        textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs(maxDate)  + ")";
+                    }
+                    $('#Teleonome').append($('<option>', {
+                        value: item.Name,
+                        text : textValue
+                    }));
+                });
+            },
+            error: function(data){
+                console.log("error getting TeleonomeNames:" + JSON.stringify(data));
+                alert("Error getting list:" + JSON.stringify(data));
+                return false;
+            }
+        });
+	}
 }
