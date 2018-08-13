@@ -88,6 +88,8 @@ class SearchPanel{
         panelHTML += "                         </form>";
         panelHTML += "                </div>";
         panelHTML += "         </div>";
+        searchFunctions.loadNewVisualizerData();
+        
         return panelHTML;
 }
 
