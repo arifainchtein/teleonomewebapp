@@ -21,7 +21,7 @@ class SearchFunctions{
         $('#WaitingText').html("Updating...");
        $('#WaitingWheel').show();
     
-       generateAllGraphs();
+       this.generateAllGraphs();
     
        
         
