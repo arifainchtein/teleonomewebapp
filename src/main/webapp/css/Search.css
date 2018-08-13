@@ -1,0 +1,93 @@
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
+
+#WaitingText{
+ 	margin-left:50px;
+ 	margin-top:-30px;
+ 	margin-bottom:10px;
+ 	font-size: 22px;
+ }
+ 
+ #WaitingWheel{
+ 	display: none;
+ 	background-color:#B6B6B4;
+ 	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius:5px;
+    padding:20px;
+    margin-left:100px;
+    margin-top:-300px;
+  
+ }
+
+.WaitingWheel{
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    height: 50%;
+    width: 50%;
+}
+
+.Parent{
+ }
+
+.HeadingTitle{
+    font-size:24px;
+}
+.LastValuePanel{
+   
+    transform: translateX(0%) translateY(50%);
+
+}
+.lastValueUnits{
+    font-size:24px;
+    margin-left:40px;
+}
+
+.lastValue{
+    margin-left:20px;
+    margin-right:20px;
+    padding-top:50px;
+    font-size:40px;
+}
+
+.lastValueTimeString{
+    font-size:14px;
+}
+
+.SearchConfigurator{
+    padding-left:200px;
+    padding-top:20px;
+    z-index: 10;
+    background-color:lightgrey;
+    margin-left:40px;
+    margin-right:40px;
+    margin-top:20px;
+}
+.TopButtons{
+    padding-top:30px;
+    padding-bottom:30px;
+    
+}
+.SearchConfiguratorButtons{
+    margin-right:200px;
+    padding-bottom:30px;
+}
+#UpdateArea{
+    cursor: pointer;
+}
+#RefreshCounter{
+    margin-left: 30px;
+    font-size:28px;
+ 	
+}
+#RefreshCounterMessage{
+    font-size:14px;
+}
