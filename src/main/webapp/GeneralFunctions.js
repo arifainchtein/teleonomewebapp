@@ -19,6 +19,14 @@ if (document.selection) {
      alert("Data copied to clipboard") 
 }}
 
+function convertUTCDateToLocalDate(date) {
+    var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+    var offset = date.getTimezoneOffset() / 60;
+    var hours = date.getHours();
+    newDate.setHours(hours - offset);
+    return newDate;   
+    //return date;
+}
 
 function msToTime(duration) {
 	var milliseconds = parseInt((duration%1000)/100)
