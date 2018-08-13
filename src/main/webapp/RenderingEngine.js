@@ -512,7 +512,7 @@ function renderPageToDisplay(){
 		//
 		panelHTML += "<div class=\"row top-buffer\">";
 		var panelCounter=0;
-
+		var inSearch=false;
 		for(var property in obj) {
 			deneChainPointer= obj[property];
 			panelCounter++;
@@ -656,6 +656,7 @@ function renderPageToDisplay(){
 			
 				var aSearchPanel = new SearchPanel();
 				panelHTML += aSearchPanel.process();
+				inSearch=true;
 				
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART ||
@@ -742,6 +743,9 @@ function renderPageToDisplay(){
 		//console.log("finished rendering page " + panelHTML);
 		$("#EntryPoint").append(panelHTML);
 		
+		if(inSearch){
+			searchFunctions.generateAllGraphs();
+		}
 		//
 		// now loop over every chart
 		//
