@@ -435,7 +435,7 @@ input:valid {
                             if(item.hasOwnProperty('TimeMin') && item.hasOwnProperty('TimeMax')){
                                 var minDate = convertUTCDateToLocalDate(new Date(item.TimeMin));
                                 var maxDate = convertUTCDateToLocalDate(new Date(item.TimeMax));
-                                textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs1(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs1(maxDate)  + ")";
+                                textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs(maxDate)  + ")";
                             }
                             $('#Teleonome').append($('<option>', {
                                 value: item.Name,
@@ -562,7 +562,7 @@ input:valid {
 	                    if(item.hasOwnProperty('TimeMin') && item.hasOwnProperty('TimeMax')){
 	                        var minDate = convertUTCDateToLocalDate(new Date(item.TimeMin));
 	                        var maxDate = convertUTCDateToLocalDate(new Date(item.TimeMax));
-	                        textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs1(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs1(maxDate)  + ")";
+	                        textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs(maxDate)  + ")";
 	                    }
 	                    $('#Teleonome').append($('<option>', {
 	                        value: item.Name,

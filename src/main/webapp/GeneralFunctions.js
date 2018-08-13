@@ -19,6 +19,14 @@ if (document.selection) {
      alert("Data copied to clipboard") 
 }}
 
+
+function getISOStringWithoutSecsAndMillisecs(date) {
+	  const dateAndTime = date.toISOString().split('T')
+	  const time = dateAndTime[1].split(':')
+	  
+	  return dateAndTime[0]+' '+time[0]+':'+time[1]
+	}
+
 function convertUTCDateToLocalDate(date) {
     var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
     var offset = date.getTimezoneOffset() / 60;
