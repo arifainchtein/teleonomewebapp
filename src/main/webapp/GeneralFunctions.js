@@ -1,3 +1,25 @@
+function count(obj) { return Object.keys(obj).length; }
+
+function CopyToClipboard(containerid) {
+if (document.selection) { 
+    var range = document.body.createTextRange();
+    range.moveToElementText(document.getElementById(containerid));
+    range.select().createTextRange();
+    document.execCommand("copy"); 
+
+} else if (window.getSelection) {
+    
+    var range = document.createRange();
+        range.selectNode(document.getElementById(containerid));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+
+
+     document.execCommand("copy");
+     alert("Data copied to clipboard") 
+}}
+
+
 function msToTime(duration) {
 	var milliseconds = parseInt((duration%1000)/100)
 	, seconds = parseInt((duration/1000)%60)
