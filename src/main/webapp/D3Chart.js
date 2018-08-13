@@ -148,9 +148,11 @@ var	margin = {top: 30, right: 20, bottom: 30, left: 70},
 //	height = 247 - margin.top - margin.bottom;
 width = parseInt(d3.select("#"+id).style("width")) - margin.left - margin.right,
 height = parseInt(d3.select("#"+id).style("height")) - margin.top - margin.bottom;
+
+
 console.log("calculated height=" + height);
 if(height<170)height = 247 - margin.top - margin.bottom;
-console.log("starting drawtimeseries");
+//console.log("starting drawtimeseries");
 // Parse the date / time
 var	parseDate = d3.time.format("%H:%M").parse;
 
@@ -177,6 +179,11 @@ var	chart1 = d3.select("#"+id)
 		.attr("height", height + margin.top + margin.bottom)
 	.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		
+
+
+		window.addEventListener('resize', chart1.render);
 
 //
 // graphtitle

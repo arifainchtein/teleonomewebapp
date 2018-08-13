@@ -15,6 +15,7 @@
 <!-- Bootstrap core CSS -->
 <link href="bootstrap.min.css" rel="stylesheet">
 <link href="css/UpdateParams.css" rel="stylesheet">
+<link href="css/SearchPanel.css" rel="stylesheet">
 <link href="bs/css/bootstrap-switch.css" rel="stylesheet">
 
 
@@ -271,8 +272,6 @@ input:valid {
 		  -->
 		 <script src="http://d3js.org/d3.v3.min.js"></script>
 		  
-		 
-		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"
 			type="text/javascript"></script>
@@ -305,12 +304,20 @@ input:valid {
 		<script type="text/javascript" src="templates/CompleteDeneSingleValuePanel.js"></script>
 		<script type="text/javascript" src="templates/ActionEvaluationReport.js"></script>
 		<script type="text/javascript" src="templates/OrganismView.js"></script>
+		<script type="text/javascript" src="templates/SearchPanel.js"></script>
 		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
 		<script type="text/javascript" src="RenderingEngine.js"></script>
 		<!-- The Heart Communication is tbe the last one to be loaded -->
 		<script type="text/javascript" src="HeartComms.js"></script>
 
 		<script>
+		 var liveUpdate;
+	     var search_RefreshInterval;
+	     var search_RefreshCounterInterval;
+	     var refreshCounter=30;
+	     var refreshCounterStatus=true;
+	     var localStorageSearchComponentKey="Search";
+	    
 			$(document).ready(function() {
 				HeartConnect();
 				
@@ -375,18 +382,343 @@ input:valid {
 					});	
                     
                    
-                   /*  $("#DenomeManager").prop("href", "logs/"+ dirName + "/DenomeManager.txt");
-                    $("#Heart").prop("href", "logs/"+ dirName + "/Heart.txt");
-                     $("#MnemosyneManager").prop("href", "logs/"+ dirName + "/MnemosyneManager.txt");
-                    $("#ObserverThread").prop("href", "logs/"+ dirName + "/ObserverThread.txt");
-                     $("#PublisherListener").prop("href", "logs/"+ dirName + "/PublisherListener.txt");
-                    $("#PulseThread").prop("href", "logs/"+ dirName + "/PulseThread.txt");
-                     $("#SubscriberThread").prop("href", "logs/"+ dirName + "/SubscriberThread.txt");
-                    $("#TeleonomeHypothalamus").prop("href", "logs/"+ dirName + "/TeleonomeHypothalamus.txt");
-                    $("#MedulaLog").prop("href", "logs/"+ dirName + "/Medula.txt");
-                    $('.pathology-modal-body').html(""); */
+                  
                 });
 				
+                $('#WaitingText').html("Please Wait...");
+                $('#WaitingWheel').show();
+                $("#SearchConfigurator").hide();
+                $.ajax({
+                    type: "GET",
+                    url: "/TeleonomeServlet",
+                    data: {formName:"GetRememberDeneWordList"},
+                    success: function (data) {
+                       // console.log("data=" + JSON.stringify(data));
+                        $('#Identity').append($('<option>', {
+                                value: "",
+                                text : "Remember a DeneWord"
+                            }));
+                        var number=  count(data);
+                        for(var i=0;i<number;i++){
+                            var item = data["option" + (i+1)];
+                            $('#Identity').append($('<option>', {
+                                value: item.value,
+                                text : item.text
+                            }));
+                        }    
+                        // $.each(data, function (i, item) {
+                        //     $('#Identity').append($('<option>', {
+                        //         value: item.value,
+                        //         text : item.text
+                        //     }));
+                        // });
+                    },
+                    error: function(data){
+                        console.log("error getting remembered denewords list:" + JSON.stringify(data));
+                        alert("Error getting list:" + JSON.stringify(data));
+                        return false;
+                    }
+                });
+            
+                $.ajax({
+                    type: "GET",
+                    url: "/TeleonomeServlet",
+                    data: {formName:"GetTeleonomeDateAvailable"},
+                    success: function (data) {
+                        $('#Teleonome').append($('<option>', {
+                                value: "",
+                                text : "Select A Teleonome"
+                            }));
+            
+                        $.each(data, function (i, item) {
+                            var textValue = item.Name;
+                            if(item.hasOwnProperty('TimeMin') && item.hasOwnProperty('TimeMax')){
+                                var minDate = convertUTCDateToLocalDate(new Date(item.TimeMin));
+                                var maxDate = convertUTCDateToLocalDate(new Date(item.TimeMax));
+                                textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs1(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs1(maxDate)  + ")";
+                            }
+                            $('#Teleonome').append($('<option>', {
+                                value: item.Name,
+                                text : textValue
+                            }));
+                        });
+                    },
+                    error: function(data){
+                        console.log("error getting TeleonomeNames:" + JSON.stringify(data));
+                        alert("Error getting list:" + JSON.stringify(data));
+                        return false;
+                    }
+                });
+            
+                generateAllGraphs();
+                var untilDate = new Date();
+                var fromDate = new Date();
+                fromDate.setDate(fromDate.getDate()-1);
+                var currentTimeAsString = untilDate.getHours() + ":" + untilDate.getMinutes() + ":"  + untilDate.getSeconds();
+            
+                $("#fromDate").valueAsDate = fromDate;
+                $("#fromTime").defaultValue = currentTimeAsString;
+            
+                $("#untilDate").valueAsDate = untilDate;
+                $("#untilTime").defaultValue = currentTimeAsString;
+                $('#WaitingWheel').hide();
+            
+            
+                $("#NewChart").click(function(e) {
+                    e.preventDefault();
+                    $("#TopButtons").hide();
+                    $("#SearchConfigurator").show();
+                });
+            
+             $("#CancelSearch").click(function(e) {
+                    e.preventDefault();
+                    $("#SearchConfigurator").hide();
+                    $("#TopButtons").show();
+                });
+                
+                $("#ClearCharts").click(function(e) {
+                    e.preventDefault();
+                    //localStorage.clear();
+                    localStorage.removeItem(localStorageSearchComponentKey);
+                    $("#RefreshCounter").html("");
+                    $("#EntryPoint").empty();
+                    refreshSearchPage();
+                });
+            
+                $(document).on('click', ".RemoveChart",function(e) {
+                    e.preventDefault();
+                    var chartTitle = $(this).data("charttitle");
+                    //localStorage.removeItem(chartTitle);
+                    localStorage.removeItem(localStorageSearchComponentKey.chartTitle);
+                    refreshCounterStatus=true;
+                    refreshSearchPage();
+                });
+            
+                $(document).on('click', ".PulseTime",function(e) {
+                    e.preventDefault();
+                    var teleonomeName = $(this).data("teleonomename");
+                    var pulseMillis = $(this).data("time");
+                    displayPulse(teleonomeName, pulseMillis);
+                });
+            
+            
+            $(document).on('click', "#RefreshCounter",function(e) {
+                    refreshCounterStatus=!refreshCounterStatus;
+                });    
+            //
+            // the search panel
+            //
+            
+            search_RefreshInterval =  setInterval(refreshSearchPage, 30000); //NOTE: period is passed in milliseconds
+        	search_RefreshCounterInterval = setInterval(refreshCounterUpdate, 1 * 1000);
+            
+            $('#WaitingText').html("Please Wait...");
+	        $('#WaitingWheel').show();
+	        $("#SearchConfigurator").hide();
+	        $.ajax({
+	            type: "GET",
+	            url: "/TeleonomeServlet",
+	            data: {formName:"GetRememberDeneWordList"},
+	            success: function (data) {
+	               // console.log("data=" + JSON.stringify(data));
+	                $('#Identity').append($('<option>', {
+	                        value: "",
+	                        text : "Remember a DeneWord"
+	                    }));
+	                var number=  count(data);
+	                for(var i=0;i<number;i++){
+	                    var item = data["option" + (i+1)];
+	                    $('#Identity').append($('<option>', {
+	                        value: item.value,
+	                        text : item.text
+	                    }));
+	                }    
+	                // $.each(data, function (i, item) {
+	                //     $('#Identity').append($('<option>', {
+	                //         value: item.value,
+	                //         text : item.text
+	                //     }));
+	                // });
+	            },
+	            error: function(data){
+	                console.log("error getting remembered denewords list:" + JSON.stringify(data));
+	                alert("Error getting list:" + JSON.stringify(data));
+	                return false;
+	            }
+	        });
+    
+	        $.ajax({
+	            type: "GET",
+	            url: "/TeleonomeServlet",
+	            data: {formName:"GetTeleonomeDateAvailable"},
+	            success: function (data) {
+	                $('#Teleonome').append($('<option>', {
+	                        value: "",
+	                        text : "Select A Teleonome"
+	                    }));
+	    
+	                $.each(data, function (i, item) {
+	                    var textValue = item.Name;
+	                    if(item.hasOwnProperty('TimeMin') && item.hasOwnProperty('TimeMax')){
+	                        var minDate = convertUTCDateToLocalDate(new Date(item.TimeMin));
+	                        var maxDate = convertUTCDateToLocalDate(new Date(item.TimeMax));
+	                        textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs1(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs1(maxDate)  + ")";
+	                    }
+	                    $('#Teleonome').append($('<option>', {
+	                        value: item.Name,
+	                        text : textValue
+	                    }));
+	                });
+	            },
+	            error: function(data){
+	                console.log("error getting TeleonomeNames:" + JSON.stringify(data));
+	                alert("Error getting list:" + JSON.stringify(data));
+	                return false;
+	            }
+	        });
+	    
+	        generateAllGraphs();
+	        var untilDate = new Date();
+	        var fromDate = new Date();
+	        fromDate.setDate(fromDate.getDate()-1);
+	        var currentTimeAsString = untilDate.getHours() + ":" + untilDate.getMinutes() + ":"  + untilDate.getSeconds();
+	    
+	        $("#fromDate").valueAsDate = fromDate;
+	        $("#fromTime").defaultValue = currentTimeAsString;
+	    
+	        $("#untilDate").valueAsDate = untilDate;
+	        $("#untilTime").defaultValue = currentTimeAsString;
+	        $('#WaitingWheel').hide();
+    
+    
+	        $("#NewChart").click(function(e) {
+	            e.preventDefault();
+	            $("#TopButtons").hide();
+	            $("#SearchConfigurator").show();
+	        });
+    
+	     	$("#CancelSearch").click(function(e) {
+	            e.preventDefault();
+	            $("#SearchConfigurator").hide();
+	            $("#TopButtons").show();
+	        });
+	        
+	        $("#ClearCharts").click(function(e) {
+	            e.preventDefault();
+	            //localStorage.clear();
+	            localStorage.removeItem(localStorageSearchComponentKey);
+	            $("#RefreshCounter").html("");
+	            $("#EntryPoint").empty();
+	            refreshSearchPage();
+	        });
+	    
+	        $(document).on('click', ".RemoveChart",function(e) {
+	            e.preventDefault();
+	            var chartTitle = $(this).data("charttitle");
+	            //localStorage.removeItem(chartTitle);
+	            localStorage.removeItem(localStorageSearchComponentKey.chartTitle);
+	            refreshCounterStatus=true;
+	            refreshSearchPage();
+	        });
+	    
+	        $(document).on('click', ".PulseTime",function(e) {
+	            e.preventDefault();
+	            var teleonomeName = $(this).data("teleonomename");
+	            var pulseMillis = $(this).data("time");
+	            displayPulse(teleonomeName, pulseMillis);
+	        });
+    
+    
+    		$(document).on('click', "#RefreshCounter",function(e) {
+            	refreshCounterStatus=!refreshCounterStatus;
+        	});    
+    
+    
+		    $( "#GetDataSubmit" ).click(function(e) {
+		        e.preventDefault();
+		
+		        $('#WaitingText').html("Please wait...");
+		        $('#WaitingWheel').show();
+		        
+		       
+		        var visualizationStyle = $('#VisualisationType').find(":selected").val();
+		        var identityPointer = document.getElementById("Identity").value;
+		        var fromDate = document.getElementById("fromDate").value;
+		        var fromTime = document.getElementById("fromTime").value;
+		        var fromMillis = (new Date(fromDate + " " + fromTime)).getTime();
+		        var untilDate = document.getElementById("untilDate").value;
+		        var untilTime = document.getElementById("untilTime").value;
+		        var untilMillis = (new Date(untilDate + " " + untilTime)).getTime();
+		        var formName="RememberDeneWord";
+		        var appendChart = $("#AppendChart").is(':checked');
+		        if(fromDate=="" || fromTime==""){
+		            var fromDate = new Date();
+		            var ts = Math.round(new Date().getTime() / 1000);
+		            fromMillis = ts - (24 * 3600);
+		            //fromDate.setDate(fromDate.getDate()-1);
+		            //fromMillis = fromDate.getTime();
+		        }
+		        if(untilDate=="" || untilTime==""){
+		            untilMillis = new Date().getTime();
+		        }
+		
+		       
+		        if(identityPointer==""){
+		            //identityPointer = document.getElementById("LookUpIdentity").html;
+		            var selectedTeleonome = $('#Teleonome').find(":selected").val();
+		            var selectedNucleus = $('#Nucleus').find(":selected").val();
+		            var selecteDeneChain = $('#DeneChain').find(":selected").val();
+		            var selecteDene = $('#Dene').find(":selected").val();
+		            var selecteDeneWord = $('#DeneWord').find(":selected").val();
+		            identityPointer = selectedTeleonome + ":" + selectedNucleus + ":" + selecteDeneChain + ":" + selecteDene + ":" + selecteDeneWord;
+		            formName="LookUpDeneWord";
+		        }
+		            
+		        if(identityPointer==""){
+		            alert("Select something");
+		            return false; 
+		        }    
+		        liveUpdate = $("#LiveUpdate").is(':checked');
+		        var localStoreageKey = identityPointer + "_" + visualizationStyle+"_" + liveUpdate ;
+		        if(localStorage.getItem(localStorageSearchComponentKey.localStoreageKey) != undefined){
+		            alert("Visualizer exists");
+		            return false; 
+		        }
+		        var searchObject = JSON.parse(localStorage.getItem(localStorageSearchComponentKey));
+		        if(searchObject == null || searchObject==undefined){
+		            searchObject={};
+		        }
+		        
+		       var numberOfObjects =  getNumberOfSearchObjects()+1;
+		
+		        var identity = identityFactory.createIdentityByPointer(identityPointer);
+		        
+		        var anyTeleonomeName = identity.teleonomeName;
+		        var chartTitle = anyTeleonomeName + "-" + identity.deneWordName;
+		        var jsonData = {
+		            visualizationStyle:visualizationStyle,
+		            identityPointer:identityPointer,
+		            formName:formName,
+		            appendChart:appendChart,
+		            liveUpdate:liveUpdate,
+		            chartTitle:chartTitle,
+		            fromMillis:fromMillis,
+		            untilMillis:untilMillis,
+		            position:numberOfObjects
+		        }
+		        var s = JSON.stringify(jsonData);
+		       
+		        searchObject[localStoreageKey]=s;
+		         localStorage.setItem(localStorageSearchComponentKey, JSON.stringify(searchObject));
+		        processForm(formName,identityPointer, fromMillis , untilMillis, appendChart, visualizationStyle, liveUpdate);
+		        $('#WaitingWheel').hide();
+		        $("#SearchConfigurator").hide();
+		        $("#TopButtons").show();
+		    });
+            //
+            // the end of searchpanel
+            //
+                
 				$(document).on('click', '#Wifi',function(e){
 					var panelPointer  = $(this).data("panelpointer");
 					var n = new Networking(panelPointer);

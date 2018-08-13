@@ -649,6 +649,12 @@ function renderPageToDisplay(){
 				panelHTML += aCompleteDeneSingleValuePanelExternalData.process();
 				
 				
+			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_SEARCH_PANEL){
+			
+				var aSearchPanel = new SearchPanel();
+				panelHTML += aSearchPanel.process();
+				
+				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART ||
 					mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART||
 					mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PIE_CHART
