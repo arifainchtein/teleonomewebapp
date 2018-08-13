@@ -1,25 +1,22 @@
 function count(obj) { return Object.keys(obj).length; }
 
 function CopyToClipboard(containerid) {
-if (document.selection) { 
-    var range = document.body.createTextRange();
-    range.moveToElementText(document.getElementById(containerid));
-    range.select().createTextRange();
-    document.execCommand("copy"); 
-
-} else if (window.getSelection) {
-    
-    var range = document.createRange();
+	if (document.selection) { 
+	    var range = document.body.createTextRange();
+	    range.moveToElementText(document.getElementById(containerid));
+	    range.select().createTextRange();
+	    document.execCommand("copy"); 	
+	} else if (window.getSelection) {
+	    var range = document.createRange();
         range.selectNode(document.getElementById(containerid));
         window.getSelection().removeAllRanges();
-        window.getSelection().addRange(range);
+        window.getSelection().addRange(range);	
+	    document.execCommand("copy");
+	    alert("Data copied to clipboard") 
+	}
+}
 
-
-     document.execCommand("copy");
-     alert("Data copied to clipboard") 
-}}
-
-generateAllGraphs(){
+function generateAllGraphs(){
     var allGraphs = allSearchStorage();
 
     if(allGraphs.length>0){
