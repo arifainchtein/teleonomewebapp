@@ -184,7 +184,7 @@ class SearchPanel{
                 panelHTML +=   "</div>";
                 panelHTML +="</div>";
                  panelHTML +="</div>";
-                $("#EntryPoint").append(panelHTML);
+                $("#SearchGraphArea").append(panelHTML);
                 if(visualizationStyle=="LineGraph"){
                     drawTimeSeriesLineChart(chartTitleNoSpaces,data, "");
                    
