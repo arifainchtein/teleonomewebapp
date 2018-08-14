@@ -109,7 +109,7 @@ class SearchPanel{
             success: function (data) {
                 console.log("receiving data for" + identityPointer);
                 if(!appendChart){
-                    $("#EntryPoint").empty();
+                    $("#SearchGraphArea").empty();
                 } 
                 var lastValue = data.Value[data.Value.length-1].Value;
                 var rendLastValue = lastValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
