@@ -22,7 +22,7 @@ class SearchFunctions{
        // location.reload();
        console.log("about to refresh");
       
-        $("#EntryPoint").empty();
+        $("#SearchGraphArea").empty();
         
         $('#WaitingText').html("Updating...");
        $('#WaitingWheel').show();
