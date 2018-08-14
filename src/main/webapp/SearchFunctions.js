@@ -1,5 +1,11 @@
 class SearchFunctions{
 	
+	constructor(){
+		
+	}
+	
+	
+	
 	refreshSearchPage(){
         if(!refreshCounterStatus){
             return false;
