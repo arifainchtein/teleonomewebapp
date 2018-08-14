@@ -87,7 +87,7 @@ class SearchPanel{
         panelHTML += "                                </div> ";
         panelHTML += "                         </form>";
         panelHTML += "                </div>";
-        panelHTML += "  <div id=\"SearchGraphArea\"></div>";
+        panelHTML += "  <div class=\"row\"><div id=\"SearchGraphArea\"></div></div>";
         panelHTML += "         </div>";
         searchFunctions.loadNewVisualizerData();
         
