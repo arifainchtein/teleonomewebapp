@@ -118,6 +118,7 @@ class SearchFunctions{
 		            serverRequest.identity=identityPointer;
 		            serverRequest.from=fromMillis;
 		            serverRequest.until=untilMillis;
+		            serverRequest.visualizationStyle=visualizationStyle;
 		            serverRequest.formName=formName;
 		            serverRequest.chartTitle=chartTitle;
 		            reqData[i]=serverRequest;
@@ -145,7 +146,7 @@ class SearchFunctions{
 		                    var chartTitleNoSpaces = chartTitle.replace(/\s/g, '');
 		                    var lastValueMillis = data.Value[data.Value.length-1]["Pulse Timestamp in Milliseconds"];
 		                    var lastValueTimestamp = new Date(lastValueMillis);
-		        
+		                    var visualizationStyle =data.VisualizationStyle;
 		                    var forHour;
 		                    if(lastValueTimestamp.getHours()<10){
 		                        forHour="0" + lastValueTimestamp.getHours();
@@ -206,7 +207,7 @@ class SearchFunctions{
 		                        panelHTML += "<thead class=\"thead-dark\">";
 		                        panelHTML += "<tr><th>Time</th><th>Value</th></tr></thead>"
 		                        var values = data.Value;
-		                      //  $.each(data, function() {
+		                    
 		                            $.each(values, function(i,item) {
 		                                var formatedTime = new Date(item["Pulse Timestamp in Milliseconds"]);
 		                                var forMin;
@@ -222,7 +223,7 @@ class SearchFunctions{
 		                                    panelHTML += '<tr><td><a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"PulseTime\" data-time=\"' + item["Pulse Timestamp in Milliseconds"] + '\"  data-teleonomeName=\"'+ anyTeleonomeName +'\">' + ft + '</a></td><td>' + item.Value + '</td></tr>';
 		                                }
 		                            });
-		                        //});
+		                        
 		                        panelHTML += '</table></div>';
 		                    }   
 		                    
@@ -328,25 +329,22 @@ class SearchFunctions{
                     panelHTML += '<table class=\"table table-striped\">';
                     panelHTML += "<thead class=\"thead-dark\">";
                     panelHTML += "<tr><th>Time</th><th>Value</th></tr></thead>"
-                    
-                  //  $.each(data, function() {
-                    	$.each(data, function(i,item) {
-                       // $.each(this, function(i,item) {
-                            var formatedTime = new Date(item["Pulse Timestamp in Milliseconds"]);
-                            var forMin;
-                            if(formatedTime.getMinutes()<10){
-                                forMin="0" + formatedTime.getMinutes();
-                            }else{
-                                forMin=formatedTime.getMinutes();
-                            }
-                            var ft = formatedTime.getDate()+"/" +  (formatedTime.getMonth()+1)+"/" + formatedTime.getFullYear()+" " + formatedTime.getHours()+":" +forMin;
-                            
-                            if(item.Value != undefined &&  !isNaN(formatedTime.getDate()) ){
-                                        
-                                panelHTML += '<tr><td><a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"PulseTime\" data-time=\"' + item["Pulse Timestamp in Milliseconds"] + '\"  data-teleonomeName=\"'+ anyTeleonomeName +'\">' + ft + '</a></td><td>' + item.Value + '</td></tr>';
-                            }
-                        });
-                   // });
+                    var values = data.Value;
+                    $.each(values, function(i,item) {
+                		var formatedTime = new Date(item["Pulse Timestamp in Milliseconds"]);
+                        var forMin;
+                        if(formatedTime.getMinutes()<10){
+                            forMin="0" + formatedTime.getMinutes();
+                        }else{
+                            forMin=formatedTime.getMinutes();
+                        }
+                        var ft = formatedTime.getDate()+"/" +  (formatedTime.getMonth()+1)+"/" + formatedTime.getFullYear()+" " + formatedTime.getHours()+":" +forMin;
+                        
+                        if(item.Value != undefined &&  !isNaN(formatedTime.getDate()) ){
+                                    
+                            panelHTML += '<tr><td><a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"PulseTime\" data-time=\"' + item["Pulse Timestamp in Milliseconds"] + '\"  data-teleonomeName=\"'+ anyTeleonomeName +'\">' + ft + '</a></td><td>' + item.Value + '</td></tr>';
+                        }
+                    });
                     panelHTML += '</table></div>';
                 }   
                 panelHTML +=                   "</div>";

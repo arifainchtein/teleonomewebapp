@@ -406,19 +406,26 @@ input:valid {
             
                 $("#untilDate").valueAsDate = untilDate;
                 $("#untilTime").defaultValue = currentTimeAsString;
-                $('#WaitingWheel').hide();
+                $('#WaitingWheel').hide(); 
             
                 $(document).on('click', "#NewChart",function(e) {
                     e.preventDefault();
                     $("#TopButtons").hide();
-                    $("#SearchConfigurator").show();
+                    refreshCounterStatus=false;
+                    $("#RefreshCounter").hide();
+     	            $("#RefreshCounterMessage").hide();
                     searchFunctions.loadNewVisualizerData();
+                    $("#SearchConfigurator").show();
+                    
                 });
              
                 $(document).on('click', "#CancelSearch",function(e) {
                     e.preventDefault();
                     $("#SearchConfigurator").hide();
                     $("#TopButtons").show();
+                    $("#RefreshCounter").show();
+     	            $("#RefreshCounterMessage").show();
+                    refreshCounterStatus=true;
                 });
                 
                 
@@ -428,18 +435,20 @@ input:valid {
                     localStorageManager.removeComponentInfo(localStorageSearchKey);
                     $("#RefreshCounter").html("");
                     $("#SearchGraphArea").empty();
+                    refreshCounterStatus=false;
                     searchFunctions.refreshSearchPage();
                 });
             
                 $(document).on('click', ".RemoveChart",function(e) {
-                    e.preventDefault();
-                    var chartTitle = $(this).data("charttitle");
-                    ;
-                    localStorageManager.removeItem(localStorageSearchKey,chartTitle);
-                    refreshCounterStatus=true;
-                    searchFunctions.refreshSearchPage();
-                });
-            
+    	            e.preventDefault();
+    	            var chartTitle = $(this).data("charttitle");
+    	            
+    	            localStorageManager.removeItem(localStorageSearchKey,chartTitle);
+    	            refreshCounterStatus=true;
+    	            searchFunctions.refreshSearchPage();
+    	        });
+                
+                
                 $(document).on('click', ".PulseTime",function(e) {
                     e.preventDefault();
                     var teleonomeName = $(this).data("teleonomename");
@@ -450,6 +459,13 @@ input:valid {
             
             $(document).on('click', "#RefreshCounter",function(e) {
                     refreshCounterStatus=!refreshCounterStatus;
+                    if(!refreshCounterStatus){
+                    	 $("#RefreshCounter").html("||");
+         	            $("#RefreshCounterMessage").html("Click to Start");
+                    }else{
+                        $("#RefreshCounter").html(refreshCounter);
+                        $("#RefreshCounterMessage").html("Click to Pause");   
+                    }       
                 });    
             //
             // the search panel
@@ -473,37 +489,9 @@ input:valid {
 	        $("#untilTime").defaultValue = currentTimeAsString;
 	        $('#WaitingWheel').hide();
     
-	        $(document).on('click', "#NewChart",function(e) {
-	            e.preventDefault();
-	            $("#TopButtons").hide();
-	            $("#UpdateArea").hide();
-	            $("#SearchConfigurator").show();
-	        });
-    
-	        $(document).on('click', "#CancelSearch",function(e) {
-	            e.preventDefault();
-	            $("#SearchConfigurator").hide();
-	            $("#TopButtons").show();
-	            $("#UpdateArea").show();
-	        });
 	        
-	     	$(document).on('click', "#ClearCharts",function(e) {
-	            e.preventDefault();
-	            
-	            localStorageManager.removeComponentInfo(localStorageSearchKey);
-	            $("#RefreshCounter").html("");
-	            $("#SearchGraphArea").empty();
-	            searchFunctions.refreshSearchPage();
-	        });
 	    
-	        $(document).on('click', ".RemoveChart",function(e) {
-	            e.preventDefault();
-	            var chartTitle = $(this).data("charttitle");
-	            
-	            localStorageManager.removeItem(localStorageSearchKey,chartTitle);
-	            refreshCounterStatus=true;
-	            searchFunctions.refreshSearchPage();
-	        });
+	       
 	    
 	        $(document).on('click', ".PulseTime",function(e) {
 	            e.preventDefault();
@@ -515,6 +503,12 @@ input:valid {
     
     		$(document).on('click', "#RefreshCounter",function(e) {
             	refreshCounterStatus=!refreshCounterStatus;
+            	if(refreshCounterStatus){
+            		refreshCounterStatus=false;
+            	}else{
+            		refreshCounterStatus=true;
+            	}
+            	
         	});    
     
     		$(document).on('click', "#GetDataSubmit",function(e) {
@@ -599,6 +593,9 @@ input:valid {
 		        $("#SearchConfigurator").hide();
 		        $("#TopButtons").show();
 		        $("#UpdateArea").show();
+		        refreshCounterStatus=true;
+		        $("#RefreshCounter").show();
+ 	            $("#RefreshCounterMessage").show();
 		    });
             //
             // the end of searchpanel

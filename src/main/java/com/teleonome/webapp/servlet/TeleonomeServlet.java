@@ -435,6 +435,9 @@ public void init() {
 				logger.debug("Refreshcurrent virew, processing:" + dataElement.toString(4));
 				String formName2 = dataElement.getString("formName");
 				String chartTitle = dataElement.getString("chartTitle");
+				String visualizationStyle = dataElement.getString("visualizationStyle");
+				
+				
 				String identityPointer =  dataElement.getString("identity");
 				Identity identity = new Identity(identityPointer);
 				
@@ -465,6 +468,7 @@ public void init() {
 					toReturnElement.put("chartTitle", chartTitle);
 					toReturnElement.put("Units", units);
 					toReturnElement.put("Minimum", minimum);
+					toReturnElement.put("VisualizationStyle", visualizationStyle);
 					toReturn.put(toReturnElement);
 					
 				}else if(formName2.equals("LookUpDeneWord")){
