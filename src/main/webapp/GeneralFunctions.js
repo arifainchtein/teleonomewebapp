@@ -16,6 +16,11 @@ function CopyToClipboard(containerid) {
 	}
 }
 
+function getISOStringDateOnly(date) {
+	  const dateAndTime = date.toISOString().split('T');
+	  const time = dateAndTime[1].split(':');
+	  return dateAndTime[0];
+	}
 
 function getISOStringWithoutSecsAndMillisecs(date) {
 	  const dateAndTime = date.toISOString().split('T')

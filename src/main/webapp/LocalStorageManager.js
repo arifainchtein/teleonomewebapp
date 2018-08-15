@@ -3,19 +3,40 @@ class LocalStorageManager{
 		
 	}
 	
+	removeItem(localStorageComponentKey, objectKey){
+		var searchObject = JSON.parse(localStorage.getItem(localStorageComponentKey));
+		delete searchObject[objectKey];
+		localStorage.setItem(localStorageComponentKey, JSON.stringify(searchObject));
+	}
+	
+	removeComponentInfo(localStorageComponentKey){
+		
+		localStorage.removeItem(localStorageComponentKey);
+	}
+	
+	getItem(localStoreageKey, objectKey){
+		
+		return localStorage.getItem(localStoreageKey);
+	}
+	
+	setItem(localStorageComponentKey, object){
+		 localStorage.setItem(localStorageComponentKey, JSON.stringify(object));
+	}
+			
+	
 	getAllStorageForComponent(localStorageComponentKey) {
         var values = [];
         var searchObj = JSON.parse(localStorage.getItem(localStorageComponentKey));
-        console.log("searchObj=" + searchObj);
         if(searchObj==null)return values;
-       // var searchObj = JSON.parse(searchObj1);
-        
-        if(searchObj != undefined && searchObj!=null){
-            
+        console.log("searchObj=" + searchObj);
+        //var searchObj1 = JSON.parse(searchObj);
+       // console.log("searchObj1=" + searchObj1);
+        //if(searchObj1 != undefined && searchObj1!=null){
+        if(searchObj != undefined && searchObj!=null){    
             var keys = Object.keys(searchObj);
             for(var key in searchObj){
                 if (searchObj.hasOwnProperty(key)) {
-                    var parsed = JSON.parse(searchObj[key])
+                  //  var parsed = JSON.parse(searchObj1[key])
                    
                     values.push( searchObj[key] );
                 }

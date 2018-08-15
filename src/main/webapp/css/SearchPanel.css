@@ -41,8 +41,8 @@
 .HeadingTitle{
     font-size:24px;
 }
-.LastValuePanel{
-   
+
+.LastValuePanel{ 
     transform: translateX(0%) translateY(50%);
 
 }
@@ -57,9 +57,35 @@
     padding-top:50px;
     font-size:40px;
 }
-
 .lastValueTimeString{
+	
     font-size:14px;
+}
+.LastValuePanelSmall{ 
+    margin-top:0px;
+    padding:10px;
+}
+
+.lastValueUnitsSmall{
+    font-size:20px;
+    margin-right:20px;
+    
+}
+
+.lastValueSmall{
+    margin-left:20px;
+    font-size:24px;
+    margin-right:5px;
+}
+
+.lastValueTimeStringSmall{
+	margin-left:20px;
+    font-size:14px;
+}
+
+.form-elements-small{
+	padding:20px;
+	margin-right:10px;
 }
 
 .SearchConfigurator{
@@ -71,9 +97,19 @@
     margin-right:40px;
     margin-top:20px;
 }
+
+.SearchConfiguratorSmall{
+    z-index: 10;
+    background-color:lightgrey;
+}
+
+.SearchConfiguratorButtonsSmall{
+	padding:15px;
+	 margin-left:10px;
+    margin-right:10px;
+}
 .TopButtons{
-    padding-top:30px;
-    padding-bottom:30px;
+    
     
 }
 .SearchConfiguratorButtons{
@@ -82,9 +118,11 @@
 }
 #UpdateArea{
     cursor: pointer;
+    margin-top: -20px;
+    margin-bottom: 20px;
 }
 #RefreshCounter{
-    margin-left: 30px;
+    padding-left: 30px;
     font-size:28px;
  	
 }

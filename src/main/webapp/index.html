@@ -251,14 +251,14 @@ input:valid {
 		</div>
 
 		<div id="EntryPoint" class="container-fluid"></div>
-		<div id="Graph" ></div>
-		
-		<div id="footer">
+		<div id="Graph" ><div id="footer">
 			<div class="col-xs-12 navbar-default navbar-fixed-bottom">
 				<div class="row" id="bottomNav">
 				</div>
 			</div>
-		</div>
+		</div></div>
+		
+		
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script>
@@ -412,6 +412,7 @@ input:valid {
                     e.preventDefault();
                     $("#TopButtons").hide();
                     $("#SearchConfigurator").show();
+                    searchFunctions.loadNewVisualizerData();
                 });
              
                 $(document).on('click', "#CancelSearch",function(e) {
@@ -423,27 +424,27 @@ input:valid {
                 
                 $(document).on('click', "#ClearCharts",function(e) {
                     e.preventDefault();
-                    //localStorage.clear();
-                    localStorage.removeItem(localStorageSearchComponentKey);
+                   
+                    localStorageManager.removeComponentInfo(localStorageSearchKey);
                     $("#RefreshCounter").html("");
                     $("#SearchGraphArea").empty();
-                    refreshSearchPage();
+                    searchFunctions.refreshSearchPage();
                 });
             
                 $(document).on('click', ".RemoveChart",function(e) {
                     e.preventDefault();
                     var chartTitle = $(this).data("charttitle");
-                    //localStorage.removeItem(chartTitle);
-                    localStorage.removeItem(localStorageSearchComponentKey.chartTitle);
+                    ;
+                    localStorageManager.removeItem(localStorageSearchKey,chartTitle);
                     refreshCounterStatus=true;
-                    refreshSearchPage();
+                    searchFunctions.refreshSearchPage();
                 });
             
                 $(document).on('click', ".PulseTime",function(e) {
                     e.preventDefault();
                     var teleonomeName = $(this).data("teleonomename");
                     var pulseMillis = $(this).data("time");
-                    displayPulse(teleonomeName, pulseMillis);
+                    searchFunctions.displayPulse(teleonomeName, pulseMillis);
                 });
             
             
@@ -457,70 +458,7 @@ input:valid {
             search_RefreshInterval =  setInterval(searchFunctions.refreshSearchPage, 30000); //NOTE: period is passed in milliseconds
         	search_RefreshCounterInterval = setInterval(searchFunctions.refreshCounterUpdate, 1 * 1000);
             
-            $('#WaitingText').html("Please Wait...");
-	        $('#WaitingWheel').show();
-	        $("#SearchConfigurator").hide();
-	        $.ajax({
-	            type: "GET",
-	            url: "/TeleonomeServlet",
-	            data: {formName:"GetRememberDeneWordList"},
-	            success: function (data) {
-	               // console.log("data=" + JSON.stringify(data));
-	                $('#Identity').append($('<option>', {
-	                        value: "",
-	                        text : "Remember a DeneWord"
-	                    }));
-	                var number=  count(data);
-	                for(var i=0;i<number;i++){
-	                    var item = data["option" + (i+1)];
-	                    $('#Identity').append($('<option>', {
-	                        value: item.value,
-	                        text : item.text
-	                    }));
-	                }    
-	                // $.each(data, function (i, item) {
-	                //     $('#Identity').append($('<option>', {
-	                //         value: item.value,
-	                //         text : item.text
-	                //     }));
-	                // });
-	            },
-	            error: function(data){
-	                console.log("error getting remembered denewords list:" + JSON.stringify(data));
-	                alert("Error getting list:" + JSON.stringify(data));
-	                return false;
-	            }
-	        });
-    
-	        $.ajax({
-	            type: "GET",
-	            url: "/TeleonomeServlet",
-	            data: {formName:"GetTeleonomeDateAvailable"},
-	            success: function (data) {
-	                $('#Teleonome').append($('<option>', {
-	                        value: "",
-	                        text : "Select A Teleonome"
-	                    }));
-	    
-	                $.each(data, function (i, item) {
-	                    var textValue = item.Name;
-	                    if(item.hasOwnProperty('TimeMin') && item.hasOwnProperty('TimeMax')){
-	                        var minDate = convertUTCDateToLocalDate(new Date(item.TimeMin));
-	                        var maxDate = convertUTCDateToLocalDate(new Date(item.TimeMax));
-	                        textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs(maxDate)  + ")";
-	                    }
-	                    $('#Teleonome').append($('<option>', {
-	                        value: item.Name,
-	                        text : textValue
-	                    }));
-	                });
-	            },
-	            error: function(data){
-	                console.log("error getting TeleonomeNames:" + JSON.stringify(data));
-	                alert("Error getting list:" + JSON.stringify(data));
-	                return false;
-	            }
-	        });
+            searchFunctions.loadNewVisualizerData();
 	    
 	        searchFunctions.generateAllGraphs();
 	        var untilDate = new Date();
@@ -535,35 +473,36 @@ input:valid {
 	        $("#untilTime").defaultValue = currentTimeAsString;
 	        $('#WaitingWheel').hide();
     
-    
-	        $("#NewChart").click(function(e) {
+	        $(document).on('click', "#NewChart",function(e) {
 	            e.preventDefault();
 	            $("#TopButtons").hide();
+	            $("#UpdateArea").hide();
 	            $("#SearchConfigurator").show();
 	        });
     
-	     	$("#CancelSearch").click(function(e) {
+	        $(document).on('click', "#CancelSearch",function(e) {
 	            e.preventDefault();
 	            $("#SearchConfigurator").hide();
 	            $("#TopButtons").show();
+	            $("#UpdateArea").show();
 	        });
 	        
-	        $("#ClearCharts").click(function(e) {
+	     	$(document).on('click', "#ClearCharts",function(e) {
 	            e.preventDefault();
-	            //localStorage.clear();
-	            localStorage.removeItem(localStorageSearchComponentKey);
+	            
+	            localStorageManager.removeComponentInfo(localStorageSearchKey);
 	            $("#RefreshCounter").html("");
 	            $("#SearchGraphArea").empty();
-	            refreshSearchPage();
+	            searchFunctions.refreshSearchPage();
 	        });
 	    
 	        $(document).on('click', ".RemoveChart",function(e) {
 	            e.preventDefault();
 	            var chartTitle = $(this).data("charttitle");
-	            //localStorage.removeItem(chartTitle);
-	            localStorage.removeItem(localStorageSearchComponentKey.chartTitle);
+	            
+	            localStorageManager.removeItem(localStorageSearchKey,chartTitle);
 	            refreshCounterStatus=true;
-	            refreshSearchPage();
+	            searchFunctions.refreshSearchPage();
 	        });
 	    
 	        $(document).on('click', ".PulseTime",function(e) {
@@ -578,8 +517,7 @@ input:valid {
             	refreshCounterStatus=!refreshCounterStatus;
         	});    
     
-    
-		    $( "#GetDataSubmit" ).click(function(e) {
+    		$(document).on('click', "#GetDataSubmit",function(e) {
 		        e.preventDefault();
 		
 		        $('#WaitingText').html("Please wait...");
@@ -625,16 +563,17 @@ input:valid {
 		        }    
 		        liveUpdate = $("#LiveUpdate").is(':checked');
 		        var localStoreageKey = identityPointer + "_" + visualizationStyle+"_" + liveUpdate ;
-		        if(localStorage.getItem(localStorageSearchComponentKey.localStoreageKey) != undefined){
+		        
+		        if(localStorageManager.getItem(localStoreageKey) != undefined){
 		            alert("Visualizer exists");
 		            return false; 
 		        }
-		        var searchObject = JSON.parse(localStorage.getItem(localStorageSearchComponentKey));
+		        var searchObject = JSON.parse(localStorageManager.getItem(localStorageSearchKey));
 		        if(searchObject == null || searchObject==undefined){
 		            searchObject={};
 		        }
 		        
-		       var numberOfObjects =  getNumberOfSearchObjects()+1;
+		       var numberOfObjects =  localStorageManager.getNumberOfObjectsByComponent(localStorageSearchKey)+1;
 		
 		        var identity = identityFactory.createIdentityByPointer(identityPointer);
 		        
@@ -652,13 +591,14 @@ input:valid {
 		            position:numberOfObjects
 		        }
 		        var s = JSON.stringify(jsonData);
-		       
 		        searchObject[localStoreageKey]=s;
-		         localStorage.setItem(localStorageSearchComponentKey, JSON.stringify(searchObject));
-		        processForm(formName,identityPointer, fromMillis , untilMillis, appendChart, visualizationStyle, liveUpdate);
+		        
+		        localStorageManager.setItem(localStorageSearchKey, searchObject);
+		        searchFunctions.processForm(formName,identityPointer, fromMillis , untilMillis, appendChart, visualizationStyle, liveUpdate);
 		        $('#WaitingWheel').hide();
 		        $("#SearchConfigurator").hide();
 		        $("#TopButtons").show();
+		        $("#UpdateArea").show();
 		    });
             //
             // the end of searchpanel
