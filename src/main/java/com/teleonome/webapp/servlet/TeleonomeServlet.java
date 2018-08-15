@@ -465,7 +465,7 @@ public void init() {
 					toReturnElement.put("Minimum", minimum);
 					toReturn.put(toReturnElement);
 					
-				}else if(formName.equals("LookUpDeneWord")){
+				}else if(formName2.equals("LookUpDeneWord")){
 					
 					Identity identity = new Identity(identityPointer);
 					

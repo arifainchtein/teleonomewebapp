@@ -17,9 +17,12 @@ function CopyToClipboard(containerid) {
 }
 
 function getISOStringDateOnly(date) {
-	  const dateAndTime = date.toISOString().split('T');
-	  const time = dateAndTime[1].split(':');
-	  return dateAndTime[0];
+//	  const dateAndTime = date.toISOString().split('T');
+//	  const time = dateAndTime[1].split(':');
+	//const dateAndTime = date..split(' ');
+	var currentDateAsString = date.getFullYear() + "/" + (date.getMonth()+1) + "/"  + date.getDate();
+    
+	  return currentDateAsString;
 	}
 
 function getISOStringWithoutSecsAndMillisecs(date) {

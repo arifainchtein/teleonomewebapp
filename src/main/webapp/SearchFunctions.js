@@ -375,6 +375,7 @@ class SearchFunctions{
 		$('#WaitingText').html("Please Wait...");
         $('#WaitingWheel').show();
         $("#SearchConfigurator").hide();
+        $('#Teleonome').empty();
         $.ajax({
             type: "GET",
             url: "/TeleonomeServlet",
@@ -420,10 +421,11 @@ class SearchFunctions{
                 $.each(data, function (i, item) {
                     var textValue = item.Name;
                     if(item.hasOwnProperty('TimeMin') && item.hasOwnProperty('TimeMax')){
-                    	var m =  Date.parse(item.TimeMin);
-                    	console.log("m=" +m);
-                        var minDate = convertUTCDateToLocalDate(m);
-                        var maxDate = convertUTCDateToLocalDate(Date.parse(item.TimeMax));
+                    	var minDate =  new Date(Date.parse(item.TimeMin));
+                    	var maxDate =  new Date(Date.parse(item.TimeMax));
+                    	//console.log("m=" +m);
+                        //var minDate = convertUTCDateToLocalDate(min);
+                        //var maxDate = convertUTCDateToLocalDate(max);
                         var screensize = document.documentElement.clientWidth;
                         if(screensize>500){
                         	textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs(maxDate)  + ")";
