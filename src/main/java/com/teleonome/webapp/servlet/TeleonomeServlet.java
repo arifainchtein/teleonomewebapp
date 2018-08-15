@@ -436,6 +436,8 @@ public void init() {
 				String formName2 = dataElement.getString("formName");
 				String chartTitle = dataElement.getString("chartTitle");
 				String identityPointer =  dataElement.getString("identity");
+				Identity identity = new Identity(identityPointer);
+				
 				TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
 				long from = dataElement.getLong("from");
 				long until = dataElement.getLong("until");
@@ -459,7 +461,7 @@ public void init() {
 					if(deneWordToRemember.has(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE)) {
 						minimum = deneWordToRemember.getDouble(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
 					}
-					
+					toReturnElement.put("TeleonomeName", identity.getTeleonomeName());
 					toReturnElement.put("chartTitle", chartTitle);
 					toReturnElement.put("Units", units);
 					toReturnElement.put("Minimum", minimum);
@@ -467,7 +469,6 @@ public void init() {
 					
 				}else if(formName2.equals("LookUpDeneWord")){
 					
-					Identity identity = new Identity(identityPointer);
 					
 					String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
 					logger.debug("for search teleonomeName :" + teleonomeName + " identity.getTeleonomeName()=" + identity.getTeleonomeName());
@@ -501,7 +502,7 @@ public void init() {
 					logger.debug("After search otherTelenomeLastPulse :" + units + " minimum=" + minimum);
 					
 					
-					
+					toReturnElement.put("TeleonomeName", identity.getTeleonomeName());
 					toReturnElement.put("chartTitle", chartTitle);
 					toReturnElement.put("Units", units);
 					toReturnElement.put("Minimum", minimum);
