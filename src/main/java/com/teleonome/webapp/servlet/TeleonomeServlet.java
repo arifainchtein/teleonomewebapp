@@ -48,8 +48,14 @@ public class TeleonomeServlet extends HttpServlet {
 
 	}
 
+	public void  doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
+		process(req, res);
+	}
+	public void  doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
+		process(req, res);
+	}
 
-	public void  doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{		
+	public void  process(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{		
 		String errorMessage="";
 		HttpSession session = req.getSession(true);
 		String formName = req.getParameter("formName");
@@ -659,14 +665,7 @@ public class TeleonomeServlet extends HttpServlet {
 		}
 	}
 	
-	public void  doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
-		String errorMessage="";
-		HttpSession session = req.getSession(true);
-		String formName = req.getParameter("formName");
-		boolean waitForResponse=true;
-		logger.debug("Do Post formaName=" + formName);
-
-	}
+	
 
 
 
