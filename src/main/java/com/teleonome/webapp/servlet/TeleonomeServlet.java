@@ -70,7 +70,7 @@ public class TeleonomeServlet extends HttpServlet {
 			String currentIdentityMode = (String) getServletContext().getAttribute("CurrentIdentityMode");
 
 			String enableNetworkMode = req.getParameter("EnableNetworkMode");
-
+			logger.debug("enableNetworkMode=" + enableNetworkMode);
 			if(enableNetworkMode!=null && enableNetworkMode.equals("Yes")){
 				command = TeleonomeConstants.COMMAND_REBOOT_ENABLE_NETWORK;
 
@@ -112,7 +112,7 @@ public class TeleonomeServlet extends HttpServlet {
 
 
 			logger.debug("the action is " + action);
-			if(action.equals(TeleonomeConstants.COMMAND_REBOOT)){
+			if(action.equals(TeleonomeConstants.COMMAND_REBOOT) || action.equals(TeleonomeConstants.COMMAND_REBOOT_TEXT)){
 				if(currentIdentityMode.equals(TeleonomeConstants.TELEONOME_IDENTITY_SELF)){
 					if(enableNetworkMode!=null && enableNetworkMode.equals("Yes")){
 						command = TeleonomeConstants.COMMAND_REBOOT_ENABLE_NETWORK;
@@ -129,7 +129,7 @@ public class TeleonomeServlet extends HttpServlet {
 						command = action;
 					}
 				}
-			}else if(action.equals(TeleonomeConstants.COMMAND_SHUTDOWN)){
+			}else if(action.equals(TeleonomeConstants.COMMAND_SHUTDOWN)  || action.equals(TeleonomeConstants.COMMAND_SHUTDOWN_TEXT)){
 				if(currentIdentityMode.equals(TeleonomeConstants.TELEONOME_IDENTITY_SELF)){
 					logger.debug("the enableNetworkMode is " + enableNetworkMode);
 

@@ -228,6 +228,9 @@ var COMMAND_LOCATION_WEBSERVER_ROOT="$Webserver_Root";
 
 var COMMAND_REBOOT="$Reboot";
 var COMMAND_SHUTDOWN="$Shutdown";
+var COMMAND_REBOOT_TEXT="Reboot";
+var COMMAND_SHUTDOWN_TEXT="Shutdown";
+
 var SHUTDOWN_ACTION="Shutdown Action";
 
 var COMMAND_SHUTDOWN_ENABLE_HOST="Shutdown Enable Host";
