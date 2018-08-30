@@ -18,6 +18,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,9 +31,11 @@ import com.teleonome.framework.utils.Utils;
 public class FileWatcherThread extends Thread{
 	//  AsyncContext anAsyncContext;
 	String denomeFileName="";
+	Logger logger;
 	private ServletContext servletContext;
 	public FileWatcherThread(ServletContext s){
 		servletContext=s;
+		logger = Logger.getLogger(getClass());
 
 	}
 	
@@ -52,21 +55,19 @@ public class FileWatcherThread extends Thread{
 
 					String extension = FilenameUtils.getExtension(selectedFile.getAbsolutePath());
 					String fileName = FilenameUtils.getName(selectedFile.getAbsolutePath());
-					// System.out.println("Async  changed:" + changed + " extension:" + extension);
+					logger.debug("File  changed:" + changed + " extension:" + extension);
 					if (extension.equals("denome")) {
 						
 						
 						JSONObject operationalDataDeneChain=null,sensorDataDeneChain=null;
-						//	// System.out.println("Async  reading denome from " +selectedFile.getName());
+						logger.debug("Reading denome from " +selectedFile.getName());
 
 						String denomeFileInString = FileUtils.readFileToString(selectedFile);
-						//// System.out.println("Async  after pulse has finished, denomeFileInString=" );
-
-						// // System.out.println("Async  s: " + s);
+						
 
 						if(denomeFileInString!=null && denomeFileInString.length()>10){
 							try {
-								String data = FileUtils.readFileToString(new File(denomeFileName));
+								String data = FileUtils.readFileToString(new File(denomeFileInString));
 								JSONObject denomeJSONObject = new JSONObject(data);
 								
 								String pulseTimestamp = denomeJSONObject.getString("Pulse Timestamp");
@@ -112,6 +113,7 @@ public class FileWatcherThread extends Thread{
 								servletContext.setAttribute("CurrentPulse", denomeJSONObject);
 								servletContext.setAttribute("CurrentTimeZone", currentTimeZone);
 								servletContext.setAttribute("CurrentIdentityMode", currentIdentityMode);
+								logger.debug("CurrentIdentityMode="+ currentIdentityMode);
 								servletContext.setAttribute("CurrentPulse", currentPulse);
 
 							}catch (JSONException e) {
