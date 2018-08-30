@@ -67,8 +67,7 @@ public class FileWatcherThread extends Thread{
 
 						if(denomeFileInString!=null && denomeFileInString.length()>10){
 							try {
-								String data = FileUtils.readFileToString(new File(denomeFileInString));
-								JSONObject denomeJSONObject = new JSONObject(data);
+								JSONObject denomeJSONObject = new JSONObject(denomeFileInString);
 								
 								String pulseTimestamp = denomeJSONObject.getString("Pulse Timestamp");
 								long pulseTimestampInMilliseconds = denomeJSONObject.getLong("Pulse Timestamp in Milliseconds");
