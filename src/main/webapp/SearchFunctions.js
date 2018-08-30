@@ -101,7 +101,8 @@ class SearchFunctions{
 		            var untilMillis = graphData.untilMillis;
 		            var formName=graphData.formName;
 		            var appendChart = graphData.appendChart;
-		            var chartTitle = graphData.chartTitle;
+                    var chartTitle = graphData.chartTitle;
+                    var chartDivId = graphData.chartDivId;
 		            var liveUpdate = graphData.liveUpdate;
 		            console.log("graphData.chartTitle="+ graphData.chartTitle + " position=" + graphData.position);
 		            if(liveUpdate){ 
@@ -116,11 +117,13 @@ class SearchFunctions{
 		          
 		            var serverRequest = {};
 		            serverRequest.identity=identityPointer;
-		            serverRequest.from=fromMillis;
-		            serverRequest.until=untilMillis;
+		            serverRequest.fromMillis=fromMillis;
+		            serverRequest.untilMillis=untilMillis;
 		            serverRequest.visualizationStyle=visualizationStyle;
-		            serverRequest.formName=formName;
-		            serverRequest.chartTitle=chartTitle;
+                    serverRequest.formName=formName;
+                    serverRequest.chartDivId=chartDivId ;
+                    serverRequest.liveUpdate=liveUpdate;
+                    serverRequest.chartTitle=chartTitle;
 		            reqData[i]=serverRequest;
 		        }
 
@@ -138,12 +141,16 @@ class SearchFunctions{
 		                var panelHTML="";
 		                for(var j=0;j<allData.length;j++){
 		                    var data = allData[j];
-		                    var chartTitle = data.chartTitle;
+                            var chartTitle = data.chartTitle;
+                            var chartDivId = data.chartDivId;
+                            var fromMillis = data.fromMillis;
+                            var untilMillis = data.untilMillis;
+
 		                    var lastValue = data.Value[data.Value.length-1].Value;
 		                    var rendLastValue = lastValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		                    var anyTeleonomeName = data.TeleonomeName;
 		                    var units = data.Units.replace('"','');
-		                    var chartTitleNoSpaces = chartTitle.replace(/\s/g, '');
+                            var liveUpdate = data.liveUpdate;
 		                    var lastValueMillis = data.Value[data.Value.length-1]["Pulse Timestamp in Milliseconds"];
 		                    var lastValueTimestamp = new Date(lastValueMillis);
 		                    var visualizationStyle =data.VisualizationStyle;
@@ -159,15 +166,16 @@ class SearchFunctions{
 		                        forMin="0" + lastValueTimestamp.getMinutes();
 		                    }else{
 		                        forMin=lastValueTimestamp.getMinutes();
-		                    }
+                            }
+                            
+                           
 		                    var lastValueDisplayString = lastValueTimestamp.getDate()+"/" +  (lastValueTimestamp.getMonth()+1)+"/" + lastValueTimestamp.getFullYear()+" " + forHour+":" +forMin;
 		                    console.log("painting " + chartTitle);
-		                // var newDiv ='<div class=\"Parent\" id=\"'+chartTitle+'Parent\"><div class="row-fluid \"><div class=\"col-xs-10 column\"> <div id=\"' +chartTitleNoSpaces + '\"></div></div><div class=\"col-xs-2 column LastValuePanel\"><div id=\"'+chartTitle+'LastValue\"><span class=\"lastValue\">'+lastValue +'</span><br><span class=\"lastValueUnits\"><span>'+units+'</span></div></div></div>';
 		                    panelHTML = "<div class=\"row\">";  
 		                    panelHTML += "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12\">";   
 		                    panelHTML += "<div class=\"bs-component\">";
 		                    panelHTML +=     "<div class=\"panel panel-default\">";
-		                    panelHTML +=         " <div class=\"panel-heading clearfix\"><span class=\"HeadingTitle\">"+ chartTitle +"</span><button data-charttitle=\"" + identityPointer + "_" + visualizationStyle +"_" + liveUpdate + "\" class=\"btn btn-default  pull-right RemoveChart\"  ><i class=\" glyphicon glyphicon-remove\"></i></button></div>";
+		                    panelHTML +=         " <div class=\"panel-heading clearfix\"><span class=\"HeadingTitle\">"+ chartTitle +"</span><button data-charttitle=\"" + identityPointer + "_" + visualizationStyle +"_" + liveUpdate  + "_" + fromMillis + "_" + untilMillis + "\" class=\"btn btn-default  pull-right RemoveChart\"  ><i class=\" glyphicon glyphicon-remove\"></i></button></div>";
 		                    panelHTML +=         "<div class=\"panel-body text-center\">";
 		                    panelHTML +=             "<div class=\"Parent\" id=\"'+chartTitle+'Parent\">";
 		                    var screensize = document.documentElement.clientWidth;
@@ -178,24 +186,33 @@ class SearchFunctions{
 		                    	
 		                    	if(screensize<500){
 		                    		panelHTML +=                     "<div class=\"col-xs-12 column\"> ";
-			                        panelHTML +=                         "<div id=\"" +chartTitleNoSpaces + "\">";
+			                        panelHTML +=                         "<div id=\"" +chartDivId + "\">";
 			                        panelHTML +=                         "</div>";
 			                        panelHTML +=                    "</div>";
 			                     // closing the row and moving the last value to a new row
-			                        panelHTML +=                    "</div>"; 
-			                        panelHTML +=                 "<div class=\"row-fluid \">";
-			                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary LastValuePanelSmall\">";            
-			                        panelHTML +=                        "<div id=\""+chartTitle+"LastValue\"><span class=\"lastValueSmall\">"+rendLastValue +"</span><span class=\"lastValueUnitsSmall\"><span>"+units+"</span><span class=\"lastValueTimeStringSmall\"><span>"+lastValueDisplayString+"</span>";
-			                        panelHTML +=                    "</div>";
-			                        
+                                    panelHTML +=                    "</div>"; 
+                                    if(liveUpdate){
+                                        panelHTML +=                 "<div class=\"row-fluid \">";
+                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary LastValuePanelSmall\">";            
+                                        panelHTML +=                        "<div id=\""+chartTitle+"LastValue\"><span class=\"lastValueSmall\">"+rendLastValue +"</span><span class=\"lastValueUnitsSmall\"><span>"+units+"</span><span class=\"lastValueTimeStringSmall\"><span>"+lastValueDisplayString+"</span>";
+                                        panelHTML +=                    "</div>";
+                                    }
 			                    }else{
-			                    	panelHTML +=                     "<div class=\"col-xs-10 column\"> ";
-			                        panelHTML +=                         "<div id=\"" +chartTitleNoSpaces + "\">";
-			                        panelHTML +=                         "</div>";
-			                        panelHTML +=                    "</div>";
-			                        panelHTML +=                    "<div class=\"col-xs-2 column LastValuePanel\">";            
-			                        panelHTML +=                        "<div id=\""+chartTitle+"LastValue\"><span class=\"lastValue\">"+rendLastValue +"</span><br><span class=\"lastValueUnits\"><span>"+units+"</span><br><span class=\"lastValueTimeString\"><span>"+lastValueDisplayString+"</span>";
-			                        panelHTML +=                    "</div>";
+                                    if(liveUpdate){
+                                        panelHTML +=                     "<div class=\"col-xs-10 column\"> ";
+                                        panelHTML +=                         "<div id=\"" +chartDivId + "\">";
+                                        panelHTML +=                         "</div>";
+                                        panelHTML +=                    "</div>";
+                                        panelHTML +=                    "<div class=\"col-xs-2 column LastValuePanel\">";            
+                                        panelHTML +=                        "<div id=\""+chartTitle+"LastValue\"><span class=\"lastValue\">"+rendLastValue +"</span><br><span class=\"lastValueUnits\"><span>"+units+"</span><br><span class=\"lastValueTimeString\"><span>"+lastValueDisplayString+"</span>";
+                                        panelHTML +=                    "</div>";
+                                    }else{
+                                        panelHTML +=                     "<div class=\"col-xs-12 column\"> ";
+                                        panelHTML +=                         "<div id=\"" +chartDivId + "\">";
+                                        panelHTML +=                         "</div>";
+                                        panelHTML +=                    "</div>";
+                                    }
+			                    	
 			                    }
 		                    	
 		                    	
@@ -245,7 +262,7 @@ class SearchFunctions{
 		                   
 		                    $("#SearchGraphArea").append(panelHTML);
 		                    if(visualizationStyle=="LineGraph"){
-		                        drawTimeSeriesLineChart(chartTitleNoSpaces,data, "");
+		                        drawTimeSeriesLineChart(chartDivId,data, "");
 		                       
 		                    }
 
@@ -267,108 +284,108 @@ class SearchFunctions{
 		    }
 		}
 	
-	processForm(formName,identityPointer, fromMillis , untilMillis, appendChart, visualizationStyle, liveUpdate){
-        var identity = identityFactory.createIdentityByPointer(identityPointer);
+	// processForm(formName,identityPointer, fromMillis , untilMillis, appendChart, visualizationStyle, liveUpdate){
+    //     var identity = identityFactory.createIdentityByPointer(identityPointer);
         
-        var anyTeleonomeName = identity.teleonomeName;
-        var chartTitle = anyTeleonomeName + "-"+identity.deneWordName;
+    //     var anyTeleonomeName = identity.teleonomeName;
+    //     var chartTitle = anyTeleonomeName + "-"+identity.deneWordName;
     
-        $.ajax({
-            type: "GET",
-            url: "/TeleonomeServlet",
-            data: {formName:formName, identity:identityPointer, from:fromMillis,until:untilMillis},
-            success: function (data) {
-                console.log("receiving data for" + identityPointer);
-                if(!appendChart){
-                    $("#SearchGraphArea").empty();
-                } 
-                var lastValue = data.Value[data.Value.length-1].Value;
-                var rendLastValue = lastValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                var anyTeleonomeName = data.TeleonomeName;
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "/TeleonomeServlet",
+    //         data: {formName:formName, identity:identityPointer, from:fromMillis,until:untilMillis},
+    //         success: function (data) {
+    //             console.log("receiving data for" + identityPointer);
+    //             if(!appendChart){
+    //                 $("#SearchGraphArea").empty();
+    //             } 
+    //             var lastValue = data.Value[data.Value.length-1].Value;
+    //             var rendLastValue = lastValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    //             var anyTeleonomeName = data.TeleonomeName;
                 
-                var units = data.Units.replace('"','');
-                var chartTitleNoSpaces = chartTitle.replace(/\s/g, '');
-                var lastValueMillis = data.Value[data.Value.length-1]["Pulse Timestamp in Milliseconds"];
-                var lastValueTimestamp = new Date(lastValueMillis);
+    //             var units = data.Units.replace('"','');
+    //             var chartTitleNoSpaces = chartTitle.replace(/\s/g, '');
+    //             var lastValueMillis = data.Value[data.Value.length-1]["Pulse Timestamp in Milliseconds"];
+    //             var lastValueTimestamp = new Date(lastValueMillis);
     
-                var forHour;
-                if(lastValueTimestamp.getHours()<10){
-                    forHour="0" + lastValueTimestamp.getHours();
-                }else{
-                    forHour=lastValueTimestamp.getHours();
-                }
+    //             var forHour;
+    //             if(lastValueTimestamp.getHours()<10){
+    //                 forHour="0" + lastValueTimestamp.getHours();
+    //             }else{
+    //                 forHour=lastValueTimestamp.getHours();
+    //             }
     
-                var forMin;
-                if(lastValueTimestamp.getMinutes()<10){
-                    forMin="0" + lastValueTimestamp.getMinutes();
-                }else{
-                    forMin=lastValueTimestamp.getMinutes();
-                }
-                var lastValueDisplayString = lastValueTimestamp.getDate()+"/" +  (lastValueTimestamp.getMonth()+1)+"/" + lastValueTimestamp.getFullYear()+" " + forHour+":" +forMin;
-    console.log("painting " + chartTitle);
-               // var newDiv ='<div class=\"Parent\" id=\"'+chartTitle+'Parent\"><div class="row-fluid \"><div class=\"col-xs-10 column\"> <div id=\"' +chartTitleNoSpaces + '\"></div></div><div class=\"col-xs-2 column LastValuePanel\"><div id=\"'+chartTitle+'LastValue\"><span class=\"lastValue\">'+lastValue +'</span><br><span class=\"lastValueUnits\"><span>'+units+'</span></div></div></div>';
-                var panelHTML= "<div class=\"row\">";  
-                panelHTML += "<div class=\"col-lg-6\">";   
-                panelHTML += "<div class=\"bs-component\">";
-                panelHTML +=     "<div class=\"panel panel-default\">";
-                panelHTML +=         " <div class=\"panel-heading clearfix\"><span class=\"HeadingTitle\">"+ chartTitle +"</span><button data-charttitle=\"" + identityPointer + "_" + visualizationStyle +"_" + liveUpdate + "\" class=\"btn btn-default  pull-right RemoveChart\"  ><i class=\" glyphicon glyphicon-remove\"></i></button></div>";
-                panelHTML +=         "<div class=\"panel-body text-center\">";
-                panelHTML +=             "<div class=\"Parent\" id=\"'+chartTitle+'Parent\">";
-                panelHTML +=                 "<div class=\"row-fluid \">";
-                if(visualizationStyle=="LineGraph"){   
-                    panelHTML +=                     "<div class=\"col-xs-10 column\"> ";
-                    panelHTML +=                         "<div id=\"" +chartTitleNoSpaces + "\">";
-                    panelHTML +=                         "</div>";
-                    panelHTML +=                    "</div>";
-                    panelHTML +=                    "<div class=\"col-xs-2 column LastValuePanel\">";            
-                    panelHTML +=                        "<div id=\""+chartTitle+"LastValue\"><span class=\"lastValue\">"+rendLastValue +"</span><br><span class=\"lastValueUnits\"><span>"+units+"</span><br><span class=\"lastValueTimeString\"><span>"+lastValueDisplayString+"</span>";
-                    panelHTML +=                    "</div>";
-                }else if(visualizationStyle=="DataTable"){
+    //             var forMin;
+    //             if(lastValueTimestamp.getMinutes()<10){
+    //                 forMin="0" + lastValueTimestamp.getMinutes();
+    //             }else{
+    //                 forMin=lastValueTimestamp.getMinutes();
+    //             }
+    //             var lastValueDisplayString = lastValueTimestamp.getDate()+"/" +  (lastValueTimestamp.getMonth()+1)+"/" + lastValueTimestamp.getFullYear()+" " + forHour+":" +forMin;
+    // console.log("painting " + chartTitle);
+    //            // var newDiv ='<div class=\"Parent\" id=\"'+chartTitle+'Parent\"><div class="row-fluid \"><div class=\"col-xs-10 column\"> <div id=\"' +chartTitleNoSpaces + '\"></div></div><div class=\"col-xs-2 column LastValuePanel\"><div id=\"'+chartTitle+'LastValue\"><span class=\"lastValue\">'+lastValue +'</span><br><span class=\"lastValueUnits\"><span>'+units+'</span></div></div></div>';
+    //             var panelHTML= "<div class=\"row\">";  
+    //             panelHTML += "<div class=\"col-lg-6\">";   
+    //             panelHTML += "<div class=\"bs-component\">";
+    //             panelHTML +=     "<div class=\"panel panel-default\">";
+    //             panelHTML +=         " <div class=\"panel-heading clearfix\"><span class=\"HeadingTitle\">"+ chartTitle +"</span><button data-charttitle=\"" + identityPointer + "_" + visualizationStyle +"_" + liveUpdate + "\" class=\"btn btn-default  pull-right RemoveChart\"  ><i class=\" glyphicon glyphicon-remove\"></i></button></div>";
+    //             panelHTML +=         "<div class=\"panel-body text-center\">";
+    //             panelHTML +=             "<div class=\"Parent\" id=\"'+chartTitle+'Parent\">";
+    //             panelHTML +=                 "<div class=\"row-fluid \">";
+    //             if(visualizationStyle=="LineGraph"){   
+    //                 panelHTML +=                     "<div class=\"col-xs-10 column\"> ";
+    //                 panelHTML +=                         "<div id=\"" +chartTitleNoSpaces + "\">";
+    //                 panelHTML +=                         "</div>";
+    //                 panelHTML +=                    "</div>";
+    //                 panelHTML +=                    "<div class=\"col-xs-2 column LastValuePanel\">";            
+    //                 panelHTML +=                        "<div id=\""+chartTitle+"LastValue\"><span class=\"lastValue\">"+rendLastValue +"</span><br><span class=\"lastValueUnits\"><span>"+units+"</span><br><span class=\"lastValueTimeString\"><span>"+lastValueDisplayString+"</span>";
+    //                 panelHTML +=                    "</div>";
+    //             }else if(visualizationStyle=="DataTable"){
                     
-                    panelHTML += "<div class=\"col-xs-12 column\">";
-                    panelHTML += '<table class=\"table table-striped\">';
-                    panelHTML += "<thead class=\"thead-dark\">";
-                    panelHTML += "<tr><th>Time</th><th>Value</th></tr></thead>"
-                    var values = data.Value;
-                    $.each(values, function(i,item) {
-                		var formatedTime = new Date(item["Pulse Timestamp in Milliseconds"]);
-                        var forMin;
-                        if(formatedTime.getMinutes()<10){
-                            forMin="0" + formatedTime.getMinutes();
-                        }else{
-                            forMin=formatedTime.getMinutes();
-                        }
-                        var ft = formatedTime.getDate()+"/" +  (formatedTime.getMonth()+1)+"/" + formatedTime.getFullYear()+" " + formatedTime.getHours()+":" +forMin;
+    //                 panelHTML += "<div class=\"col-xs-12 column\">";
+    //                 panelHTML += '<table class=\"table table-striped\">';
+    //                 panelHTML += "<thead class=\"thead-dark\">";
+    //                 panelHTML += "<tr><th>Time</th><th>Value</th></tr></thead>"
+    //                 var values = data.Value;
+    //                 $.each(values, function(i,item) {
+    //             		var formatedTime = new Date(item["Pulse Timestamp in Milliseconds"]);
+    //                     var forMin;
+    //                     if(formatedTime.getMinutes()<10){
+    //                         forMin="0" + formatedTime.getMinutes();
+    //                     }else{
+    //                         forMin=formatedTime.getMinutes();
+    //                     }
+    //                     var ft = formatedTime.getDate()+"/" +  (formatedTime.getMonth()+1)+"/" + formatedTime.getFullYear()+" " + formatedTime.getHours()+":" +forMin;
                         
-                        if(item.Value != undefined &&  !isNaN(formatedTime.getDate()) ){
+    //                     if(item.Value != undefined &&  !isNaN(formatedTime.getDate()) ){
                                     
-                            panelHTML += '<tr><td><a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"PulseTime\" data-time=\"' + item["Pulse Timestamp in Milliseconds"] + '\"  data-teleonomeName=\"'+ anyTeleonomeName +'\">' + ft + '</a></td><td>' + item.Value + '</td></tr>';
-                        }
-                    });
-                    panelHTML += '</table></div>';
-                }   
-                panelHTML +=                   "</div>";
-                panelHTML +=               "</div>";
-                panelHTML +=           "</div>";
-                panelHTML +=       "</div>";
-                panelHTML +=   "</div>";
-                panelHTML +="</div>";
-                 panelHTML +="</div>";
-                $("#SearchGraphArea").append(panelHTML);
-                if(visualizationStyle=="LineGraph"){
-                    drawTimeSeriesLineChart(chartTitleNoSpaces,data, "");
+    //                         panelHTML += '<tr><td><a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"PulseTime\" data-time=\"' + item["Pulse Timestamp in Milliseconds"] + '\"  data-teleonomeName=\"'+ anyTeleonomeName +'\">' + ft + '</a></td><td>' + item.Value + '</td></tr>';
+    //                     }
+    //                 });
+    //                 panelHTML += '</table></div>';
+    //             }   
+    //             panelHTML +=                   "</div>";
+    //             panelHTML +=               "</div>";
+    //             panelHTML +=           "</div>";
+    //             panelHTML +=       "</div>";
+    //             panelHTML +=   "</div>";
+    //             panelHTML +="</div>";
+    //              panelHTML +="</div>";
+    //             $("#SearchGraphArea").append(panelHTML);
+    //             if(visualizationStyle=="LineGraph"){
+    //                 drawTimeSeriesLineChart(chartTitleNoSpaces,data, "");
                    
-                }
+    //             }
                
-            },
-            error: function(data){
-                $('#WaitingWheel').hide();
-                console.log("error getting log file:" + JSON.stringify(data));
-                alert("Error getting log:" + JSON.stringify(data));
-                return false;
-            }
-        }); 
-    }
+    //         },
+    //         error: function(data){
+    //             $('#WaitingWheel').hide();
+    //             console.log("error getting log file:" + JSON.stringify(data));
+    //             alert("Error getting log:" + JSON.stringify(data));
+    //             return false;
+    //         }
+    //     }); 
+    // }
     
 	
 	loadNewVisualizerData(){

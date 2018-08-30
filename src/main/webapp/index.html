@@ -497,7 +497,7 @@ input:valid {
 	            e.preventDefault();
 	            var teleonomeName = $(this).data("teleonomename");
 	            var pulseMillis = $(this).data("time");
-	            displayPulse(teleonomeName, pulseMillis);
+	            searchFunctions.displayPulse(teleonomeName, pulseMillis);
 	        });
     
     
@@ -527,36 +527,49 @@ input:valid {
 		        var untilTime = document.getElementById("untilTime").value;
 		        var untilMillis = (new Date(untilDate + " " + untilTime)).getTime();
 		        var formName="RememberDeneWord";
-		        var appendChart = $("#AppendChart").is(':checked');
+				var appendChart = $("#AppendChart").is(':checked');
+				liveUpdate = $("#LiveUpdate").is(':checked');
+
 		        if(fromDate=="" || fromTime==""){
-		            var fromDate = new Date();
-		            var ts = Math.round(new Date().getTime() / 1000);
+					var date = new Date();
+					var fromDate = (date.getDate()-1) + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+					var fromTime = date.getHours() + ":" + date.getMinutes();
+					
+		            var ts = Math.round(date.getTime() / 1000);
 		            fromMillis = ts - (24 * 3600);
 		            //fromDate.setDate(fromDate.getDate()-1);
 		            //fromMillis = fromDate.getTime();
 		        }
 		        if(untilDate=="" || untilTime==""){
-		            untilMillis = new Date().getTime();
-		        }
+					
+					var date = new Date();
+					untilMillis = date.getTime();
+					var untilDate = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+					var untilTime = date.getHours() + ":" + date.getMinutes();
+					
+		        }else{
+					//
+					// if untildate is not blank, then is not a live update
+					liveUpdate=false;
+				}
 		
 		       
-		        if(identityPointer==""){
-		            //identityPointer = document.getElementById("LookUpIdentity").html;
+		        if(identityPointer=="" || identityPointer == undefined){
 		            var selectedTeleonome = $('#Teleonome').find(":selected").val();
 		            var selectedNucleus = $('#Nucleus').find(":selected").val();
 		            var selecteDeneChain = $('#DeneChain').find(":selected").val();
 		            var selecteDene = $('#Dene').find(":selected").val();
 		            var selecteDeneWord = $('#DeneWord').find(":selected").val();
 		            identityPointer = selectedTeleonome + ":" + selectedNucleus + ":" + selecteDeneChain + ":" + selecteDene + ":" + selecteDeneWord;
-		            formName="LookUpDeneWord";
+					formName="LookUpDeneWord";
+					
+					alert("Please select a remembered deneword");
+					return false;
 		        }
 		            
-		        if(identityPointer==""){
-		            alert("Select something");
-		            return false; 
-		        }    
-		        liveUpdate = $("#LiveUpdate").is(':checked');
-		        var localStoreageKey = identityPointer + "_" + visualizationStyle+"_" + liveUpdate ;
+		        
+		        
+		        var localStoreageKey = identityPointer + "_" + visualizationStyle+"_" + liveUpdate  + "_" + fromMillis + "_" + untilMillis;
 		        
 		        if(localStorageManager.getItem(localStoreageKey) != undefined){
 		            alert("Visualizer exists");
@@ -572,14 +585,20 @@ input:valid {
 		        var identity = identityFactory.createIdentityByPointer(identityPointer);
 		        
 		        var anyTeleonomeName = identity.teleonomeName;
-		        var chartTitle = anyTeleonomeName + "-" + identity.deneWordName;
+				var chartTitle = anyTeleonomeName + "-" + identity.deneWordName + " " + fromDate + " " + fromTime + "  -  " + untilDate + " " + untilTime;
+				var chartDivId = anyTeleonomeName +  identity.deneWordName  + fromDate  + fromTime + untilDate  + untilTime;
+				 chartDivId = chartDivId.replace(/\s/g, '');
+				 chartDivId = chartDivId.replace(/-/g, '')
+				 chartDivId = chartDivId.replace(/:/g, "");
+				 chartDivId = chartDivId.replace(/\//g, "");
 		        var jsonData = {
 		            visualizationStyle:visualizationStyle,
 		            identityPointer:identityPointer,
 		            formName:formName,
 		            appendChart:appendChart,
 		            liveUpdate:liveUpdate,
-		            chartTitle:chartTitle,
+					chartTitle:chartTitle,
+					chartDivId:chartDivId,
 		            fromMillis:fromMillis,
 		            untilMillis:untilMillis,
 		            position:numberOfObjects
@@ -588,7 +607,8 @@ input:valid {
 		        searchObject[localStoreageKey]=s;
 		        
 		        localStorageManager.setItem(localStorageSearchKey, searchObject);
-		        searchFunctions.processForm(formName,identityPointer, fromMillis , untilMillis, appendChart, visualizationStyle, liveUpdate);
+				//searchFunctions.processForm(formName,identityPointer, fromMillis , untilMillis, appendChart, visualizationStyle, liveUpdate);
+				searchFunctions.refreshSearchPage();
 		        $('#WaitingWheel').hide();
 		        $("#SearchConfigurator").hide();
 		        $("#TopButtons").show();

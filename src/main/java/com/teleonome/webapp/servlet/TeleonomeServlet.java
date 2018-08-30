@@ -435,25 +435,28 @@ public void init() {
 				logger.debug("Refreshcurrent virew, processing:" + dataElement.toString(4));
 				String formName2 = dataElement.getString("formName");
 				String chartTitle = dataElement.getString("chartTitle");
+				String chartDivId = dataElement.getString("chartDivId");	
 				String visualizationStyle = dataElement.getString("visualizationStyle");
+				long fromMillis = dataElement.getLong("fromMillis");
+				long untilMillis = dataElement.getLong("untilMillis");
 				
+				boolean liveUpdate = dataElement.getBoolean("liveUpdate");
 				
 				String identityPointer =  dataElement.getString("identity");
 				Identity identity = new Identity(identityPointer);
 				
 				TimeZone timeZone = (TimeZone) getServletContext().getAttribute("TimeZone");
-				long from = dataElement.getLong("from");
-				long until = dataElement.getLong("until");
+				
 				
 				if(formName2.equals("RememberDeneWord")) {
 					
 					
 					logger.debug("identityPointer=" + identityPointer);
-					JSONArray values = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, from, until);
+					JSONArray values = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, fromMillis, untilMillis);
 					
 					JSONObject toReturnElement = new JSONObject();
 					toReturnElement.put("Value", values);
-					
+					toReturnElement.put("liveUpdate", liveUpdate);
 					JSONObject deneWordsToRemember = (JSONObject) getServletContext().getAttribute("DeneWordsToRemember");
 					JSONObject deneWordToRemember = deneWordsToRemember.getJSONObject(identityPointer);
 					String units="N.A.";
@@ -467,7 +470,11 @@ public void init() {
 					toReturnElement.put("TeleonomeName", identity.getTeleonomeName());
 					toReturnElement.put("chartTitle", chartTitle);
 					toReturnElement.put("Units", units);
+					toReturnElement.put("chartDivId"	,chartDivId);
 					toReturnElement.put("Minimum", minimum);
+					toReturnElement.put("fromMillis", fromMillis);
+					toReturnElement.put("untilMillis", untilMillis);
+					
 					toReturnElement.put("VisualizationStyle", visualizationStyle);
 					toReturn.put(toReturnElement);
 					
@@ -479,9 +486,9 @@ public void init() {
 					
 					JSONArray values = null;
 					if(identity.getTeleonomeName().equals(teleonomeName)) {
-						values = aDBManager.getDeneWordTimeSeriesByIdentity( identity,  from,  until);
+						values = aDBManager.getDeneWordTimeSeriesByIdentity( identity,  fromMillis,  untilMillis);
 					}else {
-						values = aDBManager.getOrganismDeneWordTimeSeriesByIdentity( identity,  from,  until);
+						values = aDBManager.getOrganismDeneWordTimeSeriesByIdentity( identity,  fromMillis,  untilMillis);
 					}
 					
 					logger.debug("After search for :" + identity + " values length=" + values.length());

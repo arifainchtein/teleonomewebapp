@@ -43,7 +43,8 @@ class SearchPanel{
 	        panelHTML += "                                <div class=\"form-row\">";
 	        panelHTML += "                                        <label for=\"Identity\">Remembered DeneWords</label>";
 	        panelHTML += "                                    <select name=\"identity\" id=\"Identity\"></select><br>";
-	        panelHTML += "                                </div> ";                               
+			panelHTML += "                                </div> ";  
+			                             
 	        panelHTML += "                                <div class=\"form-row\">";
 	        panelHTML += "                                        <label for=\"Teleonome\">Search Denome</label>";
 	        panelHTML += "                                    <select name=\"Teleonome\" id=\"Teleonome\" onchange=\"searchFunctions.populateNuclei()\"></select>";
@@ -52,7 +53,9 @@ class SearchPanel{
 	        panelHTML += "                                    <select name=\"Dene\" id=\"Dene\" onchange=\"searchFunctions.populateDeneWord()\"></select>";
 	        panelHTML += "                                    <select name=\"DeneWord\" id=\"DeneWord\" onchange=\"searchFunctions.populateLookUpIdentity()\"></select>";
 	        panelHTML += "                                </div>";
-	        panelHTML += "                                <div  id=\"LookUpIdentity\" name=\"lookupUpIdentity\"></div><br>";                                 
+			panelHTML += "                                <div  id=\"LookUpIdentity\" name=\"lookupUpIdentity\"></div><br>";      
+			
+			
 	        panelHTML += "                                <div class=\"form-row\">";
 	        panelHTML += "                                    <div class=\"form-group col-md-6\">";
 	        panelHTML += "                                        <label for=\"fromDate\">From</label>";
