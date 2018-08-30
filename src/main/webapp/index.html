@@ -16,7 +16,7 @@
 <link href="bootstrap.min.css" rel="stylesheet">
 <link href="css/UpdateParams.css" rel="stylesheet">
 <link href="css/SearchPanel.css" rel="stylesheet">
-<link href="bs/css/bootstrap-switch.css" rel="stylesheet">
+
 
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -276,6 +276,7 @@ input:valid {
 			src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"
 			type="text/javascript"></script>
  		
+ 		<script src="bs/js/bootstrap-switch.js"></script>
 		<script type="text/javascript" src="TeleonomeConstants.js"></script>
 		<script src="bs/js/bootstrap-switch.js"></script>
 
@@ -625,6 +626,7 @@ input:valid {
 					var panelPointer  = $(this).data("panelpointer");
 					var n = new Networking(panelPointer);
 					var html = n.process(panelPointer);
+					$(".BSswitch").bootstrapSwitch();
 					$('#SettingsWorkArea').html(html);
 					$('#SettingsWorkArea').show();
 				});
@@ -701,6 +703,42 @@ input:valid {
 				
 				
 			});
+			
+			
+			function confirmNetworkingMessage( mensaje) {
+				 //
+				 // check we are enabling network mode
+				 var enabledNetworkMode = $("#EnableNetworkMode").is(':checked');
+				 if(enabledNetworkMode){
+					 //
+					 // now check that you have a value for SSID 
+					 // and if needed a password
+					 if($("#AvailableNetworks :selected")==null || ("#AvailableNetworks :selected")==""){
+						 alert("Please select a SSID");
+							return false;
+					 }
+					 var selectedSSID = $("#AvailableNetworks :selected").val();
+					 if(selectedSSID!=""){
+						 var selectedValue = $("#AvailableNetworks :selected").text();
+						 var password =  $("#password").val().length>7;
+						 
+							if(selectedValue!=null && 
+							  selectedValue.indexOf("Password")>-1 &&
+							  !password
+							){
+								alert("Please input SSID password");
+								return false;
+							}
+					 }else{
+						 alert("Select an SSID");
+						 return false;
+					 }
+					 
+				 }
+				 var answer = confirm(mensaje);
+				 return answer;
+				 
+			}
 		</script>
 
 		<!-- Placed at the end of the document so the pages load faster -->

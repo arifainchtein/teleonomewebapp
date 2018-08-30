@@ -29,6 +29,7 @@ import com.teleonome.framework.utils.Utils;
 
 
 
+
    
 public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
@@ -84,7 +85,8 @@ public class WebAppContextListener implements ServletContextListener {
 		PingThread aPingThread = new PingThread();
 		aPingThread.start();
 		logger.warn("Teleonome ContextListener initialized");
-		
+		FileWatcherThread aFileWatcherThread = new FileWatcherThread(servletContext);
+		aFileWatcherThread.start();
 	}
 
 	

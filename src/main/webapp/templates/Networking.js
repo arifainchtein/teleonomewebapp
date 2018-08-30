@@ -10,7 +10,7 @@ class Networking{
         panelHTML += " <div class=\"panel-heading\"><h4>"+panelTitle+"</h4></div>";
         panelHTML += "<div class=\"panel-body text-center\">";
         panelHTML += "<div class=\"row\">";
-        panelHTML += "<Form id=\"Resignal\" name=\"ReSignal\"  id=\"MainForm\" method=\"POST\" action=\"MonoNannyServlet\">";
+        panelHTML += "<Form id=\"Resignal\" name=\"ReSignal\"  id=\"MainForm\" method=\"POST\" action=\"TeleonomeServlet\">";
         
         var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
         var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
@@ -93,13 +93,14 @@ class Networking{
         
         
         panelHTML += "<input type=\"Hidden\" name=\"formName\" value=\"ReSignal\">";
-        panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 100px;\"></div></div>";
-        panelHTML += "<div class=\"row\">";
+       // panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 100px;\"></div></div>";
+        panelHTML += "<div class=\"row\"><div class=\"col-xs-12\">";
         panelHTML += "<center>";
+        panelHTML += "<div class=\"col-xs-12\" style=\"height: 100px;\">";
         panelHTML += "<input class=\"btn btn-primary  btn-lg\" type=\"Submit\" onclick=\"return confirmMessage('Are you sure you want to reboot the Teleonome?')\" name=\"action\" id=\"RebootButton\" value=\"Reboot\">";
         panelHTML += "<input class=\"btn btn-primary  btn-lg\" type=\"Submit\" onclick=\"return confirmMessage('Are you sure you want to shutdown the Teleonome?')\"  name=\"action\" id=\"ShutdownButton\" value=\"Shutdown\">";
         panelHTML += "</center>";
-        panelHTML += "</div>";
+        panelHTML += "</div></div>";
         panelHTML += "</form>";	
         
         if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
