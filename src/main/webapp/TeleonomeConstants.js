@@ -46,9 +46,9 @@ var TELEONOME_IDENTITY_LABEL = "Identity";
 //
 // the data when sending a commandrequest
 //
-var COMMAND_REQUEST_PASSWORD="Command Request Password";
+var COMMAND_CODE="CommandCode";
 var COMMAND_REQUEST_EXECUTION_OK="Command Request Succesfull";
-var COMMAND_REQUEST_INVALID_PASSWORD="Command Request Invalid Password";
+var COMMAND_REQUEST_INVALID_PASSWORD="Invalid Password";
 
 
 var TELEONOME_IDENTITY_SELF = "Self";

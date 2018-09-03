@@ -60,6 +60,7 @@ public class TeleonomeServlet extends HttpServlet {
 		HttpSession session = req.getSession(true);
 		String formName = req.getParameter("formName");
 		String action = req.getParameter("action");
+		String commandCode = req.getParameter(TeleonomeConstants.COMMAND_CODE);
 		String command=null;
 		String payLoad="";
 		boolean waitForResponse=true;
@@ -151,15 +152,13 @@ public class TeleonomeServlet extends HttpServlet {
 			}else{
 			}
 
-			sendCommand(command, payLoad);
+			sendCommand(command, commandCode,payLoad);
 
 		}else if(formName.equals(TeleonomeConstants.HEART_TOPIC_UPDATE_FORM_REQUEST)) {
 
 			String identityPointer = req.getParameter(TeleonomeConstants.TELEONOME_IDENTITY_LABEL);
 			Object value = req.getParameter(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
-			String password = req.getParameter(TeleonomeConstants.COMMAND_REQUEST_PASSWORD);
-
-
+			
 
 			logger.warn("about to apply mutation identityPointer=" + identityPointer + " value=" + value);
 
@@ -182,7 +181,7 @@ public class TeleonomeServlet extends HttpServlet {
 			command="SetParameters";
 			payLoad=payLoadParentJSONObject.toString();
 
-			int commandId = aDBManager.requestCommandToExecute(command,payLoad);
+			int commandId = aDBManager.requestCommandToExecute(command, commandCode,payLoad);
 			logger.debug("sent command=" + command  + " commandId=" + commandId);	
 			res.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = res.getWriter();
@@ -631,19 +630,19 @@ public class TeleonomeServlet extends HttpServlet {
 	}
 
 	
-	public void sendCommand(String command, String payLoad){
+	public void sendCommand(String command,String commandCode, String payLoad){
 		logger.debug("sending command to database =" + command);
 		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 
-		int id = aDBManager.requestCommandToExecute(command, payLoad);
-		logger.debug("MonoNannyServlet id=" + id);
+		int id = aDBManager.requestCommandToExecute(command,commandCode, payLoad);
+		logger.debug("TeleonomeServlet id=" + id);
 		//
 		// now keep waiiting until the command is executed
 		//
 		boolean waitForCommandToComplete=true;
 		int counter=0;
-		int numberOfTries=10;
+		int numberOfTries=100;
 		while(waitForCommandToComplete){
 			counter++;
 			waitForCommandToComplete= !aDBManager.isCommandCompleted(id);
@@ -659,7 +658,7 @@ public class TeleonomeServlet extends HttpServlet {
 			// if we tried ten times and did nt respond
 			// then blink red three times and get out the loop
 			if(waitForCommandToComplete && counter>numberOfTries){
-				
+				logger.debug(command + "  Failed to be executed in the time alloted");
 				waitForCommandToComplete=false;
 			}
 		}

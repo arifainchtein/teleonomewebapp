@@ -94,13 +94,13 @@ class Networking{
         
         panelHTML += "<input type=\"Hidden\" name=\"formName\" value=\"ReSignal\">";
        // panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 100px;\"></div></div>";
-        panelHTML += "<div class=\"row\"><div class=\"col-xs-12\">";
-        panelHTML += "<center>";
-        panelHTML += "<div class=\"col-xs-12\" style=\"height: 100px;\">";
-        panelHTML += "<input class=\"btn btn-primary  btn-lg\" type=\"Submit\" onclick=\"return confirmMessage('Are you sure you want to reboot the Teleonome?')\" name=\"action\" id=\"RebootButton\" value=\"Reboot\">";
-        panelHTML += "<input class=\"btn btn-primary  btn-lg\" type=\"Submit\" onclick=\"return confirmMessage('Are you sure you want to shutdown the Teleonome?')\"  name=\"action\" id=\"ShutdownButton\" value=\"Shutdown\">";
-        panelHTML += "</center>";
-        panelHTML += "</div></div>";
+        panelHTML += "<div class=\"row\">";
+       
+        panelHTML += "<div class=\"col-lg-3 col-xs-3\"></div>";
+        panelHTML += "<div class=\"col-lg-3 col-xs-3\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" onclick=\"return confirmNetworkMessage('Are you sure you want to reboot the Teleonome?')\" name=\"action\" id=\"RebootButton\" value=\"Reboot\"></div>";
+        panelHTML += "<div class=\"col-lg-3 col-xs-3\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" onclick=\"return confirmNetworkMessage('Are you sure you want to shutdown the Teleonome?')\"  name=\"action\" id=\"ShutdownButton\" value=\"Shutdown\"></div>";
+        panelHTML += "<div class=\"col-lg-3  col-xs-3\"></div>";
+        panelHTML += "</div>";
         panelHTML += "</form>";	
         
         if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
