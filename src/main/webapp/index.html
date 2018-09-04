@@ -631,9 +631,9 @@ input:valid {
 				var confirm = confirmNetworkingMessage( 'Are you sure you want to reboot the Teleonome?') ;
 				if(!confirm)return false;
 
-				var password = prompt("Please enter the password", "");
-				if(isNaN(password) || password.length!=6){
-					alert("Password must be 6 numbers");
+				var commandCode = prompt("Please enter the code", "");
+				if(isNaN(commandCode) || commandCode.length!=6){
+					alert("The code must be 6 numbers");
 					return false;
 				}
 				var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
@@ -645,11 +645,11 @@ input:valid {
 				if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
 					var enableNetworkMode = $('#EnableNetworkMode').val();
 					var AvailableNetworks = $('#AvailableNetworks');
-					var password = $('#password');
+					var password = $('#password').val();
 					$.ajax({
 						type: "POST",
 						url: "/TeleonomeServlet",
-						data: {formName:formName, EnableNetworkMode: enableNetworkMode, action:action, password:password},
+						data: {formName:formName, EnableNetworkMode: enableNetworkMode, action:action, password:password, CommandCode:commandCode},
 						success: function (commandId) {
 							console.log("commandId=" + data);
 						},
@@ -664,7 +664,7 @@ input:valid {
 					$.ajax({
 					type: "POST",
 					url: "/TeleonomeServlet",
-					data: {formName:formName, EnableHostMode: enableHostMode, action:action},
+					data: {formName:formName, EnableHostMode: enableHostMode, action:action, CommandCode:commandCode},
 					success: function (commandId) {
 						console.log("commandId=" + data);
 					},
