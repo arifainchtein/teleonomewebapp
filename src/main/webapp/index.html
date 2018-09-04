@@ -643,7 +643,7 @@ input:valid {
 				var action = "Reboot";
 
 				if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
-					var enableNetworkMode = $('#EnableNetworkMode').value();
+					var enableNetworkMode = $('#EnableNetworkMode').val();
 					var AvailableNetworks = $('#AvailableNetworks');
 					var password = $('#password');
 					$.ajax({
@@ -660,7 +660,7 @@ input:valid {
 						}
 					});	
 				}else {	
-					var enableHostMode = $('#EnableHostMode').value();
+					var enableHostMode = $('#EnableHostMode').val();
 					$.ajax({
 					type: "POST",
 					url: "/TeleonomeServlet",
