@@ -111,9 +111,14 @@ public class WebAppContextListener implements ServletContextListener {
 	        	JSONObject deneWordsToRemember =  getDeneWordsToRemember();
 				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 				
+				
+				
 				try {
 					JSONObject pulse = new JSONObject(FileUtils.readFileToString(new File("Teleonome.denome")));
 					servletContext.setAttribute("LastPulse", pulse);
+					Identity identity = new Identity(getTeleonomeName(), TeleonomeConstants.NUCLEI_PURPOSE, TeleonomeConstants.DENECHAIN_OPERATIONAL_DATA, TeleonomeConstants.DENE_VITAL,TeleonomeConstants.DENEWORD_TYPE_CURRENT_IDENTITY_MODE)
+					String currentIdentityMode = (String) DenomeUtils.getDeneWordByIdentity(pulse, identity, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+					servletContext.setAttribute("CurrentIdentityMode", currentIdentityMode);
 				} catch (JSONException | IOException e) {
 					// TODO Auto-generated catch block
 					logger.warn(Utils.getStringException(e));
