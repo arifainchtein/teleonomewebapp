@@ -626,7 +626,57 @@ input:valid {
             //
             // the end of searchpanel
             //
-                
+			$(document).on('click', '#RebootButton',function(e){
+				e.preventDefault();
+				var confirm = confirmNetworkingMessage( 'Are you sure you want to reboot the Teleonome?') ;
+				if(!confirm)return false;
+
+				var password = prompt("Please enter the password", "");
+				if(isNaN(password) || password.length!=6){
+					alert("Password must be 6 numbers");
+					return false;
+				}
+				var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
+				var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
+				
+				var formName = $('#formName').value();
+				var action = "Reboot";
+
+				if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
+					var enableNetworkMode = $('#EnableNetworkMode').value();
+					var AvailableNetworks = $('#AvailableNetworks');
+					var password = $('#password');
+					$.ajax({
+						type: "POST",
+						url: "/TeleonomeServlet",
+						data: {formName:formName, EnableNetworkMode: enableNetworkMode, action:action, password:password},
+						success: function (commandId) {
+							console.log("commandId=" + data);
+						},
+						error: function(data){
+							console.log("error getting log file:" + JSON.stringify(data));
+							alert("Error getting log:" + JSON.stringify(data));
+							return false;
+						}
+					});	
+				}else {	
+					var enableHostMode = $('#EnableHostMode').value();
+					$.ajax({
+					type: "POST",
+					url: "/TeleonomeServlet",
+					data: {formName:formName, EnableHostMode: enableHostMode, action:action},
+					success: function (commandId) {
+						console.log("commandId=" + data);
+					},
+					error: function(data){
+						console.log("error rebooting:" + data;
+						alert("Error rebooting:" +  data;
+						return false;
+					}
+				});	
+				}	
+			});
+
 				$(document).on('click', '#Wifi',function(e){
 					var panelPointer  = $(this).data("panelpointer");
 					var n = new Networking(panelPointer);
