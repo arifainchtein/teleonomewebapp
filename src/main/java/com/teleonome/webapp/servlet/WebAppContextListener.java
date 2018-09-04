@@ -122,6 +122,9 @@ public class WebAppContextListener implements ServletContextListener {
 				} catch (JSONException | IOException e) {
 					// TODO Auto-generated catch block
 					logger.warn(Utils.getStringException(e));
+				} catch (InvalidDenomeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				
 				
