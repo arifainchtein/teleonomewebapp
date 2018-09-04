@@ -639,7 +639,7 @@ input:valid {
 				var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
 				var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
 				
-				var formName = $('#formName').value();
+				var formName = $('#formName').val();
 				var action = "Reboot";
 
 				if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
