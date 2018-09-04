@@ -43,12 +43,6 @@ var DENEWORD_TYPE_INITIAL_IDENTITY_MODE = "Initial Identity Mode";
 var DENEWORD_TYPE_CURRENT_IDENTITY_MODE = "Current Identity Mode";
 var TELEONOME_IDENTITY_LABEL = "Identity";
 
-//
-// the data when sending a commandrequest
-//
-var COMMAND_CODE="CommandCode";
-var COMMAND_REQUEST_EXECUTION_OK="Command Request Succesfull";
-var COMMAND_REQUEST_INVALID_PASSWORD="Invalid Password";
 
 
 var TELEONOME_IDENTITY_SELF = "Self";
@@ -502,6 +496,11 @@ var DENEWORD_TYPE_MICROCONTROLLER_PROCESSING_CLASSNAME="Microcontroller Processi
 var COMMAND_REQUEST_NOT_EXECUTED="Not Executed";
 var COMMAND_REQUEST_EXECUTED="Executed";
 var COMMAND_REQUEST_SKIPPED_AT_INIT="Skipped at init";
+var COMMAND_EXECUTED_ON="ExecutedOn";
+var COMMAND_EXECUTION_STATUS="Status";
+var COMMAND_CODE="CommandCode";
+var COMMAND_REQUEST_EXECUTION_OK="Command Request Succesfull";
+var COMMAND_REQUEST_INVALID_PASSWORD="Invalid Password";
 
 //
 // the index for the front end

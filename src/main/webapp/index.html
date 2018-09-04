@@ -200,7 +200,7 @@ input:valid {
 				<div class="row">
 					<div id="status" class="col-lg-4 col-md-4 col-sm-6 col-xs-5">
 						<h3>
-							<div style="padding-left: 5px;" id="teleonomeName">Connecting .....</div>
+							<div style="padding-left: 5px;" id="teleonomeName">Connecting...</div>
 						</h3>
 					</div>
 
@@ -208,19 +208,19 @@ input:valid {
 						<h5><span id="ErrorText" style="color:white;" ></span></h5>
 					</div>
 		
-					<div id="status" class="hidden-lg hidden-md hidden-sm col-xs-1"></div>
+					<div  class="hidden-lg hidden-md hidden-sm col-xs-1"></div>
 
-					<div id="status" class="col-lg-2 col-md-2 col-sm-1 col-xs-2 col-xs-offset-2">
+					<div  class="col-lg-2 col-md-2 col-sm-1 col-xs-2 col-xs-offset-2">
 						<h3>
 							<span id="TeleonomeDataStatus"
-								class=" label label-sm label-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								class=" label label-sm label-danger collapse" style="display: none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 						</h3>
 						<h6>Data</h6>
 					</div>
-					<div id="status" class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
-					<div id="status" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+					<div  class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
+					<div  class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
 						<h3>
-							<span id="TeleonomeStatus" class="label label-sm label-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+							<span id="TeleonomeStatus" class="label label-sm label-default collapse" style="display: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 						</h3>
 						<h6>Status</h6>
 					</div>
@@ -229,6 +229,10 @@ input:valid {
 			<!--/.container-fluid -->
 		</nav>
 
+		<div class="row collapse">
+			<div id="CommandRequestStatus" class="alert alert-info">
+			</div>	
+		</div>
 		<div id="PulseInfo" class="well well-sm">
 			<h5>
 				Pulse: <span id="PulseTimestamp"></span> <span class="hidden-xs" >&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</span>

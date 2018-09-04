@@ -152,13 +152,20 @@ public class TeleonomeServlet extends HttpServlet {
 			}else{
 			}
 
-			sendCommand(command, commandCode,payLoad);
-
+			int commandId = sendCommand(command, commandCode,payLoad);
+			logger.debug("sent command=" + command  + " commandId=" + commandId);	
+			res.setContentType("text/html;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(commandId);
+			out.flush();
+			out.close();
+			
+			
 		}else if(formName.equals(TeleonomeConstants.HEART_TOPIC_UPDATE_FORM_REQUEST)) {
 
 			String identityPointer = req.getParameter(TeleonomeConstants.TELEONOME_IDENTITY_LABEL);
 			Object value = req.getParameter(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
-			
+
 
 			logger.warn("about to apply mutation identityPointer=" + identityPointer + " value=" + value);
 
@@ -629,42 +636,52 @@ public class TeleonomeServlet extends HttpServlet {
 
 	}
 
-	
-	public void sendCommand(String command,String commandCode, String payLoad){
+
+	public int sendCommand(String command,String commandCode, String payLoad){
 		logger.debug("sending command to database =" + command);
+		String toReturn="";
 		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 
 		int id = aDBManager.requestCommandToExecute(command,commandCode, payLoad);
 		logger.debug("TeleonomeServlet id=" + id);
-		//
-		// now keep waiiting until the command is executed
-		//
-		boolean waitForCommandToComplete=true;
-		int counter=0;
-		int numberOfTries=100;
-		while(waitForCommandToComplete){
-			counter++;
-			waitForCommandToComplete= !aDBManager.isCommandCompleted(id);
-			logger.debug("Wait for command to complete=" + waitForCommandToComplete + " counter=" + counter);
-
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//
-			// if we tried ten times and did nt respond
-			// then blink red three times and get out the loop
-			if(waitForCommandToComplete && counter>numberOfTries){
-				logger.debug(command + "  Failed to be executed in the time alloted");
-				waitForCommandToComplete=false;
-			}
-		}
+		return id;
+//		//
+//		// now keep waiiting until the command is executed
+//		//
+//		boolean waitForCommandToComplete=true;
+//		int counter=0;
+//		int numberOfTries=100;
+//		JSONObject queryResult;
+//		while(waitForCommandToComplete){
+//			counter++;
+//			queryResult= aDBManager.isCommandCompleted(id);
+//			logger.debug("Wait for command to complete=" + waitForCommandToComplete + " counter=" + counter);
+//			if(queryResult.has(TeleonomeConstants.COMMAND_EXECUTED_ON)) {
+//				waitForCommandToComplete=false;
+//				toReturn=queryResult.getString(TeleonomeConstants.COMMAND_EXECUTION_STATUS);
+//			}else {
+//				//
+//				// if we tried ten times and did nt respond
+//				// then blink red three times and get out the loop
+//				if(waitForCommandToComplete && counter>numberOfTries){
+//					logger.debug(command + "  Failed to be executed in the time alloted");
+//					waitForCommandToComplete=false;
+//				}else {
+//					try {
+//						Thread.sleep(500);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						logger.warn(Utils.getStringException(e));
+//					}
+//				}
+//			}
+//		}
+		
+//		return toReturn;
 	}
-	
-	
+
+
 
 
 

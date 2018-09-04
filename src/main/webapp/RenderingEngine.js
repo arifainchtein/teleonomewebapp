@@ -103,7 +103,7 @@ function monitorBetweenPulses() {
 
 } 
 
-function receivedCommandResponse(commandId){
+function receivedCommandResponse(cr){
 	//
 	// text contains the numerical id of the command
 	// that was completed,
@@ -111,6 +111,7 @@ function receivedCommandResponse(commandId){
 	// of the Teleonome.denome that would have been 
 	// updated.  Note that this will come from tomcat
 	// not the heart
+	var commandResponse = JSON.parse(cr);
 	$.ajax({
 		type: "GET",
 		url: "/TeleonomeServlet",
@@ -118,6 +119,21 @@ function receivedCommandResponse(commandId){
 		success: function (data) {
 			console.log("data=" + data);
 			loadDenomeRefreshInterface(data);
+			var result="info";
+			var commandResultText="";
+			var commandCode="";
+			
+			if(commandResponse.Status==COMMAND_REQUEST_EXECUTED){
+				result="success";
+				commandResultText=commandResponse.Command + " was executed succesfully";
+			}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_PASSWORD){
+				result="danger";
+				commandResultText=commandResponse.commandCode + " was not correct";
+			}
+
+			$('#CommandRequestStatus').removeClass().addClass('label label-sm label-' + result);
+			$('#CommandRequestStatus').html(commandResultText);
+			$('#CommandRequestStatus').show();
 		},
 		error: function(data){
 			var errorText = "error receiving updated Denome after command response, error was:" + JSON.stringify(data);
@@ -222,6 +238,7 @@ function loadDenomeRefreshInterface(denomeFileInString) {
 		$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
 	}
 
+	$('#CommandRequestStatus').hide();
 	pulseJSONObject= JSON.parse(denomeFileInString);
 	if(!$('#bannerformmodal').hasClass('in')){
 		RefreshInterface();
@@ -260,6 +277,7 @@ function RefreshInterface(){
 	 currentPathologyDeneCount = pathologyDenes.length + mnemosynePathologyDenes.length;
 	 if(currentPathologyDeneCount>0){
 		// $('#Pathology').show();
+		
 		// $('#ErrorText').html("See Pathology (" + pathologyDenes.length + ")");
 		// console.log("Pathology Denes:" + JSON.stringify(pathologyDenes));
 		// console.log("Mnemosyne Pathology Denes:" + JSON.stringify(mnemosynePathologyDenes));
@@ -463,6 +481,8 @@ function renderPageToDisplay(){
 		$("#EntryPoint").empty();
 		$("#teleonomeName").html(teleonomeName);
 		$("#PulseTimestamp").html(pulseTimestamp);
+		
+
 		$("#PulseCreationTime").html(pulseCreationTime);
 		//if(operationalMode!=OPERATIONAL_MODE_NORMAL){
 			$("#WPSInfo").html(operationalMode);
@@ -476,7 +496,8 @@ function renderPageToDisplay(){
 			$('#TeleonomeStatus').removeClass().addClass('label label-lg label-' + teleonomeStatusBootstrapValue);
 
 		}
-
+		$('TeleonomeStatus').show();
+		$('TeleonomeDataStatus').show();
 
 		if(currentPathologyDeneCount>0){
 			$('#TeleonomeStatus').html("&nbsp;&nbsp;" + currentPathologyDeneCount + "&nbsp;&nbsp;");
