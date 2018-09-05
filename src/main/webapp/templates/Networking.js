@@ -111,8 +111,8 @@ class Networking{
        
         panelHTML += "<div class=\"col-lg-3 col-xs-1\"></div>";
         panelHTML += "<div class=\"col-lg-3 col-xs-4\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" name=\"action\" id=\"RebootButton\" value=\"Reboot\"></div>";
-        panelHTML += "<div class=\"col-lg-1  col-xs-2\"></div>";
-        panelHTML += "<div class=\"col-lg-3 col-xs-4\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\"  name=\"action\" id=\"ShutdownButton\" value=\"Shutdown\"></div>";
+        panelHTML += "<div class=\"col-lg-1  col-xs-1\"></div>";
+        panelHTML += "<div class=\"col-lg-3 col-xs-5\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\"  name=\"action\" id=\"ShutdownButton\" value=\"Shutdown\"></div>";
         panelHTML += "<div class=\"col-lg-2  col-xs-1\"></div>";
         panelHTML += "</div>";
         panelHTML += "</form>";	
