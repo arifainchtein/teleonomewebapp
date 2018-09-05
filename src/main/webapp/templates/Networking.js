@@ -12,8 +12,11 @@ class Networking{
         panelHTML += "<div class=\"row\">";
         panelHTML += "<Form id=\"Resignal\" name=\"ReSignal\"  id=\"MainForm\" method=\"POST\" action=\"TeleonomeServlet\">";
         
-        var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
-        var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
+        var ipAddressPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"Host IP Address";
+        var ipAddress = getDeneWordByIdentityPointer(ipAddressPointer, DENEWORD_VALUE_ATTRIBUTE);
+        var essidPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"ESSID";
+        var essid = getDeneWordByIdentityPointer(essidPointer, DENEWORD_VALUE_ATTRIBUTE);
+       
         if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
             panelHTML += "<div id=\"NetworkMode\">";
             panelHTML += "<center>";
@@ -74,8 +77,8 @@ class Networking{
             panelHTML += "<div id=\"SelfMode\">";
             panelHTML += "<center>";
             panelHTML += "<div class=\"row\">";
-            panelHTML += "<label id=\"CurrentESSID\"></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            panelHTML += "<label id=\"CurrentIPAddress\"></label>";
+            panelHTML += "<label id=\"CurrentESSID\">Current SSID:&nbsp;&nbsp;"+ essid +"</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            panelHTML += "<label id=\"CurrentIPAddress\">Current IPAddress:&nbsp;&nbsp;"+ ipAddress +"</label>";
             panelHTML += "</div>";
             panelHTML += "<div class=\"row\">";
             panelHTML += "<div class=\"col-xs-12\" style=\"height: 20px;\"></div>";
