@@ -103,6 +103,34 @@ function monitorBetweenPulses() {
 
 } 
 
+function renderCommandRequestTable(allCommands){
+	var panelHTML = "<table class=\"table\">";
+	panelHTML += "<thead><tr><th>Id</th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Payload</th><th>Status</th></tr></thead><tbody>";
+	for (var i = 0; i < allCommands.length; i++) {
+		var command = allCommands[i];
+		
+		var createdOnDate = new Date(command.Createdon);
+		var createdOnDateFormated = getISOStringWithoutSecsAndMillisecs(createdOnDate);
+		var executedOnDateFormated="";
+		if(command.Executedon>0){
+			var executedOnDate = new Date(command.Executedon);
+			executedOnDateFormated = getISOStringWithoutSecsAndMillisecs(executedOnDate);
+		}
+		var rowStatus="info";
+		if(command.Status ==COMMAND_REQUEST_EXECUTED){
+			rowStatus="success";
+		}else if(command.Status ==COMMAND_REQUEST_PENDING_EXECUTION){
+			rowStatus="warning";
+		}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_PASSWORD){
+			rowStatus="danger";
+		}
+		panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td>" + command.Payload +"</td><td>" + command.Status +"</td></tr>";
+	
+	}
+	panelHTML += "</tbody></table>";
+	return panelHTML;
+}
+
 function receivedCommandResponse(cr){
 	//
 	// text contains the numerical id of the command

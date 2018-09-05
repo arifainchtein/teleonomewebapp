@@ -5,6 +5,21 @@ class SettingsInfo{
     }
 
     process(){
+        var allCommands=[];
+        $.ajax({
+            type: "POST",
+            url: "/TeleonomeServlet",
+            data: {formName:GetAllCommandRequests},
+            success: function (data) {
+                allCommands = JSON.parse(data);
+            },
+            error: function(data){
+                console.log("error getting commanda data:" + data);
+                alert("Error getting commanda data:" +  data);
+                return false;
+            }
+        });
+
         var panelHtml='';				
         panelHtml +='<div class="row">';
         panelHtml +='   <div class="col-lg-12">';
@@ -24,7 +39,15 @@ class SettingsInfo{
         panelHtml +='                       </div> ';          
         panelHtml +='                   </div> ';  
         panelHtml +='               </div>';
-        panelHtml +='               <div class="panel-body" id="SettingsWorkArea" style="display:none"></div>';
+        if(allCommands.length==0){
+            panelHtml +='               <div class="panel-body" id="SettingsWorkArea" style="display:none"></div>';
+        }else{
+            panelHtml +='               <div class="panel-body" id="SettingsWorkArea">';
+            panelHtml += renderCommandRequestTable(allCommands);
+            panelHtml +='              </div>';
+        }
+        
+
         panelHtml +='           </div> ';
         panelHtml +='       </div>';
         panelHtml +='   </div> ';

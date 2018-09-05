@@ -164,6 +164,15 @@ public class TeleonomeServlet extends HttpServlet {
 			out.close();
 			
 			
+		}else if(formName.equals("GetAllCommandRequests")){
+			aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
+			JSONArray commands  = aDBManager.getAllCommandRequests();
+			logger.debug("sent command=" + command  + " commandId=");	
+			res.setContentType("text/html;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(commands.toString());
+			out.flush();
+			out.close();
 		}else if(formName.equals(TeleonomeConstants.HEART_TOPIC_UPDATE_FORM_REQUEST)) {
 
 			String identityPointer = req.getParameter(TeleonomeConstants.TELEONOME_IDENTITY_LABEL);
