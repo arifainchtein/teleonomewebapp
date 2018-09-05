@@ -673,11 +673,7 @@ input:valid {
 						// at this point should be COMMAND_REQUEST_PENDING_EXECUTION
 						// put it on the table
 						$('#SettingsWorkArea').empty();
-						toReturn.put("id", id);
-						toReturn.put("Createdon", createdOn);
-						toReturn.put("Command", command);
-						toReturn.put("Status", TeleonomeConstants.COMMAND_REQUEST_PENDING_EXECUTION);
-						toReturn.put("CommandCode", commandCode);
+						
 						var panelHTML = "<table class=\"table text-center\">";
 						panelHTML += "<thead><tr><th>Id></th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Status</th><tr></thead>";
 						panelHTML += "<tbody><tr><td>"+response.id+"</td><td>"+ new Date(response.Createdon) +"</td><td></td><td>" + response.Command +"</td><td>" + response.Status +"</td></tr></tbody>";
