@@ -501,6 +501,7 @@ var COMMAND_EXECUTION_STATUS="Status";
 var COMMAND_CODE="CommandCode";
 var COMMAND_REQUEST_EXECUTION_OK="Command Request Succesfull";
 var COMMAND_REQUEST_INVALID_PASSWORD="Invalid Password";
+var COMMAND_REQUEST_PENDING_EXECUTION="Pending Execution";
 
 //
 // the index for the front end

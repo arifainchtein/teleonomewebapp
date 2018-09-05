@@ -152,11 +152,13 @@ public class TeleonomeServlet extends HttpServlet {
 			}else{
 			}
 
-			int commandId = sendCommand(command, commandCode,payLoad);
-			logger.debug("sent command=" + command  + " commandId=" + commandId);	
+			JSONObject commandRequestJSONObject  = sendCommand(command, commandCode,payLoad);
+			logger.debug("sent command=" + command  + " commandId=" + commandRequestJSONObject.getInt("id"));	
+			
+			
 			res.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = res.getWriter();
-			out.print(commandId);
+			out.print(commandRequestJSONObject.toString());
 			out.flush();
 			out.close();
 			
@@ -188,11 +190,11 @@ public class TeleonomeServlet extends HttpServlet {
 			command="SetParameters";
 			payLoad=payLoadParentJSONObject.toString();
 
-			int commandId = aDBManager.requestCommandToExecute(command, commandCode,payLoad);
-			logger.debug("sent command=" + command  + " commandId=" + commandId);	
+			JSONObject responseJSON = aDBManager.requestCommandToExecute(command, commandCode,payLoad);
+			logger.debug("sent command=" + command  + " response=" + responseJSON.toString(4));	
 			res.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = res.getWriter();
-			out.print(commandId);
+			out.print(responseJSON.toString());
 			out.flush();
 			out.close();
 
@@ -637,15 +639,15 @@ public class TeleonomeServlet extends HttpServlet {
 	}
 
 
-	public int sendCommand(String command,String commandCode, String payLoad){
+	public JSONObject sendCommand(String command,String commandCode, String payLoad){
 		logger.debug("sending command to database =" + command);
 		String toReturn="";
 		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 
-		int id = aDBManager.requestCommandToExecute(command,commandCode, payLoad);
-		logger.debug("TeleonomeServlet id=" + id);
-		return id;
+		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, payLoad);
+		logger.debug("TeleonomeServlet responseJSONObject=" + responseJSONObject.toString(4));
+		return responseJSONObject;
 //		//
 //		// now keep waiiting until the command is executed
 //		//
