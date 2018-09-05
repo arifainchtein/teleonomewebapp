@@ -9,7 +9,7 @@ class SettingsInfo{
         $.ajax({
             type: "POST",
             url: "/TeleonomeServlet",
-            data: {formName:GetAllCommandRequests},
+            data: {formName:"GetAllCommandRequests"},
             success: function (data) {
                 allCommands = JSON.parse(data);
             },
