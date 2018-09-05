@@ -125,7 +125,7 @@ function renderCommandRequestTable(allCommands){
 			}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_PASSWORD){
 				rowStatus="danger";
 			}
-			panelHTML += "<tr><td>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>";
 			panelHTML += "<table table-borderless>";
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Id</td><td>"+command.id+"</td></tr>";
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Client Ip</td><td>"+command.ClientIp+"</td></tr>";
