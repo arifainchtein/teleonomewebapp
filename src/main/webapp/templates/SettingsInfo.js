@@ -11,6 +11,7 @@ class SettingsInfo{
             url: "/TeleonomeServlet",
             data: {formName:"GetAllCommandRequests"},
             success: function (data) {
+                console.log("GetAllCommandRequests res," + data);
                 allCommands = JSON.parse(data);
             },
             error: function(data){
