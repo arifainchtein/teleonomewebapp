@@ -19,7 +19,12 @@ class Networking{
         var ipAddress = getDeneWordByIdentityPointer(ipAddressPointer, DENEWORD_VALUE_ATTRIBUTE);
         var essidPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"ESSID";
         var essid = getDeneWordByIdentityPointer(essidPointer, DENEWORD_VALUE_ATTRIBUTE);
-       
+        var linkQualityPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"ESSID";
+        var linkQuality = getDeneWordByIdentityPointer(linkQualityPointer, DENEWORD_VALUE_ATTRIBUTE);
+        var signallevelPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"ESSID";
+        var signallevel = getDeneWordByIdentityPointer(signallevelPointer, DENEWORD_VALUE_ATTRIBUTE);
+
+
         if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
             panelHTML += "<div id=\"NetworkMode\">";
             panelHTML += "<center>";
@@ -82,6 +87,8 @@ class Networking{
             panelHTML += "<div class=\"row\">";
             panelHTML += "<label id=\"CurrentESSID\">Current SSID:&nbsp;&nbsp;"+ essid +"</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
             panelHTML += "<label id=\"CurrentIPAddress\">Current IPAddress:&nbsp;&nbsp;"+ ipAddress +"</label>";
+            panelHTML += "<label id=\"LinkQuality\">Link Quality:&nbsp;&nbsp;"+ linkQuality +"</label>";
+            panelHTML += "<label id=\"SignalLevel\">Signal Level:&nbsp;&nbsp;"+ signallevel +"</label>";
             panelHTML += "</div>";
             panelHTML += "<div class=\"row\">";
             panelHTML += "<div class=\"col-xs-12\" style=\"height: 20px;\"></div>";
