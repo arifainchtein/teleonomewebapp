@@ -167,7 +167,7 @@ public class TeleonomeServlet extends HttpServlet {
 		}else if(formName.equals("GetAllCommandRequests")){
 			aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 			JSONArray commands  = aDBManager.getAllCommandRequests();
-			logger.debug("sent command=" + command  + " commandId=");	
+			logger.debug("GetAllCommandRequests command=" + commands.length()  );	
 			res.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = res.getWriter();
 			out.print(commands.toString());
