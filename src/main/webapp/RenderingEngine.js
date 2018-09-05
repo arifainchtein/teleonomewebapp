@@ -104,30 +104,67 @@ function monitorBetweenPulses() {
 } 
 
 function renderCommandRequestTable(allCommands){
-	var panelHTML = "<table class=\"table\">";
-	panelHTML += "<thead><tr><th>Id</th><th>Client Ip</th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Payload</th><th>Status</th></tr></thead><tbody>";
-	for (var i = 0; i < allCommands.length; i++) {
-		var command = allCommands[i];
+	if ($(window).width() < 0) {
+		var panelHTML = "<table class=\"table\"><tbody>";
 		
-		var createdOnDate = new Date(command.Createdon);
-		var createdOnDateFormated = getISOStringWithoutSecsAndMillisecs(createdOnDate);
-		var executedOnDateFormated="";
-		if(command.Executedon>0){
-			var executedOnDate = new Date(command.Executedon);
-			executedOnDateFormated = getISOStringWithoutSecsAndMillisecs(executedOnDate);
+		for (var i = 0; i < allCommands.length; i++) {
+			var command = allCommands[i];
+			
+			var createdOnDate = new Date(command.Createdon);
+			var createdOnDateFormated = getISOStringWithoutSecsAndMillisecs(createdOnDate);
+			var executedOnDateFormated="";
+			if(command.Executedon>0){
+				var executedOnDate = new Date(command.Executedon);
+				executedOnDateFormated = getISOStringWithoutSecsAndMillisecs(executedOnDate);
+			}
+			var rowStatus="info";
+			if(command.Status ==COMMAND_REQUEST_EXECUTED){
+				rowStatus="success";
+			}else if(command.Status ==COMMAND_REQUEST_PENDING_EXECUTION){
+				rowStatus="warning";
+			}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_PASSWORD){
+				rowStatus="danger";
+			}
+			panelHTML += "<tr><td"
+			panelHTML += "<tr><td>Id</td></tr>";
+			panelHTML += "<td>Client Ip</td></tr>";
+			panelHTML += "<td>Created On</td></tr>";
+			panelHTML += "<td>ExecutedOn</td></tr>";
+			panelHTML += "<td>Command</td></tr>";
+			panelHTML += "<td>Payload</td></tr>";
+			panelHTML += "<td>Status</td></tr>";
+			
+
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+command.ClientIp+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td>" + command.Payload +"</td><td>" + command.Status +"</td></tr>";
+		
 		}
-		var rowStatus="info";
-		if(command.Status ==COMMAND_REQUEST_EXECUTED){
-			rowStatus="success";
-		}else if(command.Status ==COMMAND_REQUEST_PENDING_EXECUTION){
-			rowStatus="warning";
-		}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_PASSWORD){
-			rowStatus="danger";
+		panelHTML += "</tbody></table>";
+	}else{
+		var panelHTML = "<table class=\"table table-responsive\">";
+		panelHTML += "<thead><tr><th>Id</th><th>Client Ip</th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Payload</th><th>Status</th></tr></thead><tbody>";
+		for (var i = 0; i < allCommands.length; i++) {
+			var command = allCommands[i];
+			
+			var createdOnDate = new Date(command.Createdon);
+			var createdOnDateFormated = getISOStringWithoutSecsAndMillisecs(createdOnDate);
+			var executedOnDateFormated="";
+			if(command.Executedon>0){
+				var executedOnDate = new Date(command.Executedon);
+				executedOnDateFormated = getISOStringWithoutSecsAndMillisecs(executedOnDate);
+			}
+			var rowStatus="info";
+			if(command.Status ==COMMAND_REQUEST_EXECUTED){
+				rowStatus="success";
+			}else if(command.Status ==COMMAND_REQUEST_PENDING_EXECUTION){
+				rowStatus="warning";
+			}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_PASSWORD){
+				rowStatus="danger";
+			}
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+command.ClientIp+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td>" + command.Payload +"</td><td>" + command.Status +"</td></tr>";
+		
 		}
-		panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+command.ClientIp+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td>" + command.Payload +"</td><td>" + command.Status +"</td></tr>";
-	
+		panelHTML += "</tbody></table>";
 	}
-	panelHTML += "</tbody></table>";
 	return panelHTML;
 }
 
