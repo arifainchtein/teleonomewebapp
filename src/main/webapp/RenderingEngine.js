@@ -127,13 +127,13 @@ function renderCommandRequestTable(allCommands){
 			}
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td>";
 			panelHTML += "<table table-borderless>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Id</td><td>"+command.id+"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Client Ip</td><td>"+command.ClientIp+"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Created On</td><td>"+ createdOnDateFormated +"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>ExecutedOn</td><td>"+executedOnDateFormated+"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Command</td><td>" + command.Command +"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Payload</td><td>" + command.Payload +"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Status</td><td>" + command.Status +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Id</b></td><td>&nbsp;&nbsp;"+command.id+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Client Ip</b></td><td>&nbsp;&nbsp;"+command.ClientIp+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Created On</b></td><td>&nbsp;&nbsp;"+ createdOnDateFormated +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>ExecutedOn</b></td><td>&nbsp;&nbsp;"+executedOnDateFormated+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Command</b></td><td>&nbsp;&nbsp;" + command.Command +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Payload</b></td><td>&nbsp;&nbsp;" + command.Payload +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Status</b></td><td>&nbsp;&nbsp;" + command.Status +"</td></tr>";
 			panelHTML += "</table>";
 			panelHTML += "</td></tr>";
 		}
