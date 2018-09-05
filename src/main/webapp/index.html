@@ -676,8 +676,8 @@ input:valid {
 						var createdOnDate = new Date(response.Createdon);
 						var formatedDate = getISOStringWithoutSecsAndMillisecs(createdOnDate);
 						var panelHTML = "<table class=\"table text-center\">";
-						panelHTML += "<thead><tr><th>Id></th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Status</th><tr></thead>";
-						panelHTML += "<tbody><tr class=\"warning\"><td>"+response.id+"</td><td>"+ formatedDate +"</td><td></td><td>" + response.Command +"</td><td>" + response.Status +"</td></tr></tbody>";
+						panelHTML += "<thead><tr class=\"text-center\"><th>Id</th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Status</th><tr></thead>";
+						panelHTML += "<tbody><tr class=\"warning text-center\"><td>"+response.id+"</td><td>"+ formatedDate +"</td><td></td><td>" + response.Command +"</td><td>" + response.Status +"</td></tr></tbody>";
 						panelHTML += "</table>";
 						$('#SettingsWorkArea').append(panelHTML);
 			
