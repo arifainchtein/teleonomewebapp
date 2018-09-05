@@ -104,7 +104,7 @@ function monitorBetweenPulses() {
 } 
 
 function renderCommandRequestTable(allCommands){
-	if ($(window).width() < 0) {
+	if ($(window).width() < 480) {
 		var panelHTML = "<table class=\"table\"><tbody>";
 		
 		for (var i = 0; i < allCommands.length; i++) {
@@ -125,18 +125,17 @@ function renderCommandRequestTable(allCommands){
 			}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_PASSWORD){
 				rowStatus="danger";
 			}
-			panelHTML += "<tr><td"
-			panelHTML += "<tr><td>Id</td></tr>";
-			panelHTML += "<td>Client Ip</td></tr>";
-			panelHTML += "<td>Created On</td></tr>";
-			panelHTML += "<td>ExecutedOn</td></tr>";
-			panelHTML += "<td>Command</td></tr>";
-			panelHTML += "<td>Payload</td></tr>";
-			panelHTML += "<td>Status</td></tr>";
-			
-
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+command.ClientIp+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td>" + command.Payload +"</td><td>" + command.Status +"</td></tr>";
-		
+			panelHTML += "<tr><td>";
+			panelHTML += "<table table-borderless>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Id</td><td>"+command.id+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Client Ip</td><td>"+command.ClientIp+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Created On</td><td>"+ createdOnDateFormated +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>ExecutedOn</td><td>"+executedOnDateFormated+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Command</td><td>" + command.Command +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Payload</td><td>" + command.Payload +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Status</td><td>" + command.Status +"</td></tr>";
+			panelHTML += "</table>";
+			panelHTML += "</td></tr>";
 		}
 		panelHTML += "</tbody></table>";
 	}else{
