@@ -43,6 +43,7 @@ class SettingsInfo{
                     $('#SettingsWorkArea').empty();
                     var panelHTML = renderCommandRequestTable(allCommands);
                     $('#SettingsWorkArea').append(panelHTML);
+                    $('#SettingsWorkArea').show();
                 }
 
             },
