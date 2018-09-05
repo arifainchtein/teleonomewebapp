@@ -149,7 +149,7 @@ public class TeleonomeServlet extends HttpServlet {
 					}else{
 						command = action;
 					}
-				}
+				} 
 			}else{
 			}
 
