@@ -127,13 +127,13 @@ function renderCommandRequestTable(allCommands){
 			}
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td>";
 			panelHTML += "<table table-borderless>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Id</b></td><td>&nbsp;&nbsp;"+command.id+"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Client Ip</b></td><td>&nbsp;&nbsp;"+command.ClientIp+"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Created On</b></td><td>&nbsp;&nbsp;"+ createdOnDateFormated +"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>ExecutedOn</b></td><td>&nbsp;&nbsp;"+executedOnDateFormated+"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Command</b></td><td>&nbsp;&nbsp;" + command.Command +"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Payload</b></td><td>&nbsp;&nbsp;" + command.Payload +"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>Status</b></td><td>&nbsp;&nbsp;" + command.Status +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Id</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+command.id+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Client Ip</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+command.ClientIp+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Created On</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+ createdOnDateFormated +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Executed On</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+executedOnDateFormated+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Command</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" + command.Command +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Payload</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" + command.Payload +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Status</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" + command.Status +"</td></tr>";
 			panelHTML += "</table>";
 			panelHTML += "</td></tr>";
 		}

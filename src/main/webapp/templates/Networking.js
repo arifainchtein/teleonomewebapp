@@ -109,10 +109,11 @@ class Networking{
        // panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 100px;\"></div></div>";
         panelHTML += "<div class=\"row\">";
        
-        panelHTML += "<div class=\"col-lg-3 col-xs-3\"></div>";
-        panelHTML += "<div class=\"col-lg-3 col-xs-3\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" name=\"action\" id=\"RebootButton\" value=\"Reboot\"></div>";
-        panelHTML += "<div class=\"col-lg-3 col-xs-3\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\"  name=\"action\" id=\"ShutdownButton\" value=\"Shutdown\"></div>";
-        panelHTML += "<div class=\"col-lg-3  col-xs-3\"></div>";
+        panelHTML += "<div class=\"col-lg-3 col-xs-1\"></div>";
+        panelHTML += "<div class=\"col-lg-3 col-xs-4\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" name=\"action\" id=\"RebootButton\" value=\"Reboot\"></div>";
+        panelHTML += "<div class=\"col-lg-1  col-xs-2\"></div>";
+        panelHTML += "<div class=\"col-lg-3 col-xs-4\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\"  name=\"action\" id=\"ShutdownButton\" value=\"Shutdown\"></div>";
+        panelHTML += "<div class=\"col-lg-2  col-xs-1\"></div>";
         panelHTML += "</div>";
         panelHTML += "</form>";	
         
