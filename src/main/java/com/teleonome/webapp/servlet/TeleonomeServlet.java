@@ -60,6 +60,7 @@ public class TeleonomeServlet extends HttpServlet {
 		HttpSession session = req.getSession(true);
 		String formName = req.getParameter("formName");
 		String action = req.getParameter("action");
+		String clientIp = req.getRemoteAddr();
 		String commandCode = req.getParameter(TeleonomeConstants.COMMAND_CODE);
 		String command=null;
 		String payLoad="";
@@ -155,7 +156,7 @@ public class TeleonomeServlet extends HttpServlet {
 			//
 			// to repaint the table, get all the commandrequests
 			//
-			JSONArray commands  = sendCommand(command, commandCode,payLoad);
+			JSONArray commands  = sendCommand(command, commandCode,payLoad, clientIp);
 			logger.debug("sent command=" + command  + " commandId=");	
 			res.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = res.getWriter();
@@ -200,7 +201,7 @@ public class TeleonomeServlet extends HttpServlet {
 			command="SetParameters";
 			payLoad=payLoadParentJSONObject.toString();
 
-			JSONObject responseJSON = aDBManager.requestCommandToExecute(command, commandCode,payLoad);
+			JSONObject responseJSON = aDBManager.requestCommandToExecute(command, commandCode,payLoad, clientIp);
 			logger.debug("sent command=" + command  + " response=" + responseJSON.toString(4));	
 			res.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = res.getWriter();
@@ -649,13 +650,13 @@ public class TeleonomeServlet extends HttpServlet {
 	}
 
 
-	public JSONArray sendCommand(String command,String commandCode, String payLoad){
+	public JSONArray sendCommand(String command,String commandCode, String payLoad, String clientIp){
 		logger.debug("sending command to database =" + command);
 		String toReturn="";
 		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 
-		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, payLoad);
+		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, payLoad, clientIp);
 		JSONArray commands = aDBManager.getAllCommandRequests();
 		logger.debug("TeleonomeServlet responseJSONObject=" + responseJSONObject.toString(4));
 		return commands;

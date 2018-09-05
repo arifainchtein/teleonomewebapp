@@ -38,7 +38,6 @@ class SettingsInfo{
             success: function (data) {
                 console.log("GetAllCommandRequests res," + data);
                 allCommands = JSON.parse(data);
-                
                 if(allCommands.length>0){
                     $('#SettingsWorkArea').empty();
                     var panelHTML = renderCommandRequestTable(allCommands);

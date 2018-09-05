@@ -105,7 +105,7 @@ function monitorBetweenPulses() {
 
 function renderCommandRequestTable(allCommands){
 	var panelHTML = "<table class=\"table\">";
-	panelHTML += "<thead><tr><th>Id</th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Payload</th><th>Status</th></tr></thead><tbody>";
+	panelHTML += "<thead><tr><th>Id</th><th>Client Ip On</th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Payload</th><th>Status</th></tr></thead><tbody>";
 	for (var i = 0; i < allCommands.length; i++) {
 		var command = allCommands[i];
 		
@@ -124,7 +124,7 @@ function renderCommandRequestTable(allCommands){
 		}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_PASSWORD){
 			rowStatus="danger";
 		}
-		panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td>" + command.Payload +"</td><td>" + command.Status +"</td></tr>";
+		panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+command.ClientIp+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td>" + command.Payload +"</td><td>" + command.Status +"</td></tr>";
 	
 	}
 	panelHTML += "</tbody></table>";
