@@ -668,13 +668,22 @@ input:valid {
 					success: function (data) {
 						console.log("error getting log file:" + data);
 						var response = JSON.parse(data);
-						if(response.Status == COMMAND_REQUEST_INVALID_PASSWORD){
-							alert("Invalid Password");
-							return false;
-						}else if(response.Status == COMMAND_REQUEST_EXECUTED){
-							alert("Command Successfull, rebooting as host.....");
-							return false;
-						}
+						//
+						// the response contains the id, and the status, which 
+						// at this point should be COMMAND_REQUEST_PENDING_EXECUTION
+						// put it on the table
+						$('#SettingsWorkArea').empty();
+						toReturn.put("id", id);
+						toReturn.put("Createdon", createdOn);
+						toReturn.put("Command", command);
+						toReturn.put("Status", TeleonomeConstants.COMMAND_REQUEST_PENDING_EXECUTION);
+						toReturn.put("CommandCode", commandCode);
+						var panelHTML = "<table class=\"table text-center\">";
+						panelHTML += "<thead><tr><th>Id></th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Status</th><tr></thead>";
+						panelHTML += "<tbody><tr><td>"+response.id+"</td><td>"+ new Date(response.Createdon) +"</td><td></td><td>" + response.Command +"</td><td>" + response.Status +"</td></tr></tbody>";
+						panelHTML += "</table>";
+						$('#SettingsWorkArea').append(panelHTML);
+			
 					},
 					error: function(data){
 						console.log("error rebooting:" + data);
