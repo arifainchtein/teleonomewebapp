@@ -666,19 +666,37 @@ input:valid {
 					url: "/TeleonomeServlet",
 					data: {formName:formName, EnableHostMode: enableHostMode, action:action, CommandCode:commandCode},
 					success: function (data) {
-						console.log("error getting log file:" + data);
-						var response = JSON.parse(data);
+						
+						var allCommands = JSON.parse(data);
 						//
 						// the response contains the id, and the status, which 
 						// at this point should be COMMAND_REQUEST_PENDING_EXECUTION
 						// put it on the table
 						$('#SettingsWorkArea').empty();
-						var createdOnDate = new Date(response.Createdon);
-						var formatedDate = getISOStringWithoutSecsAndMillisecs(createdOnDate);
 						var panelHTML = "<table class=\"table\">";
-						panelHTML += "<thead><tr><th>Id</th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Status</th></tr></thead>";
-						panelHTML += "<tbody><tr class=\"warning\"><td>"+response.id+"</td><td>"+ formatedDate +"</td><td></td><td>" + response.Command +"</td><td>" + response.Status +"</td></tr></tbody>";
-						panelHTML += "</table>";
+						panelHTML += "<thead><tr><th>Id</th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Payload</th><th>Status</th></tr></thead><tbody>";
+						for (var i = 0; i < allCommands.length; i++) {
+							var command = allCommands[i];
+							
+							var createdOnDate = new Date(command.Createdon);
+							var createdOnDateFormated = getISOStringWithoutSecsAndMillisecs(createdOnDate);
+							var executedOnDateFormated="";
+							if(command.Executedon>0){
+								var executedOnDate = new Date(command.Executedon);
+								executedOnDateFormated = getISOStringWithoutSecsAndMillisecs(executedOnDate);
+							}
+							var rowStatus="info";
+							if(command.Status ==COMMAND_REQUEST_EXECUTED){
+								rowStatus="success";
+							}else if(command.Status ==COMMAND_REQUEST_PENDING_EXECUTION){
+								rowStatus="warning";
+							}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_PASSWORD){
+								rowStatus="danger";
+							}
+							panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td>" + command.Payload +"</td><td>" + command.Status +"</td></tr>";
+						
+						}
+						panelHTML += "</tbody></table>";
 						$('#SettingsWorkArea').append(panelHTML);
 			
 					},

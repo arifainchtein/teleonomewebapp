@@ -152,13 +152,14 @@ public class TeleonomeServlet extends HttpServlet {
 			}else{
 			}
 
-			JSONObject commandRequestJSONObject  = sendCommand(command, commandCode,payLoad);
-			logger.debug("sent command=" + command  + " commandId=" + commandRequestJSONObject.getInt("id"));	
-			
-			
+			//
+			// to repaint the table, get all the commandrequests
+			//
+			JSONArray commands  = sendCommand(command, commandCode,payLoad);
+			logger.debug("sent command=" + command  + " commandId=");	
 			res.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = res.getWriter();
-			out.print(commandRequestJSONObject.toString());
+			out.print(commands.toString());
 			out.flush();
 			out.close();
 			
@@ -639,15 +640,16 @@ public class TeleonomeServlet extends HttpServlet {
 	}
 
 
-	public JSONObject sendCommand(String command,String commandCode, String payLoad){
+	public JSONArray sendCommand(String command,String commandCode, String payLoad){
 		logger.debug("sending command to database =" + command);
 		String toReturn="";
 		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 
 		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, payLoad);
+		JSONArray commands = aDBManager.getAllCommandRequests();
 		logger.debug("TeleonomeServlet responseJSONObject=" + responseJSONObject.toString(4));
-		return responseJSONObject;
+		return commands;
 //		//
 //		// now keep waiiting until the command is executed
 //		//
