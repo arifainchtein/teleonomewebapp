@@ -665,8 +665,16 @@ input:valid {
 					type: "POST",
 					url: "/TeleonomeServlet",
 					data: {formName:formName, EnableHostMode: enableHostMode, action:action, CommandCode:commandCode},
-					success: function (commandId) {
-						console.log("commandId=" + data);
+					success: function (data) {
+						console.log("error getting log file:" + data);
+						var response = JSON.parse(data);
+						if(response.Status == COMMAND_REQUEST_INVALID_PASSWORD){
+							alert("Invalid Password");
+							return false;
+						}else if(response.Status == COMMAND_REQUEST_EXECUTED){
+							alert("Command Successfull, rebooting as host.....");
+							return false;
+						}
 					},
 					error: function(data){
 						console.log("error rebooting:" + data);
