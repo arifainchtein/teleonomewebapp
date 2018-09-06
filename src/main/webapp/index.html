@@ -181,12 +181,34 @@ input:valid {
 .SettingsMenu{
 	cursor: pointer;
 }
+
+#WaitingWheel {
+	width: 200px;
+	height: 80px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	padding-right:20px;
+}
 </style>
 </head>
 
 <body>
 
+	
 	<div class="container">
+
+			<div class="row">
+					
+					<div id="WaitingWheel" class="col-xs-6 col-lg-2 col-*-offset-2">
+						<img src="130.gif"/ >
+						<div id="WaitingText">In Pulse...</div>
+			
+					</div>
+				</div>
 
 		<!-- Static navbar -->
 		<nav class="navbar navbar-default">
@@ -676,7 +698,16 @@ input:valid {
 				});	
 				}	
 			});
-
+				$(document).on('change', '#AvailableNetworks',function(){
+					var selectedValue = $("#AvailableNetworks :selected").text();
+					
+					if(selectedValue!=null && selectedValue.indexOf("Password")>-1){
+						$('#ssidPassword').show();
+					}else{
+						$('#ssidPassword').hide();
+					}
+					
+				});
 				$(document).on('click', '#Wifi',function(e){
 					var panelPointer  = $(this).data("panelpointer");
 					var n = new Networking(panelPointer);

@@ -62,6 +62,9 @@ class Networking{
             //
             // set up the available ssids
             //
+            $('#WaitingText').html("Please Wait...");
+            $('#WaitingWheel').show();
+        
             $.ajax({
                 type: "GET",
                 url: "/TeleonomeServlet",
@@ -79,8 +82,11 @@ class Networking{
                         //ssidOptions += "<option value=\""+ value+"\">"+ key +"</option>";
                         $('#AvailableNetworks').append($('<option>', {value:value, text:key}));
                     }	
+                    $('#ssidPassword').hide();
+                    $('#WaitingWheel').hide();
                 },
                 error: function(data){
+                    $('#WaitingWheel').hide();
                     console.log("error getting log file:" + JSON.stringify(data));
                     alert("Error getting log:" + JSON.stringify(data));
                     return false;
