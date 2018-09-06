@@ -203,12 +203,11 @@ input:valid {
 		</nav>
 
 		<div id="Pathology" class="col-lg-3 col-md-3 col-sm-2 col-xs-2 label label-lg label-danger text-white top-buffer"  style="display: none;">
-				<h5><span id="ErrorText" style="color:white;" ></span></h5>
-			</div>
+			<h5><span id="ErrorText" style="color:white;" ></span></h5>
+		</div>
 
 		<div class="row collapse">
-			<div id="CommandRequestStatus" class="alert alert-info">
-			</div>	
+			<div id="CommandRequestStatus" class="alert alert-info"></div>	
 		</div>
 
 		<div class="row">
@@ -219,37 +218,30 @@ input:valid {
 						<td id="TeleonomeDataStatus" class=" label label-sm label-danger collapse" style="display: none;height:30px;padding-right:10px;" ></td>
 						<td id="TeleonomeStatus" class=" label label-sm label-danger collapse" style="display: none;height:30px;" ></td>
 					</tr>
-					<tr><tdstyle="padding-right:10px;"><h6>Data&nbsp;&nbsp;</h6></td><td><h6>Status</h6></td></tr>
+					<tr><td style="padding-right:10px;"><h6>Data&nbsp;&nbsp;</h6></td><td><h6>Status</h6></td></tr>
 				</table>
 				<h6><span id="PulseStatusInfo" >Pulse Status Info</span><br><span id="PulseStatusInfoSecundary" ></span></h6>
 			</div>
 			<div  class="col-lg-7 col-md-7 col-sm-7 col-xs-7 col-*-offset-1">
 				<table>
-					<tr><td>Pulse</td><td>&nbsp;<b><span id="PulseTimestamp"></span></b></td><td>&nbsp;<b><span id="PulseCreationTime"></span></b></td><td>&nbsp;<b><span id="WPSInfo"></span></b></td></tr>
+					<tr><td><b><span id="PulseTimestamp"></span></b></td><td>&nbsp;<b><span id="PulseCreationTime"></span></b></td><td>&nbsp;<b><span id="WPSInfo"></span></b></td></tr>
 				</table>
 			</div>
 		</div>
-	</div>
-		
-		
-		
 		<div class="row">
 			<div  style="display: none;" class="col-lg-12 col-md-12 col-sm-12 col-sm-12 col-xs-12 text-center">
-				<div id="ErrorMessage" class="alert alert-danger">
-				</div>
+				<div id="ErrorMessage" class="alert alert-danger"></div>
 			</div>
 		</div>
 
 		<div id="EntryPoint" class="container-fluid"></div>
-		<div id="Graph" ><div id="footer">
+		<div id="Graph" ></div>
+		
+		<div id="footer">
 			<div class="col-xs-12 navbar-default navbar-fixed-bottom">
-				<div class="row" id="bottomNav">
-				</div>
+				<div class="row" id="bottomNav"></div>
 			</div>
-		</div></div>
-		
-		
-
+		</div>
 
 		 <script type="text/javascript" src="jquery-2.2.0.min.js"></script>
 		<script type="text/javascript" src="bootstrap.min.js"></script>
