@@ -92,6 +92,8 @@ class SearchFunctions{
 		        //
 		       //for(var i=allGraphs.length-1;i>-1;i--){
 		           var reqData=[];
+                $('#WaitingText').html("Please Wait...");
+                $('#WaitingWheel').show();
 
 		        for(var i=0;i<allGraphs.length;i++){
 		            var graphData = JSON.parse(allGraphs[i]);
@@ -103,7 +105,8 @@ class SearchFunctions{
 		            var appendChart = graphData.appendChart;
                     var chartTitle = graphData.chartTitle;
                     var chartDivId = graphData.chartDivId;
-		            var liveUpdate = graphData.liveUpdate;
+                    var liveUpdate = graphData.liveUpdate;
+                    var localStoreageKey = graphData.localStoreageKey;
 		            console.log("graphData.chartTitle="+ graphData.chartTitle + " position=" + graphData.position);
 		            if(liveUpdate){ 
 		               // if its live udpdate, ignore the times stored and set tthe to be the last 24 hour    
@@ -120,6 +123,7 @@ class SearchFunctions{
 		            serverRequest.fromMillis=fromMillis;
 		            serverRequest.untilMillis=untilMillis;
 		            serverRequest.visualizationStyle=visualizationStyle;
+                    serverRequest.localStoreageKey=localStoreageKey;
                     serverRequest.formName=formName;
                     serverRequest.chartDivId=chartDivId ;
                     serverRequest.liveUpdate=liveUpdate;
@@ -145,6 +149,8 @@ class SearchFunctions{
                             var chartDivId = data.chartDivId;
                             var fromMillis = data.fromMillis;
                             var untilMillis = data.untilMillis;
+                            var localStoreageKey = data.localStoreageKey;
+
                             if(data.Value.length==0){
                                 continue;
                             }
@@ -177,7 +183,7 @@ class SearchFunctions{
 		                    panelHTML += "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12\">";   
 		                    panelHTML += "<div class=\"bs-component\">";
 		                    panelHTML +=     "<div class=\"panel panel-default\">";
-		                    panelHTML +=         " <div class=\"panel-heading clearfix\"><span class=\"HeadingTitle\">"+ chartTitle +"</span><button data-charttitle=\"" + identityPointer + "_" + visualizationStyle +"_" + liveUpdate  + "_" + fromMillis + "_" + untilMillis + "\" class=\"btn btn-default  pull-right RemoveChart\"  ><i class=\" glyphicon glyphicon-remove\"></i></button></div>";
+		                    panelHTML +=         " <div class=\"panel-heading clearfix\"><span class=\"HeadingTitle\">"+ chartTitle +"</span><button data-charttitle=\"" + localStoreageKey + "\" class=\"btn btn-default  pull-right RemoveChart\"  ><i class=\" glyphicon glyphicon-remove\"></i></button></div>";
 		                    panelHTML +=         "<div class=\"panel-body text-center\">";
 		                    panelHTML +=             "<div class=\"Parent\" id=\"'+chartTitle+'Parent\">";
 		                    var screensize = document.documentElement.clientWidth;
@@ -270,7 +276,7 @@ class SearchFunctions{
 
 		                }
 
-
+                        $('#WaitingWheel').hide();
 		               
 		               
 		            },

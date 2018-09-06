@@ -595,13 +595,13 @@ input:valid {
 		
 		       
 		        if(identityPointer=="" || identityPointer == undefined){
-		            var selectedTeleonome = $('#Teleonome').find(":selected").val();
-		            var selectedNucleus = $('#Nucleus').find(":selected").val();
-		            var selecteDeneChain = $('#DeneChain').find(":selected").val();
-		            var selecteDene = $('#Dene').find(":selected").val();
-		            var selecteDeneWord = $('#DeneWord').find(":selected").val();
-		            identityPointer = selectedTeleonome + ":" + selectedNucleus + ":" + selecteDeneChain + ":" + selecteDene + ":" + selecteDeneWord;
-					formName="LookUpDeneWord";
+		            // var selectedTeleonome = $('#Teleonome').find(":selected").val();
+		            // var selectedNucleus = $('#Nucleus').find(":selected").val();
+		            // var selecteDeneChain = $('#DeneChain').find(":selected").val();
+		            // var selecteDene = $('#Dene').find(":selected").val();
+		            // var selecteDeneWord = $('#DeneWord').find(":selected").val();
+		            // identityPointer = selectedTeleonome + ":" + selectedNucleus + ":" + selecteDeneChain + ":" + selecteDene + ":" + selecteDeneWord;
+					// formName="LookUpDeneWord";
 					
 					alert("Please select a remembered deneword");
 					return false;
@@ -641,7 +641,8 @@ input:valid {
 					chartDivId:chartDivId,
 		            fromMillis:fromMillis,
 		            untilMillis:untilMillis,
-		            position:numberOfObjects
+					position:numberOfObjects,
+					localStoreageKey:localStoreageKey
 		        }
 		        var s = JSON.stringify(jsonData);
 		        searchObject[localStoreageKey]=s;

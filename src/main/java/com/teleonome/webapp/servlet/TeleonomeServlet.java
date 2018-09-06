@@ -554,7 +554,8 @@ public class TeleonomeServlet extends HttpServlet {
 				logger.debug("Refreshcurrent virew, processing:" + dataElement.toString(4));
 				String formName2 = dataElement.getString("formName");
 				String chartTitle = dataElement.getString("chartTitle");
-				String chartDivId = dataElement.getString("chartDivId");	
+				String chartDivId = dataElement.getString("chartDivId");
+				String localStoreageKey = dataElement.getString("localStoreageKey");
 				String visualizationStyle = dataElement.getString("visualizationStyle");
 				long fromMillis = dataElement.getLong("fromMillis");
 				long untilMillis = dataElement.getLong("untilMillis");
@@ -591,6 +592,7 @@ public class TeleonomeServlet extends HttpServlet {
 					toReturnElement.put("Units", units);
 					toReturnElement.put("chartDivId"	,chartDivId);
 					toReturnElement.put("Minimum", minimum);
+					toReturnElement.put("localStoreageKey", localStoreageKey);
 					toReturnElement.put("fromMillis", fromMillis);
 					toReturnElement.put("untilMillis", untilMillis);
 
