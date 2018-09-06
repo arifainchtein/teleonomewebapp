@@ -411,6 +411,7 @@ class SearchFunctions{
                         text : item.text
                     }));
                 }    
+                $('#WaitingWheel').hide();
                 // $.each(data, function (i, item) {
                 //     $('#Identity').append($('<option>', {
                 //         value: item.value,
@@ -419,50 +420,51 @@ class SearchFunctions{
                 // });
             },
             error: function(data){
+                $('#WaitingWheel').hide();
                 console.log("error getting remembered denewords list:" + JSON.stringify(data));
                 alert("Error getting list:" + JSON.stringify(data));
                 return false;
             }
         });
     
-        $.ajax({
-            type: "GET",
-            url: "/TeleonomeServlet",
-            data: {formName:"GetTeleonomeDateAvailable"},
-            success: function (data) {
-                $('#Teleonome').append($('<option>', {
-                        value: "",
-                        text : "Select A Teleonome1"
-                    }));
+        // $.ajax({
+        //     type: "GET",
+        //     url: "/TeleonomeServlet",
+        //     data: {formName:"GetTeleonomeDateAvailable"},
+        //     success: function (data) {
+        //         $('#Teleonome').append($('<option>', {
+        //                 value: "",
+        //                 text : "Select A Teleonome1"
+        //             }));
     
-                $.each(data, function (i, item) {
-                    var textValue = item.Name;
-                    if(item.hasOwnProperty('TimeMin') && item.hasOwnProperty('TimeMax')){
-                    	var minDate =  new Date(Date.parse(item.TimeMin));
-                    	var maxDate =  new Date(Date.parse(item.TimeMax));
-                    	//console.log("m=" +m);
-                        //var minDate = convertUTCDateToLocalDate(min);
-                        //var maxDate = convertUTCDateToLocalDate(max);
-                        var screensize = document.documentElement.clientWidth;
-                        if(screensize>500){
-                        	textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs(maxDate)  + ")";
-                        }else{
-                        	textValue+=   " (" + getISOStringDateOnly(minDate) + "-" + getISOStringDateOnly(maxDate)  + ")";
-                        }
+        //         $.each(data, function (i, item) {
+        //             var textValue = item.Name;
+        //             if(item.hasOwnProperty('TimeMin') && item.hasOwnProperty('TimeMax')){
+        //             	var minDate =  new Date(Date.parse(item.TimeMin));
+        //             	var maxDate =  new Date(Date.parse(item.TimeMax));
+        //             	//console.log("m=" +m);
+        //                 //var minDate = convertUTCDateToLocalDate(min);
+        //                 //var maxDate = convertUTCDateToLocalDate(max);
+        //                 var screensize = document.documentElement.clientWidth;
+        //                 if(screensize>500){
+        //                 	textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs(maxDate)  + ")";
+        //                 }else{
+        //                 	textValue+=   " (" + getISOStringDateOnly(minDate) + "-" + getISOStringDateOnly(maxDate)  + ")";
+        //                 }
                         
-                    }
-                    $('#Teleonome').append($('<option>', {
-                        value: item.Name,
-                        text : textValue
-                    }));
-                });
-            },
-            error: function(data){
-                console.log("error getting TeleonomeNames:" + JSON.stringify(data));
-                alert("Error getting list:" + JSON.stringify(data));
-                return false;
-            }
-        });
+        //             }
+        //             $('#Teleonome').append($('<option>', {
+        //                 value: item.Name,
+        //                 text : textValue
+        //             }));
+        //         });
+        //     },
+        //     error: function(data){
+        //         console.log("error getting TeleonomeNames:" + JSON.stringify(data));
+        //         alert("Error getting list:" + JSON.stringify(data));
+        //         return false;
+        //     }
+        // });
 	}
 	
 	

@@ -16,7 +16,6 @@ class SearchPanel{
         panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"ClearCharts\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-remove\"></em>Clear</button>";
         panelHTML += "                    </div>";
         panelHTML += "                    <div id=\"UpdateArea\" class=\"TopButtons pull-right col-xs-4\"><div id=\"RefreshCounter\"></div><div id=\"RefreshCounterMessage\">Click to Pause</div></div>";
-         
         panelHTML += "                </div>";
 
         panelHTML += "                <div class=\"modal fade bannerformmodal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"bannerformmodal\" aria-hidden=\"true\" id=\"bannerformmodal\">";
@@ -45,15 +44,15 @@ class SearchPanel{
 	        panelHTML += "                                    <select name=\"identity\" id=\"Identity\"></select><br>";
 			panelHTML += "                                </div> ";  
 			                             
-	        panelHTML += "                                <div class=\"form-row\">";
-	        panelHTML += "                                        <label for=\"Teleonome\">Search Denome</label>";
-	        panelHTML += "                                    <select name=\"Teleonome\" id=\"Teleonome\" onchange=\"searchFunctions.populateNuclei()\"></select>";
-	        panelHTML += "                                    <select name=\"Nucleus\" id=\"Nucleus\" onchange=\"searchFunctions.populateDeneChain()\"></select>";
-	        panelHTML += "                                    <select name=\"DeneChain\" id=\"DeneChain\" onchange=\"searchFunctions.populateDene()\"></select>";
-	        panelHTML += "                                    <select name=\"Dene\" id=\"Dene\" onchange=\"searchFunctions.populateDeneWord()\"></select>";
-	        panelHTML += "                                    <select name=\"DeneWord\" id=\"DeneWord\" onchange=\"searchFunctions.populateLookUpIdentity()\"></select>";
-	        panelHTML += "                                </div>";
-			panelHTML += "                                <div  id=\"LookUpIdentity\" name=\"lookupUpIdentity\"></div><br>";      
+	        // panelHTML += "                                <div class=\"form-row\">";
+	        // panelHTML += "                                        <label for=\"Teleonome\">Search Denome</label>";
+	        // panelHTML += "                                    <select name=\"Teleonome\" id=\"Teleonome\" onchange=\"searchFunctions.populateNuclei()\"></select>";
+	        // panelHTML += "                                    <select name=\"Nucleus\" id=\"Nucleus\" onchange=\"searchFunctions.populateDeneChain()\"></select>";
+	        // panelHTML += "                                    <select name=\"DeneChain\" id=\"DeneChain\" onchange=\"searchFunctions.populateDene()\"></select>";
+	        // panelHTML += "                                    <select name=\"Dene\" id=\"Dene\" onchange=\"searchFunctions.populateDeneWord()\"></select>";
+	        // panelHTML += "                                    <select name=\"DeneWord\" id=\"DeneWord\" onchange=\"searchFunctions.populateLookUpIdentity()\"></select>";
+	        // panelHTML += "                                </div>";
+			// panelHTML += "                                <div  id=\"LookUpIdentity\" name=\"lookupUpIdentity\"></div><br>";      
 			
 			
 	        panelHTML += "                                <div class=\"form-row\">";
@@ -100,15 +99,15 @@ class SearchPanel{
 	        panelHTML += "                                        <label for=\"Identity\">Remembered DeneWords</label>";
 	        panelHTML += "                                    <select name=\"identity\" id=\"Identity\"></select><br>";
 	        panelHTML += "                                </div> ";                               
-	        panelHTML += "                                <div class=\"form-row form-elements-small\">";
-	        panelHTML += "                                        <label for=\"Teleonome\">Search Denome</label>";
-	        panelHTML += "                                    <select name=\"Teleonome\" id=\"Teleonome\" onchange=\"searchFunctions.populateNuclei()\"></select><br>";
-	        panelHTML += "                                    <select name=\"Nucleus\" id=\"Nucleus\" onchange=\"searchFunctions.populateDeneChain()\"></select><br>";
-	        panelHTML += "                                    <select name=\"DeneChain\" id=\"DeneChain\" onchange=\"searchFunctions.populateDene()\"></select><br>";
-	        panelHTML += "                                    <select name=\"Dene\" id=\"Dene\" onchange=\"searchFunctions.populateDeneWord()\"></select><br>";
-	        panelHTML += "                                    <select name=\"DeneWord\" id=\"DeneWord\" onchange=\"searchFunctions.populateLookUpIdentity()\"></select><br>";
-	        panelHTML += "                                </div>";
-	        panelHTML += "                                <div  id=\"LookUpIdentity\" class=\"form-elements\" name=\"lookupUpIdentity\"></div><br>";                                 
+	        // panelHTML += "                                <div class=\"form-row form-elements-small\">";
+	        // panelHTML += "                                        <label for=\"Teleonome\">Search Denome</label>";
+	        // panelHTML += "                                    <select name=\"Teleonome\" id=\"Teleonome\" onchange=\"searchFunctions.populateNuclei()\"></select><br>";
+	        // panelHTML += "                                    <select name=\"Nucleus\" id=\"Nucleus\" onchange=\"searchFunctions.populateDeneChain()\"></select><br>";
+	        // panelHTML += "                                    <select name=\"DeneChain\" id=\"DeneChain\" onchange=\"searchFunctions.populateDene()\"></select><br>";
+	        // panelHTML += "                                    <select name=\"Dene\" id=\"Dene\" onchange=\"searchFunctions.populateDeneWord()\"></select><br>";
+	        // panelHTML += "                                    <select name=\"DeneWord\" id=\"DeneWord\" onchange=\"searchFunctions.populateLookUpIdentity()\"></select><br>";
+	        // panelHTML += "                                </div>";
+	        // panelHTML += "                                <div  id=\"LookUpIdentity\" class=\"form-elements\" name=\"lookupUpIdentity\"></div><br>";                                 
 	        panelHTML += "                                <div class=\"form-row form-elements-small\">";
 	        panelHTML += "                                    <div class=\"form-group col-md-6\">";
 	        panelHTML += "                                        <label for=\"fromDate\">From</label>";
