@@ -212,22 +212,18 @@ input:valid {
 		</div>
 
 		<div class="row">
-			<div  class="col-lg-2 col-md-2 col-sm-1 col-xs-6 col-xs-offset-1">
-				<h5>
-					Pulse: <span id="PulseTimestamp"></span> <span class="hidden-xs" ></span>
-					<strong><span id="TimeSinceLastPulse" class="pull-right"></span></strong>
-					<span class="hidden-sm hidden-md hidden-lg" ><br></span>
-					Creation: <span id="PulseCreationTime"></span>
-					<strong><span id="WPSInfo"></span></strong>
-				</h5>
+			<div  class="col-lg-2 col-md-2 col-sm-1 col-xs-5 col-xs-offset-1">
+				<table>
+					<tr><th>Last</th><th>Pulse</th><th>Operation</th></tr>
+					<tr><td><span id="PulseTimestamp"></span></td><td><span id="PulseCreationTime"></span></td><strong><span id="WPSInfo"></span></strong></td></tr>
+				</table>
 				<h6><span id="PulseStatusInfo" >Pulse Status Info</span><br><span id="PulseStatusInfoSecundary" ></span></h6>
 			</div>
+
 			<div  class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-			<div  class="col-lg-2 col-md-2 col-sm-1 col-xs-2">
+			<div  class="col-lg-2 col-md-2 col-sm-1 col-xs-6">
+				<strong><span id="TimeSinceLastPulse" class="pull-right"></span></strong>
 				<h3><span id="TeleonomeDataStatus" class=" label label-sm label-danger collapse" style="display: none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h6>Data</h6></span></h3>
-			</div>
-			<div  class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
-			<div  class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
 				<h3> <span id="TeleonomeStatus" class="label label-sm label-default collapse" style="display: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h6>Status</h6></span></h3>
 			</div>
 		</div>
