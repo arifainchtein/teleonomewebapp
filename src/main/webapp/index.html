@@ -220,7 +220,7 @@ input:valid {
 						<td id="TeleonomeStatus" class=" label label-sm label-danger collapse" style="display: none;height:30px;" ></td>
 					</tr>
 					<tr>
-						<td style="padding-right:10px;"><h6>Data&nbsp;&nbsp;</h6></td>
+						<td style="padding-right:10px;"><h6>&nbsp;Data&nbsp;</h6></td>
 						<td>&nbsp;</td>
 						<td><h6>Status</h6></td>
 					</tr>
@@ -230,9 +230,12 @@ input:valid {
 			<div  class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-*-offset-1">
 				<table>
 					<tr><td><b><span id="PulseTimestamp"></span></b></td></tr>
-					<tr><td>&nbsp;<b><span id="PulseCreationTime"></span></b></td></tr>
-					<tr><td>&nbsp;<b><span id="WPSInfo"></span></b></td></tr>
-					<tr><td><h6><span id="PulseStatusInfo" >Pulse Status Info</span><br><span id="PulseStatusInfoSecundary" ></span></h6></td></tr>
+					<!--
+						<tr><td>&nbsp;<b><span id="PulseCreationTime"></span></b></td></tr>
+						<tr><td>&nbsp;<b><span id="WPSInfo"></span></b></td></tr>
+						<tr><td><span id="PulseStatusInfo" ></span><br><span id="PulseStatusInfoSecundary" ></span></td></tr>
+					-->
+					<tr><td id="PulseStatusInfo" ></td></tr>
 				</table>
 			</div>
 
