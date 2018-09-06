@@ -194,51 +194,44 @@ input:valid {
 				<div class="row">
 					<div id="status" class="col-lg-4 col-md-4 col-sm-6 col-xs-5">
 						<h3>
-							<div style="padding-left: 5px;" id="teleonomeName">Connecting...</div>
+							<div style="padding-left: 5px;" id="teleonomeName">Connecting....</div>
 						</h3>
-					</div>
-
-					<div id="Pathology" class="col-lg-3 col-md-3 col-sm-2 col-xs-2 label label-lg label-danger text-white top-buffer"  style="display: none;">
-						<h5><span id="ErrorText" style="color:white;" ></span></h5>
-					</div>
-		
-					<div  class="hidden-lg hidden-md hidden-sm col-xs-1"></div>
-
-					<div  class="col-lg-2 col-md-2 col-sm-1 col-xs-2 col-xs-offset-2">
-						<h3>
-							<span id="TeleonomeDataStatus"
-								class=" label label-sm label-danger collapse" style="display: none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-						</h3>
-						<h6>Data</h6>
-					</div>
-					<div  class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
-					<div  class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-						<h3>
-							<span id="TeleonomeStatus" class="label label-sm label-default collapse" style="display: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-						</h3>
-						<h6>Status</h6>
 					</div>
 				</div>
 			</div>
 			<!--/.container-fluid -->
 		</nav>
 
+		<div id="Pathology" class="col-lg-3 col-md-3 col-sm-2 col-xs-2 label label-lg label-danger text-white top-buffer"  style="display: none;">
+				<h5><span id="ErrorText" style="color:white;" ></span></h5>
+			</div>
+
 		<div class="row collapse">
 			<div id="CommandRequestStatus" class="alert alert-info">
 			</div>	
 		</div>
-		<div id="PulseInfo" class="well well-sm">
-			<h5>
-				Pulse: <span id="PulseTimestamp"></span> <span class="hidden-xs" >&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</span>
-				<strong><span id="TimeSinceLastPulse" class="pull-right"></span></strong>
-				<span class="hidden-sm hidden-md hidden-lg" ><br></span>
-				Last Pulse Creation: <span id="PulseCreationTime"></span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-				<strong><span class="hidden-xs" >Operational Mode:</span><span id="WPSInfo"></span></strong>
-				<br>
-			</h5>
-			<h6><span id="PulseStatusInfo" >Pulse Status Info</span><br><span id="PulseStatusInfoSecundary" ></span></h6>
-		</div>
 
+		<div class="row">
+			<div  class="col-lg-2 col-md-2 col-sm-1 col-xs-6 col-xs-offset-2">
+				<h5>
+					Pulse: <span id="PulseTimestamp"></span> <span class="hidden-xs" ></span>
+					<strong><span id="TimeSinceLastPulse" class="pull-right"></span></strong>
+					<span class="hidden-sm hidden-md hidden-lg" ><br></span>
+					Pulse Creation: <span id="PulseCreationTime"></span>
+					<strong><span id="WPSInfo"></span></strong>
+				</h5>
+				<h6><span id="PulseStatusInfo" >Pulse Status Info</span><br><span id="PulseStatusInfoSecundary" ></span></h6>
+			</div>
+			<div  class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
+			<div  class="col-lg-2 col-md-2 col-sm-1 col-xs-2 col-xs-offset-2">
+				<h3><span id="TeleonomeDataStatus" class=" label label-sm label-danger collapse" style="display: none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h6>Data</h6></span></h3>
+			</div>
+			<div  class="col-lg-1 col-md-1 col-sm-1 hidden-xs"></div>
+			<div  class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+				<h3> <span id="TeleonomeStatus" class="label label-sm label-default collapse" style="display: none;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h6>Status</h6></span></h3>
+			</div>
+		</div>
+	</div>
 		
 		
 		

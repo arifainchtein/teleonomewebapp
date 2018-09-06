@@ -53,54 +53,36 @@ function monitorBetweenPulses() {
 	if ( numberOfPulsesBeforeLate != undefined &&
 			currentPulseGenerationDuration != undefined &&
 			currentPulseFrequency != undefined){
-
-
+				
 		var timeBeforeLate = numberOfPulsesBeforeLate*(currentPulseGenerationDuration+currentPulseFrequency);
-
 		//timeBeforeLate = 60000;
 		console.log("timeBeforeLate=" + timeBeforeLate + " timeSinceLastPulse=" + timeSinceLastPulse);
-		
 			if(timeSinceLastPulse>timeBeforeLate){
 				//
 				// set the status to blinking yellow
 				//
-				
 				if ($(window).width() < 480) {
 					$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-danger');
 				}else{
 					$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-danger');
 				}
-
-				
-				
-				
-			
-			}else if(timeSinceLastPulse>timeBeforeLate/2){
-				
-				 
+			}else if(timeSinceLastPulse>timeBeforeLate/2){ 
 				if ($(window).width() < 480) {
 					$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-warning');
 				}else{
 					$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-warning');
 				}
-
 			}else{
 				//
 				// set the status to blinking yellow
-				//
-				
-				
+				//	
 				if ($(window).width() < 480) {
 					$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-success');
 				}else{
 					$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
 				}
-				
-
 			}
-		
 	}
-
 } 
 
 function renderCommandRequestTable(allCommands){
@@ -560,8 +542,8 @@ function renderPageToDisplay(){
 			$('#TeleonomeStatus').removeClass().addClass('label label-lg label-' + teleonomeStatusBootstrapValue);
 
 		}
-		$('TeleonomeStatus').show();
-		$('TeleonomeDataStatus').show();
+		$('#TeleonomeStatus').show();
+		$('#TeleonomeDataStatus').show();
 
 		if(currentPathologyDeneCount>0){
 			$('#TeleonomeStatus').html("&nbsp;&nbsp;" + currentPathologyDeneCount + "&nbsp;&nbsp;");
