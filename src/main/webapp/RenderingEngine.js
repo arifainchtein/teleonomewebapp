@@ -364,15 +364,7 @@ function RefreshInterface(){
 		pageToDisplay = 1;
 	}
 
-	//
-	// Only show the panel on the first page
-	// in future version that might be  moved to the denome
-	//
-	if(pageToDisplay == 1){
-		$('#PulseActivityPanel').show();
-	}else{
-		$('#PulseActivityPanel').hide();
-	}
+	
 
 	renderPageToDisplay();
 
@@ -420,9 +412,9 @@ function renderPageToDisplay(){
 							// if this is not the first page, hide
 							// the PulseInfo
 							if(pageToDisplay==1){
-								$('#PulseInfo').show();
+								$('#PulseActivityPanel').show();
 							}else{
-								$('#PulseInfo').hide();
+								$('#PulseActivityPanel').hide();
 							}	
 							renderPageByPointer(pageDefinintionPointer);
 						}
