@@ -25,7 +25,7 @@ class Networking{
         var signallevel = getDeneWordByIdentityPointer(signallevelPointer, DENEWORD_VALUE_ATTRIBUTE);
 
 
-        if(1==1){//currentIdentityMode == TELEONOME_IDENTITY_SELF){
+        if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
             panelHTML += "<div id=\"NetworkMode\">";
             panelHTML += "<center>";
             panelHTML += "<div class=\"row\">";
