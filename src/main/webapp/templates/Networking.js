@@ -25,7 +25,7 @@ class Networking{
         var signallevel = getDeneWordByIdentityPointer(signallevelPointer, DENEWORD_VALUE_ATTRIBUTE);
 
 
-        if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
+        if(1==1){//currentIdentityMode == TELEONOME_IDENTITY_SELF){
             panelHTML += "<div id=\"NetworkMode\">";
             panelHTML += "<center>";
             panelHTML += "<div class=\"row\">";
@@ -38,31 +38,8 @@ class Networking{
             panelHTML += "<div id=\"AvailableNetworkSection\">";
             panelHTML += "<label>Available Networks:</label><br>";
             panelHTML += "<select id=\"AvailableNetworks\" name=\"AvailableNetworks\"></select>";
-            panelHTML += "<option value=\"\">Select SSID</option>";
-            //
-            // set up the available ssids
-            //
-            $.ajax({
-                type: "GET",
-                url: "/TeleonomeServlet",
-                data: {formName:"GetSSIDs" },
-                success: function (availableSSIDs) {
-                    console.log("commandId=" + data);
-                    for(var i = 0; i < availableSSIDs.length; i++) {
-                        var item = availableSSIDs[i];
-                        var security="";
-                        if(item["Authentication"]!=null && item["Authentication"].indexOf("PSK")>-1)security="Password";
-                        var key = item["SSID"]+ "-" + item["Signal"] + " " + security;
-                        var value=item["SSID"] ;
-                        panelHTML += "<option value=\""+ value+"\">"+ key +"</option>";
-                    }	
-                },
-                error: function(data){
-                    console.log("error getting log file:" + JSON.stringify(data));
-                    alert("Error getting log:" + JSON.stringify(data));
-                    return false;
-                }
-            });	
+            
+            
 
            
             panelHTML += "</select>";
@@ -81,6 +58,35 @@ class Networking{
             panelHTML += "</div>";
             panelHTML += "</center>";
             panelHTML += "</div>";
+
+            //
+            // set up the available ssids
+            //
+            $.ajax({
+                type: "GET",
+                url: "/TeleonomeServlet",
+                data: {formName:"GetSSIDs" },
+                success: function (availableSSIDs) {
+                    console.log("commandId=" + data);
+                    
+                    $('#AvailableNetworks').append('<option value="">Select SSID</option>');
+                    for(var i = 0; i < availableSSIDs.length; i++) {
+                        var item = availableSSIDs[i];
+                        var security="";
+                        if(item["Authentication"]!=null && item["Authentication"].indexOf("PSK")>-1)security="Password";
+                        var key = item["SSID"]+ "-" + item["Signal"] + " " + security;
+                        var value=item["SSID"] ;
+                        //ssidOptions += "<option value=\""+ value+"\">"+ key +"</option>";
+                        $('#AvailableNetworks').append($('<option>', {value:value, text:key}));
+                    }	
+                },
+                error: function(data){
+                    console.log("error getting log file:" + JSON.stringify(data));
+                    alert("Error getting log:" + JSON.stringify(data));
+                    return false;
+                }
+            });	
+
         }else{
             panelHTML += "<div id=\"SelfMode\">";
             panelHTML += "<center>";
