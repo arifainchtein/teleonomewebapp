@@ -53,7 +53,7 @@ function monitorBetweenPulses() {
 	if ( numberOfPulsesBeforeLate != undefined &&
 			currentPulseGenerationDuration != undefined &&
 			currentPulseFrequency != undefined){
-				
+
 		var timeBeforeLate = numberOfPulsesBeforeLate*(currentPulseGenerationDuration+currentPulseFrequency);
 		//timeBeforeLate = 60000;
 		console.log("timeBeforeLate=" + timeBeforeLate + " timeSinceLastPulse=" + timeSinceLastPulse);
@@ -364,6 +364,15 @@ function RefreshInterface(){
 		pageToDisplay = 1;
 	}
 
+	//
+	// Only show the panel on the first page
+	// in future version that might be  moved to the denome
+	//
+	if(pageToDisplay == 1){
+		$('#PulseActivityPanel').show();
+	}else{
+		$('#PulseActivityPanel').hide();
+	}
 
 	renderPageToDisplay();
 
