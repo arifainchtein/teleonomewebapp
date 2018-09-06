@@ -243,6 +243,7 @@ public class TeleonomeServlet extends HttpServlet {
 
 		}else if(formName.equals("GetSSIDs")){
 			JSONArray ssidJSONArray = NetworkUtilities.getSSID(true);
+			logger.debug("GetSSIDs=" +ssidJSONArray.toString(4));
 			res.setContentType("application/json;charset=UTF-8");
 			PrintWriter out = res.getWriter();
 			out.print(ssidJSONArray);
