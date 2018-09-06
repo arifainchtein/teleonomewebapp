@@ -66,9 +66,9 @@ class Networking{
                 type: "GET",
                 url: "/TeleonomeServlet",
                 data: {formName:"GetSSIDs" },
-                success: function (availableSSIDs) {
-                    console.log("commandId=" + data);
-                    
+                success: function (data) {
+                    console.log("availableSSIDs=" + data);
+                    var availableSSIDs = JSON.parse(data);
                     $('#AvailableNetworks').append('<option value="">Select SSID</option>');
                     for(var i = 0; i < availableSSIDs.length; i++) {
                         var item = availableSSIDs[i];
