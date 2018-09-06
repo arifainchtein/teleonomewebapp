@@ -145,7 +145,9 @@ class SearchFunctions{
                             var chartDivId = data.chartDivId;
                             var fromMillis = data.fromMillis;
                             var untilMillis = data.untilMillis;
-
+                            if(data.Value.length==0){
+                                continue;
+                            }
 		                    var lastValue = data.Value[data.Value.length-1].Value;
 		                    var rendLastValue = lastValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		                    var anyTeleonomeName = data.TeleonomeName;
@@ -393,6 +395,7 @@ class SearchFunctions{
         $('#WaitingWheel').show();
         $("#SearchConfigurator").hide();
         $('#Teleonome').empty();
+        $('#Identity').empty();
         $.ajax({
             type: "GET",
             url: "/TeleonomeServlet",
