@@ -690,12 +690,12 @@ input:valid {
 						enableNetworkMode = "Yes";
 					}
 
-					var AvailableNetworks = $('#AvailableNetworks');
+					var AvailableNetworks = $('#AvailableNetworks').val();
 					var password = $('#password').val();
 					$.ajax({
 						type: "POST",
 						url: "/TeleonomeServlet",
-						data: {formName:formName, EnableNetworkMode: enableNetworkMode, action:action, password:password, CommandCode:commandCode},
+						data: {formName:formName, EnableNetworkMode: enableNetworkMode,AvailableNetworks:AvailableNetworks, action:action, password:password, CommandCode:commandCode},
 						success: function (commandId) {
 							console.log("commandId=" + commandId);
 						},
