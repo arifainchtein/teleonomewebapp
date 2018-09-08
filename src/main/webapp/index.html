@@ -684,7 +684,12 @@ input:valid {
 				var action = "Reboot";
 
 				if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
-					var enableNetworkMode = $('#EnableNetworkMode').val();
+					
+					var enableNetworkMode = "No";
+					if($('#EnableNetworkMode').bootstrapSwitch('state')){
+						enableNetworkMode = "Yes";
+					}
+
 					var AvailableNetworks = $('#AvailableNetworks');
 					var password = $('#password').val();
 					$.ajax({
@@ -692,7 +697,7 @@ input:valid {
 						url: "/TeleonomeServlet",
 						data: {formName:formName, EnableNetworkMode: enableNetworkMode, action:action, password:password, CommandCode:commandCode},
 						success: function (commandId) {
-							console.log("commandId=" + data);
+							console.log("commandId=" + commandId);
 						},
 						error: function(data){
 							console.log("error getting log file:" + JSON.stringify(data));

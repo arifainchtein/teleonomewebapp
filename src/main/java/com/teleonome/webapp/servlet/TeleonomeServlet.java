@@ -78,7 +78,8 @@ public class TeleonomeServlet extends HttpServlet {
 
 				String ssid = req.getParameter("AvailableNetworks");
 				String password = req.getParameter("password");
-
+				logger.debug("ssid=" + ssid);
+				logger.debug("password=" + password);
 				JSONObject payLoadParentJSONObject = new JSONObject();
 
 				JSONObject payLoadJSONObject = new JSONObject();
@@ -98,11 +99,9 @@ public class TeleonomeServlet extends HttpServlet {
 					updateJSONObject2.put("Target","@On Load:Update PSK:Update PSK");
 					updateJSONObject2.put("Value", password );
 					updatesArray.put(updateJSONObject2);
-
-					logger.debug("Setting newtork info, ssid=" + ssid + " ps=" + password);
-
-					updatesArray.put(updateJSONObject);
 					payLoad=payLoadParentJSONObject.toString();
+					logger.debug("Setting newtork info, ssid=" + ssid + " ps=" + password);
+					logger.debug("payLoad=" + payLoad);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -157,7 +156,7 @@ public class TeleonomeServlet extends HttpServlet {
 			// to repaint the table, get all the commandrequests
 			//
 			JSONArray commands  = sendCommand(command, commandCode,payLoad, clientIp);
-			logger.debug("sent command=" + command  + " commandId=");	
+			logger.debug("sent command=" + command  + " commandCode="+commandCode + " payLoad=" + payLoad + " clientIp=" + clientIp);	
 			res.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = res.getWriter();
 			out.print(commands.toString());

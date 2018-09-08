@@ -134,40 +134,50 @@ class Networking{
             // layout the connected clients
             //
             panelHTML += "<div class=\"row\">";
-            panelHTML += "<div id=\"ConnectedClients\">";
+            var screensize = document.documentElement.clientWidth;
+            if(screensize<500){
+                panelHTML += "<div  class=\"col-xs-1\"></div>";
+                panelHTML += "<div id=\"ConnectedClients\" class=\"col-lg-6  col-xs-10\"></div>";
+                panelHTML += "<div  class=\"col-xs-1\"></div>";
+            }else{
+                panelHTML += "<div id=\"ConnectedClients\" class=\"col-lg-6  col-xs-12\"></div>";
+            }
             
-            panelHTML += "<label>Connected Clients:</label><br>";
-            panelHTML += "	<table id=\"ClientsTable\" class=\"table table-striped\">";
-            panelHTML += "<thead>";
-            panelHTML += "<tr> <th>Name</th> <th>IPAddress</th></tr>";
-            panelHTML += "</thead>";
-            panelHTML += "<tbody>";
+            panelHTML += "</div>";
             
             $.ajax({
                 type: "GET",
                 url: "/TeleonomeServlet",
                 data: {formName:"GetConnectedClients" },
                 success: function (connectedClients) {
-                    console.log("commandId=" + data);
-                    for(var i = 0; i < connectedClients.length; i++) {
-                        var obj = connectedClients[i];
-                        panelHTML += "<tr><td>" + obj.name + "</td><td>"+obj.ipaddress+"</td></tr>";
-                    }		
+                    console.log("commandId=" + connectedClients);
+                    var clientsTable="";
+                    $('#ConnectedClients').empty();
+                    if(connectedClients.length>0){
+                        
+                        clientsTable += "<br><label><h4>Connected Clients:</h4></label><br>";
+                        clientsTable += "	<table id=\"ClientsTable\" class=\"table table-striped table-responsive\">";
+                        clientsTable += "<thead>";
+                        clientsTable += "<tr> <th class=\"text-center\">Name</th> <th class=\"text-center\">IPAddress</th></tr>";
+                        clientsTable += "</thead>";
+                        clientsTable += "<tbody>";
+
+                        for(var i = 0; i < connectedClients.length; i++) {
+                            var obj = connectedClients[i];
+                            clientsTable += "<tr><td>" + obj.name + "</td><td>"+obj.ipaddress+"</td></tr>";
+                        }	
+                        clientsTable += "</tbody>";
+                        clientsTable += "</table>";
+                        $('#ConnectedClients').append(clientsTable);
+                    }
+                    	
                 },
                 error: function(data){
                     console.log("error getting log file:" + JSON.stringify(data));
-                    alert("Error getting log:" + JSON.stringify(data));
+                    
                     return false;
                 }
             });	
-
-
-            			
-            panelHTML += "</tbody>";
-            panelHTML += "</table>";
-            panelHTML += "</div>";
-            panelHTML += "</div>";
-            
         }
         return panelHTML;
     }
