@@ -4,7 +4,7 @@ class CompleteDeneSingleValuePanelExternalData{
 
     }
     
-	process(sourceDataPointer){
+	process(sourceDataPointer, title){
 		//var sourceDataPointer = denes[0].DeneWords[0].Value;
 		var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(sourceDataPointer);
 
@@ -32,14 +32,14 @@ class CompleteDeneSingleValuePanelExternalData{
 		var statusMessage = getDeneWordByIdentityPointer(statusMessagePointer, DENEWORD_VALUE_ATTRIBUTE);
 	//	console.log("statusMessage=" + statusMessage);
 
-		panelHTML += "<div class=\"col-lg-6\">";
+		var panelHTML = "<div class=\"col-lg-6\">";
 		panelHTML += "<div class=\"bs-component\">";
 		panelHTML += "<div class=\"panel panel-default\">";
 		panelHTML += " <div class=\"panel-heading row\">"
 			
 		
 		panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
-		panelHTML += "<h4>" + panelDeneChain["Name"] + "</h4>"; 
+		panelHTML += "<h4>" + title + "</h4>"; 
 		panelHTML +="</div>";// close col lg-4
 		
 		panelHTML += "<div class=\"col-lg-5 col-md-5 col-sm-5 col-xs-5\">";
@@ -61,18 +61,18 @@ class CompleteDeneSingleValuePanelExternalData{
 		
 
 		//console.log("in complete dene sourceDataPointer=" + sourceDataPointer)
-		renderedDataSourceDene = getDeneByIdentityPointer(sourceDataPointer);
+		var renderedDataSourceDene = getDeneByIdentityPointer(sourceDataPointer);
 		//console.log("in complete dene renderedDataSourceDene=" + renderedDataSourceDene.toString(4))
-		deneWords = renderedDataSourceDene.DeneWords;
-		for(k2=0;k2<deneWords.length;k2++){
-			deneWord = deneWords[k2];
+		var deneWords = renderedDataSourceDene.DeneWords;
+		for(var k2=0;k2<deneWords.length;k2++){
+			var deneWord = deneWords[k2];
 			if(deneWord.Name === EXTERNAL_DATA_STATUS || deneWord.Name===DENEWORD_STATUS){continue;}
 			////console.log("in complete dene deneWord=" + deneWord.toString(4))
 			var unitsText=deneWord["Units"];
 			if(unitsText==="" || unitsText===undefined)unitsText="&nbsp;&nbsp;&nbsp;&nbsp;";
 
 			// set the name to replace camel case with spaces
-			nameToDisplay = deneWord["Name"].trim().replace( /([A-Z])/g, ' $1' );
+			var nameToDisplay = deneWord["Name"].trim().replace( /([A-Z])/g, ' $1' );
 			if(nameToDisplay.length>14){
 				nameToDisplay="<span style=\"font-size:1em;\">"+nameToDisplay+"</span>"
 			}
@@ -112,5 +112,6 @@ class CompleteDeneSingleValuePanelExternalData{
 			panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
 		}
 		panelHTML += "</div>";    // closing row
+		return panelHTML;
 	}
 }

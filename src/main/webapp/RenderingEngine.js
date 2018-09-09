@@ -715,9 +715,9 @@ function renderPageToDisplay(){
 			
 				var sourceDataPointer = denes[0].DeneWords[0].Value;
 
-				
+				var title = panelDeneChain["Name"];
 				var aCompleteDeneSingleValuePanelExternalData = new CompleteDeneSingleValuePanelExternalData();
-				panelHTML += aCompleteDeneSingleValuePanelExternalData.process(sourceDataPointer);
+				panelHTML += aCompleteDeneSingleValuePanelExternalData.process(sourceDataPointer, title);
 				
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_SEARCH_PANEL){
