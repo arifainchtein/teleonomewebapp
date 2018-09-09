@@ -4,8 +4,8 @@ class CompleteDeneSingleValuePanelExternalData{
 
     }
     
-	process(){
-		var sourceDataPointer = denes[0].DeneWords[0].Value;
+	process(sourceDataPointer){
+		//var sourceDataPointer = denes[0].DeneWords[0].Value;
 		var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(sourceDataPointer);
 
 
