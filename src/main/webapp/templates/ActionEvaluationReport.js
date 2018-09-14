@@ -4,8 +4,8 @@ class ActionEvaluationReport{
 
     }
 
-    process (){
-        var sourceDataPointer = denes[0].DeneWords[0].Value;
+    process (sourceDataPointer){
+        
         //var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(sourceDataPointer);
         var actionDene = getDeneByIdentityPointer(sourceDataPointer);
         var actionName = actionDene.Name;
@@ -65,6 +65,7 @@ class ActionEvaluationReport{
         var t1=false;
         var t2=false;
         var t3=false;
+        var j2;
         for(i32=0;i32<denePanelArray.length;i32++){
             processingDene = denePanelArray[i32];
             processingDeneName = processingDene.Name;

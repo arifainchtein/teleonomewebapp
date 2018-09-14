@@ -303,6 +303,8 @@ var DENEWORD_TYPE_ACTUATOR_CONDITION_POINTER = "Actuator Condition Pointer";
 var DENEWORD_TYPE_CONDITION_VARIABLE_POINTER = "Condition Variable Pointer";
 var DENEWORD_TYPE_SENSOR_VALUE = "Sensor Value";
 var DENEWORD_TYPE_UPDATE_DENEWORD_VALUE = "Update DeneWord Value";
+var DENEWORD_TYPE_APPEND_DENEWORD_VALUE = "Append DeneWord Value";
+
 var DENEWORD_TYPE_FIRMWARE_COMMAND_POINTER = "Firmware Command Pointer";
 var DENEWORD_TYPE_FIRMWARE_COMMAND = "Firmware Command";
 var DENEWORD_TYPE_SENSOR_MICROCONTROLLER_POINTER = "Sensor Microcontroller Pointer";

@@ -643,9 +643,9 @@ function renderPageToDisplay(){
 				panelHTML += aNetworking.process();
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_ACTION_EVALUATION_REPORT){
-				
+				var sourceDataPointer = denes[0].DeneWords[0].Value;
 				var anActionEvaluationReport = new ActionEvaluationReport();
-				panelHTML += anActionEvaluationReport.process();
+				panelHTML += anActionEvaluationReport.process(sourceDataPointer);
 				
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_COMPLETE_WIDTH){
