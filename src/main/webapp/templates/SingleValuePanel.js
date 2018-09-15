@@ -21,7 +21,7 @@ class SingleValuePanel{
         
         
         var nameToDisplay;
-        var renderedDataSourceDene;
+        var renderedDataSourceDeneWord;
         //console.log("about to start going ver the rpoerties, object=" + object);
         var dataDene;
         var panelDataSourcePointer;
