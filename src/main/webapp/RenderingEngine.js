@@ -658,7 +658,7 @@ function renderPageToDisplay(){
 		       
 				
 				var aSingleValuePanel = new SingleValuePanel();
-				panelHTML += aSingleValuePanel.process(false, title, object);
+				panelHTML += aSingleValuePanel.process(TRUE, title, object);
 				
 
 				
