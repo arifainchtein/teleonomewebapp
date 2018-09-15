@@ -20,13 +20,12 @@ class SingleValuePanel{
 
         
         
-//        var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-//        var object = panelPositionInPanelHashMap["_map"];
         var nameToDisplay;
         var renderedDataSourceDene;
         //console.log("about to start going ver the rpoerties, object=" + object);
-        
-        
+        var dataDene;
+        var panelDataSourcePointer;
+        var visible=false;
         for(var property in object) {
             //
             //after every three panels 
