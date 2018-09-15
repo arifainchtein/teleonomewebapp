@@ -4,7 +4,7 @@ class SingleValuePanel{
 
     }
 
-    process(completeWidth, title ){
+    process(completeWidth, title, object ){
 
         var panelHTML = "";
         if(completeWidth){
@@ -20,8 +20,8 @@ class SingleValuePanel{
 
         
         
-        var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-        var object = panelPositionInPanelHashMap["_map"];
+//        var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
+//        var object = panelPositionInPanelHashMap["_map"];
         var nameToDisplay;
         var renderedDataSourceDene;
         //console.log("about to start going ver the rpoerties, object=" + object);
