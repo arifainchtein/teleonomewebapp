@@ -682,9 +682,9 @@ function renderPageToDisplay(){
 				panelHTML += deneWordTable.process(panelTitle, denes);
 			
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL){
-				
+				var title =  panelDeneChain["Name"]
 				var aSingleValuePanel = new SingleValuePanel();
-				panelHTML += aSingleValuePanel.process(false);
+				panelHTML += aSingleValuePanel.process(false, title);
 
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_COMPLETE_DENE_STYLE_SINGLE_VALUE_PANEL){
 				var aCompleteDeneSingleValuePanel = new CompleteDeneSingleValuePanel();

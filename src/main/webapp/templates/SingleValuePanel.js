@@ -4,7 +4,7 @@ class SingleValuePanel{
 
     }
 
-    process(completeWidth){
+    process(completeWidth, title ){
 
         var panelHTML = "";
         if(completeWidth){
@@ -14,7 +14,7 @@ class SingleValuePanel{
         }
         panelHTML += "<div class=\"bs-component\">";
         panelHTML += "<div class=\"panel panel-default\">";
-        panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
+        panelHTML += " <div class=\"panel-heading\"><h4>"+title+"</h4></div>";
         panelHTML += "<div class=\"panel-body text-center\">";
         panelHTML += "<div class=\"row\">";
 
