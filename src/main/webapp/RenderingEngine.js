@@ -650,9 +650,16 @@ function renderPageToDisplay(){
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_COMPLETE_WIDTH){
 				
+				
+				var title =  panelDeneChain["Name"]
+				
+				 var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
+		        var object = panelPositionInPanelHashMap["_map"];
+		       
+				
 				var aSingleValuePanel = new SingleValuePanel();
-				panelHTML += aSingleValuePanel.process(true);
-
+				panelHTML += aSingleValuePanel.process(false, title, object);
+				
 
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SHORT_TERM_WEATHER_FORECAST){
