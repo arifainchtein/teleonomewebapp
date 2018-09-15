@@ -71,5 +71,6 @@ class SingleValuePanel{
             }// if visible
 
         }
+        return panelHTML;
     }
 }
