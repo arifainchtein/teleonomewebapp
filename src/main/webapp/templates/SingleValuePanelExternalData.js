@@ -3,7 +3,7 @@ class SingleValuePanelExternalData{
 
     }
 
-    process(completeWidth, panelExternalDataSourcePointer){
+    process(title, completeWidth, panelExternalDataSourcePointer){
         
 
         var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(panelExternalDataSourcePointer);
@@ -31,7 +31,7 @@ class SingleValuePanelExternalData{
         panelHTML += " <div class=\"panel-heading row\">";
         
         panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
-        panelHTML += "<h4>" + panelDeneChain["Name"] + "</h4>"; 
+        panelHTML += "<h4>" + title + "</h4>"; 
         panelHTML +="</div>";// close col lg-4
         
         panelHTML += "<div class=\"col-lg-5 col-md-5 col-sm-5 col-xs-5\">";
