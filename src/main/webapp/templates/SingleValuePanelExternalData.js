@@ -21,7 +21,7 @@ class SingleValuePanelExternalData{
         //console.log("statusMessage=" + statusMessage);
         
         var panelHTML = "";
-        if(cmpleteWidth){
+        if(completeWidth){
             panelHTML+= "<div class=\"col-lg-12\">";
         }else{
             panelHTML+= "<div class=\"col-lg-6\">";
