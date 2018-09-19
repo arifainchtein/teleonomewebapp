@@ -21,6 +21,7 @@ class PathologyPanel{
 				var denePanelArray = pathologyDeneChain["Denes"];
 				var processingDene;
 				var deneName="";
+				var processingDeneName;
 				var deneWords;
 				var actuatorConditionDeneWord;
 				var conditionExpression;
