@@ -3,7 +3,7 @@ class SingleValuePanelExternalData{
 
     }
 
-    process(completeWidth){
+    process(completeWidth, panelExternalDataSourcePointer){
         
 
         var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(panelExternalDataSourcePointer);
