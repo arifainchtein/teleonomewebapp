@@ -3,7 +3,7 @@ class SingleValuePanelExternalData{
 
     }
 
-    process(title, completeWidth, panelExternalDataSourcePointer){
+    process(title, completeWidth, panelExternalDataSourcePointer, object){
         
 
         var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(panelExternalDataSourcePointer);
@@ -48,8 +48,7 @@ class SingleValuePanelExternalData{
 
         
         
-        var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-        var object = panelPositionInPanelHashMap["_map"];
+        
         var nameToDisplay;
         var renderedDataSourceDene;
         //console.log("about to start going ver the rpoerties, object=" + object);
@@ -58,11 +57,11 @@ class SingleValuePanelExternalData{
         for(var property in object) {
             //
             //after every three panels 
-            dataDene = object[property];   
-            panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE)
+            var dataDene = object[property];   
+            var panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE)
             nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE)
             //console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
-            renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
+             renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
             if(nameToDisplay.startsWith("@")){
                 //
                 // this is a pointer, so render it

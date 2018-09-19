@@ -716,13 +716,17 @@ function renderPageToDisplay(){
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_DATA){
 				var title  = panelDeneChain["Name"];
+				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
+		        var object = panelPositionInPanelHashMap["_map"];
 				var aSingleValuePanelExternalData = new SingleValuePanelExternalData();
-				panelHTML += aSingleValuePanelExternalData.process(title, false, panelExternalDataSourcePointer);
+				panelHTML += aSingleValuePanelExternalData.process(title, false, panelExternalDataSourcePointer, object);
 
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_COMPLETE_WIDTH_EXTERNAL_DATA){
 				var title  = panelDeneChain["Name"];
+				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
+		        var object = panelPositionInPanelHashMap["_map"];
 				var aSingleValuePanelExternalData = new SingleValuePanelExternalData();
-				panelHTML += aSingleValuePanelExternalData.process(title, true, panelExternalDataSourcePointer);
+				panelHTML += aSingleValuePanelExternalData.process(title, true, panelExternalDataSourcePointer, object);
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_COMPLETE_DENE_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_DATA){
 			
