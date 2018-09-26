@@ -835,8 +835,19 @@ input:valid {
 				//
 
 				//
-				// the functions related to the Settings Page
+				// the functions related to the diagnostics Page
 				//
+				
+				
+				$(document).on('click', '#AsyncUpdateButton',function(e){
+					e.preventDefault();
+					var limit = $("#limit option:selected").val();
+					var userLogs = $("#UserLogs").is(':checked')? "Yes":"No";
+					var systemLogs = $("#SystemLogs").is(':checked')? "Yes":"No";
+					var offset=1;
+					renderAsyncCommands(userLogs,systemLogs, limit, offset );
+				});
+
 				$(document).on('click', '#Synchronous',function(e){
 					var panelPointer  = $(this).data("panelpointer");
 					var n = new SynchronousDiagnostics(panelPointer);

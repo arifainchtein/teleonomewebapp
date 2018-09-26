@@ -185,6 +185,32 @@ function renderCommandRequestTable(commandsInfo){
 	return panelHTML;
 }
 
+function renderAsyncCommands(includeClient,includeInternal, limit, offset ){
+	$.ajax({
+		type: "POST",
+		url: "/TeleonomeServlet",
+		data: {formName:"GetAllCommandRequests", IncludeClient:includeClient, IncludeInternal:includeInternal,limit:limit,offset:offset },
+		success: function (data) {
+			console.log("GetAllCommandRequests res," + data);
+			commandsInfo = JSON.parse(data);
+			var allCommands = commandsInfo.Values;
+			if(allCommands.length>0){
+				$('#AynchronousLog').empty();
+				var panelHTML = renderCommandRequestTable(commandsInfo);
+				$('#AynchronousLog').append(panelHTML);
+				$('#AynchronousLog').show();
+			}
+
+		},
+		error: function(data){
+			console.log("error getting commanda data:" + data);
+			alert("Error getting commanda data:" +  data);
+			panelHtml +='               <div class="panel-body" id="AynchronousLog" style="display:none"></div>';
+			return false;
+		}
+	});
+}
+
 function receivedCommandResponse(cr){
 	//
 	// text contains the numerical id of the command

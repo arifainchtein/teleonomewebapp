@@ -20,44 +20,30 @@ class AsynchronousDiagnostics{
         panelHTML += "                      <form class=\"form-inline\" action=\"\">";
         panelHTML += "                          <div class=\"form-group\">";
         panelHTML += "                              <div class=\"checkbox\">";
-        panelHTML += "                                  <label><input type=\"checkbox\" id=\"UserLogs\" />  User</label>";
+        panelHTML += "                                  <label><input type=\"checkbox\" id=\"UserLogs\" checked />  User</label>";
         panelHTML += "                              </div>";
         panelHTML += "                          </div>";
         panelHTML += "                          <div class=\"form-group\">";
         panelHTML += "                              <div class=\"checkbox\">";
-        panelHTML += "                                  <label><input type=\"checkbox\" id=\"SystemLogs\" />  System</label>";
+        panelHTML += "                                  <label><input type=\"checkbox\" id=\"SystemLogs\" checked />  System</label>";
         panelHTML += "                              </div>";
         panelHTML += "                          </div>";
-        panelHTML += "                          <button type=\"submit\" class=\"btn btn-default\">Submit</button>";
+        panelHTML += "                          <div class=\"form-group\">";
+        panelHTML += "                              <label for=\"limit\">Show:</label>";
+        panelHTML += "                              <select class=\"form-control\" id=\"limit\">";
+        panelHTML += "                                   <option value=\"10\">10</option>";
+        panelHTML += "                                   <option value=\"20\">20</option>";
+        panelHTML += "                                   <option value=\"50\">50</option>";
+        panelHTML += "                               </select>";
+        panelHTML += "                              </div>";
+        panelHTML += "                          </div>";
+        panelHTML += "                          <button type=\"submit\" id=\"AsyncUpdateButton\" class=\"btn btn-default pull right\">Submit</button>";
         panelHTML += "                      </form>";
         panelHTML += "              </div>";    // closing panel-footer
 		panelHTML += "          </div>";    // closing <div class=\"panel panel-default\"
         panelHTML += "      </div>";    // closing <div class=\"bs-component\"
             
-
-        $.ajax({
-            type: "POST",
-            url: "/TeleonomeServlet",
-            data: {formName:"GetAllCommandRequests"},
-            success: function (data) {
-                console.log("GetAllCommandRequests res," + data);
-                commandsInfo = JSON.parse(data);
-                var allCommands = commandsInfo.Values;
-                if(allCommands.length>0){
-                    $('#AynchronousLog').empty();
-                    var panelHTML = renderCommandRequestTable(commandsInfo);
-                    $('#AynchronousLog').append(panelHTML);
-                    $('#AynchronousLog').show();
-                }
-
-            },
-            error: function(data){
-                console.log("error getting commanda data:" + data);
-                alert("Error getting commanda data:" +  data);
-                panelHtml +='               <div class="panel-body" id="AynchronousLog" style="display:none"></div>';
-                return false;
-            }
-        });
+        renderAsyncCommands("Yes","Yes", 20, 0 );
 
         return panelHTML;
     }
