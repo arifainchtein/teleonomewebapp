@@ -428,12 +428,9 @@ function RefreshInterface(){
 		pageToDisplay = 1;
 	}
 
-	//
-	// page 3 is the search and page 5 is the diagnostics
-	// so dont refresh them
-	if(pageToDisplay != 3 && pageToDisplay != 5){
+	
 		renderPageToDisplay();
-	}
+	
 	//
 	// now generate the bottomname
 	// <div class="col-xs-2 text-center">
