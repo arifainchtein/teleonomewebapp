@@ -172,7 +172,7 @@ function renderCommandRequestTable(commandsInfo){
 			panelHTML += "	<li data-offset=\""+j +"\" class=\"page-item\"><a class=\"page-link\" href=\"#\">"+j+"</a></li>";
 		}
 		panelHTML += "	<li class=\"page-item\"><a data-offset=\""+(offset + numberOfPagesToShow) +"\"  class=\"page-link\" href=\"#\"> ...</a></li>";
-		panelHTML += "	<li class=\"page-item\"><a data-offset=\""+numberPages +"\" class=\"page-link\" href=\"#\"> " + numberPages +"</a></li>";
+		panelHTML += "	<li class=\"page-item\"><a data-offset=\""+numberOfPages +"\" class=\"page-link\" href=\"#\"> " + numberOfPages +"</a></li>";
 		
 		panelHTML += "	<li class=\"page-item\">";
 		panelHTML += "	<a class=\"page-link\" href=\"#\">Next</a>";
