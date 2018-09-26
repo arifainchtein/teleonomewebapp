@@ -169,13 +169,6 @@ input:valid {
     margin-top:-25px;
    
 }
-.SettingBar{
-    text-align: center;
-}
-
-.SettingBar:hover {
-    color:salmon;
-}
 
 .label{
 	font-size:45%;
@@ -187,6 +180,25 @@ input:valid {
 .SettingsMenu{
 	cursor: pointer;
 }
+.SettingBar{
+    text-align: center;
+}
+
+.SettingBar:hover {
+    color:salmon;
+}
+
+.DiagnosticsMenu{
+	cursor: pointer;
+}
+.DiagnosticsBar{
+    text-align: center;
+}
+
+.DiagnosticsBar:hover {
+    color:salmon;
+}
+
 
 #WaitingWheel {
 	width: 300px;
@@ -337,6 +349,7 @@ input:valid {
 		<script type="text/javascript" src="DenomeFunctions.js"></script>
 		<!-- The templates, make sure they are loaded after the two Functions files -->
 		<script type="text/javascript" src="templates/SettingsInfo.js"></script>
+		<script type="text/javascript" src="templates/DiagnosticsInfo.js"></script>
 		<script type="text/javascript" src="templates/DeneWordTable.js"></script>
 		<script type="text/javascript" src="templates/DeviceInfo.js"></script>
 		<script type="text/javascript" src="templates/Networking.js"></script>
@@ -718,13 +731,13 @@ input:valid {
 					data: {formName:formName, EnableHostMode: enableHostMode, action:action, CommandCode:commandCode},
 					success: function (data) {
 						
-						var allCommands = JSON.parse(data);
+						var commandsInfo = JSON.parse(data);
 						//
 						// the response contains the id, and the status, which 
 						// at this point should be COMMAND_REQUEST_PENDING_EXECUTION
 						// put it on the table
 						$('#SettingsWorkArea').empty();
-						var panelHTML = renderCommandRequestTable(allCommands);
+						var panelHTML = renderCommandRequestTable(commandsInfo);
 						$('#SettingsWorkArea').append(panelHTML);
 					},
 					error: function(data){
@@ -745,6 +758,9 @@ input:valid {
 					}
 					
 				});
+				//
+				// the functions related to the Settings Page
+				//
 				$(document).on('click', '#Wifi',function(e){
 					var panelPointer  = $(this).data("panelpointer");
 					var n = new Networking(panelPointer);
@@ -768,6 +784,7 @@ input:valid {
 					$('#SettingsWorkArea').html(html);
 					$('#SettingsWorkArea').show();
 				});
+
 				$(document).on('click', '.UpdateParamBtn',function(e){
 					 // e.preventDefault();
 					  var source = event.target || event.srcElement;
@@ -810,20 +827,41 @@ input:valid {
 							return false;
 						}
 					});	
+				});
+				//
+				// end of settings page functions
+				//
 
-					//  var jsonData = {};
-					//  jsonData[TELEONOME_IDENTITY_LABEL] = data.identity;
-					//  jsonData[DENEWORD_VALUE_ATTRIBUTE] = selected;
-					//  jsonData[COMMAND_REQUEST_PASSWORD] = passwd;
-					// var message = new Paho.MQTT.Message(JSON.stringify(jsonData));
-					// message.destinationName = HEART_TOPIC_UPDATE_FORM_REQUEST;
-					// mqtt.send(message);
-					  
-					//message.setPayload(jsonData.getBytes());
-					//mqtt.publish(HEART_TOPIC_UPDATE_FORM_REQUEST, message);
-					 
-					 // alert(field + " " + data.identity + " " + selected);
-					});
+				//
+				// the functions related to the Settings Page
+				//
+				$(document).on('click', '#Synchronous',function(e){
+					var panelPointer  = $(this).data("panelpointer");
+					var n = new SynchronousDiagnostics(panelPointer);
+					var html = n.process(panelPointer);
+					
+					$('#DiagnosticsWorkArea').html(html);
+					$(".BSswitch").bootstrapSwitch();
+					$('#DiagnosticsWorkArea').show();
+				});
+				$(document).on('click', '#Asynchronous',function(e){
+					var panelPointer  = $(this).data("panelpointer");
+					var n = new AsynchronousDiagnostics();
+					var html = n.process(panelPointer);
+					$('#DiagnosticsWorkArea').html(html);
+					$('#DiagnosticsWorkArea').show();
+				});
+				$(document).on('click', '#SystemDiagnostics',function(e){
+					var panelPointer  = $(this).data("panelpointer");
+					var n = new SystemDiagnostics();
+					var html = n.process();
+					$('#DiagnosticsWorkArea').html(html);
+					$('#DiagnosticsWorkArea').show();
+				});
+				
+				//
+				// end of diagnostics page functions
+				//
 		        	$('#WaitingWheel').hide();
 			});
 			

@@ -155,22 +155,38 @@ public class TeleonomeServlet extends HttpServlet {
 			//
 			// to repaint the table, get all the commandrequests
 			//
-			JSONArray commands  = sendCommand(command, commandCode,payLoad, clientIp);
+			JSONObject commandsInfo  = sendCommand(command, commandCode,payLoad, clientIp);
 			logger.debug("sent command=" + command  + " commandCode="+commandCode + " payLoad=" + payLoad + " clientIp=" + clientIp);	
 			res.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = res.getWriter();
-			out.print(commands.toString());
+			out.print(commandsInfo.toString());
 			out.flush();
 			out.close();
 			
 			
 		}else if(formName.equals("GetAllCommandRequests")){
 			aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
-			JSONArray commands  = aDBManager.getAllCommandRequests();
-			logger.debug("GetAllCommandRequests command=" + commands.length()  );	
+			String includeClientS = req.getParameter("IncludeClient");
+			String includeInternalS = req.getParameter("IncludeInternal");
+			int offset = Integer.parseInt(req.getParameter("offset"));
+			int limit = Integer.parseInt(req.getParameter("limit"));
+			
+			boolean includeClient=false;
+			boolean includeInternal=false;
+			if(includeClientS!=null && includeClientS.equals("Yes"))includeClient=true;
+			if(includeInternalS!=null && includeInternalS.equals("Yes"))includeInternal=true;
+			
+			//
+			// the  method returns a JSONObject with the following structure:
+			//
+			// "Values":"JSonArray with values"
+			// "Total" : integer that represents how many there are without the limit, this is to know fpr pagination
+			
+			JSONObject commandInfo  = aDBManager.getAllCommandRequests(includeClient,includeInternal,  offset,  limit );
+			logger.debug("GetAllCommandRequests returns=" + commandInfo.toString(4)  );	
 			res.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = res.getWriter();
-			out.print(commands.toString());
+			out.print(commandInfo.toString());
 			out.flush();
 			out.close();
 		}else if(formName.equals(TeleonomeConstants.HEART_TOPIC_UPDATE_FORM_REQUEST)) {
@@ -652,16 +668,20 @@ public class TeleonomeServlet extends HttpServlet {
 	}
 
 
-	public JSONArray sendCommand(String command,String commandCode, String payLoad, String clientIp){
+	public JSONObject sendCommand(String command,String commandCode, String payLoad, String clientIp){
 		logger.debug("sending command to database =" + command);
 		String toReturn="";
 		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 
 		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, payLoad, clientIp);
-		JSONArray commands = aDBManager.getAllCommandRequests();
-		logger.debug("TeleonomeServlet responseJSONObject=" + responseJSONObject.toString(4));
-		return commands;
+		boolean includeHuman=true;
+		boolean includeInternal=false;
+		int offset=0;
+		int limit=20;
+		JSONObject commandInfo = aDBManager.getAllCommandRequests( includeHuman,  includeInternal,  offset,  limit);
+		logger.debug("TeleonomeServlet responseJSONObject=" + commandInfo.toString(4));
+		return commandInfo;
 //		//
 //		// now keep waiiting until the command is executed
 //		//

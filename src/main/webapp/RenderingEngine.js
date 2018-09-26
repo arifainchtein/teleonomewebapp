@@ -85,8 +85,17 @@ function monitorBetweenPulses() {
 	}
 } 
 
-function renderCommandRequestTable(allCommands){
+function renderCommandRequestTable(commandsInfo){
+	var commandsPerPage=20;
+	var total = commandsInfo.Total;
+	var allCommands = commandsInfo.Values;
+	var limit = commandsInfo.Limit;
+	var offset = commandsInfo.Offset;
+	var numberOfPagesToShow = 5;
+	var numberOfPages = total/commandsPerPage;
+	
 	if ($(window).width() < 480) {
+		commandsPerPage=5;
 		var panelHTML = "<table class=\"table\"><tbody>";
 		
 		for (var i = 0; i < allCommands.length; i++) {
@@ -145,6 +154,33 @@ function renderCommandRequestTable(allCommands){
 		
 		}
 		panelHTML += "</tbody></table>";
+		//
+		// do the pagination
+		//
+		var numberOfPages = 1 + total/limit;
+		var paginationStart=1;
+		if(offset>0){
+			paginationStart= paginationStart + offset;
+		}
+		var paginationEnd = paginationStart + numberOfPagesToShow;
+
+		panelHTML += "<ul class=\"pagination justify-content-center\">";
+		panelHTML += "	<li class=\"page-item disabled\">";
+		panelHTML += "		<a class=\"page-link\" href=\"#\" tabindex=\"-1\">Previous</a>";
+		panelHTML += 	"</li>";
+		for(var j=paginationStart; j<(paginationEnd-paginationStart); j++){
+			panelHTML += "	<li data-offset=\""+j +"\" class=\"page-item\"><a class=\"page-link\" href=\"#\">"+j+"</a></li>";
+		}
+		panelHTML += "	<li class=\"page-item\"><a data-offset=\""+(offset + numberOfPagesToShow) +"\"  class=\"page-link\" href=\"#\"> ...</a></li>";
+		panelHTML += "	<li class=\"page-item\"><a data-offset=\""+numberPages +"\" class=\"page-link\" href=\"#\"> " + numberPages +"</a></li>";
+		
+		panelHTML += "	<li class=\"page-item\">";
+		panelHTML += "	<a class=\"page-link\" href=\"#\">Next</a>";
+		panelHTML += "</li>";
+		panelHTML += "</ul>";
+
+		//
+		//
 	}
 	return panelHTML;
 }
@@ -635,6 +671,32 @@ function renderPageToDisplay(){
 				
 				 var settingsInfo = new SettingsInfo();
 				 panelHTML += settingsInfo.process();
+				 
+				    
+			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_DIAGNOSTICS_INFO){
+				//
+				// in this case, denes will contain one dene,
+				// which in turn will contain 3 denewords
+				// the value of each of these denewords is a pointer
+				// to the denechain panel for the Synchronous, Asynchronous and System
+				// using the pointers, get the chains and store them in localStorage
+				// since the classes will use them later
+				var systemInfoPointers = denes[0]['DeneWords'];
+				var pointer;
+				var systemInfoChain;
+				var systemInfoDeneChainPanelJSON={};
+				
+				for( var q=0;q<systemInfoPointers.length;q++){
+					pointer = systemInfoPointers[q].Value;
+					systemInfoChain = humanInterfaceDeneChainIndex["_map"][pointer];
+					systemInfoDeneChainPanelJSON[pointer] = systemInfoChain;
+					
+				}
+
+				localStorage.setItem("DiagnosticInfo", JSON.stringify(systemInfoDeneChainPanelJSON));
+				
+				 var diagnosticsInfo = new DiagnosticsInfo();
+				 panelHTML += diagnosticsInfo.process();
 				 
 				    
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_NETWORK_MODE_SELECTOR){

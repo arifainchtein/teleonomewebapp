@@ -30,37 +30,6 @@ class SettingsInfo{
         panelHtml +='       </div>';
         panelHtml +='   </div> ';
         panelHtml +='</div> ';
-
-        $.ajax({
-            type: "POST",
-            url: "/TeleonomeServlet",
-            data: {formName:"GetAllCommandRequests"},
-            success: function (data) {
-                console.log("GetAllCommandRequests res," + data);
-                allCommands = JSON.parse(data);
-                if(allCommands.length>0){
-                    $('#SettingsWorkArea').empty();
-                    var panelHTML = renderCommandRequestTable(allCommands);
-                    $('#SettingsWorkArea').append(panelHTML);
-                    $('#SettingsWorkArea').show();
-                }
-
-            },
-            error: function(data){
-                console.log("error getting commanda data:" + data);
-                alert("Error getting commanda data:" +  data);
-                panelHtml +='               <div class="panel-body" id="SettingsWorkArea" style="display:none"></div>';
-                return false;
-            }
-        });
-
-       			
-       
-       
-        
-
-        
-
         return panelHtml;
     }
 
