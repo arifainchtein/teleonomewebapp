@@ -113,7 +113,7 @@ function renderCommandRequestTable(commandsInfo){
 				rowStatus="success";
 			}else if(command.Status ==COMMAND_REQUEST_PENDING_EXECUTION){
 				rowStatus="warning";
-			}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_PASSWORD){
+			}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_CODE){
 				rowStatus="danger";
 			}
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td>";
@@ -147,7 +147,7 @@ function renderCommandRequestTable(commandsInfo){
 				rowStatus="success";
 			}else if(command.Status ==COMMAND_REQUEST_PENDING_EXECUTION){
 				rowStatus="warning";
-			}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_PASSWORD){
+			}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_CODE){
 				rowStatus="danger";
 			}
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+command.ClientIp+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td>" + command.Payload +"</td><td>" + command.Status +"</td></tr>";
@@ -234,7 +234,7 @@ function receivedCommandResponse(cr){
 			if(commandResponse.Status==COMMAND_REQUEST_EXECUTED){
 				result="success";
 				commandResultText=commandResponse.Command + " was executed succesfully";
-			}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_PASSWORD){
+			}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
 				result="danger";
 				commandResultText=commandResponse.commandCode + " was not correct";
 			}
