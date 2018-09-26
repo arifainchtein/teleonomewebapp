@@ -157,7 +157,7 @@ function renderCommandRequestTable(commandsInfo){
 		//
 		// do the pagination
 		//
-		var numberOfPages = 1 + total/limit;
+		var numberOfPages = (1 + total/limit)|0;
 		var paginationStart=1;
 		if(offset>0){
 			paginationStart= paginationStart + offset;
