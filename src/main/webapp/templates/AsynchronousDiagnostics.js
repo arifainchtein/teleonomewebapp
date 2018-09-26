@@ -59,7 +59,7 @@ class AsynchronousDiagnostics{
             }
         });
 
-        return panelHtml;
+        return panelHTML;
     }
 
     

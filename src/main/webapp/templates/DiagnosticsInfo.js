@@ -23,7 +23,7 @@ class DiagnosticsInfo{
         panelHtml +='                           <span  id="Asynchronous" data-panelpointer="Asynchronous Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-flash"></i><br>Asynchronous</span>';
         panelHtml +='                       </div>';
         panelHtml +='                       <div class="col-lg-1 col-xs-2 DiagnosticsBar">';
-        panelHtml +='                           <span id="SystemDiagnostics" data-panelpointer="System Diagnostics Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-signal"></i><br>System</span>';
+        panelHtml +='                           <span id="SystemDiagnostics" data-panelpointer="System Diagnostics Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-dashboard"></i><br>System</span>';
         panelHtml +='                       </div> ';          
         panelHtml +='                   </div> ';   
 
