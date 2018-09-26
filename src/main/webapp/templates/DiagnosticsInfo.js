@@ -1,9 +1,17 @@
 class DiagnosticsInfo{
 	
 	constructor(){
+        if(secundaryView !="" && 
+            secundaryView!="AsynchronousDiagnostics" &&
+            secundaryView!="SynchronousDiagnostics" && 
+            secundaryView!="SystemDiagnostics")
+            {
 
+            secundaryView="";
+        } 
     }
 
+    
     process(){
         var allCommands=[];
         var panelHtml='';	

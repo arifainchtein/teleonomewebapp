@@ -1,7 +1,7 @@
 class Networking{
 
     constructor(){
-
+        secundaryView="WiFi";
     }
     process(panelTitle){
         //
@@ -202,6 +202,7 @@ class Networking{
          panelHTML += "</div>";
          panelHTML += "</form>";	
 
+         
         
         return panelHTML;
     }

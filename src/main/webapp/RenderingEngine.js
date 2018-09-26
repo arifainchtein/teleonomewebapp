@@ -157,7 +157,7 @@ function renderCommandRequestTable(commandsInfo){
 		//
 		// do the pagination
 		//
-		var numberOfPages = (1 + total/limit)|0;
+		var numberOfPages = (1 + total/limit)|0	;
 		var paginationStart=1;
 		if(offset>0){
 			paginationStart= paginationStart + offset;
@@ -916,6 +916,15 @@ function renderPageToDisplay(){
 		panelHTML += "</div>";// clossing class=\"row top-buffer\">";
 		//console.log("finished rendering page " + panelHTML);
 		$("#EntryPoint").append(panelHTML);
+		
+		//
+		// check to see if secundaryView is not empty,
+		// if its not, then refresh it by invoking the function
+		// in the ViewManager
+		if(secundaryView !=""){
+			ViewManager[secundaryView]();
+		}
+
 		
 		if(inSearch){
 			searchFunctions.generateAllGraphs();

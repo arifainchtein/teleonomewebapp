@@ -42,7 +42,7 @@ class AsynchronousDiagnostics{
         panelHTML += "              </div>";    // closing panel-footer
 		panelHTML += "          </div>";    // closing <div class=\"panel panel-default\"
         panelHTML += "      </div>";    // closing <div class=\"bs-component\"
-            
+        secundaryView="AsynchronousDiagnostics";    
         renderAsyncCommands("Yes","Yes", 5, 0 );
 
         return panelHTML;

@@ -383,7 +383,8 @@ input:valid {
 	     var localStorageSearchKey="Search";
 	     var localStorageManager;
 	     var searchFunctions;
-	     
+		 var secundaryView="";
+		 
 			$(document).ready(function() {
 				
 				$('#WaitingText').html("Please Wait");
@@ -841,11 +842,7 @@ input:valid {
 				
 				$(document).on('click', '#AsyncUpdateButton',function(e){
 					e.preventDefault();
-					var limit = $("#limit option:selected").val();
-					var userLogs = $("#UserLogs").is(':checked')? "Yes":"No";
-					var systemLogs = $("#SystemLogs").is(':checked')? "Yes":"No";
-					var offset=1;
-					renderAsyncCommands(userLogs,systemLogs, limit, offset );
+					ViewManager.AsynchronousDiagnostics();
 				});
 
 				$(document).on('click', '#Synchronous',function(e){

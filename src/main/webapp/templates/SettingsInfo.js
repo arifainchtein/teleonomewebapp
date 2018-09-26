@@ -1,7 +1,14 @@
 class SettingsInfo{
 	
 	constructor(){
+        if(secundaryView !="" && 
+            secundaryView!="DeviceInfo" &&
+            secundaryView!="UpdateParams" && 
+            secundaryView!="WiFi")
+            {
 
+            secundaryView="";
+        } 
     }
 
     process(){

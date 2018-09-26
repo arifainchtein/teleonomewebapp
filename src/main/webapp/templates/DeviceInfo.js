@@ -1,6 +1,6 @@
 class DeviceInfo{
     constructor(){
-
+        secundaryView="DeviceInfo";
     }
 
     process(){

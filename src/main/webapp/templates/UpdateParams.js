@@ -1,6 +1,6 @@
 class UpdateParams{
 	constructor(){
-
+		secundaryView="UpdateParams";
 	}
 
 
