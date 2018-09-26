@@ -192,7 +192,7 @@ function renderAsyncCommands(includeClient,includeInternal, limit, offset ){
 		data: {formName:"GetAllCommandRequests", IncludeClient:includeClient, IncludeInternal:includeInternal,limit:limit,offset:offset },
 		success: function (data) {
 			console.log("GetAllCommandRequests res," + data);
-			commandsInfo = JSON.parse(data);
+			var commandsInfo = JSON.parse(data);
 			var allCommands = commandsInfo.Values;
 			if(allCommands.length>0){
 				$('#AynchronousLog').empty();
