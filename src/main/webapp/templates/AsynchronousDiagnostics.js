@@ -31,6 +31,7 @@ class AsynchronousDiagnostics{
         panelHTML += "                          <div class=\"form-group\">";
         panelHTML += "                              <label for=\"limit\">Show:</label>";
         panelHTML += "                              <select class=\"form-control\" id=\"limit\">";
+        panelHTML += "                                   <option value=\"5\">5</option>";
         panelHTML += "                                   <option value=\"10\">10</option>";
         panelHTML += "                                   <option value=\"20\">20</option>";
         panelHTML += "                                   <option value=\"50\">50</option>";
@@ -43,7 +44,7 @@ class AsynchronousDiagnostics{
 		panelHTML += "          </div>";    // closing <div class=\"panel panel-default\"
         panelHTML += "      </div>";    // closing <div class=\"bs-component\"
             
-        renderAsyncCommands("Yes","Yes", 20, 0 );
+        renderAsyncCommands("Yes","Yes", 5, 0 );
 
         return panelHTML;
     }
