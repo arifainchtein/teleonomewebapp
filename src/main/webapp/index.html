@@ -382,7 +382,8 @@ input:valid {
 	     var refreshCounterStatus=true;
 	     var localStorageSearchKey="Search";
 	     var localStorageManager;
-	     var searchFunctions;
+		 var searchFunctions;
+		 var viewManager;
 		 var secundaryView="";
 		 
 			$(document).ready(function() {
@@ -392,6 +393,7 @@ input:valid {
 
 				localStorageManager = new LocalStorageManager();
 				searchFunctions = new SearchFunctions();
+				viewManager = new ViewManager();
 				HeartConnect();
 				
 			

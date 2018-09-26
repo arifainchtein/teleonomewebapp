@@ -922,10 +922,10 @@ function renderPageToDisplay(){
 		// if its not, then refresh it by invoking the function
 		// in the ViewManager
 		if(secundaryView !=""){
-			ViewManager[secundaryView]();
+			viewManager[secundaryView]();
 		}
 
-		
+
 		if(inSearch){
 			searchFunctions.generateAllGraphs();
 		}
