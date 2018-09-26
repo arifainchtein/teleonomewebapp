@@ -14,10 +14,11 @@ class DiagnosticsInfo{
         panelHtml +='               <div class="panel-heading">';
         
         panelHtml +='                    <div class="row top-buffer">';
+        panelHtml +='                       <div class="col-lg-9 col-xs-6"> </div>';
         panelHtml +='                       <div class="col-lg-1 col-xs-2 DiagnosticsBar">';
         panelHtml +='                           <span id="Synchronous" data-panelpointer="Synchronous Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-time"></i><br>Synchronous</span>';
         panelHtml +='                       </div>';
-        panelHtml +='                       <div class="col-lg-9 col-xs-6"> </div>';
+        
         panelHtml +='                       <div class="col-lg-1 col-xs-2 DiagnosticsBar">';
         panelHtml +='                           <span  id="Asynchronous" data-panelpointer="Asynchronous Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-flash"></i><br>Asynchronous</span>';
         panelHtml +='                       </div>';
