@@ -3,8 +3,10 @@ class ActionEvaluationReport{
     constructor(){
 
     }
-
     process (sourceDataPointer){
+        process (sourceDataPointer, false);     
+    }
+    process (sourceDataPointer, closePanel){
         
         //var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(sourceDataPointer);
         var actionDene = getDeneByIdentityPointer(sourceDataPointer);
@@ -31,7 +33,7 @@ class ActionEvaluationReport{
         var actionExpression = getDeneWordByIdentityPointer(actionExpressionIdentityPointer, DENEWORD_VALUE_ATTRIBUTE);
         
         
-        var panelHTML = "<div class=\"col-lg-12 hidden-xs\">";
+        var panelHTML = "<div class=\"col-lg-12\">";
         panelHTML += "<div class=\"bs-component\">";
         panelHTML += "<div class=\"panel panel-default\">";
         panelHTML += " <div class=\"panel-heading\"><h4>Action Evaluation -" + actionName +"</h4></div>";
@@ -96,6 +98,15 @@ class ActionEvaluationReport{
         }
         
         panelHTML += "</table>";
+
+        if(closePanel){
+            panelHTML += "</div>";    // closing <div class=\"panel-body text-center\"
+			panelHTML += "</div>";    // closing <div class=\"panel-heading\"
+			panelHTML += "</div>";    // closing <div class=\"panel panel-default\"
+            panelHTML += "</div>";    // closing <div class=\"bs-component\"
+            panelHTML += "</div>";    // closing <div class=\"col-lg-12\"
+            
+        }
         return panelHTML;
     }
 }
