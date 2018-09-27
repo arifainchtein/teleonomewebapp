@@ -920,17 +920,8 @@ function renderPageToDisplay(){
 		// check to see if secundaryView is not empty,
 		// if its not, then refresh it by invoking the function
 		// in the ViewManager
-		var jsonData = {
-            offset:0,
-            limit:5,
-            userLogs:"Yes",
-            SystemLogs:"Yes"
-        }
-        var s = JSON.stringify(jsonData);
-        
-        currentViewObject["SecundaryView"]="AsynchronousDiagnostics";  
         var currentViewObject = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
-		if(currentViewObject != null){
+		if(currentViewObject != null && currentViewObject != undefined){
 			var secundaryView = currentViewObject["SecundaryView"];
 			var data = currentViewObject["Data"];
 			if( secundaryView !=""){
