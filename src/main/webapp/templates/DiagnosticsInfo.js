@@ -1,7 +1,7 @@
 class DiagnosticsInfo{
 	
 	constructor(){
-
+  
         var currentViewObject = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
 		if(currentViewObject != null && currentViewObject != undefined){
 			var secundaryView = currentViewObject["SecundaryView"];
