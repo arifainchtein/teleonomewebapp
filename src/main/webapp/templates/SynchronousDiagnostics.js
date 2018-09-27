@@ -84,10 +84,13 @@ class SynchronousDiagnostics{
 		//
 		panelHTML += "<div class=\"row top-buffer\">";
 		var panelCounter=0;
-		var inSearch=false;
+        var inSearch=false;
+        var deneChainPointer;
+        var panelDeneChain;
+        var denes;
+        
 		for(var property in obj) {
 			deneChainPointer= obj[property];
-			
 			panelDeneChain = humanInterfaceDeneChainIndex["_map"][deneChainPointer];
             denes = panelDeneChain["Denes"];	
             var sourceDataPointer = denes[0].DeneWords[0].Value;
