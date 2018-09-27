@@ -847,8 +847,8 @@ input:valid {
 					localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
 					var offset = 0;
 					var limit = $( "#limit" ).val();
-					var userLogs = $("#UserLogs").is(':checked');
-					var systemLogs = $("#SystemLogs").is(':checked');
+					var userLogs = $("#UserLogs").is(':checked')? "Yes":"No";
+					var systemLogs = $("#SystemLogs").is(':checked')? "Yes":"No";
 
                 	var currentViewObject ={};
 					var jsonData = {
