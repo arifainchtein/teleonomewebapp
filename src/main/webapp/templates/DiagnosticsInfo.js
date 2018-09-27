@@ -13,6 +13,12 @@ class DiagnosticsInfo{
             {
                 localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
             } 
+        }else{
+           // localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+            var currentViewObject ={};
+            currentViewObject["SecundaryView"]="SynchronousDiagnostics";
+            localStorageManager.setItem(LOCAL_STORAGE_CURRENT_VIEW_KEY, currentViewObject);      
+
         }
     }
 
