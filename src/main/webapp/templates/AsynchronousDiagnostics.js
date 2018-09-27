@@ -25,7 +25,8 @@ class AsynchronousDiagnostics{
 
        
     panelHTML += "                  <form  action=\"\">";
-    panelHTML += "                      <div class=\"col-lg-3 col-md-3 col-sm-3 col-xs-3\">";
+    panelHTML += "                      <div class=\"col-lg-1 col-md-1 col-sm-1 col-xs-1\"></div>";
+    panelHTML += "                      <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">";
     panelHTML += "                          <div class=\"form-group\">";
     panelHTML += "                              <div class=\"checkbox\">";
     panelHTML += "                                  <label><input type=\"checkbox\" id=\"UserLogs\" checked />  User</label>";
