@@ -1,6 +1,9 @@
 class UpdateParams{
 	constructor(){
-		secundaryView="UpdateParams";
+		localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+        var currentViewObject ={};
+        currentViewObject["SecundaryView"]="UpdateParams";
+		localStorageManager.setItem(LOCAL_STORAGE_CURRENT_VIEW_KEY, currentViewObject);
 	}
 
 
