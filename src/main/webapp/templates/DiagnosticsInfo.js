@@ -1,17 +1,21 @@
 class DiagnosticsInfo{
 	
 	constructor(){
-        if(secundaryView !="" && 
-            secundaryView!="AsynchronousDiagnostics" &&
-            secundaryView!="SynchronousDiagnostics" && 
-            secundaryView!="SystemDiagnostics")
-            {
 
-            secundaryView="";
-        } 
+        var currentViewObject = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+		if(currentViewObject != null && currentViewObject != undefined){
+			var secundaryView = currentViewObject["SecundaryView"];
+			if( secundaryView !="" && 
+                secundaryView!="AsynchronousDiagnostics" &&
+                secundaryView!="SynchronousDiagnostics" && 
+                secundaryView!="SystemDiagnostics")
+            {
+                localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+            } 
+        }
     }
 
-    
+
     process(){
         var allCommands=[];
         var panelHtml='';	

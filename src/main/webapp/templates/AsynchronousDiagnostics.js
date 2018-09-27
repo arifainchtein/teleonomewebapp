@@ -44,14 +44,7 @@ class AsynchronousDiagnostics{
         panelHTML += "      </div>";    // closing <div class=\"bs-component\"
 
         localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
-
         var currentViewObject ={};
-        
-
-        
-          
-        
-
         var jsonData = {
             offset:0,
             limit:5,

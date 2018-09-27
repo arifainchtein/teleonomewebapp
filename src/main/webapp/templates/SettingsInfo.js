@@ -1,14 +1,18 @@
 class SettingsInfo{
 	
 	constructor(){
-        if(secundaryView !="" && 
+
+        var currentViewObject = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+		if(currentViewObject != null && currentViewObject != undefined){
+			var secundaryView = currentViewObject["SecundaryView"];
+			if( secundaryView !="" && 
             secundaryView!="DeviceInfo" &&
             secundaryView!="UpdateParams" && 
             secundaryView!="WiFi")
             {
-
-            secundaryView="";
-        } 
+                localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+            } 
+        }
     }
 
     process(){
