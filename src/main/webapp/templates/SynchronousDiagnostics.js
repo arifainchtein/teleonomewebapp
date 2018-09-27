@@ -24,8 +24,6 @@ class SynchronousDiagnostics{
         var panelInPagePosition=-1;
 		var panelDeneChainPointer="";
 		var	panelVisualStyle="";
-		var	panelExternalDataSourcePointer="";
-		var	panelExternalTimestampDataSourcePointer="";
 		var	panelVisible=false;
         var denePanelArray = synchronousPanelDeneChain["Denes"];
 
@@ -41,25 +39,21 @@ class SynchronousDiagnostics{
 			panelInPagePosition=-1;
 			panelDeneChainPointer="";
 			panelVisualStyle="";
-			panelExternalDataSourcePointer="";
-			panelExternalTimestampDataSourcePointer="";
+
 			panelVisible=false;
 			for(var j2=0;j2<deneWords.length;j2++){
 				deneWord = deneWords[j2];
 				//
                 // get the position and the type
-                
+                panelVisible=false;
 				if(deneWord.hasOwnProperty("DeneWord Type") && deneWord["DeneWord Type"]===DENEWORD_TYPE_PANEL_IN_PAGE_POSITION){
 					panelInPagePosition = deneWord["Value"];
 				}else if(deneWord.hasOwnProperty("DeneWord Type") && deneWord["DeneWord Type"]===DENEWORD_TYPE_PANEL_DENECHAIN_POINTER){
 					panelDeneChainPointer = deneWord["Value"];
-				}else if(deneWord.hasOwnProperty("DeneWord Type") && deneWord["DeneWord Type"]===DENEWORD_TYPE_EXTERNAL_DATA_SOURCE_DENE){
-					panelExternalDataSourcePointer = deneWord["Value"];
-				}else if(deneWord.hasOwnProperty("DeneWord Type") && deneWord["DeneWord Type"]===DENEWORD_TYPE_EXTERNAL_TIMESTAMP_DATA_SOURCE_DENE){
-					panelExternalTimestampDataSourcePointer = deneWord["Value"];
 				}else if(deneWord.Name===DENEWORD_VISIBLE){
 					panelVisible = deneWord["Value"];
-					panelVisibleHashMap.put(panelDeneChainPointer,panelVisible);
+				}else if(deneWord.hasOwnProperty("DeneWord Type") && deneWord["DeneWord Type"]===DENEWORD_TYPE_PANEL_VISUALIZATION_STYLE){
+					panelVisualStyle = deneWord["Value"];
 				}
 			}
 			//
@@ -68,6 +62,7 @@ class SynchronousDiagnostics{
             
             if( panelVisualStyle!="" &&  
                 panelDeneChainPointer!="" &&
+                panelVisible &&
                 panelVisualStyle===PANEL_VISUALIZATION_STYLE_ACTION_EVALUATION_REPORT
             ){
 
@@ -82,7 +77,7 @@ class SynchronousDiagnostics{
 		
 		var numberOfPanelsPerRow=2;
 		var obj =  sorted["_map"];
-		var obj5 = panelVisibleHashMap["_map"];
+		
 		//
 		// after every two panels put a new row
 		// open the first one
@@ -92,8 +87,7 @@ class SynchronousDiagnostics{
 		var inSearch=false;
 		for(var property in obj) {
 			deneChainPointer= obj[property];
-			panelVisible = obj5[deneChainPointer];
-			if(!panelVisible)continue;
+			
 			panelDeneChain = humanInterfaceDeneChainIndex["_map"][deneChainPointer];
             denes = panelDeneChain["Denes"];	
             var sourceDataPointer = denes[0].DeneWords[0].Value;
