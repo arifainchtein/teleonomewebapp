@@ -1,7 +1,11 @@
 class Networking{
 
     constructor(){
-        secundaryView="WiFi";
+        localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+        var currentViewObject ={};
+        currentViewObject["SecundaryView"]="WiFi";
+        localStorageManager.setItem(LOCAL_STORAGE_CURRENT_VIEW_KEY, currentViewObject);      
+
     }
     process(panelTitle){
         //
