@@ -205,7 +205,6 @@ function renderAsyncCommands(includeClient,includeInternal, limit, offset ){
 		error: function(data){
 			console.log("error getting commanda data:" + data);
 			alert("Error getting commanda data:" +  data);
-			panelHtml +='               <div class="panel-body" id="AynchronousLog" style="display:none"></div>';
 			return false;
 		}
 	});
@@ -921,9 +920,29 @@ function renderPageToDisplay(){
 		// check to see if secundaryView is not empty,
 		// if its not, then refresh it by invoking the function
 		// in the ViewManager
-		if(secundaryView !=""){
-			viewManager[secundaryView]();
+		var jsonData = {
+            offset:0,
+            limit:5,
+            userLogs:"Yes",
+            SystemLogs:"Yes"
+        }
+        var s = JSON.stringify(jsonData);
+        
+        currentViewObject["SecundaryView"]="AsynchronousDiagnostics";  
+        var currentViewObject = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+		if(currentViewObject != null){
+			var secundaryView = currentViewObject["SecundaryView"];
+			var data = currentViewObject["Data"];
+			if( secundaryView !=""){
+				viewManager[secundaryView](data);
+			}
 		}
+
+
+
+
+
+		
 
 
 		if(inSearch){

@@ -42,7 +42,28 @@ class AsynchronousDiagnostics{
         panelHTML += "              </div>";    // closing panel-footer
 		panelHTML += "          </div>";    // closing <div class=\"panel panel-default\"
         panelHTML += "      </div>";    // closing <div class=\"bs-component\"
-        secundaryView="AsynchronousDiagnostics";    
+
+        localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+
+        var currentViewObject ={};
+        
+
+        
+          
+        
+
+        var jsonData = {
+            offset:0,
+            limit:5,
+            userLogs:"Yes",
+            systemLogs:"Yes"
+        }
+        var s = JSON.stringify(jsonData);
+        currentViewObject["Data"]=s;
+        currentViewObject["SecundaryView"]="AsynchronousDiagnostics";  
+        localStorageManager.setItem(LOCAL_STORAGE_CURRENT_VIEW_KEY, currentViewObject);
+
+
         renderAsyncCommands("Yes","Yes", 5, 0 );
 
         return panelHTML;

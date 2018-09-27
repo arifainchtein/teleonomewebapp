@@ -380,11 +380,11 @@ input:valid {
 	     var search_RefreshCounterInterval;
 	     var refreshCounter=30;
 	     var refreshCounterStatus=true;
-	     var localStorageSearchKey="Search";
+		
+		 
 	     var localStorageManager;
 		 var searchFunctions;
 		 var viewManager;
-		 var secundaryView="";
 		 
 			$(document).ready(function() {
 				
@@ -499,7 +499,7 @@ input:valid {
                 $(document).on('click', "#ClearCharts",function(e) {
                     e.preventDefault();
                    
-                    localStorageManager.removeComponentInfo(localStorageSearchKey);
+                    localStorageManager.removeComponentInfo(LOCAL_STORAGE_SEARCH_KEY);
                     $("#RefreshCounter").html("");
                     $("#SearchGraphArea").empty();
                     refreshCounterStatus=false;
@@ -510,7 +510,7 @@ input:valid {
     	            e.preventDefault();
     	            var chartTitle = $(this).data("charttitle");
     	            
-    	            localStorageManager.removeItem(localStorageSearchKey,chartTitle);
+    	            localStorageManager.removeItem(LOCAL_STORAGE_SEARCH_KEY,chartTitle);
     	            refreshCounterStatus=true;
     	            searchFunctions.refreshSearchPage();
     	        });
@@ -641,12 +641,12 @@ input:valid {
 		            alert("Visualizer exists");
 		            return false; 
 		        }
-		        var searchObject = JSON.parse(localStorageManager.getItem(localStorageSearchKey));
+		        var searchObject = JSON.parse(localStorageManager.getItem(LOCAL_STORAGE_SEARCH_KEY));
 		        if(searchObject == null || searchObject==undefined){
 		            searchObject={};
 		        }
 		        
-		       var numberOfObjects =  localStorageManager.getNumberOfObjectsByComponent(localStorageSearchKey)+1;
+		       var numberOfObjects =  localStorageManager.getNumberOfObjectsByComponent(LOCAL_STORAGE_SEARCH_KEY)+1;
 		
 		        var identity = identityFactory.createIdentityByPointer(identityPointer);
 		        
@@ -673,7 +673,7 @@ input:valid {
 		        var s = JSON.stringify(jsonData);
 		        searchObject[localStoreageKey]=s;
 		        
-		        localStorageManager.setItem(localStorageSearchKey, searchObject);
+		        localStorageManager.setItem(LOCAL_STORAGE_SEARCH_KEY, searchObject);
 				//searchFunctions.processForm(formName,identityPointer, fromMillis , untilMillis, appendChart, visualizationStyle, liveUpdate);
 				searchFunctions.refreshSearchPage();
 		        $('#WaitingWheel').hide();

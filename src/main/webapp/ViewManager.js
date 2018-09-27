@@ -1,5 +1,7 @@
 class ViewManager{
-	
+    
+    
+
 	constructor(){
 
     }
@@ -7,20 +9,19 @@ class ViewManager{
     //
     // Diagnostic Menu 
     //
-    AsynchronousDiagnostics(){
-        var limit = $("#limit option:selected").val();
-        var userLogs = $("#UserLogs").is(':checked')? "Yes":"No";
-        var systemLogs = $("#SystemLogs").is(':checked')? "Yes":"No";
-        var offset=1;
-        renderAsyncCommands(userLogs,systemLogs, limit, offset );
+    AsynchronousDiagnostics(data){
+        var stateData = JSON.parse(data);
+       renderAsyncCommands(stateData.userLogs,stateData.systemLogs, stateData.limit, stateData.offset );
     }
 
    
-     SynchronousDiagnostics(){
+     SynchronousDiagnostics(data){
+        var stateData = JSON.parse(data);
 
      } 
      
-     SystemDiagnostics(){
+     SystemDiagnostics(data){
+        var stateData = JSON.parse(data);
 
      }
 
@@ -28,15 +29,18 @@ class ViewManager{
     //
     // Settings Menu
     //
-    DeviceInfo(){
+    DeviceInfo(data){
+        var stateData = JSON.parse(data);
 
     }
 
 
-    UpdateParams(){
+    UpdateParams(data){
+        var stateData = JSON.parse(data);
     }
     
-    WiFi(){
+    WiFi(data){
+        var stateData = JSON.parse(data);
 
     }
 
