@@ -43,7 +43,7 @@ class SynchronousDiagnostics{
 			panelExternalDataSourcePointer="";
 			panelExternalTimestampDataSourcePointer="";
 			panelVisible=false;
-			for(j2=0;j2<deneWords.length;j2++){
+			for(var j2=0;j2<deneWords.length;j2++){
 				deneWord = deneWords[j2];
 				//
                 // get the position and the type
