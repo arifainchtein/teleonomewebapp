@@ -30,7 +30,8 @@ class SynchronousDiagnostics{
         var denePanelArray = synchronousPanelDeneChain["Denes"];
 
         var panelPositionInPageHashMap = new HashMap();
-		var panelVisibleHashMap = new HashMap();
+        var panelVisibleHashMap = new HashMap();
+        var deneWord;
         //
         // get the SynchronousCycle DeneCHain
         //
