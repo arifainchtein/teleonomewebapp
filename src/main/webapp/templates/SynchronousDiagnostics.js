@@ -19,8 +19,18 @@ class SynchronousDiagnostics{
         var systemInfoDeneChainPanelJSON = JSON.parse(systemInfoDeneChainPanelJSONU);
         var pointer = "@" +teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":" +"Synchronous Cycle Panel";   
         var synchronousPanelDeneChain = systemInfoDeneChainPanelJSON[pointer];
-        
+        var denePanel;
+        var deneWords;
+        var panelInPagePosition=-1;
+		var panelDeneChainPointer="";
+		var	panelVisualStyle="";
+		var	panelExternalDataSourcePointer="";
+		var	panelExternalTimestampDataSourcePointer="";
+		var	panelVisible=false;
         var denePanelArray = synchronousPanelDeneChain["Denes"];
+
+        var panelPositionInPageHashMap = new HashMap();
+		var panelVisibleHashMap = new HashMap();
         //
         // get the SynchronousCycle DeneCHain
         //
@@ -62,18 +72,6 @@ class SynchronousDiagnostics{
 
                 if(panelInPagePosition!=-1 &&  panelDeneChainPointer!=""){
                     panelPositionInPageHashMap.put(panelInPagePosition,panelDeneChainPointer);
-                }
-    
-                if(panelVisualStyle!="" &&  panelDeneChainPointer!=""){
-                    panelPointerVisualStyleHashMap.put(panelDeneChainPointer,panelVisualStyle);
-                }
-                
-                if(panelExternalDataSourcePointer!="" &&  panelDeneChainPointer!=""){
-                    panelPointerExternalDataSourcePointerHashMap.put(panelDeneChainPointer,panelExternalDataSourcePointer);
-                }
-                
-                if(panelDataSourcePointer!="" &&  panelExternalTimestampDataSourcePointer!=""){
-                    panelPointerExternalTimestampDataSourcePointerHashMap.put(panelDeneChainPointer,panelExternalTimestampDataSourcePointer);
                 }
             }
         }
