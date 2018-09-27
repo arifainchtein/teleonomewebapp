@@ -82,7 +82,7 @@ class SynchronousDiagnostics{
 		// after every two panels put a new row
 		// open the first one
 		//
-		panelHTML += "<div class=\"row top-buffer\">";
+		
 		var panelCounter=0;
         var inSearch=false;
         var deneChainPointer;
@@ -94,8 +94,11 @@ class SynchronousDiagnostics{
 			panelDeneChain = humanInterfaceDeneChainIndex["_map"][deneChainPointer];
             denes = panelDeneChain["Denes"];	
             var sourceDataPointer = denes[0].DeneWords[0].Value;
+
+            panelHTML += "<div class=\"row top-buffer\">";
             var anActionEvaluationReport = new ActionEvaluationReport();
             panelHTML += anActionEvaluationReport.process(sourceDataPointer, true);
+            panelHTML += "</div>" // closing row;
         }
 
         panelHTML += "              </div>";    // closing <div class=\"panel-body text-center\"
