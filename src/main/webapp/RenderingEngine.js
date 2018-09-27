@@ -924,9 +924,9 @@ function renderPageToDisplay(){
 		if(currentViewObjectU != null && currentViewObjectU != undefined){
 			var currentViewObject = JSON.parse(currentViewObjectU);
 			var secundaryView = currentViewObject["SecundaryView"];
-			var data = currentViewObject["Data"];
+			
 			if( secundaryView !=""){
-				viewManager[secundaryView](data);
+				viewManager[secundaryView]();
 			}
 		}
 

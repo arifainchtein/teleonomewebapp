@@ -9,9 +9,11 @@ class ViewManager{
     //
     // Diagnostic Menu 
     //
-    AsynchronousDiagnostics(data){
-        var stateData = JSON.parse(data);
-       renderAsyncCommands(stateData.userLogs,stateData.systemLogs, stateData.limit, stateData.offset );
+    AsynchronousDiagnostics(){       
+        var n = new AsynchronousDiagnostics();
+        var html = n.process(panelPointer);
+        $('#DiagnosticsWorkArea').html(html);
+        $('#DiagnosticsWorkArea').show();
     }
 
    
