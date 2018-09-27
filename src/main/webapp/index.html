@@ -843,6 +843,26 @@ input:valid {
 				
 				$(document).on('click', '#AsyncUpdateButton',function(e){
 					e.preventDefault();
+
+					localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+					var offset = 0;
+					var limit = $( "#limit" ).val();
+					var userLogs = $("#UserLogs").is(':checked');
+					var systemLog = $("#SystemLogs").is(':checked');
+
+                	var currentViewObject ={};
+					var jsonData = {
+						offset:offset,
+						limit:limit,
+						userLogs:userLogs,
+						systemLogs:systemLogs
+					}
+					var s = JSON.stringify(jsonData);
+					currentViewObject["Data"]=s;
+					currentViewObject["SecundaryView"]="AsynchronousDiagnostics";  
+					localStorageManager.setItem(LOCAL_STORAGE_CURRENT_VIEW_KEY, currentViewObject);
+				
+
 					viewManager.AsynchronousDiagnostics();
 				});
 
