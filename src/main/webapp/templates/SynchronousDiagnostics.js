@@ -88,14 +88,14 @@ class SynchronousDiagnostics{
         var deneChainPointer;
         var panelDeneChain;
         var denes;
-        
+
 		for(var property in obj) {
 			deneChainPointer= obj[property];
 			panelDeneChain = humanInterfaceDeneChainIndex["_map"][deneChainPointer];
             denes = panelDeneChain["Denes"];	
             var sourceDataPointer = denes[0].DeneWords[0].Value;
             var anActionEvaluationReport = new ActionEvaluationReport();
-            panelHTML += anActionEvaluationReport.process(sourceDataPointer);
+            panelHTML += anActionEvaluationReport.process(sourceDataPointer, true);
         }
 
         panelHTML += "              </div>";    // closing <div class=\"panel-body text-center\"
