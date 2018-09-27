@@ -17,13 +17,19 @@ class ViewManager{
     }
 
    
-     SynchronousDiagnostics(data){
-        var stateData = JSON.parse(data);
+     SynchronousDiagnostics(){
+        var n = new SynchronousDiagnostics();
+        var html = n.process();
+        $('#DiagnosticsWorkArea').html(html);
+        $('#DiagnosticsWorkArea').show();
 
      } 
      
-     SystemDiagnostics(data){
-        var stateData = JSON.parse(data);
+     SystemDiagnostics(){
+        var n = new SystemDiagnostics();
+        var html = n.process();
+        $('#DiagnosticsWorkArea').html(html);
+        $('#DiagnosticsWorkArea').show();
 
      }
 
