@@ -40,7 +40,7 @@ class SearchFunctions{
         }
         $("#SearchGraphArea").empty();
         //var allGraphs = allSearchStorage();
-        var allGraphs = localStorageManager.getAllStorageForComponent(localStorageSearchKey);
+        var allGraphs = localStorageManager.getAllStorageForComponent(LOCAL_STORAGE_SEARCH_KEY);
         if(allGraphs.length==0){
             console.log('no refresh since there are no visuzliaers');
             $("#RefreshCounter").html("");
@@ -71,7 +71,7 @@ class SearchFunctions{
 	            $("#RefreshCounterMessage").html("Click to Start");
 	            return false;
 	        }
-	        var allGraphs = localStorageManager.getAllStorageForComponent(localStorageSearchKey);
+	        var allGraphs = localStorageManager.getAllStorageForComponent(LOCAL_STORAGE_SEARCH_KEY);
 	        refreshCounter--;
 	        
 	        if(allGraphs.length==0){
@@ -84,7 +84,7 @@ class SearchFunctions{
 	    }
 	 
 	generateAllGraphs(){
-		    var allGraphs = localStorageManager.getAllStorageForComponent(localStorageSearchKey);
+		    var allGraphs = localStorageManager.getAllStorageForComponent(LOCAL_STORAGE_SEARCH_KEY);
 
 		    if(allGraphs.length>0){
 		        //
