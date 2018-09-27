@@ -37,7 +37,6 @@ class AsynchronousDiagnostics{
     panelHTML += "                                   <option value=\"20\">20</option>";
     panelHTML += "                                   <option value=\"50\">50</option>";
     panelHTML += "                               </select>";
-    panelHTML += "                              </div>";
     panelHTML += "                          </div>";
     panelHTML += "                          <button type=\"submit\" id=\"AsyncUpdateButton\" class=\"btn btn-default pull right\">Submit</button>";
     panelHTML += "                      </form>";
