@@ -37,19 +37,30 @@ class ViewManager{
     //
     // Settings Menu
     //
-    DeviceInfo(data){
-        var stateData = JSON.parse(data);
-
+    DeviceInfo(){
+        var panelPointer  = $(this).data("panelpointer");
+        var n = new DeviceInfo();
+        var html = n.process();
+        $('#SettingsWorkArea').html(html);
+        $('#SettingsWorkArea').show();
     }
 
 
-    UpdateParams(data){
-        var stateData = JSON.parse(data);
+    UpdateParams(){
+        var panelPointer  = $(this).data("panelpointer");
+        var n = new UpdateParams();
+        var html = n.process(panelPointer);
+        $('#SettingsWorkArea').html(html);
+        $('#SettingsWorkArea').show();
     }
     
-    WiFi(data){
-        var stateData = JSON.parse(data);
-
+    WiFi(){
+        var panelPointer  = $(this).data("panelpointer");
+        var n = new Networking(panelPointer);
+        var html = n.process(panelPointer);
+        
+        $('#SettingsWorkArea').html(html);
+        $(".BSswitch").bootstrapSwitch();
+        $('#SettingsWorkArea').show();
     }
-
 }
