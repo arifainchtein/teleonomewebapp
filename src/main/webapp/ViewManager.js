@@ -11,7 +11,7 @@ class ViewManager{
     //
     AsynchronousDiagnostics(){       
         var n = new AsynchronousDiagnostics();
-        var html = n.process(panelPointer);
+        var html = n.process();
         $('#DiagnosticsWorkArea').html(html);
         $('#DiagnosticsWorkArea').show();
     }
