@@ -34,7 +34,7 @@ function monitorBetweenPulses() {
 	timeSinceLastPulse = new Date().getTime()-pulseTimestampMilliseconds;
 	timeStringSinceLastPulse = msToTime(timeSinceLastPulse);
 	$("#TimeSinceLastPulse").html(timeStringSinceLastPulse);
-	console.log("timeStringSinceLastPulse=" + timeStringSinceLastPulse);
+	//console.log("timeStringSinceLastPulse=" + timeStringSinceLastPulse);
 	
 	//
 	// now calculate if we should change the color to indicate that is late
@@ -56,7 +56,7 @@ function monitorBetweenPulses() {
 
 		var timeBeforeLate = numberOfPulsesBeforeLate*(currentPulseGenerationDuration+currentPulseFrequency);
 		//timeBeforeLate = 60000;
-		console.log("timeBeforeLate=" + timeBeforeLate + " timeSinceLastPulse=" + timeSinceLastPulse);
+		//console.log("timeBeforeLate=" + timeBeforeLate + " timeSinceLastPulse=" + timeSinceLastPulse);
 			if(timeSinceLastPulse>timeBeforeLate){
 				//
 				// set the status to blinking yellow
