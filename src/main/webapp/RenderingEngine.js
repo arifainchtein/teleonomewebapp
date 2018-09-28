@@ -224,7 +224,7 @@ function receivedCommandResponse(cr){
 		url: "/TeleonomeServlet",
 		data: {formName:"GetDenome", },
 		success: function (data) {
-			console.log("data=" + data);
+			//console.log("data=" + data);
 			loadDenomeRefreshInterface(data);
 			var result="info";
 			var commandResultText="";
