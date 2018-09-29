@@ -920,7 +920,8 @@ function renderPageToDisplay(){
 		// check to see if secundaryView is not empty,
 		// if its not, then refresh it by invoking the function
 		// in the ViewManager
-        var currentViewObjectU = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+		var currentViewObjectU = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+		
 		if(currentViewObjectU != null && currentViewObjectU != undefined){
 			var currentViewObject = JSON.parse(currentViewObjectU);
 			var secundaryView = currentViewObject["SecundaryView"];

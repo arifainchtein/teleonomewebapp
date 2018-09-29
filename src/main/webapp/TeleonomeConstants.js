@@ -495,6 +495,9 @@ var PULSE_CREATION_DURATION_MILLIS="Pulse Creation Duration Millis";
 // The record size must be at least big enough to contain a pulse
 //
 var DENEWORD_TYPE_MICROCONTROLLER_PROCESSING_CLASSNAME="Microcontroller Processing Class Name";
+var DENEWORD_MICROCONTROLLER_ASYNC_REQUEST_DELAY_MILLIS="Async Request Delay Millis";
+
+
 var COMMAND_REQUEST_NOT_EXECUTED="Not Executed";
 var COMMAND_REQUEST_EXECUTED="Executed";
 var COMMAND_REQUEST_SKIPPED_AT_INIT="Skipped at init";
