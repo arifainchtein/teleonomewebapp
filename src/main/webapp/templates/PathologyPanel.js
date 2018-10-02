@@ -32,7 +32,7 @@ class PathologyPanel{
 				var i32=0;
 				var j2=0;
                 var panelHTML="";
-                
+                var deneWord;
 				if(denePanelArray.length>0 || mnemosynePathologyDenes.length>0 || allExogenousMethamorphosisEvents.length>0){
 					panelHTML += "<div class=\"col-lg-12\">";
 					panelHTML += "<div class=\"bs-component\">";

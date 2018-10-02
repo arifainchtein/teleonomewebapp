@@ -224,6 +224,14 @@ public class TeleonomeServlet extends HttpServlet {
 			out.flush();
 			out.close();
 
+		}else if(formName.equals("GetNetworkInterfaces")) {
+			JSONObject interfacesJSONObject = NetworkUtilities.getNetworkInterfaces();
+			res.setContentType("application/json;charset=UTF-8");
+			PrintWriter out = res.getWriter();
+			out.print(interfacesJSONObject.toString());
+			out.flush();
+			out.close();
+
 		}else if(formName.equals("GetConnectedClients")) {
 			JSONArray clientsJSONArray=new JSONArray();
 			LinkedHashMap linkedMap = null;

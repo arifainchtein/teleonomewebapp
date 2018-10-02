@@ -9,15 +9,40 @@ class Networking{
     }
     process(panelTitle){
         //
-        // There are two cases
+        // There are three cases
         //
         // 1)The teleonome only has wlan0 - In this case wlan0 can be in on of two states, as a host or as part of a network
         //
         // 2)The teleonome has wlan0 and wlan1 - In this case wlan0 is always the network interface bound to the outside network
         //   and wlan1 is the host for the 172.16.1.1 network. In this case you allow users to configure wlan0 as to select the
         //   wifi host (make sure not to show the internal ssid)
-        // 
-        var hasWlan1=false;
+        //
+        // 3)The teleonome has only ethernet
+        //
+        $.ajax({
+            type: "GET",
+            url: "/TeleonomeServlet",
+            data: {formName:"GetNetworkInterfaces" },
+            success: function (data) {
+                var interfaces = JSON.parse(data);
+                var hasWlan0=interfaces.hasOwnProperty("wlan0");
+                var hasWlan1=interfaces.hasOwnProperty("wlan1");
+                var hasEth0=interfaces.hasOwnProperty("eth0");
+                renderUI( hasWlan0, hasWlan1, hasEth0, panelTitle);
+            },
+            error: function(data){
+                $('#WaitingWheel').hide();
+                console.log("error getting log file:" + JSON.stringify(data));
+                alert("Error getting log:" + JSON.stringify(data));
+                return false;
+            }
+        });
+       
+    }
+    
+    renderUI( hasWlan0, hasWlan1, hasEth0, panelTitle){
+        
+
         var panelHTML = "<div class=\"col-lg-12\">";
         panelHTML += "<div class=\"bs-component\">";
         panelHTML += "<div class=\"panel panel-default\">";
