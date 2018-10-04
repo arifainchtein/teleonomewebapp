@@ -201,17 +201,6 @@ input:valid {
 }
 
 
-#WaitingWheel {
-	width: 300px;
-	height: 80px;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	margin: auto;
-	padding-right:20px;
-}
 
  #WaitingText{
  	margin-left:50px;
@@ -221,16 +210,17 @@ input:valid {
  }
  
  #WaitingWheel{
- 	display: none;
- 	background-color:#B6B6B4;
- 	-webkit-border-radius: 5px;
+        display: none;
+        background-color:#B6B6B4;
+        -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius:5px;
     padding:20px;
     margin-left:50px;
-    margin-top:130px;
-	z-index: 10;
-  
+    margin-top:10px;
+        z-index: 10;
+  width: 300px;
+    height: 80px;
  }
 </style>
 </head>
@@ -240,16 +230,6 @@ input:valid {
 	
 	<div class="container">
 
-			<div class="row">
-					
-					<div id="WaitingWheel" class="col-xs-6 col-lg-2 col-*-offset-2">
-						<img src="130.gif"/ >
-						<div id="WaitingText">In Pulse...</div>
-			
-					</div>
-				</div>
-
-		<!-- Static navbar -->
 			<div class="container-fluid">
 				<div class="row">
 					<div id="status" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -259,8 +239,14 @@ input:valid {
 					</div>
 				</div>
 			</div>
-			<!--/.container-fluid -->
 		
+			<div class="row">	
+				<div id="WaitingWheel" class="col-xs-6 col-lg-2 col-*-offset-2">
+					<img src="130.gif"/ >
+					<div id="WaitingText">In Pulse...</div>
+				</div>
+			</div>
+
 
 		<div id="Pathology" class="col-lg-3 col-md-3 col-sm-2 col-xs-2 label label-lg label-danger text-white top-buffer"  style="display: none;">
 			<h5><span id="ErrorText" style="color:white;" ></span></h5>
