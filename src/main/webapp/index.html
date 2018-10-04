@@ -876,7 +876,7 @@ input:valid {
 					$.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
-						data: {formName:HEART_TOPIC_UPDATE_FORM_REQUEST, TELEONOME_IDENTITY_LABEL: data.identity, DENEWORD_VALUE_ATTRIBUTE: selected, COMMAND_REQUEST_PASSWORD : passwd },
+						data: {formName:HEART_TOPIC_UPDATE_FORM_REQUEST, TELEONOME_IDENTITY_LABEL: data.identity, DENEWORD_VALUE_ATTRIBUTE: selected, COMMAND_CODE : passwd },
 						success: function (commandIddata) {
 							console.log("commandId=" + data);
 							
@@ -919,7 +919,7 @@ input:valid {
 					  $.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
-						data: {formName:"Resignal", action:"Reboot", COMMAND_REQUEST_PASSWORD : passwd },
+						data: {formName:"ReSignal", action:"Reboot", COMMAND_CODE : passwd },
 						success: function (commandIddata) {
 							console.log("commandId=" + data);
 							
@@ -954,7 +954,7 @@ input:valid {
 					  $.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
-						data: {formName:"Resignal", action:"Shutdown", COMMAND_REQUEST_PASSWORD : passwd },
+						data: {formName:"ReSignal", action:"Shutdown", COMMAND_CODE : passwd },
 						success: function (commandIddata) {
 							console.log("commandId=" + data);
 							

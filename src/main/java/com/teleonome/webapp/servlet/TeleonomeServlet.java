@@ -677,7 +677,7 @@ public class TeleonomeServlet extends HttpServlet {
 
 
 	public JSONObject sendCommand(String command,String commandCode, String payLoad, String clientIp){
-		logger.debug("sending command to database =" + command);
+		logger.debug("sending command to database =" + command + " commandCode=" + commandCode);
 		String toReturn="";
 		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
