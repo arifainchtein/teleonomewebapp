@@ -26,15 +26,37 @@ class SettingsInfo{
         panelHtml +='               <div class="panel-heading">';
         panelHtml +='                    <div class="row top-buffer">';
         panelHtml +='                       <div class="col-lg-1 col-xs-2 SettingBar">';
-        panelHtml +='                           <span id="DeviceInfo" data-panelpointer="Device Info Panel" class="text-center SettingsMenu"><i class="glyphicon glyphicon-info-sign"></i><br>Info</span>';
-        panelHtml +='                       </div>';
-        panelHtml +='                       <div class="col-lg-9 col-xs-6"> </div>';
+        panelHtml +='                           <span id="Wifi" data-panelpointer="Configure Wifi Panel" class="text-center SettingsMenu"><i class="glyphicon glyphicon-signal"></i><br>Network</span>';
+        panelHtml +='                       </div> ';
         panelHtml +='                       <div class="col-lg-1 col-xs-2 SettingBar">';
         panelHtml +='                           <span  id="UpdateParams" data-panelpointer="Update Params Panel" class="text-center SettingsMenu"><i class="glyphicon glyphicon-tasks"></i><br>Params</span>';
         panelHtml +='                       </div>';
         panelHtml +='                       <div class="col-lg-1 col-xs-2 SettingBar">';
-        panelHtml +='                           <span id="Wifi" data-panelpointer="Configure Wifi Panel" class="text-center SettingsMenu"><i class="glyphicon glyphicon-signal"></i><br>Wifi</span>';
-        panelHtml +='                       </div> ';          
+        panelHtml +='                           <span id="DeviceInfo" data-panelpointer="Device Info Panel" class="text-center SettingsMenu"><i class="glyphicon glyphicon-info-sign"></i><br>Info</span>';
+        panelHtml +='                       </div>';
+   
+
+        panelHtml +='                       <div class="col-lg-8 col-xs-4"> </div>';
+        panelHtml +='                       <div class="col-lg-1 col-xs-2 SettingBar">';
+    
+        //panelHtml +='                       <span id="PowerButton" data-panelpointer="Power Menu" class="text-center SettingsMenu"><i class="glyphicon glyphicon-off"></i><br>Power</span>';
+     
+        panelHtml +='                           <div class="btn-group">';
+        panelHtml +='                           <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+        panelHtml +='                               <i class="glyphicon glyphicon-off"></i><br>Power';
+        panelHtml +='                             </button>';
+        panelHtml +='                             <div class="dropdown-menu">';
+        panelHtml +='                               <a id="RestartButton" class="dropdown-item" href="#">Restart</a>';
+        panelHtml +='                               <a id="ShutdownButton" class="dropdown-item" href="#">Turn Off</a>';
+        panelHtml +='                             </div>';
+        panelHtml +='                           </div>';
+
+     
+     
+     
+        panelHtml +='                       </div>';
+    
+               
         panelHtml +='                   </div> ';  
         panelHtml +='               </div>';
         panelHtml +='               <div class="panel-body" id="SettingsWorkArea" style="display:none"></div>';

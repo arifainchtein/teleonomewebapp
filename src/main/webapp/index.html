@@ -163,6 +163,10 @@ input:valid {
 
 }
 
+.glyphicon.glyphicon-off{
+    font-size: 40px;
+    margin-top:-25px;
+}
 
 .glyphicon.glyphicon-signal,  .glyphicon.glyphicon-tasks, .glyphicon.glyphicon-info-sign,
 .glyphicon.glyphicon-dashboard,.glyphicon.glyphicon-flash, .glyphicon.glyphicon-time{
@@ -253,7 +257,7 @@ input:valid {
 				<div class="row">
 					<div id="status" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 						<h3>
-							<div style="padding-left: 5px;" id="teleonomeName">Connecting....</div>
+							<div class="text-center" style="padding-left: 5px;" id="teleonomeName">Connecting....</div>
 						</h3>
 					</div>
 				</div>
@@ -283,9 +287,12 @@ input:valid {
 						<td>&nbsp;</td>
 						<td><h6>Status</h6></td>
 					</tr>
+					<!--
 					<tr><td colspan="3" id="PulseStatusInfo" ></td></tr>
+					-->
+					
 				</table>
-				
+				<div id="PulseStatusInfo" ></div>
 			</div>
 			<div  class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-*-offset-1">
 				<table>
@@ -301,15 +308,45 @@ input:valid {
 			</div>
 
 			<div  class="col-lg-3 col-md-3 col-sm-3 col-xs-3 col-*-offset-1">
-					<strong><h5><span id="TimeSinceLastPulse" ></h5></span></strong>
+					<strong><h5><span id="TimeSinceLastPulse" ></span><h5></strong>
 					
 			</div>
 		</div>
+
 		<div class="row">
 			<div  style="display: none;" class="col-lg-12 col-md-12 col-sm-12 col-sm-12 col-xs-12 text-center">
 				<div id="ErrorMessage" class="alert alert-danger"></div>
 			</div>
 		</div>
+
+<!--
+
+
+		<div class="modal fade" id="CodeInputModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header text-center">
+							<h4 id="CodeInputModalTitle" class="modal-title w-100 font-weight-bold"></h4>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h5 id="CodeInputModalDescription" class="modal-title w-100 font-weight-bold"></h5>
+						</div>
+						<div class="modal-body mx-3">
+							<div class="md-form mb-5">
+								<i class="fa fa-envelope prefix grey-text"></i>
+								<input type="text" id="code" class="form-control validate">
+								<label data-error="wrong" data-success="right" for="defaultForm-email">Code</label>
+							</div>
+						</div>
+						<div class="modal-footer d-flex justify-content-center">
+							<button id="ModalButonText" class="btn btn-default"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+-->
 
 		<div id="EntryPoint" class="container-fluid"></div>
 		<div id="Graph" ></div>
@@ -379,7 +416,9 @@ input:valid {
 	     var search_RefreshCounterInterval;
 	     var refreshCounter=30;
 	     var refreshCounterStatus=true;
-		
+		 var hasWlan0;
+		 var hasWlan1;
+		 var hasEth0;
 		 
 	     var localStorageManager;
 		 var searchFunctions;
@@ -395,7 +434,24 @@ input:valid {
 				viewManager = new ViewManager();
 				HeartConnect();
 				
-			
+				$.ajax({
+					type: "GET",
+					url: "/TeleonomeServlet",
+					data: {formName:"GetNetworkInterfaces" },
+					success: function (interfaces) {
+					// var interfaces = JSON.parse(data);
+						 hasWlan0=interfaces.hasOwnProperty("wlan0");
+						 hasWlan1=interfaces.hasOwnProperty("wlan1");
+						 hasEth0=interfaces.hasOwnProperty("eth0");
+					},
+					error: function(data){
+						$('#WaitingWheel').hide();
+						console.log("error getting Network Interfaces Info:" + JSON.stringify(data));
+						alert("error getting Network Interfaces Info:" + JSON.stringify(data));
+						return false;
+					}
+				});
+		
 
 				//
 				// before we actually connect ask the server for the visualizer
@@ -832,6 +888,92 @@ input:valid {
 						}
 					});	
 				});
+
+				$(document).on('click', '#wlan0',function(e){
+					e.preventDefault();
+					//
+					// if we are here it means that there is a wlan0 
+					// now check if there is a wlan
+					
+				});
+
+				$(document).on('click', '#RestartButton',function(e){
+					e.preventDefault();
+
+					// $('#CodeInputModalDescription').text('Are you sure you want to restart the Teleonome?<br> if so, please input the code');
+					// $('#CodeInputModalTitle').text('Restart');
+					// $('#ModalButonText').text('show');
+					// $('#CodeInputModal').modal('show'); 
+
+
+					var passwd = prompt("Are you sure you want to reboot?Please enter the password", "");
+					  if(isNaN(passwd)){
+						alert("Password must be 6 numbers");
+						  return false;
+					  }
+					  if(passwd.length!=6){
+						  alert("Password must be 6 numbers");
+						  return false;
+					  }
+					
+					  $.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:"Resignal", action:"Reboot", COMMAND_REQUEST_PASSWORD : passwd },
+						success: function (commandIddata) {
+							console.log("commandId=" + data);
+							
+						},
+						error: function(data){
+							console.log("error restarting:" + JSON.stringify(data));
+							alert("error restarting:" + JSON.stringify(data));
+							return false;
+						}
+					});	
+				});
+				
+				$(document).on('click', '#ShutdownButton',function(e){
+					e.preventDefault();
+
+					// $('#CodeInputModalDescription').text('Are you sure you want to restart the Teleonome?<br> if so, please input the code');
+					// $('#CodeInputModalTitle').text('Restart');
+					// $('#ModalButonText').text('show');
+					// $('#CodeInputModal').modal('show'); 
+
+
+					var passwd = prompt("Are you sure you want to shutdown?  Please enter the password", "");
+					  if(isNaN(passwd)){
+						alert("Password must be 6 numbers");
+						  return false;
+					  }
+					  if(passwd.length!=6){
+						  alert("Password must be 6 numbers");
+						  return false;
+					  }
+					
+					  $.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:"Resignal", action:"Shutdown", COMMAND_REQUEST_PASSWORD : passwd },
+						success: function (commandIddata) {
+							console.log("commandId=" + data);
+							
+						},
+						error: function(data){
+							console.log("error restarting:" + JSON.stringify(data));
+							alert("error restarting:" + JSON.stringify(data));
+							return false;
+						}
+					});	
+				});
+			
+
+			$(document).on('click', '#ShutdownButton',function(e){
+					e.preventDefault();
+					
+					
+				});
+
 				//
 				// end of settings page functions
 				//

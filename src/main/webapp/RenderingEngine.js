@@ -229,18 +229,39 @@ function receivedCommandResponse(cr){
 			var result="info";
 			var commandResultText="";
 			var commandCode="";
-			
-			if(commandResponse.Status==COMMAND_REQUEST_EXECUTED){
-				result="success";
-				commandResultText=commandResponse.Command + " was executed succesfully";
-			}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
-				result="danger";
-				commandResultText=commandResponse.commandCode + " was not correct";
-			}
+			if(commandResponse.Command==COMMAND_REBOOT || 
+				commandResponse.Command == COMMAND_REBOOT_TEXT ||
+				commandResponse.Command == COMMAND_SHUTDOWN ||
+				commandResponse.Command == COMMAND_SHUTDOWN_TEXT ){
+				
+					if(commandResponse.Status==COMMAND_REQUEST_EXECUTED){
+						if(commandResponse.Command==COMMAND_REBOOT || 
+							commandResponse.Command == COMMAND_REBOOT_TEXT){
+								alert("Restarting ....");
+							}else{
+								alert("Shutting down ....");
+							}
+					}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
+						alert("Invalid Code");
+					}
+					
 
-			$('#CommandRequestStatus').removeClass().addClass('label label-sm label-' + result);
-			$('#CommandRequestStatus').html(commandResultText);
-			$('#CommandRequestStatus').show();
+			}else{
+				if(commandResponse.Status==COMMAND_REQUEST_EXECUTED){
+					result="success";
+					commandResultText=commandResponse.Command + " was executed succesfully";
+				}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
+					result="danger";
+					commandResultText=commandResponse.commandCode + " was not correct";
+				}
+	
+				$('#CommandRequestStatus').removeClass().addClass('label label-sm label-' + result);
+				$('#CommandRequestStatus').html(commandResultText);
+				$('#CommandRequestStatus').show();
+			}
+			
+
+
 		},
 		error: function(data){
 			var errorText = "error receiving updated Denome after command response, error was:" + JSON.stringify(data);
@@ -727,7 +748,7 @@ function renderPageToDisplay(){
 				    
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_NETWORK_MODE_SELECTOR){
 				
-				var aaNetworking = new Networking();
+				var aNetworking = new Networking();
 				panelHTML += aNetworking.process();
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_ACTION_EVALUATION_REPORT){

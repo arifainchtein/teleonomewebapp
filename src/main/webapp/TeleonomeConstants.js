@@ -506,6 +506,11 @@ var COMMAND_EXECUTION_STATUS="Status";
 var COMMAND_CODE="CommandCode";
 var COMMAND_REQUEST_EXECUTION_OK="Command Request Succesfull";
 var COMMAND_REQUEST_INVALID_CODE="Invalid Code";
+var MOTHER_COMMAND_REBOOT_HYPOTHALAMUS="RebootHypothalamus";
+var MOTHER_COMMAND_SHUTDOWN_HYPOTHALAMUS="ShutdownHypothalamus";
+var MOTHER_INVALIDATED_REBOOT="Mother Invalidated Reboot";
+var MOTHER_INVALIDATED_SHUTDOWN="Mother Invalidated Shutdown";
+
 var COMMAND_REQUEST_VALID_CODE="Valid Code";
 
 var COMMAND_REQUEST_PENDING_EXECUTION="Pending Execution";

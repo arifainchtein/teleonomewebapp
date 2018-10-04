@@ -74,7 +74,7 @@ public class TeleonomeServlet extends HttpServlet {
 			String enableNetworkMode = req.getParameter("EnableNetworkMode");
 			logger.debug("enableNetworkMode=" + enableNetworkMode);
 			if(enableNetworkMode!=null && enableNetworkMode.equals("Yes")){
-				command = TeleonomeConstants.COMMAND_REBOOT_ENABLE_NETWORK;
+				//command = TeleonomeConstants.COMMAND_REBOOT_ENABLE_NETWORK;
 
 				String ssid = req.getParameter("AvailableNetworks");
 				String password = req.getParameter("password");
