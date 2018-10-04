@@ -243,6 +243,9 @@ function receivedCommandResponse(cr){
 							}
 					}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
 						alert("Invalid Code");
+						$("#MainPowerButton").attr("disabled", true);
+						$("#MainPowerButton").addClass('btn-info').removeClass('btn-warning');
+
 					}
 					
 

@@ -36,19 +36,19 @@ class SettingsInfo{
         panelHtml +='                       </div>';
    
 
-        panelHtml +='                       <div class="col-lg-8 col-xs-4"> </div>';
-        panelHtml +='                       <div class="col-lg-1 col-xs-2 SettingBar">';
+        panelHtml +='                       <div class="col-lg-8 col-xs-3"> </div>';
+        panelHtml +='                       <div class="col-lg-1 col-xs-3 SettingBar">';
     
         //panelHtml +='                       <span id="PowerButton" data-panelpointer="Power Menu" class="text-center SettingsMenu"><i class="glyphicon glyphicon-off"></i><br>Power</span>';
      
         panelHtml +='                           <div class="btn-group">';
-        panelHtml +='                           <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+        panelHtml +='                           <button type="button" id="MainPowerButton" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-top:15px;top:-10px;">';
         panelHtml +='                               <i class="glyphicon glyphicon-off"></i><br>Power';
         panelHtml +='                             </button>';
-        panelHtml +='                             <div class="dropdown-menu">';
-        panelHtml +='                               <a id="RestartButton" class="dropdown-item" href="#">Restart</a>';
-        panelHtml +='                               <a id="ShutdownButton" class="dropdown-item" href="#">Turn Off</a>';
-        panelHtml +='                             </div>';
+        panelHtml +='                             <ul class="dropdown-menu">';
+        panelHtml +='                               <li><a id="RestartButton" class="dropdown-item" href="#">Restart</a></li>';
+        panelHtml +='                               <li><a id="ShutdownButton" class="dropdown-item" href="#">Turn Off</a></li>';
+        panelHtml +='                             </ul>';
         panelHtml +='                           </div>';
 
      

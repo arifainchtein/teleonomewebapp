@@ -163,13 +163,10 @@ input:valid {
 
 }
 
-.glyphicon.glyphicon-off{
-    font-size: 40px;
-    margin-top:-25px;
-}
+
 
 .glyphicon.glyphicon-signal,  .glyphicon.glyphicon-tasks, .glyphicon.glyphicon-info-sign,
-.glyphicon.glyphicon-dashboard,.glyphicon.glyphicon-flash, .glyphicon.glyphicon-time{
+.glyphicon.glyphicon-dashboard,.glyphicon.glyphicon-flash, .glyphicon.glyphicon-time, .glyphicon.glyphicon-off{
     font-size: 20px;
     margin-top:-25px;
 }
@@ -876,9 +873,10 @@ input:valid {
 					$.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
-						data: {formName:HEART_TOPIC_UPDATE_FORM_REQUEST, TELEONOME_IDENTITY_LABEL: data.identity, DENEWORD_VALUE_ATTRIBUTE: selected, COMMAND_CODE : passwd },
+						data: {formName:HEART_TOPIC_UPDATE_FORM_REQUEST, TELEONOME_IDENTITY_LABEL: data.identity, DENEWORD_VALUE_ATTRIBUTE: selected, CommandCode : passwd },
 						success: function (commandIddata) {
-							console.log("commandId=" + data);
+							console.log("commandIddata=" +commandIddata);
+							
 							
 						},
 						error: function(data){
@@ -906,7 +904,7 @@ input:valid {
 					// $('#CodeInputModal').modal('show'); 
 
 
-					var passwd = prompt("Are you sure you want to reboot?Please enter the password", "");
+					var passwd = prompt("Are you sure you want to reboot?Please enter the code", "");
 					  if(isNaN(passwd)){
 						alert("Password must be 6 numbers");
 						  return false;
@@ -919,10 +917,13 @@ input:valid {
 					  $.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
-						data: {formName:"ReSignal", action:"Reboot", COMMAND_CODE : passwd },
+						data: {formName:"ReSignal", action:"Reboot", CommandCode : passwd },
 						success: function (commandIddata) {
-							console.log("commandId=" + data);
-							
+							console.log("commandId=" + commandIddata);
+							alert("Reboot Request Sent");
+							$("#MainPowerButton").attr("disabled", true);
+							$("#MainPowerButton").addClass('btn-warning').removeClass('btn-info');
+
 						},
 						error: function(data){
 							console.log("error restarting:" + JSON.stringify(data));
@@ -954,9 +955,10 @@ input:valid {
 					  $.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
-						data: {formName:"ReSignal", action:"Shutdown", COMMAND_CODE : passwd },
+						data: {formName:"ReSignal", action:"Shutdown", CommandCode : passwd },
 						success: function (commandIddata) {
-							console.log("commandId=" + data);
+							console.log("commandId=" + commandIddata);
+							alert("Reboot Request Sent");
 							
 						},
 						error: function(data){
