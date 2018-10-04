@@ -914,15 +914,20 @@ input:valid {
 						  return false;
 					  }
 					
+					  $("#MainPowerButton").attr("disabled", true);
+					  $("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
+					  $('#WaitingText').html("Please Wait");
+					  $('#WaitingWheel').show();
+
 					  $.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
 						data: {formName:"ReSignal", action:"Reboot", CommandCode : passwd },
 						success: function (commandIddata) {
 							console.log("commandId=" + commandIddata);
+							$('#WaitingWheel').hide();
 							alert("Reboot Request Sent");
-							$("#MainPowerButton").attr("disabled", true);
-							$("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
+							
 
 						},
 						error: function(data){
@@ -942,13 +947,13 @@ input:valid {
 					// $('#CodeInputModal').modal('show'); 
 
 
-					var passwd = prompt("Are you sure you want to shutdown?  Please enter the password", "");
+					var passwd = prompt("Are you sure you want to shutdown?  Please enter the code", "");
 					  if(isNaN(passwd)){
-						alert("Password must be 6 numbers");
+						alert("Code must be 6 numbers");
 						  return false;
 					  }
 					  if(passwd.length!=6){
-						  alert("Password must be 6 numbers");
+						  alert("Code must be 6 numbers");
 						  return false;
 					  }
 					
@@ -958,7 +963,9 @@ input:valid {
 						data: {formName:"ReSignal", action:"Shutdown", CommandCode : passwd },
 						success: function (commandIddata) {
 							console.log("commandId=" + commandIddata);
-							alert("Reboot Request Sent");
+							alert("Shutdown Request Sent");
+							$("#MainPowerButton").attr("disabled", true);
+							$("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
 							
 						},
 						error: function(data){
