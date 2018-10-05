@@ -233,7 +233,8 @@ function receivedCommandResponse(cr){
 				commandResponse.Command == COMMAND_REBOOT_TEXT ||
 				commandResponse.Command == COMMAND_SHUTDOWN ||
 				commandResponse.Command == COMMAND_SHUTDOWN_TEXT ){
-				
+					$('#WaitingWheel').hide();
+					powerButtonDisabled=false;
 					if(commandResponse.Status==COMMAND_REQUEST_EXECUTED){
 						if(commandResponse.Command==COMMAND_REBOOT || 
 							commandResponse.Command == COMMAND_REBOOT_TEXT){
@@ -245,7 +246,7 @@ function receivedCommandResponse(cr){
 						alert("Invalid Code");
 						$("#MainPowerButton").attr("disabled", false);
 						$("#MainPowerButton").addClass('btn-success').removeClass('btn-warning');
-
+						
 					}
 					
 
@@ -953,6 +954,14 @@ function renderPageToDisplay(){
 			if( secundaryView !=""){
 				viewManager[secundaryView]();
 			}
+		}
+
+		//
+		// check to see if the user is waiting for response after sking for reboot or shutdown
+		//
+		if(powerButtonDisabled){
+			$("#MainPowerButton").attr("disabled", true);
+		  	$("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
 		}
 
 

@@ -402,7 +402,7 @@ input:valid {
 		 var hasWlan0;
 		 var hasWlan1;
 		 var hasEth0;
-		 
+		 var powerButtonDisabled=false;
 	     var localStorageManager;
 		 var searchFunctions;
 		 var viewManager;
@@ -904,15 +904,14 @@ input:valid {
 					  $("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
 					  $('#WaitingText').html("Please Wait");
 					  $('#WaitingWheel').show();
-
+					  powerButtonDisabled=true;
 					  $.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
 						data: {formName:"ReSignal", action:"Reboot", CommandCode : passwd },
 						success: function (commandIddata) {
 							console.log("commandId=" + commandIddata);
-							$('#WaitingWheel').hide();
-							alert("Reboot Request Sent");
+							//alert("Reboot Request Sent");
 							
 
 						},

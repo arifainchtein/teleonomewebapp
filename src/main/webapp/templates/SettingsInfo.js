@@ -41,6 +41,7 @@ class SettingsInfo{
     
         //panelHtml +='                       <span id="PowerButton" data-panelpointer="Power Menu" class="text-center SettingsMenu"><i class="glyphicon glyphicon-off"></i><br>Power</span>';
      
+        
         panelHtml +='                           <div class="btn-group">';
         panelHtml +='                           <button type="button" id="MainPowerButton" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-top:15px;top:-10px;">';
         panelHtml +='                               <i class="glyphicon glyphicon-off"></i><br>Power';
