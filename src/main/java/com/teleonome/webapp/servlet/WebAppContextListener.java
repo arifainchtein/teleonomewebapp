@@ -99,7 +99,14 @@ public class WebAppContextListener implements ServletContextListener {
 	        while(true) {
 	        	logger.warn("Hello from WebServer ");
 	        	try {
-	    			FileUtils.writeStringToFile(new File("WebServerPing.info"), ""+System.currentTimeMillis());
+	        		double webserverAvailableMemory = Runtime.getRuntime().freeMemory()/1024000;
+					double webserverMaxMemory = Runtime.getRuntime().maxMemory()/1024000;
+					JSONObject pingInfo = new JSONObject();
+					pingInfo.put(TeleonomeConstants.WEBSERVER_PROCESS_AVAILABLE_MEMORY, webserverAvailableMemory);
+					pingInfo.put(TeleonomeConstants.WEBSERVER_PROCESS_MAXIMUM_MEMORY, webserverMaxMemory);
+					pingInfo.put(TeleonomeConstants.DATATYPE_TIMESTAMP_MILLISECONDS, System.currentTimeMillis());
+					
+	    			FileUtils.writeStringToFile(new File("WebServerPing.info"), pingInfo.toString());
 	    		//	String webPid = Integer.parseInt(processName.split("@")[0]);
 	    			
 	    		} catch (IOException e1) {
