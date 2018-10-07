@@ -66,9 +66,8 @@ var WEBSERVER_PROCESS_MAXIMUM_MEMORY="Maximum Memory for the Webserver JVM";
 
 var HYPOTHALAMUS_PROCESS_AVAILABLE_MEMORY="Available Memory to the Hypothalamus JVM";
 var HYPOTHALAMUS_PROCESS_MAXIMUM_MEMORY="Maximum Memory for the Hypothalamus JVM";
-
-public static final String  HEART_PROCESS_AVAILABLE_MEMORY="Available Memory to the Heart JVM";
-public static final String  HEART_PROCESS_MAXIMUM_MEMORY="Maximum Memory for the Heart JVM";
+var HEART_PROCESS_AVAILABLE_MEMORY="Available Memory to the Heart JVM";
+var HEART_PROCESS_MAXIMUM_MEMORY="Maximum Memory for the Heart JVM";
 
 var DATATYPE_LONG = "long";
 var DATATYPE_FILE="File";
