@@ -8,15 +8,15 @@ class NewRememberedDeneWordWizard{
         
         var panelHTML = "";
         
-        panelHTML = "<div class=\"modal fade bs-example-modal-lg\" tabindex=\"-1\" id=\"NewRememberedDeneWordWizard\" role=\"dialog\" aria-labelledby=\"NewRememberedDeneWordWizard\" aria-hidden=\"true\">";
-        panelHTML = "   <div class=\"modal-dialog modal-lg\">";
-        panelHTML = "       <div class=\"modal-content\">";
-        panelHTML = "           <div class=\"modal-header\">";
-        panelHTML = "               <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>";
-        panelHTML = "               <h4 class=\"modal-title\" id=\"NewRememberedDeneWordWizard\">Start Remembering</h4>";
-        panelHTML = "           </div>";
+        panelHTML += "<div class=\"modal fade bs-example-modal-lg\" tabindex=\"-1\" id=\"NewRememberedDeneWordWizard\" role=\"dialog\" aria-labelledby=\"NewRememberedDeneWordWizard\" aria-hidden=\"true\">";
+        panelHTML += "   <div class=\"modal-dialog modal-lg\">";
+        panelHTML += "       <div class=\"modal-content\">";
+        panelHTML += "           <div class=\"modal-header\">";
+        panelHTML += "               <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>";
+        panelHTML += "               <h4 class=\"modal-title\" id=\"NewRememberedDeneWordWizard\">Start Remembering</h4>";
+        panelHTML += "           </div>";
 
-        panelHTML = "           <div class=\"col-lg-12\">";
+        panelHTML += "           <div class=\"col-lg-12\">";
         panelHTML += "              <div class=\"bs-component\">";
         panelHTML += "                  <div class=\"panel panel-default\">";
         panelHTML += "                      <div class=\"panel-heading\"><h4><span id=\"ModalHeadingText\"></span></h4></div>";
