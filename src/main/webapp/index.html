@@ -576,6 +576,7 @@ body.modal-open .modal .modal-dialog {
 					//
 					// initialie the variables
 					// 
+					$("#NewRememberedWordPanel").show();
 					newRememberedDeneWordTeleonomeName="";
 					 newRememberedDeneWordNucleus="";
 					 newRememberedDeneWordDeneChain="";
@@ -607,7 +608,10 @@ body.modal-open .modal .modal-dialog {
 					
 				});
 			
-
+				$(document).on('click', "#NewRememberedWordCloseButton",function(e) {
+                    e.preventDefault();                   
+					$("#NewRememberedWordPanel").show();
+				});
 
 				$(document).on('click', ".rwTeleonome",function(e) {
 					e.preventDefault();
@@ -621,7 +625,7 @@ body.modal-open .modal .modal-dialog {
 					var nucleusArray = ["Internal","Purpose", "Mnemosyne"];
 					var arrayLength = nucleusArray.length;
 					for (var i = 0; i < arrayLength; i++) {
-						panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+						panelHTML += "<div class=\"col-lg-3 col-md-3 col-sm-3 col-xs-6 text-center top-buffer\">";
 						panelHTML += "<a href=\"http://"+i+".local\" data-nucleus=\""+ nucleusArray[i] +"\" class=\"btn btn-lg btn-default rwNucleus\">"+nucleusArray[i]+"</a>";
 						panelHTML += "</div>";	
 					}
@@ -703,7 +707,7 @@ body.modal-open .modal .modal-dialog {
 							var arrayLength = deneWordsArray.length;
 							var panelHTML="";
 							for (var i = 0; i < arrayLength; i++) {
-								panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center top-buffer\">";
 								panelHTML += "<a href=\"http://"+i+".local\" data-deneword=\""+ deneWordsArray[i] +"\" class=\"btn btn-lg btn-default rwDeneWord\">"+deneWordsArray[i]+"</a>";
 								panelHTML += "</div>";	
 							}
