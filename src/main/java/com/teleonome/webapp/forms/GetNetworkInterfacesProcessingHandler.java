@@ -29,7 +29,7 @@ public class GetNetworkInterfacesProcessingHandler extends ProcessingFormHandler
 		PrintWriter out = response.getWriter();
 		out.print(interfacesJSONObject.toString());
 		out.flush();
-		out.close();
+		out.close(); 
 
 	}
 

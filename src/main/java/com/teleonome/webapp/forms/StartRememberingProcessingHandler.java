@@ -41,11 +41,9 @@ public class StartRememberingProcessingHandler extends ProcessingFormHandler {
 			payLoadJSONObject.put("Updates"	, updatesArray);
 
 			JSONObject updateJSONObject =  new JSONObject();
-			updateJSONObject.put("Target","@On Load:Update SSID:Update SSID");
+			updateJSONObject.put("Target","@On Load:Update Target Identity:Update Target Identity");
 			updateJSONObject.put("Value",newRememberedDeneWordIdentity);
 			updatesArray.put(updateJSONObject);
-
-
 			payLoad=payLoadParentJSONObject.toString();
 			logger.debug("payLoad=" + payLoad);
 		} catch (JSONException e) {

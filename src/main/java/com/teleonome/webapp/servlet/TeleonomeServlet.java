@@ -68,7 +68,7 @@ public class TeleonomeServlet extends HttpServlet {
 			processingFormHandler.process();
 		} catch (ServletProcessingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.warn(Utils.getStringException(e));
 		}
 	}
 
