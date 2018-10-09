@@ -222,6 +222,17 @@ input:valid {
   width: 300px;
     height: 80px;
  }
+
+ body.modal-open .modal {
+    display: flex !important;
+    height: 100%;
+} 
+
+body.modal-open .modal .modal-dialog {
+    margin: auto;
+}
+
+
 </style>
 </head>
 
@@ -330,10 +341,10 @@ input:valid {
 			</div>
 			
 -->
-
+		<div id="OrganismModal" ></div>
 		<div id="EntryPoint" class="container-fluid"></div>
 		<div id="Graph" ></div>
-		<div id="OrganismModal" ></div>
+		
 
 		<div id="footer">
 			<div class="col-xs-12 navbar-default navbar-fixed-bottom">
@@ -379,6 +390,7 @@ input:valid {
 		<script type="text/javascript" src="templates/WellSingleValuePanel.js"></script>
 		<script type="text/javascript" src="templates/DailyWeatherForecast.js"></script>
 		<script type="text/javascript" src="templates/ShortTermWeatherForecast.js"></script>
+		<script type="text/javascript" src="templates/NewRememberedDeneWordWizard.js"></script>
 		<script type="text/javascript" src="templates/MnemosyneTable.js"></script>
 		<script type="text/javascript" src="templates/SingleValuePanelExternalData.js"></script>
 		<script type="text/javascript" src="templates/SingleValuePanel.js"></script>
@@ -603,7 +615,7 @@ input:valid {
 					newRememberedDeneWordTeleonomeName = $(this).data("teleonomename");
 					
 					$('#NewRememberedWordOrganismView').empty();
-					
+					var panelHTML="";
 					var nucleusArray = ["Internal","Purpose", "Mnemosyne"];
 					var arrayLength = nucleusArray.length;
 					for (var i = 0; i < arrayLength; i++) {
@@ -615,7 +627,7 @@ input:valid {
     	           
 				});
 				
-				$(document).on('click', ".rwNuclei",function(e) {
+				$(document).on('click', ".rwNucleus",function(e) {
 					e.preventDefault();
 					$('#NewRememberedWordNucleusView').empty();
 					newRememberedDeneWordNucleus = $(this).data("nucleus");
@@ -625,6 +637,7 @@ input:valid {
 						data: {formName:"GetDeneChainNames", TeleonomeName: newRememberedDeneWordTeleonomeName,Nucleus:newRememberedDeneWordNucleus},
 						success: function (deneChainArray) {
 							console.log("deneChainArray=" + deneChainArray);
+							var panelHTML="";
 							var arrayLength = deneChainArray.length;
 							for (var i = 0; i < arrayLength; i++) {
 								panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
@@ -654,8 +667,9 @@ input:valid {
 						success: function (deneArray) {
 							console.log("deneArray=" + deneArray);
 							var arrayLength = deneArray.length;
+							var panelHTML="";
 							for (var i = 0; i < arrayLength; i++) {
-								panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center top-buffer\">";
 								panelHTML += "<a href=\"http://"+i+".local\" data-dene=\""+ deneArray[i] +"\" class=\"btn btn-lg btn-default rwDene\">"+deneArray[i]+"</a>";
 								panelHTML += "</div>";	
 							}
@@ -682,6 +696,7 @@ input:valid {
 						success: function (deneWordsArray) {
 							console.log("deneWordsArray=" +deneWordsArray);
 							var arrayLength = deneWordsArray.length;
+							var panelHTML="";
 							for (var i = 0; i < arrayLength; i++) {
 								panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
 								panelHTML += "<a href=\"http://"+i+".local\" data-deneword=\""+ deneWordsArray[i] +"\" class=\"btn btn-lg btn-default rwDeNeWord\">"+deneWordsArray[i]+"</a>";
@@ -701,7 +716,6 @@ input:valid {
 					e.preventDefault();
 					$('#NewRememberedWordDeneWordView').empty();
 					newRememberedDeneWordDeneWord = $(this).data("deneword");
-
 
 					var newRememberedDeneWordIdentity = "@" + newRememberedDeneWordTeleonomeName +":"+ newRememberedDeneWordNucleus + ":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene + ":"+ newRememberedDeneWordDeneWord;
 					 

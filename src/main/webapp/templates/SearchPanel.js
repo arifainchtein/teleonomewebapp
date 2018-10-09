@@ -18,7 +18,7 @@ class SearchPanel{
 		if(organismInfoJsonData != undefined){
 			panelHTML += "                        <button class=\"btn btn-default\"  data-toggle=\"modal\" data-target=\"#NewRememberedDeneWordWizard\" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" ><em class=\"glyphicon glyphicon-remove\"></em>Remember</button>";
 		}else{
-			panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" disabled><em class=\"glyphicon glyphicon-remove\"></em>Remember</button>";
+			panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" disabled><em class=\"glyphicon glyphicon-plus\"></em>Remember</button>";
 		}
 		
 		panelHTML += "                    </div>";

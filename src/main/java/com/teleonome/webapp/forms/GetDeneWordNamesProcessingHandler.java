@@ -15,9 +15,9 @@ import com.teleonome.framework.exception.ServletProcessingException;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.webapp.servlet.ProcessingFormHandler;
 
-public class GetDeneWordNamesProcessHandler extends ProcessingFormHandler {
+public class GetDeneWordNamesProcessingHandler extends ProcessingFormHandler {
 
-	public GetDeneWordNamesProcessHandler(HttpServletRequest req, HttpServletResponse res,
+	public GetDeneWordNamesProcessingHandler(HttpServletRequest req, HttpServletResponse res,
 			ServletContext servletContext) {
 		super(req, res, servletContext);
 		// TODO Auto-generated constructor stub
