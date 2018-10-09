@@ -333,7 +333,8 @@ input:valid {
 
 		<div id="EntryPoint" class="container-fluid"></div>
 		<div id="Graph" ></div>
-		
+		<div id="OrganismModal" ></div>
+
 		<div id="footer">
 			<div class="col-xs-12 navbar-default navbar-fixed-bottom">
 				<div class="row" id="bottomNav"></div>
@@ -406,6 +407,12 @@ input:valid {
 	     var localStorageManager;
 		 var searchFunctions;
 		 var viewManager;
+		 var newRememberedDeneWordTeleonomeName="";
+		 var newRememberedDeneWordNucleus="";
+		 var newRememberedDeneWordDeneChain="";
+		 var newRememberedDeneWordDene="";
+		 var newRememberedDeneWordDeneWord="";
+		 
 		 
 			$(document).ready(function() {
 				
@@ -542,8 +549,198 @@ input:valid {
                     $("#SearchGraphArea").empty();
                     refreshCounterStatus=false;
                     searchFunctions.refreshSearchPage();
-                });
-            
+				});
+
+
+				//
+				// functions for the new rememberedword functionality
+				//
+				$(document).on('click', "#NewRemember",function(e) {
+                    e.preventDefault();                   
+                    var newRememberedDeneWordWizard = new NewRememberedDeneWordWizard();
+					var orgSelectorHTML = newRememberedDeneWordWizard.process();
+					$("#OrganismModal").empty();
+					$("#OrganismModal").append(orgSelectorHTML);
+					//
+					// initialie the variables
+					// 
+					newRememberedDeneWordTeleonomeName="";
+					 newRememberedDeneWordNucleus="";
+					 newRememberedDeneWordDeneChain="";
+					 newRememberedDeneWordDene="";
+					 newRememberedDeneWordDeneWord="";
+					$("#NewRememberedWordOrganismView").empty();
+					$("#NewRememberedWordNucleusView").empty();
+					$("#NewRememberedWordDeneChainView").empty();
+					$("#NewRememberedWordDeneView").empty();
+					$("#NewRememberedWordDeneWordView").empty();
+						
+					 //
+					//  now populate the teleonomes
+					//
+					if(organismInfoJsonData != undefined){
+						$("#RefreshCounter").html("");
+						refreshCounterStatus=false;
+						var panelHTML="";
+						$('#NewRememberedWordOrganismView').empty();
+						for(var i in organismInfoJsonData){
+							
+							panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+							panelHTML += "<a href=\"http://"+i+".local\" data-teleonomename=\""+ i +"\" class=\"btn btn-lg btn-"+ organismInfoJsonData[i] +" rwTeleonome\">"+i+"</a>";
+							panelHTML += "</div>";	
+							
+						}
+						$('#NewRememberedWordOrganismView').append(panelHTML);
+					}
+					
+				});
+			
+
+
+				$(document).on('click', ".rwTeleonome",function(e) {
+					e.preventDefault();
+					
+					newRememberedDeneWordTeleonomeName = $(this).data("teleonomename");
+					
+					$('#NewRememberedWordOrganismView').empty();
+					
+					var nucleusArray = ["Internal","Purpose", "Mnemosyne"];
+					var arrayLength = nucleusArray.length;
+					for (var i = 0; i < arrayLength; i++) {
+						panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+						panelHTML += "<a href=\"http://"+i+".local\" data-nucleus=\""+ nucleusArray[i] +"\" class=\"btn btn-lg btn-default rwNucleus\">"+nucleusArray[i]+"</a>";
+						panelHTML += "</div>";	
+					}
+					$('#NewRememberedWordNucleusView').append(panelHTML);
+    	           
+				});
+				
+				$(document).on('click', ".rwNuclei",function(e) {
+					e.preventDefault();
+					$('#NewRememberedWordNucleusView').empty();
+					newRememberedDeneWordNucleus = $(this).data("nucleus");
+					$.ajax({
+						type: "POST",
+						url: "/TeleonomeServlet",
+						data: {formName:"GetDeneChainNames", TeleonomeName: newRememberedDeneWordTeleonomeName,Nucleus:newRememberedDeneWordNucleus},
+						success: function (deneChainArray) {
+							console.log("deneChainArray=" + deneChainArray);
+							var arrayLength = deneChainArray.length;
+							for (var i = 0; i < arrayLength; i++) {
+								panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+								panelHTML += "<a href=\"http://"+i+".local\" data-denechain=\""+ deneChainArray[i] +"\" class=\"btn btn-lg btn-default rwDeneChain\">"+deneChainArray[i]+"</a>";
+								panelHTML += "</div>";	
+							}
+							$('#NewRememberedWordDeneChainView').append(panelHTML);
+						},
+						error: function(data){
+							console.log("error getting log file:" + JSON.stringify(data));
+							alert("Error getting log:" + JSON.stringify(data));
+							return false;
+						}
+					});
+				});
+
+				$(document).on('click', ".rwDeneChain",function(e) {
+					e.preventDefault();
+					$('#NewRememberedWordDeneChainView').empty();
+					newRememberedDeneWordDeneChain = $(this).data("denechain");
+					
+					
+					$.ajax({
+						type: "POST",
+						url: "/TeleonomeServlet",
+						data: {formName:"GetDeneNames", TeleonomeName: newRememberedDeneWordTeleonomeName,Nucleus:newRememberedDeneWordNucleus, DeneChain:newRememberedDeneWordDeneChain},
+						success: function (deneArray) {
+							console.log("deneArray=" + deneArray);
+							var arrayLength = deneArray.length;
+							for (var i = 0; i < arrayLength; i++) {
+								panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+								panelHTML += "<a href=\"http://"+i+".local\" data-dene=\""+ deneArray[i] +"\" class=\"btn btn-lg btn-default rwDene\">"+deneArray[i]+"</a>";
+								panelHTML += "</div>";	
+							}
+							$('#NewRememberedWordDeneView').append(panelHTML);
+						},
+						error: function(data){
+							console.log("error getting denes :" + JSON.stringify(data));
+							alert("Error getting denes:" + JSON.stringify(data));
+							return false;
+						}
+					});
+				});
+
+				$(document).on('click', ".rwDene",function(e) {
+					e.preventDefault();
+					$('#NewRememberedWordDeneView').empty();
+					newRememberedDeneWordDene = $(this).data("dene");
+					
+					
+					$.ajax({
+						type: "POST",
+						url: "/TeleonomeServlet",
+						data: {formName:"GetDeneWordNames", TeleonomeName: newRememberedDeneWordTeleonomeName,Nucleus:newRememberedDeneWordNucleus, DeneChain:newRememberedDeneWordDeneChain, Dene:newRememberedDeneWordDene},
+						success: function (deneWordsArray) {
+							console.log("deneWordsArray=" +deneWordsArray);
+							var arrayLength = deneWordsArray.length;
+							for (var i = 0; i < arrayLength; i++) {
+								panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+								panelHTML += "<a href=\"http://"+i+".local\" data-deneword=\""+ deneWordsArray[i] +"\" class=\"btn btn-lg btn-default rwDeNeWord\">"+deneWordsArray[i]+"</a>";
+								panelHTML += "</div>";	
+							}
+							$('#NewRememberedWordDeneView').append(panelHTML);
+						},
+						error: function(data){
+							console.log("error getting denes :" + JSON.stringify(data));
+							alert("Error getting denes:" + JSON.stringify(data));
+							return false;
+						}
+					});
+				});
+
+				$(document).on('click', ".rwDeneWord",function(e) {
+					e.preventDefault();
+					$('#NewRememberedWordDeneWordView').empty();
+					newRememberedDeneWordDeneWord = $(this).data("deneword");
+
+
+					var newRememberedDeneWordIdentity = "@" + newRememberedDeneWordTeleonomeName +":"+ newRememberedDeneWordNucleus + ":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene + ":"+ newRememberedDeneWordDeneWord;
+					 
+					var text = "Are you sure you want to start remembering " + newRememberedDeneWordIdentity + "  ?";
+					var answer = confirm("text");
+
+					var passwd = prompt("Are you sure you want to start remembering " + newRememberedDeneWordIdentity + "  ? Please enter the code", "");
+					  if(isNaN(passwd)){
+						alert("Code must be 6 numbers");
+						  return false;
+					  }
+					  if(passwd.length!=6){
+						  alert("Code must be 6 numbers");
+						  return false;
+					  }
+					
+					//some code
+					$.ajax({
+						type: "POST",
+						url: "/TeleonomeServlet",
+						data: {formName:"StartRemembering", Identity: newRememberedDeneWordIdentity, CommandCode:passwd},
+						success: function (deneWordsArray) {
+							$("#OrganismModal").modal('hide');
+							alert("Request Submitted");
+						},
+						error: function(data){
+							console.log("error getting denes :" + JSON.stringify(data));
+							alert("Error getting denes:" + JSON.stringify(data));
+							return false;
+						}
+					});
+				});
+
+				//
+				// END OF functions for the new rememberedword functionality
+				//
+
+
+
                 $(document).on('click', ".RemoveChart",function(e) {
     	            e.preventDefault();
     	            var chartTitle = $(this).data("charttitle");

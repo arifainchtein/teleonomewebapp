@@ -14,7 +14,14 @@ class SearchPanel{
         panelHTML += "                    <div id=\"TopButtons\" class=\"pull-left TopButtons col-xs-8\">";
         panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"NewChart\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-plus\"></em>New</button>";
         panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"ClearCharts\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-remove\"></em>Clear</button>";
-        panelHTML += "                    </div>";
+
+		if(organismInfoJsonData != undefined){
+			panelHTML += "                        <button class=\"btn btn-default\"  data-toggle=\"modal\" data-target=\"#NewRememberedDeneWordWizard\" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" ><em class=\"glyphicon glyphicon-remove\"></em>Remember</button>";
+		}else{
+			panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" disabled><em class=\"glyphicon glyphicon-remove\"></em>Remember</button>";
+		}
+		
+		panelHTML += "                    </div>";
         panelHTML += "                    <div id=\"UpdateArea\" class=\"TopButtons pull-right col-xs-4\"><div id=\"RefreshCounter\"></div><div id=\"RefreshCounterMessage\">Click to Pause</div></div>";
         panelHTML += "                </div>";
 

@@ -9,12 +9,15 @@ package com.teleonome.webapp.servlet;
  */
 import javax.servlet.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Hashtable;
 import javax.servlet.http.*;
 import org.apache.log4j.*;
+import org.json.JSONObject;
 
 import com.teleonome.framework.exception.PersistenceException;
 import com.teleonome.framework.exception.ServletProcessingException;
+import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 
 
 public abstract class ProcessingFormHandler{
@@ -44,7 +47,7 @@ public abstract class ProcessingFormHandler{
 	 * process the request and returns the string that represents the class
 	 * to be followed next
 	 */
-	public abstract void process() throws ServletProcessingException;
+	public abstract void process() throws ServletProcessingException, IOException;
 	
 
 	public HttpServletRequest getRequest(){
@@ -73,4 +76,19 @@ public abstract class ProcessingFormHandler{
 		return command;
 	}
 	
+	public JSONObject sendCommand(String command,String commandCode, String payLoad, String clientIp){
+		logger.debug("sending command to database =" + command + " commandCode=" + commandCode);
+		String toReturn="";
+		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
+		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
+
+		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, payLoad, clientIp);
+		boolean includeHuman=true;
+		boolean includeInternal=false;
+		int offset=0;
+		int limit=20;
+		JSONObject commandInfo = aDBManager.getAllCommandRequests( includeHuman,  includeInternal,  offset,  limit);
+		logger.debug("TeleonomeServlet responseJSONObject=" + commandInfo.toString(4));
+		return commandInfo;
+	}
 }	
