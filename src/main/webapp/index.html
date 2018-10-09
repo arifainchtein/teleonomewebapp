@@ -614,7 +614,7 @@ body.modal-open .modal .modal-dialog {
 					
 					newRememberedDeneWordTeleonomeName = $(this).data("teleonomename");
 					$("#ModalHeadingText").html("Select Nucleus");
-					$("#NewRememberedWordIdentity").html("@" + newRememberedDeneWordTeleonomeName);
+					$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + "</h4>");
 
 					$('#NewRememberedWordOrganismView').empty();
 					var panelHTML="";
@@ -633,7 +633,7 @@ body.modal-open .modal .modal-dialog {
 					e.preventDefault();
 					$('#NewRememberedWordNucleusView').empty();
 					newRememberedDeneWordNucleus = $(this).data("nucleus");
-					$("#NewRememberedWordIdentity").html("@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus);
+					$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus + "</h4>");
 					$("#ModalHeadingText").html("Select DeneChain");
 					$.ajax({
 						type: "POST",
@@ -662,7 +662,7 @@ body.modal-open .modal .modal-dialog {
 					e.preventDefault();
 					$('#NewRememberedWordDeneChainView').empty();
 					newRememberedDeneWordDeneChain = $(this).data("denechain");
-					$("#NewRememberedWordIdentity").html("@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain);
+					$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + "</h4>");
 					$("#ModalHeadingText").html("Select Dene");
 					$.ajax({
 						type: "POST",
@@ -692,7 +692,7 @@ body.modal-open .modal .modal-dialog {
 					$('#NewRememberedWordDeneView').empty();
 					newRememberedDeneWordDene = $(this).data("dene");
 					$("#ModalHeadingText").html("Select DeneWord");
-					$("#NewRememberedWordIdentity").html("@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene);
+					$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene + "</h4>");
 					
 					$.ajax({
 						type: "POST",
@@ -704,7 +704,7 @@ body.modal-open .modal .modal-dialog {
 							var panelHTML="";
 							for (var i = 0; i < arrayLength; i++) {
 								panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
-								panelHTML += "<a href=\"http://"+i+".local\" data-deneword=\""+ deneWordsArray[i] +"\" class=\"btn btn-lg btn-default rwDeNeWord\">"+deneWordsArray[i]+"</a>";
+								panelHTML += "<a href=\"http://"+i+".local\" data-deneword=\""+ deneWordsArray[i] +"\" class=\"btn btn-lg btn-default rwDeneWord\">"+deneWordsArray[i]+"</a>";
 								panelHTML += "</div>";	
 							}
 							$('#NewRememberedWordDeneView').append(panelHTML);
@@ -724,9 +724,6 @@ body.modal-open .modal .modal-dialog {
 
 					var newRememberedDeneWordIdentity = "@" + newRememberedDeneWordTeleonomeName +":"+ newRememberedDeneWordNucleus + ":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene + ":"+ newRememberedDeneWordDeneWord;
 					 
-					var text = "Are you sure you want to start remembering " + newRememberedDeneWordIdentity + "  ?";
-					var answer = confirm("text");
-
 					var passwd = prompt("Are you sure you want to start remembering " + newRememberedDeneWordIdentity + "  ? Please enter the code", "");
 					  if(isNaN(passwd)){
 						alert("Code must be 6 numbers");
