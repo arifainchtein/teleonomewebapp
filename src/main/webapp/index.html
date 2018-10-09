@@ -586,7 +586,7 @@ body.modal-open .modal .modal-dialog {
 					$("#NewRememberedWordDeneChainView").empty();
 					$("#NewRememberedWordDeneView").empty();
 					$("#NewRememberedWordDeneWordView").empty();
-						
+					$("#ModalHeadingText").html("Select Teleonome");
 					 //
 					//  now populate the teleonomes
 					//
@@ -613,7 +613,9 @@ body.modal-open .modal .modal-dialog {
 					e.preventDefault();
 					
 					newRememberedDeneWordTeleonomeName = $(this).data("teleonomename");
-					
+					$("#ModalHeadingText").html("Select Nucleus");
+					$("#NewRememberedWordIdentity").html("@" + newRememberedDeneWordTeleonomeName);
+
 					$('#NewRememberedWordOrganismView').empty();
 					var panelHTML="";
 					var nucleusArray = ["Internal","Purpose", "Mnemosyne"];
@@ -631,6 +633,8 @@ body.modal-open .modal .modal-dialog {
 					e.preventDefault();
 					$('#NewRememberedWordNucleusView').empty();
 					newRememberedDeneWordNucleus = $(this).data("nucleus");
+					$("#NewRememberedWordIdentity").html("@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus);
+					$("#ModalHeadingText").html("Select DeneChain");
 					$.ajax({
 						type: "POST",
 						url: "/TeleonomeServlet",
@@ -658,8 +662,8 @@ body.modal-open .modal .modal-dialog {
 					e.preventDefault();
 					$('#NewRememberedWordDeneChainView').empty();
 					newRememberedDeneWordDeneChain = $(this).data("denechain");
-					
-					
+					$("#NewRememberedWordIdentity").html("@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain);
+					$("#ModalHeadingText").html("Select Dene");
 					$.ajax({
 						type: "POST",
 						url: "/TeleonomeServlet",
@@ -687,7 +691,8 @@ body.modal-open .modal .modal-dialog {
 					e.preventDefault();
 					$('#NewRememberedWordDeneView').empty();
 					newRememberedDeneWordDene = $(this).data("dene");
-					
+					$("#ModalHeadingText").html("Select DeneWord");
+					$("#NewRememberedWordIdentity").html("@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene);
 					
 					$.ajax({
 						type: "POST",
