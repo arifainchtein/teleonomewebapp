@@ -15,7 +15,6 @@ import com.teleonome.framework.TeleonomeConstants;
 import com.teleonome.framework.denome.Identity;
 import com.teleonome.framework.exception.ServletProcessingException;
 import com.teleonome.webapp.servlet.ProcessingFormHandler;
-
 public class StartRememberingProcessingHandler extends ProcessingFormHandler {
 
 	public StartRememberingProcessingHandler(HttpServletRequest req, HttpServletResponse res,

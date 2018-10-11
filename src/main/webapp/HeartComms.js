@@ -5,21 +5,21 @@ function HeartConnect() {
 	//
 	// before we actually connect ask the server for the visualizer
 	//	
-	$.ajax({
-		type: "GET",
-		url: "/TeleonomeServlet",
-		data: {formName:"GetVisualizer"},
-		success: function (data) {
-			console.log("data=" + data);
-			visualizer=data;
+	// $.ajax({
+	// 	type: "GET",
+	// 	url: "/TeleonomeServlet",
+	// 	data: {formName:"GetVisualizer"},
+	// 	success: function (data) {
+	// 		console.log("data=" + data);
+	// 		visualizer=data;
 			
-		},
-		error: function(data){
-			console.log("error getting visualizer:" + JSON.stringify(data));
-			alert("Hubo un errors al procesar la forma:" + JSON.stringify(data));
-			return false;
-		}
-	});	
+	// 	},
+	// 	error: function(data){
+	// 		console.log("error getting visualizer:" + JSON.stringify(data));
+	// 		alert("Hubo un errors al procesar la forma:" + JSON.stringify(data));
+	// 		return false;
+	// 	}
+	// });	
 	
 	
 	
