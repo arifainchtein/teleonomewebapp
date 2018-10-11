@@ -102,10 +102,11 @@ var DENE_TYPE_MICROCONTROLLER_CONFIG_PARAMETER = "Microcontroller Config Paramet
 var DENE_TYPE_VITAL = "Vital";
 var DENE_TYPE_CODON_ELEMENT = "Codon Element";
 var DENE_TYPE_ON_LOAD_MUTATION = "On Load";
+varDENE_TYPE_ON_FINISH_MUTATION = "On Finish";
 var DENE_TYPE_DENEWORD_CARRIER= "DeneWord Carrier";
 
 var DENE_TYPE_ACTION_LIST= "Action List";
-
+var DENE_NAME_ATTRIBUTE= "Dene Name";
 var DENE_TYPE_HUMAN_INTERFACE_STATE_VARIABLES= "Human Interface State Variables";
 var DENE_TYPE_ACTUATOR_ACTION_PROCESSING="Actuator Action Processing";
 
@@ -257,6 +258,8 @@ var CAMERA_TIMESTAMP_FILENAME_FORMAT="dd-MM-yyyy_HHmm";
 //
 var MUTATION_COMMAND_SET_DENEWORD = "Set DeneWord";
 var MUTATION_COMMAND_TARGET = "Target";
+var MUTATION_INJECTION_TARGET = "Injection Target";
+
 var MUTATION_COMMAND_DENEWORD_NAME = "Mutation Name";
 var MUTATION_COMMAND_DENEWORD_VALUE = "Mutation Value";
 //
@@ -311,6 +314,8 @@ var DENEWORD_TYPE_CONDITION_VARIABLE_POINTER = "Condition Variable Pointer";
 var DENEWORD_TYPE_SENSOR_VALUE = "Sensor Value";
 var DENEWORD_TYPE_UPDATE_DENEWORD_VALUE = "Update DeneWord Value";
 var DENEWORD_TYPE_APPEND_DENEWORD_VALUE = "Append DeneWord Value";
+var DENE_TYPE_UPDATE_DENEWORD_VALUE = "Update DeneWord Value";
+var DENE_TYPE_UPDATE_DENE_NAME = "Update Dene Name";
 
 var DENEWORD_TYPE_FIRMWARE_COMMAND_POINTER = "Firmware Command Pointer";
 var DENEWORD_TYPE_FIRMWARE_COMMAND = "Firmware Command";

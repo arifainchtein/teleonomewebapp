@@ -729,6 +729,8 @@ body.modal-open .modal .modal-dialog {
 					var newRememberedDeneWordIdentity = "@" + newRememberedDeneWordTeleonomeName +":"+ newRememberedDeneWordNucleus + ":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene + ":"+ newRememberedDeneWordDeneWord;
 					 
 					var passwd = prompt("Are you sure you want to start remembering " + newRememberedDeneWordIdentity + "  ? Please enter the code", "");
+					if(passwd == null)return false;
+					
 					  if(isNaN(passwd)){
 						alert("Code must be 6 numbers");
 						  return false;
