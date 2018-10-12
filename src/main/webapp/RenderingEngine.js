@@ -316,7 +316,9 @@ function asyncUpdate(text){
 			value = updateJson[pointer];
 			setDeneWordValueByIdentityPointer(pointer, value)
 		}
-		RefreshInterface();
+		if(refreshActive){
+			RefreshInterface();
+		}
 	}
 	
 }
