@@ -28,9 +28,9 @@ class LocalStorageManager{
         var values = [];
         var searchObj = JSON.parse(localStorage.getItem(localStorageComponentKey));
         if(searchObj==null)return values;
-        console.log("searchObj=" + searchObj);
+        // console.log("searchObj=" + searchObj);
         //var searchObj1 = JSON.parse(searchObj);
-       // console.log("searchObj1=" + searchObj1);
+       // // console.log("searchObj1=" + searchObj1);
         //if(searchObj1 != undefined && searchObj1!=null){
         if(searchObj != undefined && searchObj!=null){    
             var keys = Object.keys(searchObj);
@@ -53,7 +53,7 @@ class LocalStorageManager{
 	
 	 getNumberOfObjectsByComponent(localStorageComponentKey){
 	        var searchObj = JSON.parse(localStorage.getItem(localStorageComponentKey));
-	        //console.log("searchObj=" + searchObj);
+	        //// console.log("searchObj=" + searchObj);
 	        if(searchObj==null){
 	            return 0;
 	        }else{

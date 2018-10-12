@@ -150,9 +150,9 @@ width = parseInt(d3.select("#"+id).style("width")) - margin.left - margin.right,
 height = parseInt(d3.select("#"+id).style("height")) - margin.top - margin.bottom;
 
 
-console.log("calculated height=" + height);
+// // // // console.log("calculated height=" + height);
 if(height<170)height = 247 - margin.top - margin.bottom;
-//console.log("starting drawtimeseries");
+//// // // // console.log("starting drawtimeseries");
 // Parse the date / time
 var	parseDate = d3.time.format("%H:%M").parse;
 
@@ -208,7 +208,7 @@ chart1.append("text")
 .text(dataSource.Units);
 
 var data = dataSource.Value;
-//console.log("dataSource=" + dataSource);
+//// // // // console.log("dataSource=" + dataSource);
 
 	data.forEach(function(d) {
 		d.date = new Date(d["Pulse Timestamp in Milliseconds"]);
@@ -243,7 +243,7 @@ var data = dataSource.Value;
 		.attr("class", "y axis")
 		.call(yAxis);
 
-console.log("finsished drawlineseries");
+// // // // console.log("finsished drawlineseries");
 }
 
 

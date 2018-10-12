@@ -16,7 +16,7 @@ class SearchFunctions{
                 url: "/TeleonomeServlet",
                 data: {formName:formName, TeleonomeName:teleonomeName, PulseMillis:pulseMillis},
                 success: function (data) {
-                   // console.log("data=" + JSON.stringify(data));
+                   // // console.log("data=" + JSON.stringify(data));
                    var pulseJson = JSON.stringify(data, null, 2);
                    var d =  new Date(pulseMillis);
                    var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +d.getHours() + ":" + d.getMinutes()+ ":" + d.getSeconds();
@@ -26,7 +26,7 @@ class SearchFunctions{
                 },
                 error: function(data){
                     $('#WaitingWheel').hide();
-                    console.log("error getting log file:" + JSON.stringify(data));
+                    // console.log("error getting log file:" + JSON.stringify(data));
                     alert("Error getting log:" + JSON.stringify(data));
                     return false;
                 }
@@ -42,13 +42,13 @@ class SearchFunctions{
         //var allGraphs = allSearchStorage();
         var allGraphs = localStorageManager.getAllStorageForComponent(LOCAL_STORAGE_SEARCH_KEY);
         if(allGraphs.length==0){
-            console.log('no refresh since there are no visuzliaers');
+            // console.log('no refresh since there are no visuzliaers');
             $("#RefreshCounter").html("");
             refreshCounter=0;
             return false;
         } 
        // location.reload();
-       console.log("about to refresh");
+       // console.log("about to refresh");
       
        
         
@@ -107,7 +107,7 @@ class SearchFunctions{
                     var chartDivId = graphData.chartDivId;
                     var liveUpdate = graphData.liveUpdate;
                     var localStoreageKey = graphData.localStoreageKey;
-		            console.log("graphData.chartTitle="+ graphData.chartTitle + " position=" + graphData.position);
+		            // console.log("graphData.chartTitle="+ graphData.chartTitle + " position=" + graphData.position);
 		            if(liveUpdate){ 
 		               // if its live udpdate, ignore the times stored and set tthe to be the last 24 hour    
 		                var fromDate = new Date();
@@ -137,7 +137,7 @@ class SearchFunctions{
 		            url: "/TeleonomeServlet",
 		            data: {formName:"RefreshCurrentView", data:dataToSend},
 		            success: function (dataString) {
-		                console.log("receiving data for refresh" );
+		                // console.log("receiving data for refresh" );
 		               // if(!appendChart){
 		                    $("#SearchGraphArea").empty();
 		                //} 
@@ -178,7 +178,7 @@ class SearchFunctions{
                             
                            
 		                    var lastValueDisplayString = lastValueTimestamp.getDate()+"/" +  (lastValueTimestamp.getMonth()+1)+"/" + lastValueTimestamp.getFullYear()+" " + forHour+":" +forMin;
-		                    console.log("painting " + chartTitle);
+		                    // console.log("painting " + chartTitle);
 		                    panelHTML = "<div class=\"row\">";  
 		                    panelHTML += "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12\">";   
 		                    panelHTML += "<div class=\"bs-component\">";
@@ -282,7 +282,7 @@ class SearchFunctions{
 		            },
 		            error: function(data){
 		                $('#WaitingWheel').hide();
-		                console.log("error getting log file:" + JSON.stringify(data));
+		                // console.log("error getting log file:" + JSON.stringify(data));
 		                alert("Error getting log:" + JSON.stringify(data));
 		                return false;
 		            }
@@ -303,7 +303,7 @@ class SearchFunctions{
     //         url: "/TeleonomeServlet",
     //         data: {formName:formName, identity:identityPointer, from:fromMillis,until:untilMillis},
     //         success: function (data) {
-    //             console.log("receiving data for" + identityPointer);
+    //             // console.log("receiving data for" + identityPointer);
     //             if(!appendChart){
     //                 $("#SearchGraphArea").empty();
     //             } 
@@ -330,7 +330,7 @@ class SearchFunctions{
     //                 forMin=lastValueTimestamp.getMinutes();
     //             }
     //             var lastValueDisplayString = lastValueTimestamp.getDate()+"/" +  (lastValueTimestamp.getMonth()+1)+"/" + lastValueTimestamp.getFullYear()+" " + forHour+":" +forMin;
-    // console.log("painting " + chartTitle);
+    // // console.log("painting " + chartTitle);
     //            // var newDiv ='<div class=\"Parent\" id=\"'+chartTitle+'Parent\"><div class="row-fluid \"><div class=\"col-xs-10 column\"> <div id=\"' +chartTitleNoSpaces + '\"></div></div><div class=\"col-xs-2 column LastValuePanel\"><div id=\"'+chartTitle+'LastValue\"><span class=\"lastValue\">'+lastValue +'</span><br><span class=\"lastValueUnits\"><span>'+units+'</span></div></div></div>';
     //             var panelHTML= "<div class=\"row\">";  
     //             panelHTML += "<div class=\"col-lg-6\">";   
@@ -388,7 +388,7 @@ class SearchFunctions{
     //         },
     //         error: function(data){
     //             $('#WaitingWheel').hide();
-    //             console.log("error getting log file:" + JSON.stringify(data));
+    //             // console.log("error getting log file:" + JSON.stringify(data));
     //             alert("Error getting log:" + JSON.stringify(data));
     //             return false;
     //         }
@@ -407,7 +407,7 @@ class SearchFunctions{
             url: "/TeleonomeServlet",
             data: {formName:"GetRememberDeneWordList"},
             success: function (data) {
-               // console.log("data=" + JSON.stringify(data));
+               // // console.log("data=" + JSON.stringify(data));
                 $('#Identity').append($('<option>', {
                         value: "",
                         text : "Remember a DeneWord"
@@ -430,7 +430,7 @@ class SearchFunctions{
             },
             error: function(data){
                 $('#WaitingWheel').hide();
-                console.log("error getting remembered denewords list:" + JSON.stringify(data));
+                // console.log("error getting remembered denewords list:" + JSON.stringify(data));
                 alert("Error getting list:" + JSON.stringify(data));
                 return false;
             }
@@ -451,7 +451,7 @@ class SearchFunctions{
         //             if(item.hasOwnProperty('TimeMin') && item.hasOwnProperty('TimeMax')){
         //             	var minDate =  new Date(Date.parse(item.TimeMin));
         //             	var maxDate =  new Date(Date.parse(item.TimeMax));
-        //             	//console.log("m=" +m);
+        //             	//// console.log("m=" +m);
         //                 //var minDate = convertUTCDateToLocalDate(min);
         //                 //var maxDate = convertUTCDateToLocalDate(max);
         //                 var screensize = document.documentElement.clientWidth;
@@ -469,7 +469,7 @@ class SearchFunctions{
         //         });
         //     },
         //     error: function(data){
-        //         console.log("error getting TeleonomeNames:" + JSON.stringify(data));
+        //         // console.log("error getting TeleonomeNames:" + JSON.stringify(data));
         //         alert("Error getting list:" + JSON.stringify(data));
         //         return false;
         //     }
@@ -508,7 +508,7 @@ class SearchFunctions{
                 },
                 error: function(data){
                     $('#WaitingWheel').hide();
-                    console.log("error getting TeleonomeNames:" + JSON.stringify(data));
+                    // console.log("error getting TeleonomeNames:" + JSON.stringify(data));
                     alert("Error getting list:" + JSON.stringify(data));
                     return false;
                 }
@@ -544,7 +544,7 @@ class SearchFunctions{
                 },
                 error: function(data){
                     $('#WaitingWheel').hide();
-                    console.log("error getting TeleonomeNames:" + JSON.stringify(data));
+                    // console.log("error getting TeleonomeNames:" + JSON.stringify(data));
                     alert("Error getting list:" + JSON.stringify(data));
                     return false;
                 }
@@ -580,7 +580,7 @@ class SearchFunctions{
                 },
                 error: function(data){
                     $('#WaitingWheel').hide();
-                    console.log("error getting Denes:" + JSON.stringify(data));
+                    // console.log("error getting Denes:" + JSON.stringify(data));
                     alert("Error getting list:" + JSON.stringify(data));
                     return false;
                 }
@@ -617,7 +617,7 @@ class SearchFunctions{
                 },
                 error: function(data){
                     $('#WaitingWheel').hide();
-                    console.log("error getting Denes:" + JSON.stringify(data));
+                    // console.log("error getting Denes:" + JSON.stringify(data));
                     alert("Error getting list:" + JSON.stringify(data));
                     return false;
                 }

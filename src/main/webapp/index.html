@@ -614,36 +614,33 @@ body.modal-open .modal .modal-dialog {
 				$(document).on('click', "#ForgetRememberedDeneWord",function(e) {
                     e.preventDefault();                   
                    
-					$("#NewRememberedWordPanel").show();
+					$("#ForgetRememberedWordPanel").show();
 					refreshActive=false;
-					newRememberedDeneWordTeleonomeName="";
-					 newRememberedDeneWordNucleus="";
-					 newRememberedDeneWordDeneChain="";
-					 newRememberedDeneWordDene="";
-					 newRememberedDeneWordDeneWord="";
-					$("#NewRememberedWordOrganismView").empty();
-					$("#NewRememberedWordNucleusView").empty();
-					$("#NewRememberedWordDeneChainView").empty();
-					$("#NewRememberedWordDeneView").empty();
-					$("#NewRememberedWordDeneWordView").empty();
-					$("#ModalHeadingText").html("Select Teleonome");
-					 //
-					//  now populate the teleonomes
-					//
-					if(organismInfoJsonData != undefined){
-						$("#RefreshCounter").html("");
-						refreshCounterStatus=false;
-						var panelHTML="";
-						$('#NewRememberedWordOrganismView').empty();
-						for(var i in organismInfoJsonData){
-							
-							panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
-							panelHTML += "<a href=\"http://"+i+".local\" data-teleonomename=\""+ i +"\" class=\"btn btn-lg btn-"+ organismInfoJsonData[i] +" rwTeleonome\">"+i+"</a>";
-							panelHTML += "</div>";	
-							
+					
+					$("#ForgetHeadingText").html("Select DeneWord to Stop Remembering");
+					$('#RememberedDeneWordList').empty(); 
+					
+					$.ajax({
+						type: "POST",
+						url: "/TeleonomeServlet",
+						data: {formName:"GetRememberedDeneWordList"},
+						success: function (list) {
+							console.log("GetRememberedDeneWordList, list=" + list);
+							// var arrayLength = list.length;
+							// var panelHTML="";
+							// for (var i = 0; i < list; i++) {
+							// 	panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center top-buffer\">";
+							// 	panelHTML += "<a href=\"http://"+i+".local\" data-dene=\""+ list[i] +"\" class=\"btn btn-lg btn-default rwDene\">"+deneArray[i]+"</a>";
+							// 	panelHTML += "</div>";	
+							// }
+							// $('#NewRememberedWordDeneView').append(panelHTML);
+						},
+						error: function(data){
+							console.log("error getting denes :" + JSON.stringify(data));
+							alert("Error getting denes:" + JSON.stringify(data));
+							return false;
 						}
-						$('#NewRememberedWordOrganismView').append(panelHTML);
-					}
+					});
 					
 				});
 			
