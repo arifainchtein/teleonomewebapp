@@ -610,7 +610,7 @@ body.modal-open .modal .modal-dialog {
 			
 				$(document).on('click', "#NewRememberedWordCloseButton",function(e) {
                     e.preventDefault();                   
-					$("#NewRememberedWordPanel").show();
+					$("#NewRememberedWordPanel").hide();
 				});
 
 				$(document).on('click', ".rwTeleonome",function(e) {
@@ -730,7 +730,7 @@ body.modal-open .modal .modal-dialog {
 					 
 					var passwd = prompt("Are you sure you want to start remembering " + newRememberedDeneWordIdentity + "  ? Please enter the code", "");
 					if(passwd == null)return false;
-					
+
 					  if(isNaN(passwd)){
 						alert("Code must be 6 numbers");
 						  return false;

@@ -1,5 +1,8 @@
 package com.teleonome.webapp.forms;
 
+
+
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -15,7 +18,7 @@ import com.teleonome.framework.TeleonomeConstants;
 import com.teleonome.framework.denome.Identity;
 import com.teleonome.framework.exception.ServletProcessingException;
 import com.teleonome.webapp.servlet.ProcessingFormHandler;
-public class StartRememberingProcessingHandler extends ProcessingFormHandler {
+	public class StartRememberingProcessingHandler extends ProcessingFormHandler {
 
 	public StartRememberingProcessingHandler(HttpServletRequest req, HttpServletResponse res,
 			ServletContext servletContext) {
@@ -43,7 +46,7 @@ public class StartRememberingProcessingHandler extends ProcessingFormHandler {
 			payLoadJSONObject.put("Updates"	, updatesArray);
 
 			JSONObject updateJSONObject =  new JSONObject();
-			updateJSONObject.put("Target","@Dene Injections:New  DeneWord To Remember:DeneWord To Remember");
+			updateJSONObject.put("Target","@Dene Injections:New DeneWord To Remember:DeneWord To Remember");
 			updateJSONObject.put("Value",newRememberedDeneWordIdentity);
 			updateJSONObject.put(TeleonomeConstants.DENE_NAME_ATTRIBUTE,"Remember " +identity.getTeleonomeName() + "-" + identity.getDeneWordName());
 			
