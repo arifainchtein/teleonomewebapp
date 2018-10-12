@@ -424,7 +424,7 @@ body.modal-open .modal .modal-dialog {
 		 var newRememberedDeneWordDeneChain="";
 		 var newRememberedDeneWordDene="";
 		 var newRememberedDeneWordDeneWord="";
-		 
+		 var refreshActive=true;
 		 
 			$(document).ready(function() {
 				
@@ -577,6 +577,7 @@ body.modal-open .modal .modal-dialog {
 					// initialie the variables
 					// 
 					$("#NewRememberedWordPanel").show();
+					refreshActive=false;
 					newRememberedDeneWordTeleonomeName="";
 					 newRememberedDeneWordNucleus="";
 					 newRememberedDeneWordDeneChain="";
@@ -611,6 +612,7 @@ body.modal-open .modal .modal-dialog {
 				$(document).on('click', "#NewRememberedWordCloseButton",function(e) {
                     e.preventDefault();                   
 					$("#NewRememberedWordPanel").hide();
+					refreshActive=true;
 				});
 
 				$(document).on('click', ".rwTeleonome",function(e) {

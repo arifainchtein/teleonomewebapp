@@ -372,7 +372,7 @@ function loadDenomeRefreshInterface(denomeFileInString) {
 	
 	$('#CommandRequestStatus').hide();
 	pulseJSONObject= JSON.parse(denomeFileInString);
-	if(!$('#bannerformmodal').hasClass('in')){
+	if(!$('#bannerformmodal').hasClass('in') && refreshActive){
 	
 		RefreshInterface();
 	
