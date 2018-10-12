@@ -48,9 +48,14 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
 			JSONObject updateJSONObject =  new JSONObject();
 			updateJSONObject.put("Target","@Dene Injections:New DeneWord To Remember:DeneWord To Remember");
 			updateJSONObject.put("Value",newRememberedDeneWordIdentity);
-			updateJSONObject.put(TeleonomeConstants.DENE_NAME_ATTRIBUTE,"Remember " +identity.getTeleonomeName() + "-" + identity.getDeneWordName());
-			
 			updatesArray.put(updateJSONObject);
+			
+			JSONObject updateJSONObject2 =  new JSONObject();
+			updateJSONObject2.put("Target","@On Finish:Update Dene Name:Update Dene Name");
+			updateJSONObject2.put("Value","Remember " +identity.getTeleonomeName() + "-" + identity.getDeneWordName());
+			updatesArray.put(updateJSONObject2);
+			
+			
 			payload=payLoadParentJSONObject.toString();
 			logger.debug("payLoad=" + payload);
 		} catch (JSONException e) {
