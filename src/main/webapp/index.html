@@ -613,6 +613,7 @@ body.modal-open .modal .modal-dialog {
                     e.preventDefault();                   
 					$("#NewRememberedWordPanel").hide();
 					refreshActive=true;
+					RefreshInterface();
 				});
 
 				$(document).on('click', ".rwTeleonome",function(e) {
@@ -750,8 +751,15 @@ body.modal-open .modal .modal-dialog {
 						success: function (deneWordsArray) {
 							$("#OrganismModal").modal('hide');
 							alert("Request Submitted");
+							$("#NewRememberedWordPanel").hide();
+							refreshActive=true;
+							RefreshInterface();
+
 						},
 						error: function(data){
+							$("#NewRememberedWordPanel").hide();
+							refreshActive=true;
+							RefreshInterface();
 							console.log("error getting denes :" + JSON.stringify(data));
 							alert("Error getting denes:" + JSON.stringify(data));
 							return false;
