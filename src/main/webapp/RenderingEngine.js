@@ -34,7 +34,7 @@ function monitorBetweenPulses() {
 	timeSinceLastPulse = new Date().getTime()-pulseTimestampMilliseconds;
 	timeStringSinceLastPulse = msToTime(timeSinceLastPulse);
 	$("#TimeSinceLastPulse").html(timeStringSinceLastPulse);
-	//console.log("timeStringSinceLastPulse=" + timeStringSinceLastPulse);
+	//// console.log("timeStringSinceLastPulse=" + timeStringSinceLastPulse);
 	
 	//
 	// now calculate if we should change the color to indicate that is late
@@ -56,7 +56,7 @@ function monitorBetweenPulses() {
 
 		var timeBeforeLate = numberOfPulsesBeforeLate*(currentPulseGenerationDuration+currentPulseFrequency);
 		//timeBeforeLate = 60000;
-		//console.log("timeBeforeLate=" + timeBeforeLate + " timeSinceLastPulse=" + timeSinceLastPulse);
+		//// console.log("timeBeforeLate=" + timeBeforeLate + " timeSinceLastPulse=" + timeSinceLastPulse);
 			if(timeSinceLastPulse>timeBeforeLate){
 				//
 				// set the status to blinking yellow
@@ -191,7 +191,7 @@ function renderAsyncCommands(includeClient,includeInternal, limit, offset ){
 		url: "/TeleonomeServlet",
 		data: {formName:"GetAllCommandRequests", IncludeClient:includeClient, IncludeInternal:includeInternal,limit:limit,offset:offset },
 		success: function (data) {
-			console.log("GetAllCommandRequests res," + data);
+			// console.log("GetAllCommandRequests res," + data);
 			var commandsInfo = JSON.parse(data);
 			var allCommands = commandsInfo.Values;
 			if(allCommands.length>0){
@@ -203,7 +203,7 @@ function renderAsyncCommands(includeClient,includeInternal, limit, offset ){
 
 		},
 		error: function(data){
-			console.log("error getting commanda data:" + data);
+			// console.log("error getting commanda data:" + data);
 			alert("Error getting commanda data:" +  data);
 			return false;
 		}
@@ -224,7 +224,7 @@ function receivedCommandResponse(cr){
 		url: "/TeleonomeServlet",
 		data: {formName:"GetDenome", },
 		success: function (data) {
-			//console.log("data=" + data);
+			//// console.log("data=" + data);
 			loadDenomeRefreshInterface(data);
 			var result="info";
 			var commandResultText="";
@@ -269,7 +269,7 @@ function receivedCommandResponse(cr){
 		},
 		error: function(data){
 			var errorText = "error receiving updated Denome after command response, error was:" + JSON.stringify(data);
-			console.log(errorText);
+			// console.log(errorText);
 			alert(errorText);
 			return false;
 		}
@@ -332,7 +332,7 @@ function updatePulseStatusInfoSecundary(text){
 }
 
 function setAvailableSSIDs(ssids){
-	console.log("Ssids=" + JSON.stringify(ssids));
+	// console.log("Ssids=" + JSON.stringify(ssids));
 	availableSSIDSArray=ssids;
 }
 
@@ -364,7 +364,7 @@ function refreshOrganismView(){
 }
 
 function loadDenomeRefreshInterface(denomeFileInString) {
-	console.log("pulse arrive at " + new Date() );
+	// console.log("pulse arrive at " + new Date() );
 	if(betweenPulseInterval!= undefined)clearInterval(betweenPulseInterval);
 	if ($(window).width() < 480) {
 		$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-success');
@@ -415,15 +415,15 @@ function RefreshInterface(){
 		// $('#Pathology').show();
 		
 		// $('#ErrorText').html("See Pathology (" + pathologyDenes.length + ")");
-		// console.log("Pathology Denes:" + JSON.stringify(pathologyDenes));
-		// console.log("Mnemosyne Pathology Denes:" + JSON.stringify(mnemosynePathologyDenes));
+		// // console.log("Pathology Denes:" + JSON.stringify(pathologyDenes));
+		// // console.log("Mnemosyne Pathology Denes:" + JSON.stringify(mnemosynePathologyDenes));
 		 
 	 }else{
 		 $('#Pathology').hide();
 		 $('#ErrorText').html("");
 	 }
 	
-	//console.log("humanInterfaceDeneChainArray=" + humanInterfaceDeneChainArray);
+	//// console.log("humanInterfaceDeneChainArray=" + humanInterfaceDeneChainArray);
 	var pointer;
 	for( i=0;i<humanInterfaceDeneChainArray.length;i++){
 		pointer = "@" + teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":"+ humanInterfaceDeneChainArray[i]["Name"];
@@ -431,23 +431,23 @@ function RefreshInterface(){
 	}
 
 	var teleonomeStatusBootstrapValuePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_OPERATIONAL_STATUS_BOOTSTRAP_EQUIVALENT;
-	//console.log("teleonomeStatusBootstrapValuePointer=" + teleonomeStatusBootstrapValuePointer);
+	//// console.log("teleonomeStatusBootstrapValuePointer=" + teleonomeStatusBootstrapValuePointer);
 	teleonomeStatusBootstrapValue = getDeneWordByIdentityPointer(teleonomeStatusBootstrapValuePointer, DENEWORD_VALUE_ATTRIBUTE);
 	
 	var currentPulseFrequencyPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_PULSE_FREQUENCY;
-	//console.log("currentPulseFrequencyPointer=" + currentPulseFrequencyPointer);
+	//// console.log("currentPulseFrequencyPointer=" + currentPulseFrequencyPointer);
 	currentPulseFrequency = getDeneWordByIdentityPointer(currentPulseFrequencyPointer, DENEWORD_VALUE_ATTRIBUTE);
-	//console.log("currentPulseFrequency=" + currentPulseFrequency);
+	//// console.log("currentPulseFrequency=" + currentPulseFrequency);
 
 	var currentPulseGenerationDurationPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_PULSE_GENERATION_DURATION;
-	//console.log("currentPulseGenerationDurationPointer=" + currentPulseGenerationDurationPointer);
+	//// console.log("currentPulseGenerationDurationPointer=" + currentPulseGenerationDurationPointer);
 	currentPulseGenerationDuration = getDeneWordByIdentityPointer(currentPulseGenerationDurationPointer, DENEWORD_VALUE_ATTRIBUTE);
-	//console.log("currentPulseGenerationDuration=" + currentPulseGenerationDuration);
+	//// console.log("currentPulseGenerationDuration=" + currentPulseGenerationDuration);
 
 	var numberOfPulsesBeforeLatePointer = "@" +teleonomeName + ":" + NUCLEI_INTERNAL + ":" +DENECHAIN_DESCRIPTIVE + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_NUMBER_PULSES_BEFORE_LATE;
-	//console.log("numberOfPulsesBeforeLatePointer=" + numberOfPulsesBeforeLatePointer);
+	//// console.log("numberOfPulsesBeforeLatePointer=" + numberOfPulsesBeforeLatePointer);
 	numberOfPulsesBeforeLate = getDeneWordByIdentityPointer(numberOfPulsesBeforeLatePointer, DENEWORD_VALUE_ATTRIBUTE);
-	//console.log("numberOfPulsesBeforeLate=" + numberOfPulsesBeforeLate);
+	//// console.log("numberOfPulsesBeforeLate=" + numberOfPulsesBeforeLate);
 
 	identityFactory.init(teleonomeName);
 	if(pageToDisplay === -1){
@@ -483,7 +483,7 @@ function setPageToDisplay(p){
 function renderPageToDisplay(){
 	var pagePosition, pageDefinintionPointer;
 	var controlParameterDenes,controlParameterDene, deneWords, deneWord;
-	console.log("entering render page to display, with pageToDisplay=" + pageToDisplay );
+	// console.log("entering render page to display, with pageToDisplay=" + pageToDisplay );
 	for( j=0;j<humanInterfaceDeneChainArray.length;j++){
 		if( humanInterfaceDeneChainArray[j]["DeneChain Type"]===HUMAN_INTERFACE_CONTROL_PARAMETERS){
 			controlParameterDenes = humanInterfaceDeneChainArray[j]["Denes"];
@@ -496,7 +496,7 @@ function renderPageToDisplay(){
 						pagePosition =  deneWord["Value"];
 						if(pageToDisplay===pagePosition){
 							pageDefinintionPointer = getDeneWordAttributeByDeneWordTypeFromDene(controlParameterDene, DENEWORD_TYPE_WEB_PAGE_VIEW_DEFINITION_POINTER,DENEWORD_VALUE_ATTRIBUTE);
-							//console.log("pageDefinintionPointer=" +pageDefinintionPointer);
+							//// console.log("pageDefinintionPointer=" +pageDefinintionPointer);
 							//
 							// if this is not the first page, hide
 							// the PulseInfo
@@ -521,7 +521,7 @@ function renderPageToDisplay(){
 
 	function renderPageByPointer(pagePointer){
 		var pageDeneChain = humanInterfaceDeneChainIndex.get(pagePointer);
-		//console.log("renderPageByPointer pageDeneChain=" +pageDeneChain);
+		//// console.log("renderPageByPointer pageDeneChain=" +pageDeneChain);
 		//
 		// get the denes, every dene is a panel in this page
 		//
@@ -555,7 +555,7 @@ function renderPageToDisplay(){
 		var panelVisualizationStyle;
 		var dataDene;
 		var panelVisible;
-		//console.log("renderPageByPointer denePanelArray.length=" +denePanelArray.length);
+		//// console.log("renderPageByPointer denePanelArray.length=" +denePanelArray.length);
 		var i2=0, j2=0,k2=0;
 		for(i2=0;i2<denePanelArray.length;i2++){
 			denePanel = denePanelArray[i2];
@@ -647,10 +647,10 @@ function renderPageToDisplay(){
 
 		for(key in sorted){
 			var obj = sorted[key];
-			//console.log("key=" + key + "value=" + obj);
+			//// console.log("key=" + key + "value=" + obj);
 			for(var property in obj) {
 				deneChainPointer= obj[property];
-				//console.log("line 178 a property=" + deneChainPointer);
+				//// console.log("line 178 a property=" + deneChainPointer);
 			}
 
 		}
@@ -679,7 +679,7 @@ function renderPageToDisplay(){
 			panelExternalDataSourcePointer = obj3[deneChainPointer];
 			panelExternalTimestampDataSourcePointer = obj4[deneChainPointer];
 			
-			console.log("line 197 deneChainPointer=" + deneChainPointer +" mainPanelVisualStyle=" + mainPanelVisualStyle);
+			// console.log("line 197 deneChainPointer=" + deneChainPointer +" mainPanelVisualStyle=" + mainPanelVisualStyle);
 
 			panelDeneChain = humanInterfaceDeneChainIndex["_map"][deneChainPointer];
 			denes = panelDeneChain["Denes"];		
@@ -882,7 +882,7 @@ function renderPageToDisplay(){
 				renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
 				
 		
-				console.log("before rendering chart");
+				// console.log("before rendering chart");
 				chartDataSourcePointerHashMap.put(id,renderedDataSourceDeneWord);
 				chartStyleHashMap.put(id,mainPanelVisualStyle);
 			}else if(mainPanelVisualStyle == PANEL_VISUALIZATION_STYLE_IMAGE){
@@ -913,7 +913,7 @@ function renderPageToDisplay(){
 			}else{
 			
 			}
-				//console.log("unidentified style, mainPanelVisualStyle=" + mainPanelVisualStyle)
+				//// console.log("unidentified style, mainPanelVisualStyle=" + mainPanelVisualStyle)
 			
 			panelHTML += "</div>";    // closing <div class=\"panel-body text-center\"
 			panelHTML += "</div>";    // closing <div class=\"panel-heading\"
@@ -921,7 +921,7 @@ function renderPageToDisplay(){
 			panelHTML += "</div>";    // closing <div class=\"bs-component\"
 			//panelHTML += "</div>";    // closing <div class=\"col-lg-6\"
 
-			console.log("rowPanelCounter=" + rowPanelCounter + " numberOfPanelsPerRow=" + numberOfPanelsPerRow);
+			// console.log("rowPanelCounter=" + rowPanelCounter + " numberOfPanelsPerRow=" + numberOfPanelsPerRow);
 			if(rowPanelCounter===numberOfPanelsPerRow){
 
 				//
@@ -934,13 +934,13 @@ function renderPageToDisplay(){
 				//
 				panelHTML += "<div class=\"row top-buffer\">";				
 				rowPanelCounter=0;
-				//console.log("added new row to the panels");
+				//// console.log("added new row to the panels");
 			}
 		}
 		//
 		//close the last row of the page panels
 		panelHTML += "</div>";// clossing class=\"row top-buffer\">";
-		//console.log("finished rendering page " + panelHTML);
+		//// console.log("finished rendering page " + panelHTML);
 		$("#EntryPoint").append(panelHTML);
 		
 		//
@@ -1007,7 +1007,7 @@ function renderPageToDisplay(){
 		var option = $('<option></option>').attr("value", "").text("Select SSID");
 		$("#AvailableNetworks").empty().append(option);
 
-		console.log("availableSSIDs=" + availableSSIDs);
+		// console.log("availableSSIDs=" + availableSSIDs);
 		var $el = $("#AvailableNetworks");
 		$(function() {
 		    $.each(availableSSIDs, function(i, item) {

@@ -537,7 +537,8 @@ body.modal-open .modal .modal-dialog {
                     $("#TopButtons").hide();
                     refreshCounterStatus=false;
                     $("#RefreshCounter").hide();
-     	            $("#RefreshCounterMessage").hide();
+					 $("#RefreshCounterMessage").hide();
+					 refreshActive=false;
                     searchFunctions.loadNewVisualizerData();
                     $("#SearchConfigurator").show();
                     
@@ -548,7 +549,8 @@ body.modal-open .modal .modal-dialog {
                     $("#SearchConfigurator").hide();
                     $("#TopButtons").show();
                     $("#RefreshCounter").show();
-     	            $("#RefreshCounterMessage").show();
+					 $("#RefreshCounterMessage").show();
+					 refreshActive=true;
                     refreshCounterStatus=true;
                 });
                 
@@ -576,6 +578,42 @@ body.modal-open .modal .modal-dialog {
 					//
 					// initialie the variables
 					// 
+					$("#NewRememberedWordPanel").show();
+					refreshActive=false;
+					newRememberedDeneWordTeleonomeName="";
+					 newRememberedDeneWordNucleus="";
+					 newRememberedDeneWordDeneChain="";
+					 newRememberedDeneWordDene="";
+					 newRememberedDeneWordDeneWord="";
+					$("#NewRememberedWordOrganismView").empty();
+					$("#NewRememberedWordNucleusView").empty();
+					$("#NewRememberedWordDeneChainView").empty();
+					$("#NewRememberedWordDeneView").empty();
+					$("#NewRememberedWordDeneWordView").empty();
+					$("#ModalHeadingText").html("Select Teleonome");
+					 //
+					//  now populate the teleonomes
+					//
+					if(organismInfoJsonData != undefined){
+						$("#RefreshCounter").html("");
+						refreshCounterStatus=false;
+						var panelHTML="";
+						$('#NewRememberedWordOrganismView').empty();
+						for(var i in organismInfoJsonData){
+							
+							panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+							panelHTML += "<a href=\"http://"+i+".local\" data-teleonomename=\""+ i +"\" class=\"btn btn-lg btn-"+ organismInfoJsonData[i] +" rwTeleonome\">"+i+"</a>";
+							panelHTML += "</div>";	
+							
+						}
+						$('#NewRememberedWordOrganismView').append(panelHTML);
+					}
+					
+				});
+
+				$(document).on('click', "#ForgetRememberedDeneWord",function(e) {
+                    e.preventDefault();                   
+                   
 					$("#NewRememberedWordPanel").show();
 					refreshActive=false;
 					newRememberedDeneWordTeleonomeName="";
@@ -944,7 +982,8 @@ body.modal-open .modal .modal-dialog {
 				//searchFunctions.processForm(formName,identityPointer, fromMillis , untilMillis, appendChart, visualizationStyle, liveUpdate);
 				searchFunctions.refreshSearchPage();
 		        $('#WaitingWheel').hide();
-		        $("#SearchConfigurator").hide();
+				$("#SearchConfigurator").hide();
+				refreshActive=true;
 		        $("#TopButtons").show();
 		        $("#UpdateArea").show();
 		        refreshCounterStatus=true;

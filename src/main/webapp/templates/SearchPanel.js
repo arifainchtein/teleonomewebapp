@@ -13,7 +13,7 @@ class SearchPanel{
         panelHTML += "                <div class=\"row-fluid\">";
         panelHTML += "                    <div id=\"TopButtons\" class=\"pull-left TopButtons col-xs-8\">";
         panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"NewChart\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-plus\"></em>New</button>";
-        panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"ClearCharts\" type=\"submit\" value=\"Submit\"   style=\" margin-right:30px;\"><em class=\"glyphicon glyphicon-remove\"></em>Clear</button>";
+        panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"ClearCharts\" type=\"submit\" value=\"Submit\"   style=\" margin-right:50px;\"><em class=\"glyphicon glyphicon-remove\"></em>Clear</button>";
 
 		if(organismInfoJsonData != undefined){
 			panelHTML += "                        <button class=\"btn btn-default\"  data-toggle=\"modal\" data-target=\"#NewRememberedDeneWordWizard\" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" ><em class=\"glyphicon glyphicon-record\"></em>Remember</button>";
@@ -21,7 +21,7 @@ class SearchPanel{
 			panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" disabled><em class=\"glyphicon glyphicon-record\"></em>Remember</button>";
 		}
 	
-		panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"ForgetRememberedDeneWord\" type=\"submit\" value=\"Submit\" disabled><em class=\"glyphicon glyphicon-remove\"></em>Forget</button>";
+		panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"ForgetRememberedDeneWord\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-remove\"></em>Forget</button>";
 	
 
 		panelHTML += "                    </div>";
@@ -68,6 +68,29 @@ class SearchPanel{
 		// end the panel for the new remembered
 		//
 
+		//
+		// the panel for the forget remembered
+		//
+		panelHTML += "          <div id=\"ForgetRememberedWordPanel\" class=\"row collapse \">";
+		panelHTML += "              <div class=\"col-lg-12\">";
+        panelHTML += "                  <div class=\"bs-component\">";
+		panelHTML += "                      <div class=\"panel panel-default\">";
+        panelHTML += "                          <div class=\"panel-heading\"> <h4><span id=\"ModalHeadingText\"></span> <button id=\"ForgetRememberedWordCloseButton\" type=\"button\" class=\"close pull-right\" >&times;</button></h4></div>";
+        panelHTML += "                          <div class=\"panel-body text-center\">";
+        panelHTML += "                              <div class=\"well\" id=\"NewRememberedWordIdentity\" class=\"row\"></div>";
+        panelHTML += "                              <div id=\"NewRememberedWordOrganismView\" class=\"row\"></div>";
+        panelHTML += "                              <div id=\"NewRememberedWordNucleusView\" class=\"row\"></div>";
+        panelHTML += "                              <div id=\"NewRememberedWordDeneChainView\" class=\"row\"></div>";
+        panelHTML += "                              <div id=\"NewRememberedWordDeneView\" class=\"row\"></div>";
+        panelHTML += "                              <div id=\"NewRememberedWordDeneWordView\" class=\"row\"></div>";
+        panelHTML += "                          </div>";
+        panelHTML += "                      </div>"; //panel panel-default           
+        panelHTML += "                  </div>";   //bs-component  
+		panelHTML += "              </div>"; // col-lg-12
+		panelHTML += "          </div>"; // row
+		//
+		// end the panel for the new remembered
+		//
 
 
         var screensize = document.documentElement.clientWidth;
