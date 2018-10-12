@@ -5,9 +5,11 @@ package com.teleonome.webapp.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.TimeZone;
+import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -315,6 +317,7 @@ public class WebAppContextListener implements ServletContextListener {
 			
 					}
 				}
+				toReturn = getSorted(toReturn);
 			}
 		} catch (InvalidDenomeException e) {
 			// TODO Auto-generated catch block
@@ -330,7 +333,24 @@ public class WebAppContextListener implements ServletContextListener {
 	}
 		
 		
+	private  JSONObject getSorted(final JSONObject obj) {
+		final JSONObject json = new JSONObject();
+		try {
+			final Field map = json.getClass().getDeclaredField("map");
+			map.setAccessible(true);
+			map.set(json, new TreeMap<>());
+			map.setAccessible(false);
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
 
+		for (final String key : obj.keySet()) {
+			json.put(key, obj.get(key));
+		}
+
+		return json;
+	}
+	 
 
 	
 	
