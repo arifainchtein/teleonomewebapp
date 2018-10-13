@@ -626,6 +626,11 @@ body.modal-open .modal .modal-dialog {
 						data: {formName:"GetRememberedDeneWordList"},
 						success: function (list) {
 							console.log("GetRememberedDeneWordList, list=" + list);
+							for(var i in list){
+								var key = i;
+								var val = jsonData[i];
+								console.log(i);
+							}
 							// var arrayLength = list.length;
 							// var panelHTML="";
 							// for (var i = 0; i < list; i++) {
