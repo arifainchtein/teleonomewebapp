@@ -611,6 +611,15 @@ body.modal-open .modal .modal-dialog {
 					
 				});
 
+
+				$("#RememeberedDeneWords").on('change', function() {
+					if( this.value!="" ){
+						$("#ForgetSubmitButton").prop('disabled', false);
+					}else{
+						$("#ForgetSubmitButton").prop('disabled', true);
+					}
+				});
+
 				$(document).on('click', "#ForgetRememberedDeneWord",function(e) {
                     e.preventDefault();                   
                    
@@ -626,10 +635,15 @@ body.modal-open .modal .modal-dialog {
 						data: {formName:"GetRememberedDeneWordList"},
 						success: function (list) {
 							console.log("GetRememberedDeneWordList, list=" + list);
-							for(var i in list){
+							var l = JSON.parse(list);
+							console.log(l);
+							var $el = $("#RememeberedDeneWords");
+							$el.append($("<option></option>").attr("", val).text("Select"));
+							for(var i in l){
 								var key = i;
-								var val = list[i];
-								console.log(i);
+								var val = l[i];
+								console.log(val);
+								$el.append($("<option></option>").attr("value", val).text(val));
 							}
 							// var arrayLength = list.length;
 							// var panelHTML="";
@@ -648,7 +662,39 @@ body.modal-open .modal .modal-dialog {
 					});
 					
 				});
-			
+				
+				$(document).on('click', "#ForgetSubmitButton",function(e) {
+					e.preventDefault();        
+					var $el = $("#RememeberedDeneWords");
+					var selectedValue = $("#RememeberedDeneWords option:selected").val();           
+					$("#ForgetRememberedWordPanel").hide();
+					
+					$.ajax({
+						type: "POST",
+						url: "/TeleonomeServlet",
+						data: {formName:"StopRemembering", value:selectedValue},
+						success: function (data) {
+							alert("Request Sent";
+						},
+						error: function(data){
+							console.log("error StopRemembering :" + JSON.stringify(data));
+							alert("Error StopRemembering :" + JSON.stringify(data));
+							return false;
+						}
+					});
+					refreshActive=true;
+					RefreshInterface();
+				});
+
+
+				$(document).on('click', "#ForgetRememberedWordCloseButton",function(e) {
+                    e.preventDefault();                   
+					$("#ForgetRememberedWordPanel").hide();
+					refreshActive=true;
+					RefreshInterface();
+				});
+
+
 				$(document).on('click', "#NewRememberedWordCloseButton",function(e) {
                     e.preventDefault();                   
 					$("#NewRememberedWordPanel").hide();

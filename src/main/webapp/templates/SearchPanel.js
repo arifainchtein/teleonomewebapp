@@ -72,12 +72,8 @@ class SearchPanel{
 		panelHTML += "                      <div class=\"panel panel-default\">";
         panelHTML += "                          <div class=\"panel-heading\"> <h4><span id=\"ForgetHeadingText\"></span> <button id=\"ForgetRememberedWordCloseButton\" type=\"button\" class=\"close pull-right\" >&times;</button></h4></div>";
         panelHTML += "                          <div class=\"panel-body text-center\">";
-        panelHTML += "                              <div class=\"well\" id=\"NewRememberedWordIdentity\" class=\"row\"></div>";
-        panelHTML += "                              <div id=\"NewRememberedWordOrganismView\" class=\"row\"></div>";
-        panelHTML += "                              <div id=\"NewRememberedWordNucleusView\" class=\"row\"></div>";
-        panelHTML += "                              <div id=\"NewRememberedWordDeneChainView\" class=\"row\"></div>";
-        panelHTML += "                              <div id=\"NewRememberedWordDeneView\" class=\"row\"></div>";
-        panelHTML += "                              <div id=\"NewRememberedWordDeneWordView\" class=\"row\"></div>";
+		panelHTML += "                              <select id=\"RememeberedDeneWords\" class=\"\"></select>";
+		panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"ForgetSubmitButton\" type=\"submit\" value=\"Submit\" disabled><em class=\"glyphicon glyphicon-record\"></em>Submiy</button>";
         panelHTML += "                          </div>";
         panelHTML += "                      </div>"; //panel panel-default           
         panelHTML += "                  </div>";   //bs-component  
