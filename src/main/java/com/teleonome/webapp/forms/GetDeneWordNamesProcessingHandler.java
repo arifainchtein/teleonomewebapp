@@ -39,7 +39,7 @@ public class GetDeneWordNamesProcessingHandler extends ProcessingFormHandler {
 		JSONArray data=null;
 		if(teleonomeName.equals(anyTeleonomeName)) {
 			JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
-			data = DenomeUtils.getAllDeneWordsForDene(pulse, nucleus, deneChain, dene);
+			data = DenomeUtils.getAllDeneWordNamesForDene(pulse, nucleus, deneChain, dene);
 		}else {
 			data = aDBManager.getDeneWordNamesForTeleonomeInOrganism(anyTeleonomeName, nucleus, deneChain, dene);
 		}

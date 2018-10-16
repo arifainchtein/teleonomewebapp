@@ -754,7 +754,7 @@ body.modal-open .modal .modal-dialog {
 							var arrayLength = deneChainArray.length;
 							for (var i = 0; i < arrayLength; i++) {
 								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center top-buffer\">";
-								panelHTML += "<a href=\"http://"+i+".local\" data-denechain=\""+ deneChainArray[i].Name +"\" class=\"btn btn-lg btn-default rwDeneChain\">"+deneChainArray[i].Name+"</a>";
+								panelHTML += "<a href=\"http://"+i+".local\" data-denechain=\""+ deneChainArray[i] +"\" class=\"btn btn-lg btn-default rwDeneChain\">"+deneChainArray[i]+"</a>";
 								panelHTML += "</div>";	
 							}
 							$('#NewRememberedWordDeneChainView').append(panelHTML);
@@ -783,7 +783,7 @@ body.modal-open .modal .modal-dialog {
 							var panelHTML="";
 							for (var i = 0; i < arrayLength; i++) {
 								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center top-buffer\">";
-								panelHTML += "<a href=\"http://"+i+".local\" data-dene=\""+ deneArray[i].Name +"\" class=\"btn btn-lg btn-default rwDene\">"+deneArray[i].Name+"</a>";
+								panelHTML += "<a href=\"http://"+i+".local\" data-dene=\""+ deneArray[i] +"\" class=\"btn btn-lg btn-default rwDene\">"+deneArray[i]+"</a>";
 								panelHTML += "</div>";	
 							}
 							$('#NewRememberedWordDeneView').append(panelHTML);
@@ -813,7 +813,7 @@ body.modal-open .modal .modal-dialog {
 							var panelHTML="";
 							for (var i = 0; i < arrayLength; i++) {
 								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center top-buffer\">";
-								panelHTML += "<a href=\"http://"+i+".local\" data-deneword=\""+ deneWordsArray[i].Name +"\" class=\"btn btn-lg btn-default rwDeneWord\">"+deneWordsArray[i].Name+"</a>";
+								panelHTML += "<a href=\"http://"+i+".local\" data-deneword=\""+ deneWordsArray[i] +"\" class=\"btn btn-lg btn-default rwDeneWord\">"+deneWordsArray[i]+"</a>";
 								panelHTML += "</div>";	
 							}
 							$('#NewRememberedWordDeneView').append(panelHTML);
