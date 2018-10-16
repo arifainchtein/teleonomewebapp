@@ -320,11 +320,8 @@ public class WebAppContextListener implements ServletContextListener {
 								
 								clonedRememberedDeneWordJSONObject = new JSONObject(rememberedDeneWordJSONObject, JSONObject.getNames(rememberedDeneWordJSONObject));
 								clonedRememberedDeneWordJSONObject.put(TeleonomeConstants.DENEWORD_IDENTITY_ATTRIBUTE ,rememberedDeneWordSourceDeneWordPointer);
-								
+								logger.debug("Storing a rememberedword as key=" + rememberedDeneWordPointer + " clonedRememberedDeneWordJSONObject=" + clonedRememberedDeneWordJSONObject.toString(4));
 								toReturn.put(rememberedDeneWordPointer, clonedRememberedDeneWordJSONObject);
-
-								
-								
 							}
 						}
 			
