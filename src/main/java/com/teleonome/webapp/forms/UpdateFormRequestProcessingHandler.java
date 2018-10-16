@@ -30,6 +30,8 @@ public class UpdateFormRequestProcessingHandler extends ProcessingFormHandler {
 		
 		String identityPointer = request.getParameter(TeleonomeConstants.TELEONOME_IDENTITY_LABEL);
 		Object value = request.getParameter(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+		Object valueType = request.getParameter(TeleonomeConstants.DENEWORD_VALUETYPE_ATTRIBUTE);
+		
 		String clientIp = request.getRemoteAddr();
 		String commandCode = request.getParameter(TeleonomeConstants.COMMAND_CODE);
 
@@ -43,12 +45,14 @@ public class UpdateFormRequestProcessingHandler extends ProcessingFormHandler {
 		payLoadJSONObject.put("Updates"	, updatesArray);
 
 		JSONObject updateJSONObject =  new JSONObject();
-		updateJSONObject.put("Target","@On Load:Update DeneWord:Update DeneWord");
-		updateJSONObject.put("MutationTargetNewValue",identityPointer);
-		updateJSONObject.put("Value",value);
+		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_UPDATE_TARGET,"@On Load:Update DeneWord:Update DeneWord");
+		updateJSONObject.put(TeleonomeConstants.MUTATION_TARGET,identityPointer);
+		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_VALUE,value);
+		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_VALUETYPE,valueType);
+		
 		updatesArray.put(updateJSONObject);
 
-
+		
 
 
 		command="SetParameters";

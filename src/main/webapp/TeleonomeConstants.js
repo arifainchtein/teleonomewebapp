@@ -101,9 +101,10 @@ var DENE_TYPE_MICROCONTROLLER_CONFIG_PARAMETER = "Microcontroller Config Paramet
 
 var DENE_TYPE_VITAL = "Vital";
 var DENE_TYPE_CODON_ELEMENT = "Codon Element";
-var DENE_TYPE_ON_LOAD_MUTATION = "On Load";
-varDENE_TYPE_ON_FINISH_MUTATION = "On Finish";
-var DENE_TYPE_DENEWORD_CARRIER= "DeneWord Carrier";
+
+
+
+
 
 var DENE_TYPE_ACTION_LIST= "Action List";
 var DENE_NAME_ATTRIBUTE= "Dene Name";
@@ -166,10 +167,7 @@ var DENECHAIN_HUMAN_INTERFACE = "Human Interface";
 var DENECHAIN_OPERATIONAL_DATA ="Operational Data";
 var DENECHAIN_SENSOR_DATA ="Sensor Data";
 
-var DENECHAIN_DENE_INJECTION ="Dene Injections";
-var DENECHAIN_DENEWORD_INJECTION ="DeneWord Injections";
-var DENECHAIN_ACTIONS_TO_EXECUTE="Actions To Execute";
-var DENECHAIN_MNEMOSYNE_OPERATIONS="Mnemosyne Operations";
+
 
 var DENECHAIN_ORGANISM_CONFIGURATION="Organism Configuration";
 var DENECHAIN_ORGANISM_STATUS="Organism Status";
@@ -257,9 +255,13 @@ var CAMERA_TIMESTAMP_FILENAME_FORMAT="dd-MM-yyyy_HHmm";
 // the mutation actions dene types
 //
 var MUTATION_COMMAND_SET_DENEWORD = "Set DeneWord";
-var MUTATION_COMMAND_TARGET = "Target";
+var MUTATION_TARGET = "Target";
+var MUTATION_VALUE_ATTRIBUTE="Value";
 var MUTATION_INJECTION_TARGET = "Injection Target";
-
+var MUTATION_PAYLOAD_VALUE="Mutation Payload Value";
+var MUTATION_PAYLOAD_VALUETYPE="Mutation Payload Value Type";
+var MUTATION_DELETION_TARGET = "Deletion Target";
+var MUTATION_PAYLOAD_UPDATE_TARGET = "Payload Update Target";
 var MUTATION_COMMAND_DENEWORD_NAME = "Mutation Name";
 var MUTATION_COMMAND_DENEWORD_VALUE = "Mutation Value";
 //
@@ -269,6 +271,13 @@ var MUTATION_EXECUTION_MODE_NORMAL="Normal";
 
 var MUTATION_PROCESSING_LOGIC_DENE_CHAIN_NAME="Mutation Processing Logic";
 
+var DENE_TYPE_ON_LOAD_MUTATION = "On Load";
+var DENE_TYPE_ON_FINISH_MUTATION = "On Finish";
+var DENE_TYPE_DENEWORD_CARRIER= "DeneWord Carrier";
+var DENECHAIN_DENE_INJECTION ="Dene Injections";
+var DENECHAIN_DENEWORD_INJECTION ="DeneWord Injections";
+var DENECHAIN_ACTIONS_TO_EXECUTE="Actions To Execute";
+var DENECHAIN_MNEMOSYNE_OPERATIONS="Mnemosyne Operations";
 
 //
 // the mutation type

@@ -611,8 +611,7 @@ body.modal-open .modal .modal-dialog {
 					
 				});
 
-
-				$("#RememeberedDeneWords").on('change', function() {
+				$(document).on('change','#RememeberedDeneWords',function(){
 					if( this.value!="" ){
 						$("#ForgetSubmitButton").prop('disabled', false);
 					}else{
@@ -643,7 +642,7 @@ body.modal-open .modal .modal-dialog {
 								var key = i;
 								var val = l[i];
 								console.log(val);
-								$el.append($("<option></option>").attr("value", val).text(val));
+								$el.append($("<option></option>").attr("value", key).text(key));
 							}
 							// var arrayLength = list.length;
 							// var panelHTML="";
@@ -668,13 +667,27 @@ body.modal-open .modal .modal-dialog {
 					var $el = $("#RememeberedDeneWords");
 					var selectedValue = $("#RememeberedDeneWords option:selected").val();           
 					$("#ForgetRememberedWordPanel").hide();
+					 
+					var passwd = prompt("Are you sure you want to stop remembering " + selectedValue + "  ? Please enter the code", "");
+					if(passwd == null)return false;
+
+					  if(isNaN(passwd)){
+						alert("Code must be 6 numbers");
+						  return false;
+					  }
+					  if(passwd.length!=6){
+						  alert("Code must be 6 numbers");
+						  return false;
+					  }
 					
+					//some code
 					$.ajax({
 						type: "POST",
 						url: "/TeleonomeServlet",
-						data: {formName:"StopRemembering", value:selectedValue},
+						data: {formName:"StopRemembering", Identity: selectedValue, CommandCode:passwd},
+						
 						success: function (data) {
-							alert("Request Sent";
+							alert("Request Sent");
 						},
 						error: function(data){
 							console.log("error StopRemembering :" + JSON.stringify(data));
