@@ -74,7 +74,7 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
 
 			JSONObject updateJSONObject =  new JSONObject();
 			updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_UPDATE_TARGET,"@DeneWord Deletion:DeneWord Carrier:DeneWord To Stop Remembering");
-			updateJSONObject.put(TeleonomeConstants.MUTATION_DELETION_TARGET,stopRememberedDeneWordIdentity);
+			updateJSONObject.put(TeleonomeConstants.MUTATION_DELETION_TARGET,targetIdentity);
 			updatesArray.put(updateJSONObject);
 			
 			payload=payLoadParentJSONObject.toString();
