@@ -100,6 +100,8 @@ class UpdateParams{
 				panelHTML += "<input style=\"font-size:20px;\" class=\"form-control\" type=\""+ fieldType +"\" " +" id=\""+ nameToDisplay +"\" placeholder=\"\" value=\""+ valueData +"\"  required>";
 			}
 			panelHTML += "</div>";
+			panelHTML += "<input type=\"hidden\" name=\""+ DENEWORD_VALUETYPE_ATTRIBUTE+"\" value=\""+ valueType +"\">";
+			
 			panelHTML += "<div class=\"form-group\"> ";
 			panelHTML += "<button type=\"submit\" data-form='{\"field\":\"" + nameToDisplay + "\", \"identity\":\""+panelDataSourcePointer+"\"}'class=\"btn btn-primary col-sm-4 pull-right UpdateParamBtn\">Update</button>";
 			panelHTML += "</div>";

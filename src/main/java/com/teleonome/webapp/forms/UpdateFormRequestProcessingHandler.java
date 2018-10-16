@@ -35,7 +35,7 @@ public class UpdateFormRequestProcessingHandler extends ProcessingFormHandler {
 		String clientIp = request.getRemoteAddr();
 		String commandCode = request.getParameter(TeleonomeConstants.COMMAND_CODE);
 
-		logger.warn("about to apply mutation identityPointer=" + identityPointer + " value=" + value);
+		logger.warn("about to apply mutation identityPointer=" + identityPointer + " value=" + value + " valueType=" + valueType);
 
 		JSONObject payLoadParentJSONObject = new JSONObject();
 		JSONObject payLoadJSONObject = new JSONObject();
