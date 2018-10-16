@@ -296,7 +296,7 @@ public class WebAppContextListener implements ServletContextListener {
 			if(anMnemosyconsDeneChainJSONObject!=null){
 				
 				JSONArray denes = anMnemosyconsDeneChainJSONObject.getJSONArray("Denes");
-				JSONObject rememberedDeneWordJSONObject;
+				JSONObject rememberedDeneWordJSONObject, clonedRememberedDeneWordJSONObject;
 				
 				//String rememberedDeneWordUnit;
 				
@@ -310,13 +310,21 @@ public class WebAppContextListener implements ServletContextListener {
 							for(int j=0;j<rememberedDeneWordsJSONArray.length();j++) {
 								rememberedDeneWordJSONObject = rememberedDeneWordsJSONArray.getJSONObject(j);
 								rememberedDeneWordPointer= rememberedDeneWordJSONObject.getString(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
-								
+								logger.debug( " rememberedDeneWordPointer= " + rememberedDeneWordPointer + " rememberedDeneWordJSONObject=" + rememberedDeneWordJSONObject.toString(4) );
 								//
-								// store the value of the remembered word as a key and its identity (ie the pointer to the denome that contains these deneword) as a value
+								// clone the remembereddenenword and add an attribute that will store the identity
+								// of the deneword (which is a mnemosycon) that actually contains the data to be stored
+								//
 								rememberedDeneWordSourceDeneWordPointer = (new Identity(getTeleonomeName(), TeleonomeConstants.NUCLEI_INTERNAL,  TeleonomeConstants.DENECHAIN_MNEMOSYCONS, rememberedWordsMnemosyconJSONObject.getString(TeleonomeConstants.DENE_DENE_NAME_ATTRIBUTE),rememberedDeneWordJSONObject.getString(TeleonomeConstants.DENEWORD_NAME_ATTRIBUTE))).toString();
 								logger.debug( " rememberedDeneWordPointer= " + rememberedDeneWordPointer + " rememberedDeneWordSourceDeneWordPointer=" + rememberedDeneWordSourceDeneWordPointer );
 								
-								toReturn.put(rememberedDeneWordPointer, rememberedDeneWordSourceDeneWordPointer);
+								clonedRememberedDeneWordJSONObject = new JSONObject(rememberedDeneWordJSONObject, JSONObject.getNames(rememberedDeneWordJSONObject));
+								clonedRememberedDeneWordJSONObject.put(TeleonomeConstants.DENEWORD_IDENTITY_ATTRIBUTE ,rememberedDeneWordSourceDeneWordPointer);
+								
+								toReturn.put(rememberedDeneWordPointer, clonedRememberedDeneWordJSONObject);
+
+								
+								
 							}
 						}
 			
