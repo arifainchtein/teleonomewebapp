@@ -594,16 +594,14 @@ body.modal-open .modal .modal-dialog {
 					 //
 					//  now populate the teleonomes
 					//
+					$("#RefreshCounter").html("");
+					refreshCounterStatus=false;
+					var panelHTML="";
+
+					panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+					panelHTML += "<a href=\"http://"+i+".local\" data-teleonomename=\""+ teleonomeName +"\" class=\"btn btn-lg btn-success rwTeleonome\">"+teleonomeName+"</a>";
+					panelHTML += "</div>";	
 					if(organismInfoJsonData != undefined){
-						$("#RefreshCounter").html("");
-						refreshCounterStatus=false;
-						var panelHTML="";
-						$('#NewRememberedWordOrganismView').empty();
-						panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
-						panelHTML += "<a href=\"http://"+i+".local\" data-teleonomename=\""+ teleonomeName +"\" class=\"btn btn-lg btn-success rwTeleonome\">"+teleonomeName+"</a>";
-						panelHTML += "</div>";	
-
-
 						for(var i in organismInfoJsonData){
 							
 							panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
