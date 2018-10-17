@@ -828,10 +828,16 @@ body.modal-open .modal .modal-dialog {
 							console.log("deneWordsArray=" +deneWordsArray);
 							var arrayLength = deneWordsArray.length;
 							var panelHTML="";
-							for (var i = 0; i < arrayLength; i++) {
+							if(arrayLength>0){
+								for (var i = 0; i < arrayLength; i++) {
+									panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center top-buffer\">";
+									panelHTML += "<a href=\"http://"+i+".local\" data-deneword=\""+ deneWordsArray[i] +"\" class=\"btn btn-lg btn-default rwDeneWord\">"+deneWordsArray[i]+"</a>";
+									panelHTML += "</div>";	
+								}
+							}else{
 								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center top-buffer\">";
-								panelHTML += "<a href=\"http://"+i+".local\" data-deneword=\""+ deneWordsArray[i] +"\" class=\"btn btn-lg btn-default rwDeneWord\">"+deneWordsArray[i]+"</a>";
-								panelHTML += "</div>";	
+									panelHTML += "No DeneWords Available";
+									panelHTML += "</div>";
 							}
 							$('#NewRememberedWordDeneView').append(panelHTML);
 						},
