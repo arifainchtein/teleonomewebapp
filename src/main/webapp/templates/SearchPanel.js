@@ -149,11 +149,11 @@ class SearchPanel{
 	        panelHTML += "                                    </div>";
 	        panelHTML += "                                    <div class=\"form-group col-md-6\">";
 	        panelHTML += "                                        <div class=\"form-check form-check-inline\">";
-	        panelHTML += "                                            <input class=\"form-check-input\" type=\"checkbox\" id=\"AppendChart\" >";
+	        panelHTML += "                                            <input class=\"form-check-input BSswitch\" type=\"checkbox\" id=\"AppendChart\" >";
 	        panelHTML += "                                            <label class=\"form-check-label\" for=\"AppendChart\">Append</label>";
 	        panelHTML += "                                        </div>";
 	        panelHTML += "                                        <div class=\"form-check form-check-inline\">";
-	        panelHTML += "                                            <input class=\"form-check-input\" type=\"checkbox\" id=\"LiveUpdate\" value=\"option2\">";
+	        panelHTML += "                                            <input class=\"form-check-input BSswitch\" type=\"checkbox\" id=\"LiveUpdate\" value=\"option2\">";
 	        panelHTML += "                                            <label class=\"form-check-label\" for=\"LiveUpdate\">Live Update</label>";
 	        panelHTML += "                                        </div>";
 	        panelHTML += "                                    </div>";

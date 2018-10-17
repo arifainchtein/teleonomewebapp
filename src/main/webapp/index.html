@@ -539,7 +539,8 @@ body.modal-open .modal .modal-dialog {
                     $("#RefreshCounter").hide();
 					 $("#RefreshCounterMessage").hide();
 					 refreshActive=false;
-                    searchFunctions.loadNewVisualizerData();
+					searchFunctions.loadNewVisualizerData();
+					$(".BSswitch").bootstrapSwitch();
                     $("#SearchConfigurator").show();
                     
                 });
