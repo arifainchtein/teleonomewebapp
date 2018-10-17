@@ -107,7 +107,7 @@ var DENE_TYPE_CODON_ELEMENT = "Codon Element";
 
 
 var DENE_TYPE_ACTION_LIST= "Action List";
-var DENE_NAME_ATTRIBUTE= "Dene Name";
+var DENE_NAME_ATTRIBUTE= "Name";
 var DENE_TYPE_HUMAN_INTERFACE_STATE_VARIABLES= "Human Interface State Variables";
 var DENE_TYPE_ACTUATOR_ACTION_PROCESSING="Actuator Action Processing";
 

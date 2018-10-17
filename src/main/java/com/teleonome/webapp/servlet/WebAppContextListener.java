@@ -156,7 +156,7 @@ public class WebAppContextListener implements ServletContextListener {
 				
 				
 		        try {
-					Thread.sleep(1000*60);
+					Thread.sleep(1000*10);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
