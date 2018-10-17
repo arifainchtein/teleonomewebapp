@@ -814,7 +814,7 @@ body.modal-open .modal .modal-dialog {
 					$('#NewRememberedWordDeneView').empty();
 					newRememberedDeneWordDene = $(this).data("dene");
 					$("#ModalHeadingText").html("Select DeneWord");
-					$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene + "</h4>");
+					var screensize = document.documentElement.clientWidth;
 					if(screensize>500){
 						$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene + "</h4>");
 					}else{
@@ -823,7 +823,7 @@ body.modal-open .modal .modal-dialog {
 					$.ajax({
 						type: "POST",
 						url: "/TeleonomeServlet",
-						data: {formName:"GetDeneWordNames", TeleonomeName: newRememberedDeneWordTeleonomeName,Nucleus:newRememberedDeneWordNucleus, DeneChain:newRememberedDeneWordDeneChain, Dene:newRememberedDeneWordDene},
+						data: {formName:"GetDeneWordNamesForNewRememberedWord", TeleonomeName: newRememberedDeneWordTeleonomeName,Nucleus:newRememberedDeneWordNucleus, DeneChain:newRememberedDeneWordDeneChain, Dene:newRememberedDeneWordDene},
 						success: function (deneWordsArray) {
 							console.log("deneWordsArray=" +deneWordsArray);
 							var arrayLength = deneWordsArray.length;
