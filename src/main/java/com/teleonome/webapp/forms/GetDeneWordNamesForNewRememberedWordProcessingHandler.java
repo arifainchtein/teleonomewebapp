@@ -53,7 +53,7 @@ public class GetDeneWordNamesForNewRememberedWordProcessingHandler extends Proce
 		JSONArray fixedData = new JSONArray();
 		for(int i=0;i<data.length();i++) {
 			deneWordName = data.getString(i);
-			identityPointer = "@"+anyTeleonomeName + " :" + nucleus + " :" + deneChain + " :" + dene+ " :" + deneWordName;
+			identityPointer = "@"+anyTeleonomeName + ":" + nucleus + ":" + deneChain + ":" + dene+ ":" + deneWordName;
 			System.out.println("identityPointer=" + identityPointer + " " + !deneWordsToRemember.has(identityPointer));
 			if(!deneWordsToRemember.has(identityPointer)) {
 				fixedData.put(deneWordName);
