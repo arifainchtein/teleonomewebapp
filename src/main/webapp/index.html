@@ -742,7 +742,15 @@ body.modal-open .modal .modal-dialog {
 					e.preventDefault();
 					$('#NewRememberedWordNucleusView').empty();
 					newRememberedDeneWordNucleus = $(this).data("nucleus");
-					$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus + "</h4>");
+					
+
+					var screensize = document.documentElement.clientWidth;
+        			if(screensize>500){
+						$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus + "</h4>");
+					}else{
+						$("#NewRememberedWordIdentity").html("<h5>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus + "</h5>");
+					}
+
 					$("#ModalHeadingText").html("Select DeneChain");
 					$.ajax({
 						type: "POST",
@@ -753,7 +761,7 @@ body.modal-open .modal .modal-dialog {
 							var panelHTML="";
 							var arrayLength = deneChainArray.length;
 							for (var i = 0; i < arrayLength; i++) {
-								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center top-buffer\">";
+								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center top-buffer\">";
 								panelHTML += "<a href=\"http://"+i+".local\" data-denechain=\""+ deneChainArray[i] +"\" class=\"btn btn-lg btn-default rwDeneChain\">"+deneChainArray[i]+"</a>";
 								panelHTML += "</div>";	
 							}
@@ -771,7 +779,12 @@ body.modal-open .modal .modal-dialog {
 					e.preventDefault();
 					$('#NewRememberedWordDeneChainView').empty();
 					newRememberedDeneWordDeneChain = $(this).data("denechain");
-					$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + "</h4>");
+					var screensize = document.documentElement.clientWidth;
+        			if(screensize>500){
+						$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + "</h4>");
+					}else{
+						$("#NewRememberedWordIdentity").html("<h6>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + "</h6>");
+					}
 					$("#ModalHeadingText").html("Select Dene");
 					$.ajax({
 						type: "POST",
@@ -782,7 +795,7 @@ body.modal-open .modal .modal-dialog {
 							var arrayLength = deneArray.length;
 							var panelHTML="";
 							for (var i = 0; i < arrayLength; i++) {
-								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center top-buffer\">";
+								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center top-buffer\">";
 								panelHTML += "<a href=\"http://"+i+".local\" data-dene=\""+ deneArray[i] +"\" class=\"btn btn-lg btn-default rwDene\">"+deneArray[i]+"</a>";
 								panelHTML += "</div>";	
 							}
@@ -802,7 +815,11 @@ body.modal-open .modal .modal-dialog {
 					newRememberedDeneWordDene = $(this).data("dene");
 					$("#ModalHeadingText").html("Select DeneWord");
 					$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene + "</h4>");
-					
+					if(screensize>500){
+						$("#NewRememberedWordIdentity").html("<h4>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene + "</h4>");
+					}else{
+						$("#NewRememberedWordIdentity").html("<h6>@" + newRememberedDeneWordTeleonomeName + ":" + newRememberedDeneWordNucleus +":" + newRememberedDeneWordDeneChain + ":" + newRememberedDeneWordDene + "</h6>");
+					}
 					$.ajax({
 						type: "POST",
 						url: "/TeleonomeServlet",
@@ -812,7 +829,7 @@ body.modal-open .modal .modal-dialog {
 							var arrayLength = deneWordsArray.length;
 							var panelHTML="";
 							for (var i = 0; i < arrayLength; i++) {
-								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center top-buffer\">";
+								panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center top-buffer\">";
 								panelHTML += "<a href=\"http://"+i+".local\" data-deneword=\""+ deneWordsArray[i] +"\" class=\"btn btn-lg btn-default rwDeneWord\">"+deneWordsArray[i]+"</a>";
 								panelHTML += "</div>";	
 							}
