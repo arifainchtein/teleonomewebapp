@@ -634,7 +634,8 @@ body.modal-open .modal .modal-dialog {
 					$.ajax({
 						type: "POST",
 						url: "/TeleonomeServlet",
-						data: {formName:"GetRememberedDeneWordList"},
+						data: {formName:"
+						"},
 						success: function (list) {
 							console.log("GetRememberedDeneWordList, list=" + list);
 							var l = JSON.parse(list);

@@ -8,25 +8,46 @@ class SearchPanel{
     }
 
     process(){
-        var panelHTML="";
-        panelHTML += "<div class=\"resizable ui-widget-content container-fluid wrap\">";
-        panelHTML += "                <div class=\"row-fluid\">";
-        panelHTML += "                    <div id=\"TopButtons\" class=\"pull-left TopButtons col-xs-8\">";
-        panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"NewChart\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-plus\"></em>New</button>";
-        panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"ClearCharts\" type=\"submit\" value=\"Submit\"   style=\" margin-right:50px;\"><em class=\"glyphicon glyphicon-remove\"></em>Clear</button>";
-
-		if(organismInfoJsonData != undefined){
-			panelHTML += "                        <button class=\"btn btn-default\"  data-toggle=\"modal\" data-target=\"#NewRememberedDeneWordWizard\" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" ><em class=\"glyphicon glyphicon-record\"></em>Remember</button>";
+		var screensize = document.documentElement.clientWidth;
+		var panelHTML="";
+		panelHTML += "<div class=\"resizable ui-widget-content container-fluid wrap\">";
+       
+        if(screensize>500){
+			panelHTML += "                <div class=\"row-fluid\">";
+			panelHTML += "                    <div id=\"TopButtons\" class=\"pull-left TopButtons col-xs-8\">";
+			panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"NewChart\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-plus\"></em>New</button>";
+			panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"ClearCharts\" type=\"submit\" value=\"Submit\"   style=\" margin-right:50px;\"><em class=\"glyphicon glyphicon-remove\"></em>Clear</button>";
+			if(organismInfoJsonData != undefined){
+				panelHTML += "                        <button class=\"btn btn-default\"  data-toggle=\"modal\" data-target=\"#NewRememberedDeneWordWizard\" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" ><em class=\"glyphicon glyphicon-record\"></em>Remember</button>";
+			}else{
+				panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" disabled><em class=\"glyphicon glyphicon-record\"></em>Remember</button>";
+			}
+			panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"ForgetRememberedDeneWord\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-remove\"></em>Stop Remembering</button>";
+			panelHTML += "                    </div>";
+			panelHTML += "                    <div id=\"UpdateArea\" class=\"TopButtons pull-right col-xs-4\"><div id=\"RefreshCounter\"></div><div id=\"RefreshCounterMessage\">Click to Pause</div></div>";
+			panelHTML += "                </div>";
 		}else{
-			panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" disabled><em class=\"glyphicon glyphicon-record\"></em>Remember</button>";
+			panelHTML += "                <div class=\"row-fluid\">";
+			panelHTML += "                    <div id=\"TopButtons\" class=\"pull-left TopButtons col-xs-8\">";
+			panelHTML += "                        <button class=\"btn btn-default btn-sm\" type=\"button\" id=\"NewChart\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-plus\"></em></button>";
+			panelHTML += "                        <button class=\"btn btn-default btn-sm\" type=\"button\" id=\"ClearCharts\" type=\"submit\" value=\"Submit\"   style=\" margin-right:50px;\"><em class=\"glyphicon glyphicon-remove\"></em></button>";
+			if(organismInfoJsonData != undefined){
+				panelHTML += "                        <button class=\"btn btn-default btn-sm\"  data-toggle=\"modal\" data-target=\"#NewRememberedDeneWordWizard\" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" ><em class=\"glyphicon glyphicon-record\"></em></button>";
+			}else{
+				panelHTML += "                        <button class=\"btn btn-default btn-sm\" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" disabled><em class=\"glyphicon glyphicon-record\"></em></button>";
+			}
+			panelHTML += "                        <button class=\"btn btn-default btn-sm\" type=\"button\" id=\"ForgetRememberedDeneWord\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-remove\"></em></button>";
+			panelHTML += "                    </div>";
+			panelHTML += "                    <div id=\"UpdateArea\" class=\"TopButtons pull-right col-xs-4\"><div id=\"RefreshCounter\"></div><div id=\"RefreshCounterMessage\"></div></div>";
+			panelHTML += "                </div>";
 		}
+        
+        
+        
 	
-		panelHTML += "                        <button class=\"btn btn-default \" type=\"button\" id=\"ForgetRememberedDeneWord\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-remove\"></em>Stop Remembering</button>";
-	
+		
 
-		panelHTML += "                    </div>";
-        panelHTML += "                    <div id=\"UpdateArea\" class=\"TopButtons pull-right col-xs-4\"><div id=\"RefreshCounter\"></div><div id=\"RefreshCounterMessage\">Click to Pause</div></div>";
-        panelHTML += "                </div>";
+		
 
         panelHTML += "                <div class=\"modal fade bannerformmodal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"bannerformmodal\" aria-hidden=\"true\" id=\"bannerformmodal\">";
         panelHTML += "				    <div class=\"modal-dialog modal-xl\">";
@@ -89,7 +110,6 @@ class SearchPanel{
 		//
 
 
-        var screensize = document.documentElement.clientWidth;
         if(screensize>500){
 	        panelHTML += "                <div id=\"SearchConfigurator\"  class=\"SearchConfigurator row\" style=\"display:none\">";
 	        panelHTML += "                        <form >";
