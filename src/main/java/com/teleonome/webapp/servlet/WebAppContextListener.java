@@ -99,7 +99,7 @@ public class WebAppContextListener implements ServletContextListener {
 	    }
 	    public void run(){
 	        while(true) {
-	        	logger.warn("Hello from WebServer ");
+	        	logger.debug("Hello from WebServer ");
 	        	try {
 	        		double webserverAvailableMemory = Runtime.getRuntime().freeMemory()/1024000;
 					double webserverMaxMemory = Runtime.getRuntime().maxMemory()/1024000;
@@ -116,7 +116,7 @@ public class WebAppContextListener implements ServletContextListener {
 	    			e1.printStackTrace();
 	    		}
 	        	
-	        	logger.warn("Refreshing, deneWordsToRemember");
+	        	logger.debug("Refreshing, deneWordsToRemember");
 	        	JSONObject deneWordsToRemember =  getDeneWordsToRemember();
 				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 				
@@ -139,7 +139,7 @@ public class WebAppContextListener implements ServletContextListener {
 				
 				
 				
-				logger.warn("Refreshing, autocompleteValues");
+				logger.debug("Refreshing, autocompleteValues");
 				long now = System.currentTimeMillis();
 	        //	JSONObject autoCompleteValues =  getAutoCompleteValues();
 	        	

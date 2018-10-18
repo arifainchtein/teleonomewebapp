@@ -401,6 +401,8 @@ body.modal-open .modal .modal-dialog {
 		<script type="text/javascript" src="templates/ActionEvaluationReport.js"></script>
 		<script type="text/javascript" src="templates/OrganismView.js"></script>
 		<script type="text/javascript" src="templates/SearchPanel.js"></script>
+		<script type="text/javascript" src="templates/WellSingleValuePanel.js"></script>
+		
 		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
 		<script type="text/javascript" src="RenderingEngine.js"></script>
 		<!-- The Heart Communication is tbe the last one to be loaded -->
@@ -1044,7 +1046,8 @@ body.modal-open .modal .modal-dialog {
 		        var identity = identityFactory.createIdentityByPointer(identityPointer);
 		        
 		        var anyTeleonomeName = identity.teleonomeName;
-				var chartTitle = anyTeleonomeName + "-" + identity.deneWordName + " " + fromDate + " " + fromTime + "  -  " + untilDate + " " + untilTime;
+				var chartTitle = anyTeleonomeName + "-" + identity.deneWordName;
+				if(liveUpdate)chartTitle = anyTeleonomeName + "-" + identity.deneWordName + " " + fromDate + " " + fromTime + "  -  " + untilDate + " " + untilTime;
 				var chartDivId = anyTeleonomeName +  identity.deneWordName  + fromDate  + fromTime + untilDate  + untilTime;
 				 chartDivId = chartDivId.replace(/\s/g, '');
 				 chartDivId = chartDivId.replace(/-/g, '')
