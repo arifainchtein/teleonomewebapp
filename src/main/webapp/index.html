@@ -1218,7 +1218,7 @@ body.modal-open .modal .modal-dialog {
 					$.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
-						data: {formName:HEART_TOPIC_UPDATE_FORM_REQUEST, TELEONOME_IDENTITY_LABEL: data.identity, DENEWORD_VALUE_ATTRIBUTE: selected, CommandCode : passwd },
+						data: {formName:"UpdateFormRequest", ValueType:data.valueType, Identity: data.identity, Value: selected, CommandCode : passwd },
 						success: function (commandIddata) {
 							console.log("commandIddata=" +commandIddata);
 							

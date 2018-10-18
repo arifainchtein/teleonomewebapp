@@ -30,7 +30,7 @@ public class UpdateFormRequestProcessingHandler extends ProcessingFormHandler {
 		
 		String identityPointer = request.getParameter(TeleonomeConstants.TELEONOME_IDENTITY_LABEL);
 		Object value = request.getParameter(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
-		Object valueType = request.getParameter(TeleonomeConstants.DENEWORD_VALUETYPE_ATTRIBUTE);
+		Object valueType = request.getParameter("ValueType");//TeleonomeConstants.DENEWORD_VALUETYPE_ATTRIBUTE);
 		
 		String clientIp = request.getRemoteAddr();
 		String commandCode = request.getParameter(TeleonomeConstants.COMMAND_CODE);
