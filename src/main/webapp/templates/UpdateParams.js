@@ -54,7 +54,8 @@ class UpdateParams{
 					navBarText =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_TEXT, DENEWORD_VALUE_ATTRIBUTE);
 					
 					panelHtml +='	<div class="col-lg-3 col-xs-3 SettingBar">';
-					panelHtml +='    	<span id="'+navBarText+'" data-panelpointer="'+navBarText+'" class="text-center SettingsSubMenu">'+navBarText+'</span>';
+					//panelHtml +='    	<a id="'+navBarText+'" data-panelpointer="'+navBarText+'" class="text-center SettingsSubMenu">'+navBarText+'</span>';
+					panelHtml +='    	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#'+ navBarText+'" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
 					panelHtml +='    </div> ';
 				}
 				panelHtml += "</div>";
@@ -73,7 +74,7 @@ class UpdateParams{
 					panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
 					object = panelPositionInPanelHashMap["_map"];
 
-					panelHtml+="<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup hidden\" >";
+					panelHtml+="<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup collapse\" >";
 					for(var property in object) {
 						//
 						//after every three panels 
