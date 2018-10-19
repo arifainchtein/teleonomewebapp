@@ -57,7 +57,7 @@ class UpdateParams{
 					panelHtml +='	<div class="col-lg-3 col-xs-3 SettingBar">';
 					//panelHtml +='    	<a id="'+navBarText+'" data-panelpointer="'+navBarText+'" class="text-center SettingsSubMenu">'+navBarText+'</span>';
 					//panelHtml +='    	<button class="btn btn-primary SettingsSubMenu" type="button" data-toggle="collapse" data-target="#'+ navBarText+'" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
-					panelHtml +='    	<button class="btn btn-primary SettingsSubMenu" type="button" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
+					panelHtml +='    	<button class="btn btn-primary SettingsSubMenu"  data-panelpointer="'+navBarText+'" type="button" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
 					panelHtml +='    </div> ';
 				}
 				panelHtml += "</div>";

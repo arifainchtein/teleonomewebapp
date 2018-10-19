@@ -479,6 +479,8 @@ function RefreshInterface(){
 
 function setPageToDisplay(p){
 	pageToDisplay=p;
+	refreshActive=true;
+
 	renderPageToDisplay();
 }
 

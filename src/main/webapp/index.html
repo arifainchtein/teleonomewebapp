@@ -1190,13 +1190,14 @@ body.modal-open .modal .modal-dialog {
 					$('#SettingsWorkArea').show();
 				});
 				
-				$(document).on('click', '.SettingsSubMenu',function(e){\
+				$(document).on('click', '.SettingsSubMenu',function(e){
 					e.preventDefault();
 					$('.UpdateParamsList').addClass('hidden');
 					 
 					  var source = event.target || event.srcElement;
 					   var panelPointer  = $(this).data("panelpointer");	  
 					  $("#"+panelPointer ).removeClass('hidden');
+					  refreshActive=false;
 
 				});
 
