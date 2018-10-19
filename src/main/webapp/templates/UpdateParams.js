@@ -53,10 +53,13 @@ class UpdateParams{
 					navBarPosition =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_POSITION, DENEWORD_VALUE_ATTRIBUTE);
 					navBarText =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_TEXT, DENEWORD_VALUE_ATTRIBUTE);
 					
-					panelHtml +='	<div class="col-lg-1 col-xs-3 SettingBar">';
+					panelHtml +='	<div class="col-lg-3 col-xs-3 SettingBar">';
 					panelHtml +='    	<span id="'+navBarText+'" data-panelpointer="'+navBarPointer+'" class="text-center SettingsSubMenu">'+navBarText+'</span>';
 					panelHtml +='    </div> ';
-				
+				}
+				panelHtml += "</div>";
+				for(i2=0;i2<denePanelArray.length;i2++){
+					denePanel = denePanelArray[i2];
 					//
 					// each dene will have three denewords with special denewordtype
 					//
@@ -160,8 +163,7 @@ class UpdateParams{
 						panelHtml += "</div>";// closing card
 						
 					}
-					panelHtml += "</div>";
-					 
+					panelHtml +='</div>';
 			} 
 			panelHtml +='</div>';
 			}	
