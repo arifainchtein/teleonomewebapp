@@ -56,14 +56,7 @@ class UpdateParams{
 					panelHtml +='	<div class="col-lg-1 col-xs-3 SettingBar">';
 					panelHtml +='    	<span id="'+navBarText+'" data-panelpointer="'+navBarPointer+'" class="text-center SettingsSubMenu">'+navBarText+'</span>';
 					panelHtml +='    </div> ';
-				} 
-				panelHtml +='</div>';
-
-				//
-				// now run the loop again this time to draw the hidden accordions
-				//
-				for(i2=0;i2<denePanelArray.length;i2++){
-					denePanel = denePanelArray[i2];
+				
 					//
 					// each dene will have three denewords with special denewordtype
 					//
@@ -74,7 +67,7 @@ class UpdateParams{
 					panelDeneChain = getDeneChainByIdentityPointer( navBarPointer);
 					prettyNamesList = getFormPrettyNameOrdered(panelDeneChain);
 					prettyNamesListObject = prettyNamesList["_map"];
-				 	panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
+					panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
 					object = panelPositionInPanelHashMap["_map"];
 
 					panelHtml+="<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup hidden\" >";
@@ -168,7 +161,9 @@ class UpdateParams{
 						
 					}
 					panelHtml += "</div>";
-				} 
+					 
+			} 
+			panelHtml +='</div>';
 			}	
 		}
 		return panelHtml;
