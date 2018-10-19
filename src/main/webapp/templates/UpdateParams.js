@@ -15,7 +15,7 @@ class UpdateParams{
 		var panelPointers = Object.keys(systemInfoDeneChainPanelJSON);  
 		var UpdateParamsNavBarDeneChain="";
 		var i2=0, j2=0,k2=0;
-		var panelHtml;
+		var panelHtml="";
 		var prettyNamesList;
 		var prettyNamesListObject, panelDeneChain
 		var prettyNameListCounter=0;
@@ -27,7 +27,8 @@ class UpdateParams{
 		var renderedDataSourceDeneWord;
 		//console.log("about to start going ver the rpoerties, object=" + object);
 		var dataDene,panelDataSourcePointer;
-
+		var denePanel, navBarPointer, navBarPosition, navBarText;
+		var denePanelArray;
 		for(var i=0;i<panelPointers.length;i++){
 			var panelPointer = panelPointers[i];
 			if(panelPointer.includes("Update Parameters")){
@@ -41,9 +42,7 @@ class UpdateParams{
 				// of deneword update forms.  Each form in a group is submitted 
 				// individually but they are presented together in an accordion
 				// Each of th
-				var denePanelArray = UpdateParamsNavBarDeneChain["Denes"];
-				
-				var denePanel, navBarPointer, navBarPosition, navBarText;
+				denePanelArray = UpdateParamsNavBarDeneChain["Denes"];
 				panelHtml +='<div class="row top-buffer">';
 				for(i2=0;i2<denePanelArray.length;i2++){
 					denePanel = denePanelArray[i2];
@@ -63,8 +62,6 @@ class UpdateParams{
 				//
 				// now run the loop again this time to draw the hidden accordions
 				//
-				
-
 				for(i2=0;i2<denePanelArray.length;i2++){
 					denePanel = denePanelArray[i2];
 					//
@@ -172,9 +169,7 @@ class UpdateParams{
 					}
 					panelHTML += "</div>";
 				} 
-			}
-				
-			
+			}	
 		}
 		return panelHTML;
 	}
