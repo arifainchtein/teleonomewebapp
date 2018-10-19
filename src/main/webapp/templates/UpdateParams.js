@@ -23,6 +23,7 @@ class UpdateParams{
 		var panelPositionInPanelHashMap;
 		var object;
 		var nameToDisplay;
+		var nameToDisplayNoSpaces;
 		var renderedDataSourceDene;
 		var renderedDataSourceDeneWord;
 		//console.log("about to start going ver the rpoerties, object=" + object);
@@ -90,7 +91,7 @@ class UpdateParams{
 
 						renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
 						nameToDisplay = renderedDataSourceDeneWord["Name"];
-
+						nameToDisplayNoSpaces = nameToDisplay.replace(/ /g,'');
 						var unitsText="";
 						if(renderedDataSourceDeneWord["Units"]!= undefined){
 							unitsText=renderedDataSourceDeneWord["Units"];
@@ -104,13 +105,13 @@ class UpdateParams{
 						panelHtml += "<div class=\"card\">";
 						panelHtml += "  <div class=\"card-header\" id=\"headingOne\">";
 						panelHtml += "      <h5 class=\"mb-0\">";
-						panelHtml += "          <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplay + "UpdateFormPanel\" aria-expanded=\"true\" aria-controls=\""+nameToDisplay + "UpdateFormPanel\">";
+						panelHtml += "          <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplayNoSpaces + "UpdateFormPanel\" aria-expanded=\"true\" aria-controls=\""+nameToDisplayNoSpaces + "UpdateFormPanel\">";
 						panelHtml += "              Update "+nameToDisplay;
 						panelHtml += "          </button>";
 						panelHtml += "      </h5>";
 						panelHtml += "  </div>";
 
-						panelHtml += "<div id=\""+nameToDisplay + "UpdateFormPanel\" class=\"collapse show\" aria-labelledby=\"headingOne\" data-parent=\"#"+navBarText +"\">";
+						panelHtml += "<div id=\""+nameToDisplayNoSpaces + "UpdateFormPanel\" class=\"UpdateParamsList collapse\" aria-labelledby=\"headingOne\" data-parent=\"#"+navBarText +"\">";
 						panelHtml += "  <div class=\"card-body\">";
 
 
