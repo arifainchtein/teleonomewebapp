@@ -56,7 +56,8 @@ class UpdateParams{
 					
 					panelHtml +='	<div class="col-lg-3 col-xs-3 SettingBar">';
 					//panelHtml +='    	<a id="'+navBarText+'" data-panelpointer="'+navBarText+'" class="text-center SettingsSubMenu">'+navBarText+'</span>';
-					panelHtml +='    	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#'+ navBarText+'" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
+					//panelHtml +='    	<button class="btn btn-primary SettingsSubMenu" type="button" data-toggle="collapse" data-target="#'+ navBarText+'" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
+					panelHtml +='    	<button class="btn btn-primary SettingsSubMenu" type="button" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
 					panelHtml +='    </div> ';
 				}
 				panelHtml += "</div>";
@@ -75,7 +76,7 @@ class UpdateParams{
 					panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
 					object = panelPositionInPanelHashMap["_map"];
 
-					panelHtml+="<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup collapse\" >";
+					panelHtml+="<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup hidden\" >";
 					for(var property in object) {
 						//
 						//after every three panels 
@@ -103,7 +104,7 @@ class UpdateParams{
 						var maxValueText="";
 			
 						panelHtml += "<div class=\"card\">";
-						panelHtml += "  <div class=\"card-header\" id=\"headingOne\">";
+						panelHtml += "  <div class=\"card-header\" id=\""+nameToDisplayNoSpaces+"Card\">";
 						panelHtml += "      <h5 class=\"mb-0\">";
 						panelHtml += "          <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplayNoSpaces + "UpdateFormPanel\" aria-expanded=\"true\" aria-controls=\""+nameToDisplayNoSpaces + "UpdateFormPanel\">";
 						panelHtml += "              Update "+nameToDisplay;
@@ -111,7 +112,7 @@ class UpdateParams{
 						panelHtml += "      </h5>";
 						panelHtml += "  </div>";
 
-						panelHtml += "<div id=\""+nameToDisplayNoSpaces + "UpdateFormPanel\" class=\"UpdateParamsList collapse\" aria-labelledby=\"headingOne\" data-parent=\"#"+navBarText +"\">";
+						panelHtml += "<div id=\""+nameToDisplayNoSpaces + "UpdateFormPanel\" class=\"UpdateParamsList collapse\" aria-labelledby=\""+nameToDisplayNoSpaces+"Card\" data-parent=\"#"+navBarText +"\">";
 						panelHtml += "  <div class=\"card-body\">";
 
 
