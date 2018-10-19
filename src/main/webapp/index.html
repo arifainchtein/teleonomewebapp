@@ -178,6 +178,10 @@ input:valid {
 	
 }
 
+.SettingsSubMenu{
+	cursor: pointer;
+}
+
 .SettingsMenu{
 	cursor: pointer;
 }
@@ -401,7 +405,6 @@ body.modal-open .modal .modal-dialog {
 		<script type="text/javascript" src="templates/ActionEvaluationReport.js"></script>
 		<script type="text/javascript" src="templates/OrganismView.js"></script>
 		<script type="text/javascript" src="templates/SearchPanel.js"></script>
-		<script type="text/javascript" src="templates/WellSingleValuePanel.js"></script>
 		
 		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
 		<script type="text/javascript" src="RenderingEngine.js"></script>
@@ -1175,7 +1178,7 @@ body.modal-open .modal .modal-dialog {
 				$(document).on('click', '#UpdateParams',function(e){
 					var panelPointer  = $(this).data("panelpointer");
 					var n = new UpdateParams();
-					var html = n.process(panelPointer);
+					var html = n.process();
 					$('#SettingsWorkArea').html(html);
 					$('#SettingsWorkArea').show();
 				});
@@ -1186,6 +1189,13 @@ body.modal-open .modal .modal-dialog {
 					$('#SettingsWorkArea').html(html);
 					$('#SettingsWorkArea').show();
 				});
+				
+				$(document).on('click', '.SettingsSubMenu',function(e){
+					 // e.preventDefault();
+					  var source = event.target || event.srcElement;
+					  var panelPointer  = $(this).data("panelpointer");	  
+				});
+
 
 				$(document).on('click', '.UpdateParamBtn',function(e){
 					 // e.preventDefault();

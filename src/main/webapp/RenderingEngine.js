@@ -425,10 +425,13 @@ function RefreshInterface(){
 	
 	//// console.log("humanInterfaceDeneChainArray=" + humanInterfaceDeneChainArray);
 	var pointer;
+	var humanInterfaceDeneChainJSONObject={};
 	for( i=0;i<humanInterfaceDeneChainArray.length;i++){
 		pointer = "@" + teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":"+ humanInterfaceDeneChainArray[i]["Name"];
 		humanInterfaceDeneChainIndex.put(pointer, humanInterfaceDeneChainArray[i]);
+		humanInterfaceDeneChainJSONObject[pointer]=humanInterfaceDeneChainArray[i];
 	}
+	localStorage.setItem("HumanInterfaceDeneChainIndex", JSON.stringify(humanInterfaceDeneChainJSONObject));
 
 	var teleonomeStatusBootstrapValuePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_OPERATIONAL_STATUS_BOOTSTRAP_EQUIVALENT;
 	//// console.log("teleonomeStatusBootstrapValuePointer=" + teleonomeStatusBootstrapValuePointer);
@@ -707,7 +710,9 @@ function renderPageToDisplay(){
 				// the value of each of these denewords is a pointer
 				// to the denechain panel for the info, wifi and update parameteres
 				// using the pointers, get the chains and store them in localStorage
-				// since the classes will use them later
+				// since the classes will use them later.
+				// Each of these three pointers point to a denechain that itself has
+				// only one dene 
 				var systemInfoPointers = denes[0]['DeneWords'];
 				var pointer;
 				var systemInfoChain;
