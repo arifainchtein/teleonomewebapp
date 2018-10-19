@@ -77,7 +77,7 @@ class UpdateParams{
 				 	panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
 					object = panelPositionInPanelHashMap["_map"];
 
-					panelHTML+="<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup hidden\" >";
+					panelHtml+="<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup hidden\" >";
 					for(var property in object) {
 						//
 						//after every three panels 
@@ -104,25 +104,25 @@ class UpdateParams{
 						var minValueText="";
 						var maxValueText="";
 			
-						panelHTML += "<div class=\"card\">";
-						panelHTML += "  <div class=\"card-header\" id=\"headingOne\">";
-						panelHTML += "      <h5 class=\"mb-0\">";
-						panelHTML += "          <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplay + "UpdateFormPanel\" aria-expanded=\"true\" aria-controls=\""+nameToDisplay + "UpdateFormPanel\">";
-						panelHTML += "              Update "+nameToDisplay;
-						panelHTML += "          </button>";
-						panelHTML += "      </h5>";
-						panelHTML += "  </div>";
+						panelHtml += "<div class=\"card\">";
+						panelHtml += "  <div class=\"card-header\" id=\"headingOne\">";
+						panelHtml += "      <h5 class=\"mb-0\">";
+						panelHtml += "          <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplay + "UpdateFormPanel\" aria-expanded=\"true\" aria-controls=\""+nameToDisplay + "UpdateFormPanel\">";
+						panelHtml += "              Update "+nameToDisplay;
+						panelHtml += "          </button>";
+						panelHtml += "      </h5>";
+						panelHtml += "  </div>";
 
-						panelHTML += "<div id=\""+nameToDisplay + "UpdateFormPanel\" class=\"collapse show\" aria-labelledby=\"headingOne\" data-parent=\"#"+navBarText +"\">";
-						panelHTML += "  <div class=\"card-body\">";
+						panelHtml += "<div id=\""+nameToDisplay + "UpdateFormPanel\" class=\"collapse show\" aria-labelledby=\"headingOne\" data-parent=\"#"+navBarText +"\">";
+						panelHtml += "  <div class=\"card-body\">";
 
 
-						//panelHTML += "<div class=\"col-sm-4 SingleForm\">";
-						panelHTML += "      <form id=\"" + nameToDisplay + "UpdateForm\">";
-						panelHTML += "          <div class=\"panel panel-default\">";
-						panelHTML += "              <div class=\"panel-heading\"><h6>Update "+nameToDisplay+"</h6></div>";
-						panelHTML += "                  <div class=\"panel-body text-center\">";
-						panelHTML += "                      <div class=\"form-group\">";
+						//panelHtml += "<div class=\"col-sm-4 SingleForm\">";
+						panelHtml += "      <form id=\"" + nameToDisplay + "UpdateForm\">";
+						panelHtml += "          <div class=\"panel panel-default\">";
+						panelHtml += "              <div class=\"panel-heading\"><h6>Update "+nameToDisplay+"</h6></div>";
+						panelHtml += "                  <div class=\"panel-body text-center\">";
+						panelHtml += "                      <div class=\"form-group\">";
 
 						if(valueType==="int" || valueType==="double"){
 							fieldType="number";
@@ -134,43 +134,43 @@ class UpdateParams{
 								minValueText = "min=\""+ renderedDataSourceDeneWord["Minimum"] + "\"";
 							}
 
-							panelHTML += "              <label class=\"control-label\"  for=\""+ nameToDisplay +"\" class=\"col-sm-4\" ><h5><span id=\""+ nameToDisplay+"Label\">Current&nbsp;("+ valueData +" " + unitsText +") &nbsp;&nbsp;</span></h5></label>";
-							panelHTML += "              <input style=\"font-size:20px;\" class=\"form-control\" type=\""+ fieldType +"\" "+ maxValueText +" "+ minValueText +" id=\""+ nameToDisplay +"\" placeholder=\"\" value=\""+ valueData +"\"  required>";
+							panelHtml += "              <label class=\"control-label\"  for=\""+ nameToDisplay +"\" class=\"col-sm-4\" ><h5><span id=\""+ nameToDisplay+"Label\">Current&nbsp;("+ valueData +" " + unitsText +") &nbsp;&nbsp;</span></h5></label>";
+							panelHtml += "              <input style=\"font-size:20px;\" class=\"form-control\" type=\""+ fieldType +"\" "+ maxValueText +" "+ minValueText +" id=\""+ nameToDisplay +"\" placeholder=\"\" value=\""+ valueData +"\"  required>";
 
 						}else if(valueType==="boolean" ){
 
-							panelHTML += "              <label  for=\""+ nameToDisplay +"\" class=\"col-sm-4\" ><h5><span id=\""+ nameToDisplay+"Label\">"+ prettyName +"&nbsp;&nbsp;</span></h5></label>";
-							panelHTML += "              <div class=\"input-group\">";
-							panelHTML += "                  <div id=\""+ nameToDisplay +"\" class=\"btn-group col-sm-4\">";
-							panelHTML += "                      <a class=\"btn btn-primary btn-sm active\" id=\""+ nameToDisplay +"_true\" data-toggle=\""+nameToDisplay+"\" data-title=\"Y\">YES</a>";
-							panelHTML += "                      <a class=\"btn btn-primary btn-sm notActive\" id=\""+nameToDisplay+"_false\" data-toggle=\""+nameToDisplay+"\" data-title=\"N\">NO</a>";
-							panelHTML += "                  </div>";
-							panelHTML += "                  <input style=\"font-size:20px;\" type=\"hidden\" name=\""+ nameToDisplay+"\" id=\""+ nameToDisplay +"\">";
-							panelHTML += "              </div>"
+							panelHtml += "              <label  for=\""+ nameToDisplay +"\" class=\"col-sm-4\" ><h5><span id=\""+ nameToDisplay+"Label\">"+ prettyName +"&nbsp;&nbsp;</span></h5></label>";
+							panelHtml += "              <div class=\"input-group\">";
+							panelHtml += "                  <div id=\""+ nameToDisplay +"\" class=\"btn-group col-sm-4\">";
+							panelHtml += "                      <a class=\"btn btn-primary btn-sm active\" id=\""+ nameToDisplay +"_true\" data-toggle=\""+nameToDisplay+"\" data-title=\"Y\">YES</a>";
+							panelHtml += "                      <a class=\"btn btn-primary btn-sm notActive\" id=\""+nameToDisplay+"_false\" data-toggle=\""+nameToDisplay+"\" data-title=\"N\">NO</a>";
+							panelHtml += "                  </div>";
+							panelHtml += "                  <input style=\"font-size:20px;\" type=\"hidden\" name=\""+ nameToDisplay+"\" id=\""+ nameToDisplay +"\">";
+							panelHtml += "              </div>"
 						}else if(valueType==="String" ){ 
 							fieldType="text";
-							panelHTML += "<label class=\"control-label col-sm-4\"  for=\""+ nameToDisplay +"\"><h5><span id=\""+ nameToDisplay+"Label\">"+ prettyName +"&nbsp;&nbsp;&nbsp;</span></h5></label>";
-							panelHTML += "<input style=\"font-size:20px;\" class=\"form-control\" type=\""+ fieldType +"\" " +" id=\""+ nameToDisplay +"\" placeholder=\"\" value=\""+ valueData +"\"  required>";
+							panelHtml += "<label class=\"control-label col-sm-4\"  for=\""+ nameToDisplay +"\"><h5><span id=\""+ nameToDisplay+"Label\">"+ prettyName +"&nbsp;&nbsp;&nbsp;</span></h5></label>";
+							panelHtml += "<input style=\"font-size:20px;\" class=\"form-control\" type=\""+ fieldType +"\" " +" id=\""+ nameToDisplay +"\" placeholder=\"\" value=\""+ valueData +"\"  required>";
 						}
-						panelHTML += "</div>";
+						panelHtml += "</div>";
 						
-						panelHTML += "<div class=\"form-group\"> ";
-						panelHTML += "<button type=\"submit\" data-form='{\"field\":\"" + nameToDisplay + "\",\"valueType\":\"" + valueType + "\", \"identity\":\""+panelDataSourcePointer+"\"}'class=\"btn btn-primary col-sm-4 pull-right UpdateParamBtn\">Update</button>";
-						panelHTML += "</div>";
-						panelHTML += "</div>";
-						panelHTML += "</div>";
-						panelHTML += "</div>";
-						panelHTML += "</form>";
+						panelHtml += "<div class=\"form-group\"> ";
+						panelHtml += "<button type=\"submit\" data-form='{\"field\":\"" + nameToDisplay + "\",\"valueType\":\"" + valueType + "\", \"identity\":\""+panelDataSourcePointer+"\"}'class=\"btn btn-primary col-sm-4 pull-right UpdateParamBtn\">Update</button>";
+						panelHtml += "</div>";
+						panelHtml += "</div>";
+						panelHtml += "</div>";
+						panelHtml += "</div>";
+						panelHtml += "</form>";
 						
-						panelHTML += "</div>";//</cardbody
-						panelHTML += "</div>"; 
-						panelHTML += "</div>";// closing card
+						panelHtml += "</div>";//</cardbody
+						panelHtml += "</div>"; 
+						panelHtml += "</div>";// closing card
 						
 					}
-					panelHTML += "</div>";
+					panelHtml += "</div>";
 				} 
 			}	
 		}
-		return panelHTML;
+		return panelHtml;
 	}
 }
