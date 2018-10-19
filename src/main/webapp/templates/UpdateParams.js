@@ -75,7 +75,7 @@ class UpdateParams{
 					object = panelPositionInPanelHashMap["_map"];
 					
 					panelHtml+="<div id=\"" + navBarText +"FormGroup\" class=\"hidden\" >";navBarText
-					panelHtml+="	<div id=\"" + navBarText +"Well\" class=\"well\" >Updating " +navBarText + "</div>";
+					panelHtml+="	<div id=\"" + navBarText +"Well\" class=\"well\" ><h4>Updating " +navBarText + "</h4></div>";
 					panelHtml+="	<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup\" >";
 					for(var property in object) {
 						//
