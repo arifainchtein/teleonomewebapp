@@ -55,12 +55,10 @@ class UpdateParams{
 					navBarText =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_TEXT, DENEWORD_VALUE_ATTRIBUTE);
 					
 					panelHtml +='	<div class="col-lg-3 col-xs-3 SettingBar">';
-					//panelHtml +='    	<a id="'+navBarText+'" data-panelpointer="'+navBarText+'" class="text-center SettingsSubMenu">'+navBarText+'</span>';
-					//panelHtml +='    	<button class="btn btn-primary SettingsSubMenu" type="button" data-toggle="collapse" data-target="#'+ navBarText+'" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
-					panelHtml +='    	<button class="btn btn-primary SettingsSubMenu"  data-panelpointer="'+navBarText+'" type="button" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
+					panelHtml +='    	<button class="btn btn-primary SettingsSubMenu"  data-panelpointer="'+navBarText+'FormGroup" type="button" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
 					panelHtml +='    </div> ';
 				}
-				panelHtml += "</div>";
+				panelHtml += "</div>    <hr /> ";
 				for(i2=0;i2<denePanelArray.length;i2++){
 					denePanel = denePanelArray[i2];
 					//
@@ -75,8 +73,10 @@ class UpdateParams{
 					prettyNamesListObject = prettyNamesList["_map"];
 					panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
 					object = panelPositionInPanelHashMap["_map"];
-
-					panelHtml+="<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup hidden\" >";
+					
+					panelHtml+="<div id=\"" + navBarText +"FormGroup\" class=\"hidden\" >";navBarText
+					panelHtml+="	<div id=\"" + navBarText +"Well\" class=\"well\" >Updating " +navBarText + "</div>";
+					panelHtml+="	<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup\" >";
 					for(var property in object) {
 						//
 						//after every three panels 
@@ -106,7 +106,7 @@ class UpdateParams{
 						panelHtml += "<div class=\"card\">";
 						panelHtml += "  <div class=\"card-header\" id=\""+nameToDisplayNoSpaces+"Card\">";
 						panelHtml += "      <h5 class=\"mb-0\">";
-						panelHtml += "          <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplayNoSpaces + "UpdateFormPanel\" aria-expanded=\"true\" aria-controls=\""+nameToDisplayNoSpaces + "UpdateFormPanel\">";
+						panelHtml += "          <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplayNoSpaces + "UpdateFormPanel\" style=\"margin-bottom:30px;\" aria-expanded=\"true\" aria-controls=\""+nameToDisplayNoSpaces + "UpdateFormPanel\">";
 						panelHtml += "              Update "+nameToDisplay;
 						panelHtml += "          </button>";
 						panelHtml += "      </h5>";
@@ -167,7 +167,9 @@ class UpdateParams{
 						panelHtml += "</div>";// closing card
 						
 					}
+					panelHtml +='	</div>';
 					panelHtml +='</div>';
+					
 			} 
 			panelHtml +='</div>';
 			}	
