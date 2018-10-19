@@ -54,7 +54,7 @@ class UpdateParams{
 					navBarText =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_TEXT, DENEWORD_VALUE_ATTRIBUTE);
 					
 					panelHtml +='	<div class="col-lg-3 col-xs-3 SettingBar">';
-					panelHtml +='    	<span id="'+navBarText+'" data-panelpointer="'+navBarPointer+'" class="text-center SettingsSubMenu">'+navBarText+'</span>';
+					panelHtml +='    	<span id="'+navBarText+'" data-panelpointer="'+navBarText+'" class="text-center SettingsSubMenu">'+navBarText+'</span>';
 					panelHtml +='    </div> ';
 				}
 				panelHtml += "</div>";
@@ -153,9 +153,10 @@ class UpdateParams{
 						panelHtml += "<div class=\"form-group\"> ";
 						panelHtml += "<button type=\"submit\" data-form='{\"field\":\"" + nameToDisplay + "\",\"valueType\":\"" + valueType + "\", \"identity\":\""+panelDataSourcePointer+"\"}'class=\"btn btn-primary col-sm-4 pull-right UpdateParamBtn\">Update</button>";
 						panelHtml += "</div>";
-						panelHtml += "</div>";
-						panelHtml += "</div>";
-						panelHtml += "</div>";
+
+						panelHtml += "</div>"; //panel-body text-center
+						panelHtml += "</div>"; //panel panel-default
+						//panelHtml += "</div>";
 						panelHtml += "</form>";
 						
 						panelHtml += "</div>";//</cardbody
