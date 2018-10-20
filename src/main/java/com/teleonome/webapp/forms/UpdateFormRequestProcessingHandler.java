@@ -29,7 +29,7 @@ public class UpdateFormRequestProcessingHandler extends ProcessingFormHandler {
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 		
 		String identityPointer = request.getParameter(TeleonomeConstants.TELEONOME_IDENTITY_LABEL);
-		Object value = request.getParameter(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+		String value = request.getParameter(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
 		Object valueType = request.getParameter("ValueType");//TeleonomeConstants.DENEWORD_VALUETYPE_ATTRIBUTE);
 		
 		String clientIp = request.getRemoteAddr();
@@ -47,6 +47,23 @@ public class UpdateFormRequestProcessingHandler extends ProcessingFormHandler {
 		JSONObject updateJSONObject =  new JSONObject();
 		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_UPDATE_TARGET,"@On Load:Update DeneWord:Update DeneWord");
 		updateJSONObject.put(TeleonomeConstants.MUTATION_TARGET,identityPointer);
+		
+		if(valueType.equals(TeleonomeConstants.DATATYPE_INTEGER)) {
+			updateJSONObject.put("Value",Integer.parseInt(value));
+			
+		}else if(valueType.equals(TeleonomeConstants.DATATYPE_DOUBLE)) {
+			updateJSONObject.put("Value",Double.parseDouble(value));
+			
+		}else if(valueType.equals(TeleonomeConstants.DATATYPE_LONG)) {
+			updateJSONObject.put("Value",Long.parseLong(value));
+			
+		}else if(valueType.equals(TeleonomeConstants.DATATYPE_DENE_POINTER)) {
+			updateJSONObject.put("Value",value);
+		
+		}else if(valueType.equals(TeleonomeConstants.DATATYPE_STRING)) {
+			updateJSONObject.put("Value",value);
+		
+		}
 		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_VALUE,value);
 		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_VALUETYPE,valueType);
 		

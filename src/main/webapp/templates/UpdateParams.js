@@ -74,9 +74,9 @@ class UpdateParams{
 					panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
 					object = panelPositionInPanelHashMap["_map"];
 					
-					panelHtml+="<div id=\"" + navBarText +"FormGroup\" class=\"hidden\" >";navBarText
+					panelHtml+="<div id=\"" + navBarText +"FormGroup\" class=\"hidden UpdateParamsGroup\" >";navBarText
 					panelHtml+="	<div id=\"" + navBarText +"Well\" class=\"well\" ><h4>Updating " +navBarText + "</h4></div>";
-					panelHtml+="	<div id=\"" + navBarText +"\" class=\"accordion UpdateParamsGroup\" >";
+					panelHtml+="	<div id=\"" + navBarText +"\" class=\"accordion\" >";
 					for(var property in object) {
 						//
 						//after every three panels 
@@ -133,28 +133,28 @@ class UpdateParams{
 								minValueText = "min=\""+ renderedDataSourceDeneWord["Minimum"] + "\"";
 							}
 
-							panelHtml += "              <label class=\"control-label\"  for=\""+ nameToDisplay +"\" class=\"col-sm-4\" ><h5><span id=\""+ nameToDisplay+"Label\">Current&nbsp;("+ valueData +" " + unitsText +") &nbsp;&nbsp;</span></h5></label>";
-							panelHtml += "              <input style=\"font-size:20px;\" class=\"form-control\" type=\""+ fieldType +"\" "+ maxValueText +" "+ minValueText +" id=\""+ nameToDisplay +"\" placeholder=\"\" value=\""+ valueData +"\"  required>";
+							panelHtml += "              <label class=\"control-label\"  for=\""+ nameToDisplayNoSpaces +"\" class=\"col-sm-4\" ><h5><span id=\""+ nameToDisplayNoSpaces+"Label\">Current&nbsp;("+ valueData +" " + unitsText +") &nbsp;&nbsp;</span></h5></label>";
+							panelHtml += "              <input style=\"font-size:20px;\" class=\"form-control\" type=\""+ fieldType +"\" "+ maxValueText +" "+ minValueText +" id=\""+ nameToDisplayNoSpaces +"\" placeholder=\"\" value=\""+ valueData +"\"  required>";
 
 						}else if(valueType==="boolean" ){
 
-							panelHtml += "              <label  for=\""+ nameToDisplay +"\" class=\"col-sm-4\" ><h5><span id=\""+ nameToDisplay+"Label\">"+ prettyName +"&nbsp;&nbsp;</span></h5></label>";
+							panelHtml += "              <label  for=\""+ nameToDisplayNoSpaces +"\" class=\"col-sm-4\" ><h5><span id=\""+ nameToDisplayNoSpaces+"Label\">"+ prettyName +"&nbsp;&nbsp;</span></h5></label>";
 							panelHtml += "              <div class=\"input-group\">";
-							panelHtml += "                  <div id=\""+ nameToDisplay +"\" class=\"btn-group col-sm-4\">";
-							panelHtml += "                      <a class=\"btn btn-primary btn-sm active\" id=\""+ nameToDisplay +"_true\" data-toggle=\""+nameToDisplay+"\" data-title=\"Y\">YES</a>";
-							panelHtml += "                      <a class=\"btn btn-primary btn-sm notActive\" id=\""+nameToDisplay+"_false\" data-toggle=\""+nameToDisplay+"\" data-title=\"N\">NO</a>";
+							panelHtml += "                  <div id=\""+ nameTnameToDisplayNoSpacesoDisplay +"\" class=\"btn-group col-sm-4\">";
+							panelHtml += "                      <a class=\"btn btn-primary btn-sm active\" id=\""+ nameToDisplayNoSpaces +"_true\" data-toggle=\""+nameToDisplayNoSpaces+"\" data-title=\"Y\">YES</a>";
+							panelHtml += "                      <a class=\"btn btn-primary btn-sm notActive\" id=\""+nameToDisplayNoSpaces+"_false\" data-toggle=\""+nameToDisplayNoSpaces+"\" data-title=\"N\">NO</a>";
 							panelHtml += "                  </div>";
-							panelHtml += "                  <input style=\"font-size:20px;\" type=\"hidden\" name=\""+ nameToDisplay+"\" id=\""+ nameToDisplay +"\">";
+							panelHtml += "                  <input style=\"font-size:20px;\" type=\"hidden\" name=\""+ nameToDisplayNoSpaces+"\" id=\""+ nameToDisplayNoSpaces +"\">";
 							panelHtml += "              </div>"
 						}else if(valueType==="String" ){ 
 							fieldType="text";
-							panelHtml += "<label class=\"control-label col-sm-4\"  for=\""+ nameToDisplay +"\"><h5><span id=\""+ nameToDisplay+"Label\">"+ prettyName +"&nbsp;&nbsp;&nbsp;</span></h5></label>";
-							panelHtml += "<input style=\"font-size:20px;\" class=\"form-control\" type=\""+ fieldType +"\" " +" id=\""+ nameToDisplay +"\" placeholder=\"\" value=\""+ valueData +"\"  required>";
+							panelHtml += "<label class=\"control-label col-sm-4\"  for=\""+ nameToDisplayNoSpaces +"\"><h5><span id=\""+ nameToDisplayNoSpaces+"Label\">"+ prettyName +"&nbsp;&nbsp;&nbsp;</span></h5></label>";
+							panelHtml += "<input style=\"font-size:20px;\" class=\"form-control\" type=\""+ fieldType +"\" " +" id=\""+ nameToDisplayNoSpaces +"\" placeholder=\"\" value=\""+ valueData +"\"  required>";
 						}
 						panelHtml += "</div>";
 						
 						panelHtml += "<div class=\"form-group\"> ";
-						panelHtml += "<button type=\"submit\" data-form='{\"field\":\"" + nameToDisplay + "\",\"valueType\":\"" + valueType + "\", \"identity\":\""+panelDataSourcePointer+"\"}'class=\"btn btn-primary col-sm-4 pull-right UpdateParamBtn\">Update</button>";
+						panelHtml += "<button type=\"submit\" data-form='{\"field\":\"" + nameToDisplayNoSpaces + "\",\"valueType\":\"" + valueType + "\", \"identity\":\""+panelDataSourcePointer+"\"}'class=\"btn btn-primary col-sm-4 pull-right UpdateParamBtn\">Update</button>";
 						panelHtml += "</div>";
 
 						panelHtml += "</div>"; //panel-body text-center
