@@ -30,6 +30,8 @@ class UpdateParams{
 		var dataDene,panelDataSourcePointer;
 		var denePanel, navBarPointer, navBarPosition, navBarText;
 		var denePanelArray;
+		var restartNeeded=false;
+		var restartNeededText="";
 		for(var i=0;i<panelPointers.length;i++){
 			var panelPointer = panelPointers[i];
 			if(panelPointer.includes("Update Parameters")){
@@ -83,7 +85,11 @@ class UpdateParams{
 						dataDene = object[property];   
 						panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE)
 						nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE)
-
+						restartNeeded =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_RESTART_NEEDED, DENEWORD_VALUE_ATTRIBUTE)
+						restartNeededText="";
+						if(restartNeeded){
+							restartNeededText='<span class=".text-danger">Restart Needed</span>';
+						}
 						//panelDataSourcePointer = object[property];    
 						//console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
 
@@ -107,7 +113,7 @@ class UpdateParams{
 						panelHtml += "  <div class=\"card-header\" id=\""+nameToDisplayNoSpaces+"Card\">";
 						panelHtml += "      <h5 class=\"mb-0\">";
 						panelHtml += "          <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplayNoSpaces + "UpdateFormPanel\" style=\"margin-bottom:30px;\" aria-expanded=\"true\" aria-controls=\""+nameToDisplayNoSpaces + "UpdateFormPanel\">";
-						panelHtml += "              Update "+nameToDisplay;
+						panelHtml += "              Update "+nameToDisplay + "   " + restartNeededText;
 						panelHtml += "          </button>";
 						panelHtml += "      </h5>";
 						panelHtml += "  </div>";
