@@ -77,7 +77,7 @@ class UpdateParams{
 					object = panelPositionInPanelHashMap["_map"];
 					
 					panelHtml+="<div id=\"" + navBarText +"FormGroup\" class=\"hidden UpdateParamsGroup\" >";navBarText
-					panelHtml+="	<div id=\"" + navBarText +"Well\" class=\"well\" ><h4>Updating " +navBarText + "</h4></div>";
+					panelHtml+="	<div id=\"" + navBarText +"Well\" class=\"well\" ><h4>Updating " +navBarText + "</h4><br><h5> <span class=\"text-danger\">Update to DeneWords in Red will reqiure a restart to be applied</span></div>";
 					panelHtml+="	<div id=\"" + navBarText +"\" class=\"accordion\" >";
 					for(var property in object) {
 						//
@@ -88,7 +88,7 @@ class UpdateParams{
 						restartNeeded =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_RESTART_NEEDED, DENEWORD_VALUE_ATTRIBUTE)
 						restartNeededText="";
 						if(restartNeeded){
-							restartNeededText='<span class=".text-danger">Restart Needed</span>';
+							restartNeededText='text-danger';
 						}
 						//panelDataSourcePointer = object[property];    
 						//console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
@@ -112,8 +112,8 @@ class UpdateParams{
 						panelHtml += "<div class=\"card\">";
 						panelHtml += "  <div class=\"card-header\" id=\""+nameToDisplayNoSpaces+"Card\">";
 						panelHtml += "      <h5 class=\"mb-0\">";
-						panelHtml += "          <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplayNoSpaces + "UpdateFormPanel\" style=\"margin-bottom:30px;\" aria-expanded=\"true\" aria-controls=\""+nameToDisplayNoSpaces + "UpdateFormPanel\">";
-						panelHtml += "              Update "+nameToDisplay + "   " + restartNeededText;
+						panelHtml += "          <button class=\"btn btn-link "+ restartNeededText +"\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplayNoSpaces + "UpdateFormPanel\" style=\"margin-bottom:30px;\" aria-expanded=\"true\" aria-controls=\""+nameToDisplayNoSpaces + "UpdateFormPanel\">";
+						panelHtml += "              Update "+nameToDisplay;
 						panelHtml += "          </button>";
 						panelHtml += "      </h5>";
 						panelHtml += "  </div>";
