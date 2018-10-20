@@ -1236,12 +1236,13 @@ body.modal-open .modal .modal-dialog {
 						data: {formName:"UpdateFormRequest", ValueType:data.valueType, Identity: data.identity, Value: selected, CommandCode : passwd },
 						success: function (commandIddata) {
 							console.log("commandIddata=" +commandIddata);
-							
+							refreshActive=true;
 							
 						},
 						error: function(data){
 							console.log("error getting log file:" + JSON.stringify(data));
 							alert("Error getting log:" + JSON.stringify(data));
+							refreshActive=true;
 							return false;
 						}
 					});	
