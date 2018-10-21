@@ -30,7 +30,7 @@ public class UpdateFormRequestProcessingHandler extends ProcessingFormHandler {
 		
 		String identityPointer = request.getParameter(TeleonomeConstants.TELEONOME_IDENTITY_LABEL);
 		String value = request.getParameter(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
-		String rn = request.getParameter("RestartNeeded");
+		String rn = request.getParameter("RestartRequired");
 		boolean restartRequired=false;
 		if(rn !=null && rn.equals("true")) {
 			restartRequired=true;

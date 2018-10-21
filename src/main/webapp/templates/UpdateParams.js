@@ -30,8 +30,8 @@ class UpdateParams{
 		var dataDene,panelDataSourcePointer;
 		var denePanel, navBarPointer, navBarPosition, navBarText;
 		var denePanelArray;
-		var restartNeeded=false;
-		var restartNeededText="";
+		var restartRequired=false;
+		var restartRequiredText="";
 		for(var i=0;i<panelPointers.length;i++){
 			var panelPointer = panelPointers[i];
 			if(panelPointer.includes("Update Parameters")){
@@ -85,10 +85,10 @@ class UpdateParams{
 						dataDene = object[property];   
 						panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE)
 						nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE)
-						restartNeeded =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_RESTART_NEEDED, DENEWORD_VALUE_ATTRIBUTE)
-						restartNeededText="";
-						if(restartNeeded){
-							restartNeededText='btn-danger';
+						restartRequired =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_RESTART_NEEDED, DENEWORD_VALUE_ATTRIBUTE)
+						restartRequiredText="";
+						if(restartRequired){
+							restartRequiredText='btn-danger';
 						}
 						//panelDataSourcePointer = object[property];    
 						//console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
@@ -112,7 +112,7 @@ class UpdateParams{
 						panelHtml += "<div class=\"card\">";
 						panelHtml += "  <div class=\"card-header\" id=\""+nameToDisplayNoSpaces+"Card\">";
 						panelHtml += "      <h5 class=\"mb-0\">";
-						panelHtml += "          <button class=\"btn "+ restartNeededText +"\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplayNoSpaces + "UpdateFormPanel\" style=\"margin-bottom:30px;\" aria-expanded=\"true\" aria-controls=\""+nameToDisplayNoSpaces + "UpdateFormPanel\">";
+						panelHtml += "          <button class=\"btn "+ restartRequiredText +"\" type=\"button\" data-toggle=\"collapse\" data-target=\"#"+nameToDisplayNoSpaces + "UpdateFormPanel\" style=\"margin-bottom:30px;\" aria-expanded=\"true\" aria-controls=\""+nameToDisplayNoSpaces + "UpdateFormPanel\">";
 						panelHtml += "              Update "+nameToDisplay;
 						panelHtml += "          </button>";
 						panelHtml += "      </h5>";
@@ -160,7 +160,7 @@ class UpdateParams{
 						panelHtml += "</div>";
 						
 						panelHtml += "<div class=\"form-group\"> ";
-						panelHtml += "<button type=\"submit\" data-form='{\"field\":\"" + nameToDisplayNoSpaces + "\",\"valueType\":\"" + valueType +   "\",\"restartNeeded\":\"" + restartNeeded +  "\", \"identity\":\""+panelDataSourcePointer+"\"}'class=\"btn btn-primary col-sm-4 pull-right UpdateParamBtn\">Update</button>";
+						panelHtml += "<button type=\"submit\" data-form='{\"field\":\"" + nameToDisplayNoSpaces + "\",\"valueType\":\"" + valueType +   "\",\"restartRequired\":\"" + restartRequired +  "\", \"identity\":\""+panelDataSourcePointer+"\"}'class=\"btn btn-primary col-sm-4 pull-right UpdateParamBtn\">Update</button>";
 						panelHtml += "</div>";
 
 						panelHtml += "</div>"; //panel-body text-center
