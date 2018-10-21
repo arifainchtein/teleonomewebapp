@@ -421,6 +421,7 @@ body.modal-open .modal .modal-dialog {
 		 var hasWlan1;
 		 var hasEth0;
 		 var powerButtonDisabled=false;
+		 var powerButtonRed=false;
 	     var localStorageManager;
 		 var searchFunctions;
 		 var viewManager;
@@ -1232,6 +1233,7 @@ body.modal-open .modal .modal-dialog {
 					var restartRequired = data.restartRequired;
 					if(restartRequired){
 						$("#MainPowerButton").addClass('btn-danger').removeClass('btn-success');
+						powerButtonRed=true;
 					}
 					$.ajax({
 						type: "GET",

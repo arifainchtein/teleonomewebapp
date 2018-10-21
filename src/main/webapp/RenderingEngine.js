@@ -246,7 +246,6 @@ function receivedCommandResponse(cr){
 						alert("Invalid Code");
 						$("#MainPowerButton").attr("disabled", false);
 						$("#MainPowerButton").addClass('btn-success').removeClass('btn-warning');
-						
 					}
 					
 
@@ -974,6 +973,9 @@ function renderPageToDisplay(){
 		if(powerButtonDisabled){
 			$("#MainPowerButton").attr("disabled", true);
 		  	$("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
+		}
+		if(powerButtonRed){
+			$("#MainPowerButton").addClass('btn-danger').removeClass('btn-warning')..removeClass('btn-success');
 		}
 
 
