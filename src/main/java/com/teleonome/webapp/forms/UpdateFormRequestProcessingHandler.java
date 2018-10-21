@@ -30,6 +30,13 @@ public class UpdateFormRequestProcessingHandler extends ProcessingFormHandler {
 		
 		String identityPointer = request.getParameter(TeleonomeConstants.TELEONOME_IDENTITY_LABEL);
 		String value = request.getParameter(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+		String rn = request.getParameter("RestartNeeded");
+		boolean restartRequired=false;
+		if(rn !=null && rn.equals("true")) {
+			restartRequired=true;
+		}
+		logger.debug("rn=" + rn  + " restartRequired=" + restartRequired);
+		
 		Object valueType = request.getParameter("ValueType");//TeleonomeConstants.DENEWORD_VALUETYPE_ATTRIBUTE);
 		
 		String clientIp = request.getRemoteAddr();
@@ -75,7 +82,8 @@ public class UpdateFormRequestProcessingHandler extends ProcessingFormHandler {
 		command="SetParameters";
 		String payLoad=payLoadParentJSONObject.toString();
 
-		JSONObject responseJSON = aDBManager.requestCommandToExecute(command, commandCode,payLoad, clientIp);
+		JSONObject responseJSON = aDBManager.requestCommandToExecute(command, commandCode,payLoad, clientIp, restartRequired);
+		
 		logger.debug("sent command=" + command  + " response=" + responseJSON.toString(4));	
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();

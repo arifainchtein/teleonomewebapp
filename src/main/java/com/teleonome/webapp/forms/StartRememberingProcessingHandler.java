@@ -66,7 +66,9 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
 		// 
 		// to repaint the table, get all the commandrequests
 		//
-		JSONObject commandsInfo  = sendCommand(command, commandCode,payload, clientIp);
+		boolean restartRequired=false;
+		JSONObject commandsInfo  = sendCommand(command, commandCode,payload, clientIp, restartRequired);
+		
 		logger.debug("sent command=" + command  + " commandCode="+commandCode + " payLoad=" + payload + " clientIp=" + clientIp);	
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();

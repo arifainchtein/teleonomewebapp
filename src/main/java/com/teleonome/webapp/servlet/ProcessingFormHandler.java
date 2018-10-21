@@ -76,13 +76,13 @@ public abstract class ProcessingFormHandler{
 		return command;
 	}
 	
-	public JSONObject sendCommand(String command,String commandCode, String payLoad, String clientIp){
+	public JSONObject sendCommand(String command,String commandCode, String payLoad, String clientIp, boolean restartRequired){
 		logger.debug("sending command to database =" + command + " commandCode=" + commandCode);
 		String toReturn="";
 		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 
-		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, payLoad, clientIp);
+		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, payLoad, clientIp, restartRequired);
 		boolean includeHuman=true;
 		boolean includeInternal=false;
 		int offset=0;

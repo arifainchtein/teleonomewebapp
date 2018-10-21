@@ -1229,11 +1229,14 @@ body.modal-open .modal .modal-dialog {
 					}catch(err){
 					    console.log("error=" + err);
 					}
-
+					var restartNeeded = data.restartNeeded;
+					if(restartRequired){
+						$("#MainPowerButton").addClass('btn-danger').removeClass('btn-success');
+					}
 					$.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
-						data: {formName:"UpdateFormRequest", ValueType:data.valueType, Identity: data.identity, Value: selected, CommandCode : passwd },
+						data: {formName:"UpdateFormRequest", RestartNeeded:restartNeeded, ValueType:data.valueType, Identity: data.identity, Value: selected, CommandCode : passwd },
 						success: function (commandIddata) {
 							console.log("commandIddata=" +commandIddata);
 							refreshActive=true;

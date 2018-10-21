@@ -254,6 +254,9 @@ function receivedCommandResponse(cr){
 				if(commandResponse.Status==COMMAND_REQUEST_EXECUTED){
 					result="success";
 					commandResultText=commandResponse.Command + " was executed succesfully";
+					if(commandResponse.RestartRequired){
+						$("#MainPowerButton").addClass('btn-danger').removeClass('btn-success');
+					}
 				}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
 					result="danger";
 					commandResultText=commandResponse.commandCode + " was not correct";
