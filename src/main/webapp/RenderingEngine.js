@@ -975,7 +975,7 @@ function renderPageToDisplay(){
 		  	$("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
 		}
 		if(powerButtonRed){
-			$("#MainPowerButton").addClass('btn-danger').removeClass('btn-warning')..removeClass('btn-success');
+			$("#MainPowerButton").addClass('btn-danger').removeClass('btn-warning').removeClass('btn-success');
 		}
 
 

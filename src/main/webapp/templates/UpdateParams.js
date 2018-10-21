@@ -77,7 +77,7 @@ class UpdateParams{
 					object = panelPositionInPanelHashMap["_map"];
 					
 					panelHtml+="<div id=\"" + navBarText +"FormGroup\" class=\"hidden UpdateParamsGroup\" >";navBarText
-					panelHtml+="	<div id=\"" + navBarText +"Well\" class=\"well\" ><h4>Updating " +navBarText + "</h4><br><h5> <span class=\"text-danger\">Update to DeneWords in Red will reqiure a restart to be applied</span></div>";
+					panelHtml+="	<div id=\"" + navBarText +"Well\" class=\"well\" ><h4>Updating " +navBarText + "</h4><br><h5> <span class=\"text-danger\">Update to DeneWords in Red will require a manual restart</span></div>";
 					panelHtml+="	<div id=\"" + navBarText +"\" class=\"accordion\" >";
 					for(var property in object) {
 						//
