@@ -55,12 +55,6 @@ class SearchFunctions{
        
     
        searchFunctions.generateAllGraphs();
-    
-       
-        
-        $('#WaitingWheel').hide();
-        refreshCounter=30;
-        $("#RefreshCounter").html(refreshCounter);
         
     }
 	
@@ -276,7 +270,8 @@ class SearchFunctions{
 		                    }
 
 		                }
-
+                        refreshCounter=30;
+                        $("#RefreshCounter").html(refreshCounter);
                         $('#WaitingWheel').hide();
 		               
 		               
