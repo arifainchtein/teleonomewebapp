@@ -262,14 +262,17 @@ class SearchFunctions{
 		                    panelHTML +="</div>";
 		                    panelHTML +="</div>";
 		                   
-                            $("#SearchGraphArea").empty();
-		                    $("#SearchGraphArea").append(panelHTML);
-		                    if(visualizationStyle=="LineGraph"){
-		                        drawTimeSeriesLineChart(chartDivId,data, "");
-		                       
-		                    }
+                            
 
 		                }
+		                
+		                $("#SearchGraphArea").empty();
+	                    $("#SearchGraphArea").append(panelHTML);
+	                    if(visualizationStyle=="LineGraph"){
+	                        drawTimeSeriesLineChart(chartDivId,data, "");
+	                       
+	                    }
+	                    
                         refreshCounter=30;
                         $("#RefreshCounter").html(refreshCounter);
                         $('#WaitingWheel').hide();
