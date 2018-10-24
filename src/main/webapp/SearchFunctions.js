@@ -137,6 +137,7 @@ class SearchFunctions{
 		                    
 		                //} 
 		                var allData = JSON.parse(dataString);
+		                $("#SearchGraphArea").empty();
 		                var panelHTML="";
 		                for(var j=0;j<allData.length;j++){
 		                    var data = allData[j];
@@ -262,17 +263,14 @@ class SearchFunctions{
 		                    panelHTML +="</div>";
 		                    panelHTML +="</div>";
 		                   
-                            
+                           
+		                    $("#SearchGraphArea").append(panelHTML);
+		                    if(visualizationStyle=="LineGraph"){
+		                        drawTimeSeriesLineChart(chartDivId,data, "");
+		                       
+		                    }
 
 		                }
-		                
-		                $("#SearchGraphArea").empty();
-	                    $("#SearchGraphArea").append(panelHTML);
-	                    if(visualizationStyle=="LineGraph"){
-	                        drawTimeSeriesLineChart(chartDivId,data, "");
-	                       
-	                    }
-	                    
                         refreshCounter=30;
                         $("#RefreshCounter").html(refreshCounter);
                         $('#WaitingWheel').hide();
