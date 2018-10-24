@@ -994,7 +994,7 @@ function renderPageToDisplay(){
 		
 
 
-		if(inSearch){
+		if(inSearch && lastMessageTopic=='Status'){
 			searchFunctions.generateAllGraphs();
 		}
 		//

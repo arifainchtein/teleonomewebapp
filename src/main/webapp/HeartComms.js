@@ -1,6 +1,7 @@
 var mqtt;
 var reconnectTimeout = 2000;
 var visualizer="";
+var lastMessageTopic;
 function HeartConnect() {
 	//
 	// before we actually connect ask the server for the visualizer
@@ -77,7 +78,7 @@ function onFailure(){
 
 function onMessageArrived(message) {
 console.log("message arrived");
-	var topic = message.destinationName;
+	lastMessageTopic = message.destinationName;
 	var payload = message.payloadString;
 	console.log("message arrive, topic=" + topic);
 	if(topic=='Status'){
@@ -91,24 +92,24 @@ console.log("message arrived");
 		//aDenomeUtil.loadDenomeRefreshInterface(payload);
 		loadDenomeRefreshInterface(payload);
 		
-	} else if(topic=='Ada Status'){
+	} else if(lastMessageTopic=='Ada Status'){
 		//
 		// The message of the payload when is a status message
 		// is
 		//  Ada Name#IP Address#Timestamp Millis#Timestamp#Message
 		//
 		updateAdaStatus(payload);
-	}else if(topic==HEART_TOPIC_PULSE_STATUS_INFO){
+	}else if(lastMessageTopic==HEART_TOPIC_PULSE_STATUS_INFO){
 		updatePulseStatusInfo(payload);
-	}else if(topic==HEART_TOPIC_PULSE_STATUS_INFO_SECUNDARY){
+	}else if(lastMessageTopic==HEART_TOPIC_PULSE_STATUS_INFO_SECUNDARY){
 		updatePulseStatusInfoSecundary(payload);
-	}else if(topic==HEART_TOPIC_ORGANISM_STATUS){
+	}else if(lastMessageTopic==HEART_TOPIC_ORGANISM_STATUS){
 		updateOrganismView(payload);
-	}else if(topic==HEART_TOPIC_AVAILABLE_SSIDS){
+	}else if(lastMessageTopic==HEART_TOPIC_AVAILABLE_SSIDS){
 		setAvailableSSIDs(payload);
-	}else if(topic==HEART_TOPIC_ASYNC_CYCLE_UPDATE){
+	}else if(lastMessageTopic==HEART_TOPIC_ASYNC_CYCLE_UPDATE){
 		asyncUpdate(payload);
-	}else if(topic==HEART_TOPIC_UPDATE_FORM_RESPONSE){
+	}else if(lastMessageTopic==HEART_TOPIC_UPDATE_FORM_RESPONSE){
 		receivedCommandResponse(payload);
 	}       
 };
