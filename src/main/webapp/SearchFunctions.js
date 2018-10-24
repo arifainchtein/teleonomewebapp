@@ -38,7 +38,7 @@ class SearchFunctions{
         if(!refreshCounterStatus){
             return false;
         }
-        $("#SearchGraphArea").empty();
+        
         //var allGraphs = allSearchStorage();
         var allGraphs = localStorageManager.getAllStorageForComponent(LOCAL_STORAGE_SEARCH_KEY);
         if(allGraphs.length==0){
@@ -52,8 +52,7 @@ class SearchFunctions{
       
        
         
-        $('#WaitingText').html("Updating...");
-       $('#WaitingWheel').show();
+       
     
        searchFunctions.generateAllGraphs();
     
@@ -131,7 +130,9 @@ class SearchFunctions{
 		            reqData[i]=serverRequest;
 		        }
 
-		        var dataToSend = JSON.stringify(reqData);
+                var dataToSend = JSON.stringify(reqData);
+                
+
 		        $.ajax({
 		            type: "GET",
 		            url: "/TeleonomeServlet",
@@ -139,7 +140,7 @@ class SearchFunctions{
 		            success: function (dataString) {
 		                // console.log("receiving data for refresh" );
 		               // if(!appendChart){
-		                    $("#SearchGraphArea").empty();
+		                    
 		                //} 
 		                var allData = JSON.parse(dataString);
 		                var panelHTML="";
@@ -267,7 +268,7 @@ class SearchFunctions{
 		                    panelHTML +="</div>";
 		                    panelHTML +="</div>";
 		                   
-		                   
+                            $("#SearchGraphArea").empty();
 		                    $("#SearchGraphArea").append(panelHTML);
 		                    if(visualizationStyle=="LineGraph"){
 		                        drawTimeSeriesLineChart(chartDivId,data, "");
