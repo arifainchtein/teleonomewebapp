@@ -80,8 +80,8 @@ function onMessageArrived(message) {
 console.log("message arrived");
 	lastMessageTopic = message.destinationName;
 	var payload = message.payloadString;
-	console.log("message arrive, topic=" + topic);
-	if(topic=='Status'){
+	console.log("message arrive, topic=" + lastMessageTopic);
+	if(lastMessageTopic=='Status'){
 		//
 		// the payload is a pulse so refresh the interface
 		// in the current page
