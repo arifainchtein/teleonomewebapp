@@ -1051,7 +1051,7 @@ body.modal-open .modal .modal-dialog {
 		        
 		        var anyTeleonomeName = identity.teleonomeName;
 				var chartTitle = anyTeleonomeName + "-" + identity.deneWordName;
-				if(liveUpdate)chartTitle = anyTeleonomeName + "-" + identity.deneWordName + " " + fromDate + " " + fromTime + "  -  " + untilDate + " " + untilTime;
+				if(!liveUpdate)chartTitle = anyTeleonomeName + "-" + identity.deneWordName + " " + fromDate + " " + fromTime + "  -  " + untilDate + " " + untilTime;
 				var chartDivId = anyTeleonomeName +  identity.deneWordName  + fromDate  + fromTime + untilDate  + untilTime;
 				 chartDivId = chartDivId.replace(/\s/g, '');
 				 chartDivId = chartDivId.replace(/-/g, '')

@@ -107,9 +107,9 @@ console.log("message arrived");
 		updateOrganismView(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_AVAILABLE_SSIDS){
 		setAvailableSSIDs(payload);
-	}else if(lastMessageTopic==HEART_TOPIC_ASYNC_CYCLE_UPDATE){
+	}else if(lastMessageTopic==HEART_TOPIC_ASYNC_CYCLE_UPDATE && pageToDisplay==1){
 		asyncUpdate(payload);
-	}else if(lastMessageTopic==HEART_TOPIC_UPDATE_FORM_RESPONSE){
+	}else if(lastMessageTopic==HEART_TOPIC_UPDATE_FORM_RESPONSE  && pageToDisplay==1){
 		receivedCommandResponse(payload);
 	}       
 };
