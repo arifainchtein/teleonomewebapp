@@ -1075,13 +1075,14 @@ body.modal-open .modal .modal-dialog {
 		        
 		        localStorageManager.setItem(LOCAL_STORAGE_SEARCH_KEY, searchObject);
 				//searchFunctions.processForm(formName,identityPointer, fromMillis , untilMillis, appendChart, visualizationStyle, liveUpdate);
+				refreshCounterStatus=true;
 				searchFunctions.refreshSearchPage();
 		        $('#WaitingWheel').hide();
 				$("#SearchConfigurator").hide();
 				refreshActive=true;
 		        $("#TopButtons").show();
 		        $("#UpdateArea").show();
-		        refreshCounterStatus=true;
+		        
 		        $("#RefreshCounter").show();
  	            $("#RefreshCounterMessage").show();
 		    });

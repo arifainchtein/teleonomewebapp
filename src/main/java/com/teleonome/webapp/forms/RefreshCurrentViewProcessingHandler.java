@@ -104,14 +104,14 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 				toReturnElement.put("Value", values);
 				//
 				// to get the units and the minimum, get the last pulse
-				org.postgresql.util.PGobject pg = (PGobject) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+				org.postgresql.util.PGobject pg = (PGobject) aDBManager.getOrganismDeneWordAttributeLastValueByIdentity( identity, TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
 				String units = "";
 				if(pg!=null) {
 					units = pg.toString();
 				}
 				//String units = (String) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
 				//double minimum = (double) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
-				pg = (PGobject) aDBManager.getOrganismDeneWordAttributeByIdentity( identity, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
+				pg = (PGobject) aDBManager.getOrganismDeneWordAttributeLastValueByIdentity( identity, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
 				double minimum = 0.0;
 				if(pg!=null && pg.getValue()!=null) {
 					minimum = Double.parseDouble(pg.getValue());
