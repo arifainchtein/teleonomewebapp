@@ -843,7 +843,8 @@ function renderPageToDisplay(){
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_TIMESTAMP){
 				var aSingleValuePanelExternalTimestamp = new SingleValuePanelExternalTimestamp();
-				panelHTML += aSingleValuePanelExternalTimestamp.process( panelExternalTimestampDataSourcePointer);
+				var title  = panelDeneChain["Name"];
+				panelHTML += aSingleValuePanelExternalTimestamp.process( title, panelExternalTimestampDataSourcePointer);
 
 
 				

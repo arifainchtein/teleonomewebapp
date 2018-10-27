@@ -3,7 +3,7 @@ class SingleValuePanelExternalTimestamp{
 
     }
 
-    process( panelExternalTimestampDataSourcePointer){
+    process( title, panelExternalTimestampDataSourcePointer){
         var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(panelExternalTimestampDataSourcePointer);
         //
         // 2)statusMessage - A string description of the status
@@ -18,7 +18,7 @@ class SingleValuePanelExternalTimestamp{
         panelHTML += " <div class=\"panel-heading row\">";
         
         panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
-        panelHTML += "<h4>" + panelDeneChain["Name"] + "</h4>"; 
+        panelHTML += "<h4>" + title + "</h4>"; 
         panelHTML +="</div>";// close col lg-4
         
         panelHTML += "<div class=\"col-lg-8 col-md-8 col-sm-8 col-xs-8\">";
