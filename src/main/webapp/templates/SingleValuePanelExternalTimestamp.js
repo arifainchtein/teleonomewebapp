@@ -3,7 +3,7 @@ class SingleValuePanelExternalTimestamp{
 
     }
 
-    process( title, panelExternalTimestampDataSourcePointer){
+    process( title, panelExternalTimestampDataSourcePointer, object){
         var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(panelExternalTimestampDataSourcePointer);
         //
         // 2)statusMessage - A string description of the status
@@ -31,8 +31,7 @@ class SingleValuePanelExternalTimestamp{
 
         
         
-        var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-        var object = panelPositionInPanelHashMap["_map"];
+       
         var nameToDisplay;
         var renderedDataSourceDene;
         //console.log("about to start going ver the rpoerties, object=" + object);

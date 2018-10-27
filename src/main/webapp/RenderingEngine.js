@@ -844,7 +844,10 @@ function renderPageToDisplay(){
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_TIMESTAMP){
 				var aSingleValuePanelExternalTimestamp = new SingleValuePanelExternalTimestamp();
 				var title  = panelDeneChain["Name"];
-				panelHTML += aSingleValuePanelExternalTimestamp.process( title, panelExternalTimestampDataSourcePointer);
+				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
+				var object = panelPositionInPanelHashMap["_map"];
+				
+				panelHTML += aSingleValuePanelExternalTimestamp.process( title, panelExternalTimestampDataSourcePointer, object);
 
 
 				
