@@ -3,7 +3,7 @@ class SingleValuePanelExternalTimestamp{
 
     }
 
-    process(){
+    process( panelExternalTimestampDataSourcePointer){
         var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(panelExternalTimestampDataSourcePointer);
         //
         // 2)statusMessage - A string description of the status
