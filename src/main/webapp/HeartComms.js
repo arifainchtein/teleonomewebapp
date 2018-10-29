@@ -109,7 +109,7 @@ console.log("message arrived");
 		setAvailableSSIDs(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_ASYNC_CYCLE_UPDATE && pageToDisplay==1){
 		asyncUpdate(payload);
-	}else if(lastMessageTopic==HEART_TOPIC_UPDATE_FORM_RESPONSE  && pageToDisplay==1){
+	}else if(lastMessageTopic==HEART_TOPIC_UPDATE_FORM_RESPONSE  && (pageToDisplay==1 || pageToDisplay==5)) {
 		receivedCommandResponse(payload);
 	}       
 };
