@@ -30,7 +30,7 @@ class MnemosyneTable{
         var columnDefinitionHeaderDenesHashMap = new HashMap();
         var columnDefinitionDataSourcePointerHashMap = new HashMap();
         var columnDefinitionTDClassInfoHashMap = new HashMap();
-        
+        var deneWords;
         var columnDefinitionDenesHashMap = new HashMap();
         for(i34=0;i34<panelDeneWords.length;i34++){
             processingDeneWord = panelDeneWords[i34];
