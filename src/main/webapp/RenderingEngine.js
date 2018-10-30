@@ -921,7 +921,7 @@ function renderPageToDisplay(){
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MNEMOSYNE_TABLE){
 				var panelDeneWords = denes[0].DeneWords;
 				var aMnemosyneTable = new MnemosyneTable();
-				panelHTML += aMnemosyneTable.process();
+				panelHTML += aMnemosyneTable.process(panelDeneWords);
 
 				
 				
