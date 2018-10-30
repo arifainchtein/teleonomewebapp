@@ -4,7 +4,7 @@ class MnemosyneTable{
 
     }
 
-    process(){
+    process(panelDeneWords){
         //
         // the info for this panel is stored in a denechain that contains one dene, that dene
         // has the following denewords
@@ -12,7 +12,7 @@ class MnemosyneTable{
         var processingDeneWord;
         var processingDeneWordName;
 
-        var panelDeneWords = denes[0].DeneWords;
+        
         var i34=0;
         var sortingOrder="Descending";
         var dataSourcePointer="";

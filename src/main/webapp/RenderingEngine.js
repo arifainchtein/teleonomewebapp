@@ -154,13 +154,11 @@ function renderCommandRequestTable(commandsInfo){
 			}else if(command.Status ==COMMAND_REQUEST_SKIPPED_AT_INIT || command.Status ==COMMAND_REQUEST_INVALID_CODE){
 				rowStatus="danger";
 			}
-			if(command.Payload==undefined){
+			if(command.Payload==undefined || command.Payload==""){
 				panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+command.ClientIp+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td>No Payload</td><td>" + command.Status +"</td></tr>";
 			}else{
 				panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+command.id+"</td><td>"+command.ClientIp+"</td><td>"+ createdOnDateFormated +"</td><td>"+executedOnDateFormated+"</td><td>" + command.Command +"</td><td><pre><code>" + command.Payload +"</code></pre></td><td>" + command.Status +"</td></tr>";
 			}
-
-			
 		}
 		panelHTML += "</tbody></table>";
 		//
@@ -921,6 +919,7 @@ function renderPageToDisplay(){
 				
 				
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MNEMOSYNE_TABLE){
+				var panelDeneWords = denes[0].DeneWords;
 				var aMnemosyneTable = new MnemosyneTable();
 				panelHTML += aMnemosyneTable.process();
 
