@@ -26,9 +26,9 @@ function getISOStringDateOnly(date) {
 	}
 
 function getISOStringWithoutSecsAndMillisecs(date) {
-	  const dateAndTime = date.toISOString().split('T')
-	  const time = dateAndTime[1].split(':')
-	  
+	var newDate = convertUTCDateToLocalDate(date) ;
+	  const dateAndTime = newDate.toISOString().split('T');
+	  const time = dateAndTime[1].split(':')  
 	  return dateAndTime[0]+' '+time[0]+':'+time[1]
 	}
 

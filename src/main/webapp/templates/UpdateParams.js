@@ -146,7 +146,7 @@ class UpdateParams{
 
 							panelHtml += "              <label  for=\""+ nameToDisplayNoSpaces +"\" class=\"col-sm-4\" ><h5><span id=\""+ nameToDisplayNoSpaces+"Label\">"+ prettyName +"&nbsp;&nbsp;</span></h5></label>";
 							panelHtml += "              <div class=\"input-group\">";
-							panelHtml += "                  <div id=\""+ nameTnameToDisplayNoSpacesoDisplay +"\" class=\"btn-group col-sm-4\">";
+							panelHtml += "                  <div id=\""+ nameToDisplayNoSpaces +"\" class=\"btn-group col-sm-4\">";
 							panelHtml += "                      <a class=\"btn btn-primary btn-sm active\" id=\""+ nameToDisplayNoSpaces +"_true\" data-toggle=\""+nameToDisplayNoSpaces+"\" data-title=\"Y\">YES</a>";
 							panelHtml += "                      <a class=\"btn btn-primary btn-sm notActive\" id=\""+nameToDisplayNoSpaces+"_false\" data-toggle=\""+nameToDisplayNoSpaces+"\" data-title=\"N\">NO</a>";
 							panelHtml += "                  </div>";
