@@ -24,6 +24,7 @@ class UpdateParams{
 		var object;
 		var nameToDisplay;
 		var nameToDisplayNoSpaces;
+		var navBarTextNoSpaces;
 		var renderedDataSourceDene;
 		var renderedDataSourceDeneWord;
 		//console.log("about to start going ver the rpoerties, object=" + object);
@@ -57,7 +58,7 @@ class UpdateParams{
 					navBarText =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_TEXT, DENEWORD_VALUE_ATTRIBUTE);
 					
 					panelHtml +='	<div class="col-lg-3 col-xs-3 SettingBar">';
-					panelHtml +='    	<button class="btn btn-primary SettingsSubMenu"  data-panelpointer="'+navBarText+'FormGroup" type="button" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
+					panelHtml +='    	<button class="btn btn-primary SettingsSubMenu"  data-panelpointer="'+navBarTextNoSpaces+'FormGroup" type="button" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
 					panelHtml +='    </div> ';
 				}
 				panelHtml += "</div>    <hr /> ";
@@ -69,16 +70,17 @@ class UpdateParams{
 					navBarPointer =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_POINTER, DENEWORD_VALUE_ATTRIBUTE);
 					navBarPosition =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_POSITION, DENEWORD_VALUE_ATTRIBUTE);
 					navBarText =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_TEXT, DENEWORD_VALUE_ATTRIBUTE);
-					
+					navBarTextNoSpaces = navBarText.replace(/ /g,'');
+
 					panelDeneChain = getDeneChainByIdentityPointer( navBarPointer);
 					prettyNamesList = getFormPrettyNameOrdered(panelDeneChain);
 					prettyNamesListObject = prettyNamesList["_map"];
 					panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
 					object = panelPositionInPanelHashMap["_map"];
 					
-					panelHtml+="<div id=\"" + navBarText +"FormGroup\" class=\"hidden UpdateParamsGroup\" >";navBarText
-					panelHtml+="	<div id=\"" + navBarText +"Well\" class=\"well\" ><h4>Updating " +navBarText + "</h4><br><h5> <span class=\"text-danger\">Update to DeneWords in Red will require a manual restart</span></div>";
-					panelHtml+="	<div id=\"" + navBarText +"\" class=\"accordion\" >";
+					panelHtml+="<div id=\"" + navBarTextNoSpaces +"FormGroup\" class=\"hidden UpdateParamsGroup\" >";navBarText
+					panelHtml+="	<div id=\"" + navBarTextNoSpaces +"Well\" class=\"well\" ><h4>Updating " +navBarText + "</h4><br><h5> <span class=\"text-danger\">Update to DeneWords in Red will require a manual restart</span></div>";
+					panelHtml+="	<div id=\"" + navBarTextNoSpaces +"\" class=\"accordion\" >";
 					for(var property in object) {
 						//
 						//after every three panels 

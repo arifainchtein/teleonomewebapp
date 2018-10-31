@@ -411,7 +411,7 @@ function RefreshInterface(){
 	var operationalModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_OPERATIONAL_MODE;
 	operationalMode = getDeneWordByIdentityPointer(operationalModePointer, DENEWORD_VALUE_ATTRIBUTE);
 
-	var timeZoneIdPointer = "@" +teleonomeName + ":" + NUCLEI_INTERNAL + ":" +DENECHAIN_DENECHAIN_DESCRIPTIVE + ":" + DENE_TYPE_VITAL + ":" +"Timezone";
+	var timeZoneIdPointer = "@" +teleonomeName + ":" + NUCLEI_INTERNAL + ":" +DENECHAIN_DESCRIPTIVE + ":" + DENE_TYPE_VITAL + ":" +"Timezone";
 	timeZoneId = getDeneWordByIdentityPointer(operationalModePointer, DENEWORD_VALUE_ATTRIBUTE);
 
 	pulseCreationTime = msToTime(pulseCreationTimeMilliseconds);
