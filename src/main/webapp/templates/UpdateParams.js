@@ -56,7 +56,7 @@ class UpdateParams{
 					navBarPointer =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_POINTER, DENEWORD_VALUE_ATTRIBUTE);
 					navBarPosition =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_POSITION, DENEWORD_VALUE_ATTRIBUTE);
 					navBarText =  getDeneWordAttributeByDeneWordTypeFromDene(denePanel, DENEWORD_TYPE_NAVBAR_TEXT, DENEWORD_VALUE_ATTRIBUTE);
-					
+					navBarTextNoSpaces = navBarText.replace(/ /g,'');
 					panelHtml +='	<div class="col-lg-3 col-xs-3 SettingBar">';
 					panelHtml +='    	<button class="btn btn-primary SettingsSubMenu"  data-panelpointer="'+navBarTextNoSpaces+'FormGroup" type="button" aria-expanded="false" aria-controls="'+navBarText+'">'+navBarText+'</button>';
 					panelHtml +='    </div> ';
