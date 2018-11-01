@@ -218,13 +218,13 @@ class SearchPanel{
 			panelHTML += "                                    </div>";
 			panelHTML += "                                </div>";
 			panelHTML += "                                <div class=\"form-row form-elements-small\">";
-			panelHTML += "                                    <div class=\"form-group col-md-6\">";
+			panelHTML += "                                    <div class=\"form-group col-xs-6\">";
 	        panelHTML += "                                        <div class=\"form-check form-check-inline\">";
 	        panelHTML += "                                            <input class=\"form-check-input BSswitch\" type=\"checkbox\" id=\"LiveUpdate\" value=\"option2\"><br>";
 	        panelHTML += "                                            <label class=\"form-check-label\" for=\"LiveUpdate\">Live Update</label>";
 	        panelHTML += "                                        </div>";
 			panelHTML += "                                    </div>";
-			panelHTML += "                                    <div class=\"form-group col-sm-3\">";
+			panelHTML += "                                    <div class=\"form-group col-xs-6\">";
 	        panelHTML += "                                        <div class=\"form-check form-check-inline\">";
 	        panelHTML += "                                            <input class=\"form-check-input \" type=\"input\" id=\"LiveUpdateMinutes\" value=\"60\"><br>";
 	        panelHTML += "                                            <label class=\"form-check-label\" for=\"LiveUpdateMinutes\">Live Update Minutes</label>";
