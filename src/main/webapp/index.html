@@ -989,7 +989,7 @@ body.modal-open .modal .modal-dialog {
 		        var untilDate = document.getElementById("untilDate").value;
 		        var untilTime = document.getElementById("untilTime").value;
 				var untilMillis = (new Date(untilDate + " " + untilTime)).getTime();
-				var liveUpdateMinutes= document.getElementById("LiveUpdateMinutes").value;
+				var liveUpdateMinutes= +document.getElementById("LiveUpdateMinutes").value;
 		        var formName="RememberDeneWord";
 				var appendChart = $("#AppendChart").is(':checked');
 				liveUpdate = $("#LiveUpdate").is(':checked');
@@ -1004,7 +1004,7 @@ body.modal-open .modal .modal-dialog {
 					
 		            var ts = Math.round(date.getTime() / 1000);
 					//fromMillis = ts - (24 * 3600);
-					fromMillis = ts - (liveUpdateMinutes * 60);
+					fromMillis = ts - (liveUpdateMinutes * 60000);
 					
 		            //fromDate.setDate(fromDate.getDate()-1);
 		            //fromMillis = fromDate.getTime();

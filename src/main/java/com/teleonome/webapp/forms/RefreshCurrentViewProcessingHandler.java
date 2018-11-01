@@ -59,7 +59,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 			if(formName2.equals("RememberDeneWord")) {
 
 
-				logger.debug("identityPointer=" + identityPointer);
+				logger.debug("identityPointer=" + identityPointer + " fromMillis=" + fromMillis+ " untilMillis=" + untilMillis  );
 				JSONArray values = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, fromMillis, untilMillis);
 
 				JSONObject toReturnElement = new JSONObject();

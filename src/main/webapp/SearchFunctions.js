@@ -105,10 +105,8 @@ class SearchFunctions{
 		            // console.log("graphData.chartTitle="+ graphData.chartTitle + " position=" + graphData.position);
 		            if(liveUpdate){ 
 		               // if its live udpdate, ignore the times stored and set tthe to be the last 24 hour    
-		                var fromDate = new Date();
-		                fromDate.setDate(fromDate.getDate()-1);
-		                fromMillis = fromDate.getTime();
-		                untilMillis = new Date().getTime();
+		                 fromMillis = new Date().getTime()-liveUpdateMinutes*60000;
+		                 untilMillis = new Date().getTime();
 		            }
 		            $("#AppendChart").prop('checked', appendChart);
 		            $("#LiveUpdate").prop('checked', liveUpdate);
