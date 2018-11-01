@@ -47,6 +47,8 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 			long untilMillis = dataElement.getLong("untilMillis");
 
 			boolean liveUpdate = dataElement.getBoolean("liveUpdate");
+			int liveUpdateMinutes = dataElement.getInt("liveUpdateMinutes");
+			
 
 			String identityPointer =  dataElement.getString("identity");
 			Identity identity = new Identity(identityPointer);
@@ -63,6 +65,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 				JSONObject toReturnElement = new JSONObject();
 				toReturnElement.put("Value", values);
 				toReturnElement.put("liveUpdate", liveUpdate);
+				toReturnElement.put("liveUpdateMinutes", liveUpdateMinutes);
 				JSONObject deneWordsToRemember = (JSONObject) getServletContext().getAttribute("DeneWordsToRemember");
 				JSONObject deneWordToRemember = deneWordsToRemember.getJSONObject(identityPointer);
 				String units="N.A.";

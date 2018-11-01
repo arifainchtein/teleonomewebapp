@@ -993,7 +993,10 @@ body.modal-open .modal .modal-dialog {
 		        var formName="RememberDeneWord";
 				var appendChart = $("#AppendChart").is(':checked');
 				liveUpdate = $("#LiveUpdate").is(':checked');
-
+				if(liveUpdate && liveUpdateMinutes<2){
+					alert("Please input  live update minutes greater than 2");
+					return false;
+				}
 		        if(fromDate=="" || fromTime==""){
 					var date = new Date();
 					var fromDate = (date.getDate()-1) + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
@@ -1063,7 +1066,8 @@ body.modal-open .modal .modal-dialog {
 		            identityPointer:identityPointer,
 		            formName:formName,
 		            appendChart:appendChart,
-		            liveUpdate:liveUpdate,
+					liveUpdate:liveUpdate,
+					liveUpdateMinutes:liveUpdateMinutes,
 					chartTitle:chartTitle,
 					chartDivId:chartDivId,
 		            fromMillis:fromMillis,

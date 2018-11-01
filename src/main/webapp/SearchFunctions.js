@@ -99,6 +99,8 @@ class SearchFunctions{
                     var chartTitle = graphData.chartTitle;
                     var chartDivId = graphData.chartDivId;
                     var liveUpdate = graphData.liveUpdate;
+                    var liveUpdateMinutes = graphData.liveUpdateMinutes;
+                    
                     var localStoreageKey = graphData.localStoreageKey;
 		            // console.log("graphData.chartTitle="+ graphData.chartTitle + " position=" + graphData.position);
 		            if(liveUpdate){ 
@@ -119,6 +121,7 @@ class SearchFunctions{
                     serverRequest.localStoreageKey=localStoreageKey;
                     serverRequest.formName=formName;
                     serverRequest.chartDivId=chartDivId ;
+                    serverRequest.liveUpdateMinutes=liveUpdateMinutes;
                     serverRequest.liveUpdate=liveUpdate;
                     serverRequest.chartTitle=chartTitle;
 		            reqData[i]=serverRequest;
@@ -155,6 +158,7 @@ class SearchFunctions{
 		                    var anyTeleonomeName = data.TeleonomeName;
 		                    var units = data.Units.replace('"','');
                             var liveUpdate = data.liveUpdate;
+                            var liveUpdateMinutes=data.liveUpdateMinutes;
 		                    var lastValueMillis = data.Value[data.Value.length-1]["Pulse Timestamp in Milliseconds"];
 		                    var lastValueTimestamp = new Date(lastValueMillis);
 		                    var visualizationStyle =data.VisualizationStyle;
