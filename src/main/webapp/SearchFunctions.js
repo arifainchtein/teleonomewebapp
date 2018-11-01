@@ -44,6 +44,7 @@ class SearchFunctions{
         if(allGraphs.length==0){
             // console.log('no refresh since there are no visuzliaers');
             $("#RefreshCounter").html("");
+            $("#SearchGraphArea").empty();
             refreshCounter=0;
             return false;
         } 

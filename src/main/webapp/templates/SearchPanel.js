@@ -203,12 +203,12 @@ class SearchPanel{
 	        panelHTML += "                                <div class=\"form-row form-elements-small\">";
 	        panelHTML += "                                    <div class=\"form-group col-xs-6\">";
 	        panelHTML += "                                            <select name=\"VisualisationType\" id=\"VisualisationType\">";
-	        panelHTML += "                                                <option value=\"LineGraph\">Line Graph</option>";
-	        panelHTML += "                                                <option value=\"DataTable\">Data Table</option>";
+	        panelHTML += "                                                <option value=\"LineGraph\">Line Graph   </option>";
+	        panelHTML += "                                                <option value=\"DataTable\">Data Table   </option>";
 	        panelHTML += "                                            </select><br>";
 	        panelHTML += "                                            <label for=\"VisualisationType\">View As</label>";
 			panelHTML += "                                    </div>";
-	        panelHTML += "                               
+	       
 	        panelHTML += "                                    <div class=\"form-group col-xs-6\">";
 	        panelHTML += "                                        <div class=\"form-check form-check-inline\">";
 	        panelHTML += "                                            <input class=\"form-check-input BSswitch\" type=\"checkbox\" id=\"AppendChart\" ><br>";
