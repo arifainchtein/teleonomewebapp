@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.TimeZone;
@@ -82,8 +83,8 @@ public class WebAppContextListener implements ServletContextListener {
 		}
 		logger.warn("timeZone:" + timeZone );
 		
-		logger.warn("Teleonome ContextListener Starting PingThread");
 		
+		logger.warn("Teleonome ContextListener Starting PingThread");
 		PingThread aPingThread = new PingThread();
 		aPingThread.start();
 		logger.warn("Teleonome ContextListener initialized");

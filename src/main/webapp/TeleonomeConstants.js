@@ -52,6 +52,7 @@ var TELEONOME_IDENTITY_ORGANISM = "Organism";
 //
 var DATATYPE_DOUBLE = "double";
 var DATATYPE_INTEGER = "int";
+var DATATYPE_BOOLEAN = "boolean";
 var DATATYPE_STRING = "String";
 var DATATYPE_JSONARRAY = "JSONArray";
 var DATATYPE_IMAGE_FILE = "Image File";
@@ -207,7 +208,7 @@ var COMMANDS_CURRENT_HOUR_IN_DAY = "$Current_Hour_In_Day";
 var COMMANDS_CURRENT_DAY_IN_WEEK = "$Current_Day_In_Week";
 var COMMANDS_CURRENT_DAY_IN_MONTH = "$Current_Day_In_Month";
 var COMMANDS_DATE_FOR_EXPORT_FILENAME="$Date_For_File_Export";
-
+var COMMANDS_GENERATE_DIGITAL_GEPPETTO_CODE = "$Generate_Digital_Geppetto_Code";
 var CURRENT_TIMESTAMP_VARIABLE_NAME = "CurrentTime";
 
 
@@ -389,7 +390,9 @@ var DENEWORD_TYPE_OPERATION_DESTINATION= "DeneWord Operation Destination";
 var DENEWORD_ACTION_EXECUTION_POINT= "Execution Point";
 var DENEWORD_ACTION_EXECUTION_POINT_IMMEDIATE= "Execution Point Immediate";
 var DENEWORD_ACTION_EXECUTION_POINT_POST_PULSE= "Execution Point Post Pulse";
-
+var TELEONOME_SECURITY_CODE="Teleonome Code";	
+var DIGITAL_GEPPETTO_SECURITY_CODE="Digital Geppetto Code";	
+var DENEWORD_CODE_TYPE="Code Type";
 
 var DENE_TYPE_DENECHAIN_VISUALIZATION_POSITION = "DeneChain Visualization Position";
 var DENE_TYPE_DENE_VISUALIZATION_POSITION="Dene Visualization Position";

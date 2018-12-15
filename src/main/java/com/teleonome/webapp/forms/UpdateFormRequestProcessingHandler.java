@@ -81,8 +81,8 @@ public class UpdateFormRequestProcessingHandler extends ProcessingFormHandler {
 
 		command="SetParameters";
 		String payLoad=payLoadParentJSONObject.toString();
-
-		JSONObject responseJSON = aDBManager.requestCommandToExecute(command, commandCode,payLoad, clientIp, restartRequired);
+		String commandCodeType=TeleonomeConstants.TELEONOME_SECURITY_CODE;
+		JSONObject responseJSON = aDBManager.requestCommandToExecute(command, commandCode,commandCodeType,payLoad, clientIp, restartRequired);
 		
 		logger.debug("sent command=" + command  + " response=" + responseJSON.toString(4));	
 		response.setContentType("text/html;charset=UTF-8");

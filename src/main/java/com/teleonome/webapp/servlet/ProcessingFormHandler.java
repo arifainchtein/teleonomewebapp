@@ -15,6 +15,7 @@ import javax.servlet.http.*;
 import org.apache.log4j.*;
 import org.json.JSONObject;
 
+import com.teleonome.framework.TeleonomeConstants;
 import com.teleonome.framework.exception.PersistenceException;
 import com.teleonome.framework.exception.ServletProcessingException;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
@@ -81,8 +82,8 @@ public abstract class ProcessingFormHandler{
 		String toReturn="";
 		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
-
-		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, payLoad, clientIp, restartRequired);
+		String commandCodeType=TeleonomeConstants.TELEONOME_SECURITY_CODE;
+		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, commandCodeType,payLoad, clientIp, restartRequired);
 		boolean includeHuman=true;
 		boolean includeInternal=false;
 		int offset=0;
