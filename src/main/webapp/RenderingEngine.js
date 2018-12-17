@@ -710,9 +710,9 @@ function renderPageToDisplay(){
 			// start rendering the html for this panel
 			//
 			if(mainPanelVisualStyle===PANEL_VISUALIZATION_ORGANISM_VIEW){
-				
-				var organismView = new organismView();
-				panelHTML += organismView.process();
+				var title = panelDeneChain["Name"];
+				var organismView = new OrganismView();
+				panelHTML += organismView.process(title);
 				refreshOrganismView();
 		
 

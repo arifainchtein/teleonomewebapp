@@ -72,15 +72,21 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 				if(deneWordToRemember.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
 					units = deneWordToRemember.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
 				}
-				double minimum=0.0;
+				double minimum=-9999;
 				if(deneWordToRemember.has(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE)) {
-					minimum = deneWordToRemember.getDouble(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+					minimum = deneWordToRemember.getDouble(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
+				}
+				
+				double maximum=-9999;
+				if(deneWordToRemember.has(TeleonomeConstants.DENEWORD_MAXIMUM_ATTRIBUTE)) {
+					maximum = deneWordToRemember.getDouble(TeleonomeConstants.DENEWORD_MAXIMUM_ATTRIBUTE);
 				}
 				toReturnElement.put("TeleonomeName", identity.getTeleonomeName());
 				toReturnElement.put("chartTitle", chartTitle);
 				toReturnElement.put("Units", units);
 				toReturnElement.put("chartDivId"	,chartDivId);
-				toReturnElement.put("Minimum", minimum);
+				if(minimum>-9999)toReturnElement.put("Minimum", minimum);
+				if(maximum>-9999)toReturnElement.put("Maximum", maximum);
 				toReturnElement.put("localStoreageKey", localStoreageKey);
 				toReturnElement.put("fromMillis", fromMillis);
 				toReturnElement.put("untilMillis", untilMillis);

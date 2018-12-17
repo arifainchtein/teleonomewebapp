@@ -448,6 +448,36 @@ function getDeneChainByIdentityPointer(identityPointer){
 	}
 }
 
+function containsDeneWordByIdentityPointer(identityPointer){
+	var identity = identityFactory.createIdentityByPointer(identityPointer);
+	var i4=0,j4=0,k4=0,l4=0;
+	var toReturn=false;
+	for( i4=0;i4<nucleiJSONArray.length;i4++){
+		//console.log("nucleiJSONArray=" + JSON.stringify(nucleiJSONArray[i4]));
+		if(nucleiJSONArray[i4]['Name']===identity.nucleusName){
+			var deneChains = nucleiJSONArray[i4]['DeneChains'];
+			for( j4=0;j4<deneChains.length;j4++){
+				if(deneChains[j4]["Name"]===identity.deneChainName){
+					var denes = deneChains[j4]["Denes"];
+					for( k4=0;k4<denes.length;k4++){
+						var dene = denes[k4];
+						if(dene["Name"]===identity.deneName){
+							var deneWords = dene['DeneWords'];
+							for( l4=0;l4<deneWords.length;l4++){
+								var deneWord = deneWords[l4];
+								if(deneWord['Name']===identity.deneWordName){
+									toReturn=true;								
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return toReturn;
+}
+
 function deneHasDeneWordProperty(dene, propertyName){
 	var deneWords = dene["DeneWords"];
 	var l7=0;

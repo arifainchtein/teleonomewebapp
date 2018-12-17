@@ -234,7 +234,50 @@ body.modal-open .modal .modal-dialog {
     margin: auto;
 }
 
+/*
+ Internal Power css
+*/
+.battery:after {
+    background-color: #fff;
+    border: 2px solid #000;
+    content: "";
+    display: block;
+    height: 16px;
+    position: absolute;
+    right: -6px;
+    top: 6px;
+    width: 6px;
+   
+}
+.battery {
+    background-color: #fff;
+    border: 2px solid #000;
+    height: 32px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    width: 100px;
+    font-size:24px;
+    font-family:Courier; 
+    color:Black;
+}
+.battery .battery-level {
+    background-color: #666;
+    height: 100%;
+}
 
+.battery .battery-level.battery-high {
+    background-color: #66CD00;
+}
+.battery .battery-level.battery-medium {
+    background-color: #FCD116;
+}
+.battery .battery-level.battery-low {
+    background-color: #FF3333;
+}
+.battery .battery-level {
+    text-align: center;
+}
 </style>
 </head>
 
@@ -614,9 +657,8 @@ body.modal-open .modal .modal-dialog {
 							panelHTML += "</div>";	
 							
 						}
-						$('#NewRememberedWordOrganismView').append(panelHTML);
 					}
-					
+					$('#NewRememberedWordOrganismView').append(panelHTML);
 				});
 
 				$(document).on('change','#RememeberedDeneWords',function(){
@@ -1408,10 +1450,59 @@ body.modal-open .modal .modal-dialog {
 					var panelPointer  = $(this).data("panelpointer");
 					var n = new SystemDiagnostics();
 					var html = n.process();
+					var batteryVoltagePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_POWER_STATUS + ":" +DENEWORD_MAIN_BATTERY_VOLTAGE;
+					if(containsDeneWordByIdentityPointer(batteryVoltagePointer)){
+						var batteryVoltage = getDeneWordByIdentityPointer(batteryVoltagePointer, DENEWORD_VALUE_ATTRIBUTE);
+						var batteryLevel = jQuery('.battery .battery-level');
+						var batterStateOfCharge=-1;
+						var batteryStatefChargePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_POWER_STATUS + ":" +DENEWORD_MAIN_BATTERY_STATE_OF_CHARGE;
+						if(containsDeneWordByIdentityPointer(batteryStatefChargePointer)){
+							batterStateOfCharge = getDeneWordByIdentityPointer(batteryStatefChargePointer, DENEWORD_VALUE_ATTRIBUTE);
+						}
+						batteryLevel.css('width', battery.level + '%');
+						batteryLevel.text(battery.level + '%');
+					    batteryLevel.removeClass('battery-high');  
+						batteryLevel.removeClass('battery-medium');  
+					    batteryLevel.removeClass('battery-low');  
+					    $('#DiagnosticsWorkArea').html(html);
+						$('#DiagnosticsWorkArea').show();
+						   
+						if (batterStateOfCharge > 85) {  
+						    batteryLevel.addClass('high');  
+						} else if (battery.level >= 65 ) {  
+						    batteryLevel.addClass('battery-medium');  
+						} else {  
+						    batteryLevel.addClass('battery-low');  
+						}
+						if (batteryVoltage>13) {
+						    $('#InternalBatteryChargingInd').show();
+					    }else{	
+					    	$('#InternalBatteryChargingInd').hide();
+					    }
+					}
+					
+					var batteryVoltagePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_POWER_STATUS + ":" +DENEWORD_MAIN_BATTERY_VOLTAGE;
+					if(containsDeneWordByIdentityPointer(batteryVoltagePointer)){
+					
+					
+					
+				    
+					
+					
+					
+					
+					
+					
+					
+				});
+				
+				$(document).on('click', '#Mnemosycons',function(e){
+					var panelPointer  = $(this).data("panelpointer");
+					var n = new Mnemosycons();
+					var html = n.process();
 					$('#DiagnosticsWorkArea').html(html);
 					$('#DiagnosticsWorkArea').show();
 				});
-				
 				//
 				// end of diagnostics page functions
 				//

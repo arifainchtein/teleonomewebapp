@@ -143,6 +143,11 @@ var DENE_USB_DEVICES="USB Devices";
 var DENE_PROCESSOR_INFO="Processor Info";
 var DENE_COMPUTER_INFO="Computer Info";
 var DENE_OPERON_CONTROL="Operon Control";
+var DENEWORD_MAIN_BATTERY_VOLTAGE="MainBatteryVoltage";
+var DENEWORD_MAIN_BATTERY_OUTPUT_CURRENT="MainBatteryOutputCurrent";
+var DENEWORD_MAIN_BATTERY_INPUT_CURRENT="MainBatteryInputCurrent";
+var DENEWORD_SOLAR_PANEL_INPUT_CURRENT="SolarPanelInputCurrent";
+var DENEWORD_MAIN_BATTERY_STATE_OF_CHARGE="InternalBatteryStateOfCharge";
 //
 // the different types of DeneChain
 //

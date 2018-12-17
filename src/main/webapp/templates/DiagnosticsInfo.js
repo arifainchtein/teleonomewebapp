@@ -37,15 +37,24 @@ class DiagnosticsInfo{
         panelHtml +='               <div class="panel-heading">';
         
         panelHtml +='                    <div class="row top-buffer">';
-        panelHtml +='                       <div class="col-lg-9"> </div>';
-        panelHtml +='                       <div class="col-lg-1 col-xs-4 DiagnosticsBar">';
+        
+        
+        
+        panelHtml +='                       <div class="col-lg-6"> </div>';
+        
+        panelHtml +='                       <div class="col-lg-1 col-xs-3 DiagnosticsBar">';
+        panelHtml +='                           <span id="Mnemosycons" data-panelpointer="Mnemosycons Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-erase"></i><br>Mnemosycons</span>';
+        panelHtml +='                       </div>';
+        
+        panelHtml +='                       <div class="col-lg-1 col-xs-3 DiagnosticsBar">';
         panelHtml +='                           <span id="Synchronous" data-panelpointer="Synchronous Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-time"></i><br>Synchronous</span>';
         panelHtml +='                       </div>';
         
-        panelHtml +='                       <div class="col-lg-1 col-xs-4 DiagnosticsBar">';
+        panelHtml +='                       <div class="col-lg-1 col-xs-3 DiagnosticsBar">';
         panelHtml +='                           <span  id="Asynchronous" data-panelpointer="Asynchronous Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-flash"></i><br>Asynchronous</span>';
-        panelHtml +='                       </div>';
-        panelHtml +='                       <div class="col-lg-1 col-xs-4 DiagnosticsBar">';
+        panelHtml +='                       </div>
+        	
+        panelHtml +='                       <div class="col-lg-1 col-xs-3 DiagnosticsBar">';
         panelHtml +='                           <span id="SystemDiagnostics" data-panelpointer="System Diagnostics Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-dashboard"></i><br>System</span>';
         panelHtml +='                       </div> ';          
         panelHtml +='                   </div> ';   
