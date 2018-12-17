@@ -1481,10 +1481,10 @@ body.modal-open .modal .modal-dialog {
 					    }
 					}
 					
-					var batteryVoltagePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_POWER_STATUS + ":" +DENEWORD_MAIN_BATTERY_VOLTAGE;
-					if(containsDeneWordByIdentityPointer(batteryVoltagePointer)){
-					
-					
+					var mainBatteryOutputCurrentPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_POWER_STATUS + ":" +DENEWORD_MAIN_BATTERY_OUTPUT_CURRENT;
+					if(containsDeneWordByIdentityPointer(mainBatteryOutputCurrentPointer)){
+						var mainBatteryOutputCurrent = getDeneWordByIdentityPointer(mainBatteryOutputCurrentPointer, DENEWORD_VALUE_ATTRIBUTE);
+					}
 					
 				    
 					
