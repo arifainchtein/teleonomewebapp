@@ -15,6 +15,7 @@ import org.postgresql.util.PGobject;
 import com.teleonome.framework.TeleonomeConstants;
 import com.teleonome.framework.denome.DenomeUtils;
 import com.teleonome.framework.denome.Identity;
+import com.teleonome.framework.exception.InvalidDenomeException;
 import com.teleonome.framework.exception.ServletProcessingException;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.webapp.servlet.ProcessingFormHandler;
@@ -62,7 +63,13 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 
 				logger.debug("identityPointer=" + identityPointer + " fromMillis=" + fromMillis+ " untilMillis=" + untilMillis  );
 				JSONObject currentPulse = (JSONObject)servletContext.getAttribute("CurrentPulse");
-				JSONObject wordToRememberSourceJSONObject = (JSONObject) DenomeUtils.getDeneWordByIdentity(currentPulse, new Identity(identityPointer), TeleonomeConstants.COMPLETE);
+				JSONObject wordToRememberSourceJSONObject=null;
+				try {
+					wordToRememberSourceJSONObject = (JSONObject) DenomeUtils.getDeneWordByIdentity(currentPulse, new Identity(identityPointer), TeleonomeConstants.COMPLETE);
+				} catch (InvalidDenomeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				JSONArray values = aDBManager.getRemeberedDeneWord(timeZone, identityPointer, fromMillis, untilMillis);
 
@@ -73,16 +80,16 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 				JSONObject deneWordsToRemember = (JSONObject) getServletContext().getAttribute("DeneWordsToRemember");
 				JSONObject deneWordToRemember = deneWordsToRemember.getJSONObject(identityPointer);
 				String units="N.A.";
-				if(wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
+				if(wordToRememberSourceJSONObject!=null && wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
 					units = wordToRememberSourceJSONObject.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
 				}
 				double minimum=-9999;
-				if(wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE)) {
+				if(wordToRememberSourceJSONObject!=null && wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE)) {
 					minimum = wordToRememberSourceJSONObject.getDouble(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
 				}
 				
 				double maximum=-9999;
-				if(wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_MAXIMUM_ATTRIBUTE)) {
+				if(wordToRememberSourceJSONObject!=null && wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_MAXIMUM_ATTRIBUTE)) {
 					maximum = wordToRememberSourceJSONObject.getDouble(TeleonomeConstants.DENEWORD_MAXIMUM_ATTRIBUTE);
 				}
 				toReturnElement.put("TeleonomeName", identity.getTeleonomeName());
