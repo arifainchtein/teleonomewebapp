@@ -120,6 +120,13 @@ public class WebAppContextListener implements ServletContextListener {
 	        	logger.debug("Refreshing, deneWordsToRemember");
 	        	JSONObject deneWordsToRemember =  getDeneWordsToRemember();
 				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
+				try {
+					JSONObject denomeJSONObject = new JSONObject(FileUtils.readFileToString(new File("Teleonome.denome")));
+					servletContext.setAttribute("CurrentPulse", denomeJSONObject);
+				} catch (JSONException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 				
 				
