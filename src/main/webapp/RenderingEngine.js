@@ -521,7 +521,7 @@ function renderPageToDisplay(){
 							}else{
 								$('#PulseActivityPanel').hide();
 							}	
-							renderPageByPointer(pageDefinintionPointer);
+							renderPageByPointer(pageDefinintionPointer, "EntryPoint");
 						}
 					}
 				}
@@ -535,7 +535,7 @@ function renderPageToDisplay(){
 
 
 
-	function renderPageByPointer(pagePointer){
+	function renderPageByPointer(pagePointer, locationId){
 		var pageDeneChain = humanInterfaceDeneChainIndex.get(pagePointer);
 		//// console.log("renderPageByPointer pageDeneChain=" +pageDeneChain);
 		//
@@ -630,7 +630,7 @@ function renderPageToDisplay(){
 		// now start rendering each panel
 		// therefore at this point empty the interface
 		//
-		$("#EntryPoint").empty();
+		$("#" + locationId).empty();
 		$("#teleonomeName").html(teleonomeName);
 		$("#PulseTimestamp").html(pulseTimestamp);
 		
@@ -964,7 +964,7 @@ function renderPageToDisplay(){
 		//close the last row of the page panels
 		panelHTML += "</div>";// clossing class=\"row top-buffer\">";
 		//// console.log("finished rendering page " + panelHTML);
-		$("#EntryPoint").append(panelHTML);
+		$("#" + locationId).append(panelHTML);
 		
 		//
 		// check to see if secundaryView is not empty,

@@ -1450,9 +1450,15 @@ body.modal-open .modal .modal-dialog {
 				});
 				$(document).on('click', '#SystemDiagnostics',function(e){
 					var panelPointer  = $(this).data("panelpointer");
-					var n = new SystemDiagnostics();
-					var html = n.process();
-					var batteryVoltagePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_POWER_STATUS + ":" +DENEWORD_MAIN_BATTERY_VOLTAGE;
+					var systemDiagnosticsPanelPointer = "@" +teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":" +panelPointer;
+					renderPageByPointer(systemDiagnosticsPanelPointer, "DiagnosticsWorkArea");
+					
+					//var systemDiagnosticsPanelDeneChain = humanInterfaceDeneChainIndex.get(systemDiagnosticsPanelPointer);
+					//var n = new SystemDiagnostics(systemDiagnosticsPanelDeneChain);
+					//var html = n.process();
+					$('#DiagnosticsWorkArea').show();
+					
+					/* var batteryVoltagePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_POWER_STATUS + ":" +DENEWORD_MAIN_BATTERY_VOLTAGE;
 					if(containsDeneWordByIdentityPointer(batteryVoltagePointer)){
 						var batteryVoltage = getDeneWordByIdentityPointer(batteryVoltagePointer, DENEWORD_VALUE_ATTRIBUTE);
 						var batteryLevel = jQuery('.battery .battery-level');
@@ -1469,8 +1475,6 @@ body.modal-open .modal .modal-dialog {
 							batteryLevel.text( 'N.A.');
 						}
 						
-						
-						
 					    batteryLevel.removeClass('battery-high');  
 						batteryLevel.removeClass('battery-medium');  
 					    batteryLevel.removeClass('battery-low');  
@@ -1478,7 +1482,7 @@ body.modal-open .modal .modal-dialog {
 						$('#DiagnosticsWorkArea').show();
 						   
 						if (batterStateOfCharge > 85) {  
-						    batteryLevel.addClass('high');  
+						    batteryLevel.addClass('battery-high');  
 						} else if (battery.level >= 65 ) {  
 						    batteryLevel.addClass('battery-medium');  
 						} else {  
@@ -1488,8 +1492,8 @@ body.modal-open .modal .modal-dialog {
 						    $('#InternalBatteryChargingInd').show();
 					    }else{	
 					    	$('#InternalBatteryChargingInd').hide();
-					    }
-					}
+					    } 
+					}*/
 					
 					var mainBatteryOutputCurrentPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_POWER_STATUS + ":" +DENEWORD_MAIN_BATTERY_OUTPUT_CURRENT;
 					if(containsDeneWordByIdentityPointer(mainBatteryOutputCurrentPointer)){
