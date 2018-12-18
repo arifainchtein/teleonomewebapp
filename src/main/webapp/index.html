@@ -1449,13 +1449,13 @@ body.modal-open .modal .modal-dialog {
 					$('#DiagnosticsWorkArea').show();
 				});
 				$(document).on('click', '#SystemDiagnostics',function(e){
+					
+					var n = new SystemDiagnostics();
+					n.process();
 					var panelPointer  = $(this).data("panelpointer");
 					var systemDiagnosticsPanelPointer = "@" +teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":" +panelPointer;
 					renderPageByPointer(systemDiagnosticsPanelPointer, "DiagnosticsWorkArea");
 					
-					//var systemDiagnosticsPanelDeneChain = humanInterfaceDeneChainIndex.get(systemDiagnosticsPanelPointer);
-					//var n = new SystemDiagnostics(systemDiagnosticsPanelDeneChain);
-					//var html = n.process();
 					$('#DiagnosticsWorkArea').show();
 					
 					/* var batteryVoltagePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_POWER_STATUS + ":" +DENEWORD_MAIN_BATTERY_VOLTAGE;

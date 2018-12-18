@@ -4,23 +4,22 @@ class SystemDiagnostics{
 
 	}
 
-process1(systemDiagnosticsPanelDeneChain){
-	panelDeneChain = humanInterfaceDeneChainIndex["_map"][deneChainPointer];
-	
-	if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL){
-		var title =  panelDeneChain["Name"]
-		
-		 var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-        var object = panelPositionInPanelHashMap["_map"];
-       
-		
-		var aSingleValuePanel = new SingleValuePanel();
-		panelHTML += aSingleValuePanel.process(false, title, object);
+	process(){
+		var currentViewObjectU = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+		if(currentViewObjectU != null && currentViewObjectU != undefined){
+			var currentViewObject = JSON.parse(currentViewObjectU);
+			var secundaryView = currentViewObject["SecundaryView"];
+			if( secundaryView != "SystemDiagnostics"){
+				localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
+				var currentViewObject ={};
+				currentViewObject["SecundaryView"]="SystemDiagnostics";  
+				localStorageManager.setItem(LOCAL_STORAGE_CURRENT_VIEW_KEY, currentViewObject);
+			}
+		}
 
 	}
-}
 
-	process(){
+	process1(){
 		var commandsInfo;
 
 		var panelHTML = "<div class=\"col-lg-12\">";
