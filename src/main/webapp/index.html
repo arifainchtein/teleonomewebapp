@@ -426,6 +426,7 @@ body.modal-open .modal .modal-dialog {
 		<!-- The templates, make sure they are loaded after the two Functions files -->
 		<script type="text/javascript" src="templates/SettingsInfo.js"></script>
 		<script type="text/javascript" src="templates/DiagnosticsInfo.js"></script>
+		<script type="text/javascript" src="templates/SystemDiagnostics.js"></script>
 		<script type="text/javascript" src="templates/AsynchronousDiagnostics.js"></script>
 		<script type="text/javascript" src="templates/SynchronousDiagnostics.js"></script>
 		<script type="text/javascript" src="templates/DeneWordTable.js"></script>
@@ -446,7 +447,7 @@ body.modal-open .modal .modal-dialog {
 		<script type="text/javascript" src="templates/ActionEvaluationReport.js"></script>
 		<script type="text/javascript" src="templates/OrganismView.js"></script>
 		<script type="text/javascript" src="templates/SearchPanel.js"></script>
-		<script type="text/javascript" src="templates/SystemDiagnostics.js"></script>
+		
 		
 		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
 		<script type="text/javascript" src="RenderingEngine.js"></script>
@@ -1460,8 +1461,16 @@ body.modal-open .modal .modal-dialog {
 						if(containsDeneWordByIdentityPointer(batteryStatefChargePointer)){
 							batterStateOfCharge = getDeneWordByIdentityPointer(batteryStatefChargePointer, DENEWORD_VALUE_ATTRIBUTE);
 						}
-						batteryLevel.css('width', battery.level + '%');
-						batteryLevel.text(battery.level + '%');
+						if(batterStateOfCharge>0){
+							batteryLevel.css('width', batterStateOfCharge + '%');
+							batteryLevel.text(batterStateOfCharge + '%');
+						}else{
+							batteryLevel.css('width', 0 + '%');
+							batteryLevel.text( 'N.A.');
+						}
+						
+						
+						
 					    batteryLevel.removeClass('battery-high');  
 						batteryLevel.removeClass('battery-medium');  
 					    batteryLevel.removeClass('battery-low');  

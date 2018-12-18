@@ -15,7 +15,7 @@ class SystemDiagnostics{
         panelHTML += "              <div class=\"panel-heading\"><h4>Internal Power</h4></div>";
         panelHTML += "              <div class=\"panel-body text-center\">";
         panelHTML += "                  <div class=\"battery\">";    
-        panelHTML += "                  	<div class=\"battery-level\"></div>":  
+        panelHTML += "                  	<div class=\"battery-level\"></div>";  
         panelHTML += "                  	<i id=\"InternalBatteryChargingInd\" class=\"glyphicon glyphicon-erase\"></i>";  
         panelHTML += "                  </div>"; 
         panelHTML += "                  <div class=\"current\">";    
