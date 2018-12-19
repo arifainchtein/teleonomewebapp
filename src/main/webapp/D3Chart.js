@@ -50,7 +50,7 @@ function drawPieChart(id, data){
 		
 
 	  var svg = mySvg.append("g")
-		.attr("transform", "translate(" + ((width / 2)-50) + "," + ((height / 2)) + ")");
+		.attr("transform", "translate(" + ((width / 2)-30) + "," + ((height / 2)) + ")");
 	  
 	  var g = svg.selectAll(".arc")
 		.data(pie(pie_data))
@@ -86,14 +86,14 @@ function drawPieChart(id, data){
   
   .attr("transform", function(d,i){
 	//return "translate(" + i*230 + "," + (i * 1 + 450) + ")"; // place each legend on the right and bump each one down 15 pixels
-	return "translate(" + (width -50) + "," + (i * 65 + 10) + ")"; // place each legend on the right and bump each one down 15 pixels
+	return "translate(" + (width -50) + "," + (i * 55) + ")"; // place each legend on the right and bump each one down 15 pixels
  })
  .attr("class", "legend");   
 
 legendG.append("rect") // make a matching color rect
   .attr("width", 30)
   .attr("height", 30)
-  .attr("y",40)
+  .attr("y",10)
   .attr("fill", function(d) {
     return d3.rgb(d.data.Color);
   });
@@ -103,7 +103,7 @@ legendG.append("text") // add the text
     return  d.data.Name + " ("+ d.data.Value +d.data.Units+")";
   })
   .style("font-size", 16)
-  .attr("y", 65)
+  .attr("y", 25)
   .attr("x", 35);
 
 //  legendG.append("text") // add the text

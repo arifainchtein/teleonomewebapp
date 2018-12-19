@@ -1,0 +1,10 @@
+class Mnemosycons{
+
+	constructor(){
+
+	}
+
+	process(){
+		
+	}
+}
