@@ -1,4 +1,4 @@
-function drawPieChart(id, pie_data){
+function drawPieChart(id, data){
 
 //	var pie_data = [{
 //		"name": "Database",
@@ -17,9 +17,14 @@ function drawPieChart(id, pie_data){
 //		"color":"#d0d0d0"
 //	  }];
 //
-
-	  var width = 350,
-		height = 250,
+	for(var i = 0; i < data.Value.length; i++) {
+	    var obj = data.Value[i];
+	    obj.Value = Number(obj.Value);
+	}
+	
+		var pie_data = data.Value;
+	  var width = 300,
+		height = 240,
 		radius = (Math.min(width, height) / 2);
 	  
 	  
@@ -36,7 +41,7 @@ function drawPieChart(id, pie_data){
 		var pie = d3.layout.pie()
 		.sort(null)
 		.value(function(d) {
-		  return d.value;
+		  return d.Value;
 		});
 	  
 		var mySvg = d3.select("#"+id).append("svg")
@@ -58,7 +63,7 @@ function drawPieChart(id, pie_data){
 		
 		.style("fill", function(d) {
 		  //return color(d.data.value);
-		  return d3.rgb(d.data.color);
+		  return d3.rgb(d.data.Color);
 		});
 	  
 	 
@@ -69,7 +74,7 @@ function drawPieChart(id, pie_data){
 		  return "translate(" + arc.centroid(d) + ")";
 		})
 		.attr("dy", ".35em")
-		.style("font", "bold 20px sans-serif")
+		.style("font", "bold 18px sans-serif")
 		.text(function(d) {
 		  return "";
 		});
@@ -90,24 +95,24 @@ legendG.append("rect") // make a matching color rect
   .attr("height", 30)
   .attr("y",40)
   .attr("fill", function(d) {
-    return d3.rgb(d.data.color);
+    return d3.rgb(d.data.Color);
   });
 
 legendG.append("text") // add the text
   .text(function(d){
-    return  d.data.name;
+    return  d.data.Name + " ("+ d.data.Value +d.data.Units+")";
   })
-  .style("font-size", 20)
+  .style("font-size", 16)
   .attr("y", 65)
   .attr("x", 35);
 
-  legendG.append("text") // add the text
-  .text(function(d){
-    return "("+ d.data.value +d.data.units+")";
-  })
-  .style("font", "italic 14px sans-serif")
-  .attr("y", 65)
-  .attr("x",130);
+//  legendG.append("text") // add the text
+//  .text(function(d){
+//    return "("+ d.data.Value +d.data.Units+")";
+//  })
+//  .style("font", "italic 14px sans-serif")
+//  .attr("y", 65)
+//  .attr("x",130);
 
 
 	  function type(d) {

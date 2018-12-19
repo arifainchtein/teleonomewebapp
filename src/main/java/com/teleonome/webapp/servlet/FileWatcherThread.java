@@ -106,14 +106,14 @@ public class FileWatcherThread extends Thread{
 								
 								currentIdentityMode = (String) DenomeUtils.getDeneWordAttributeByDeneWordNameFromDene(vitalDene, TeleonomeConstants.DENEWORD_TYPE_CURRENT_IDENTITY_MODE, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
 								
-								int currentPulse = ((Integer) DenomeUtils.getDeneWordAttributeByDeneWordNameFromDene(vitalDene, TeleonomeConstants.DENEWORD_TYPE_CURRENT_PULSE_FREQUENCY, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE))/1000;
+								int currentPulseFrequency = ((Integer) DenomeUtils.getDeneWordAttributeByDeneWordNameFromDene(vitalDene, TeleonomeConstants.DENEWORD_TYPE_CURRENT_PULSE_FREQUENCY, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE))/1000;
 								//// System.out.println("AsyncServlet, currentPulse=" + currentPulse);
 							
 								servletContext.setAttribute("CurrentPulse", denomeJSONObject);
 								servletContext.setAttribute("CurrentTimeZone", currentTimeZone);
 								servletContext.setAttribute("CurrentIdentityMode", currentIdentityMode);
 								logger.debug("CurrentIdentityMode="+ currentIdentityMode);
-								servletContext.setAttribute("CurrentPulse", currentPulse);
+								servletContext.setAttribute("CurrentPulseFrequency", currentPulseFrequency);
 
 							}catch (JSONException e) {
 								// TODO Auto-generated catch block

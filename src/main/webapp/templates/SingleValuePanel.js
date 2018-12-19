@@ -50,7 +50,7 @@ class SingleValuePanel{
                 var unitsText=renderedDataSourceDeneWord["Units"];
                 if(unitsText==="" || unitsText===undefined)unitsText="&nbsp;&nbsp;&nbsp;&nbsp;";
 
-                panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-4 col-xs-4\">";
+                panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
                 panelHTML += "<div class=\"panel panel-default\">";
                 panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
                 var valueData = renderedDataSourceDeneWord["Value"];

@@ -942,7 +942,7 @@ function renderPageToDisplay(){
 			panelHTML += "</div>";    // closing <div class=\"panel-heading\"
 			panelHTML += "</div>";    // closing <div class=\"panel panel-default\"
 			panelHTML += "</div>";    // closing <div class=\"bs-component\"
-			//panelHTML += "</div>";    // closing <div class=\"col-lg-6\"
+			panelHTML += "</div>";    // closing <div class=\"col-lg-6\"
 
 			// console.log("rowPanelCounter=" + rowPanelCounter + " numberOfPanelsPerRow=" + numberOfPanelsPerRow);
 			if(rowPanelCounter===numberOfPanelsPerRow){
