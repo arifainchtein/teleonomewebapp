@@ -327,10 +327,7 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 				}
 			}
 			rulesDetailsLink = '<a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"MnemosyconRulesDetails\" data-time=\"' + pulseTimestampMillis + '\"  data-mnemosyconname=\"'+ mnemosyconName +'\">' + numberRules + '</a>';
-			
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+pulseTimestampString+"</td><td>"+freeSpaceBefore+"</td><td>"+ freeSpaceAfter +"</td><td>"+rulesDetailsLink+"</td><td>" + totalTime +"</td></tr>";
-
-
 		}
 		panelHTML += "</tbody></table>";
 	}
