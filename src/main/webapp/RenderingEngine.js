@@ -327,23 +327,8 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 				}
 			}
 			rulesDetailsLink = '<a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"MnemosyconRulesDetails\" data-time=\"' + pulseTimestampMillis + '\"  data-mnemosyconname=\"'+ mnemosyconName +'\">' + numberRules + '</a>';
-			"
+			
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+pulseTimestampString+"</td><td>"+freeSpaceBefore+"</td><td>"+ freeSpaceAfter +"</td><td>"+rulesDetailsLink+"</td><td>" + totalTime +"</td></tr>";
-
-
-			var formatedTime = new Date(item["Pulse Timestamp in Milliseconds"]);
-			var forMin;
-			if(formatedTime.getMinutes()<10){
-				forMin="0" + formatedTime.getMinutes();
-			}else{
-				forMin=formatedTime.getMinutes();
-			}
-			var ft = formatedTime.getDate()+"/" +  (formatedTime.getMonth()+1)+"/" + formatedTime.getFullYear()+" " + formatedTime.getHours()+":" +forMin;
-
-			if(item.Value != undefined &&  !isNaN(formatedTime.getDate()) ){
-
-				panelHTML += '<tr><td><a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"PulseTime\" data-time=\"' + item["Pulse Timestamp in Milliseconds"] + '\"  data-teleonomeName=\"'+ anyTeleonomeName +'\">' + ft + '</a></td><td>' + item.Value + '</td></tr>';
-			}
 
 
 		}
@@ -449,7 +434,7 @@ function renderMnemosyconsRules(mnemosyconName, rulesDetails){
 					panelHTML += "</table>";
 					panelHTML += "</td></tr>";
 				}
-			}
+			
 			}
 		}
 		panelHTML += "</tbody></table>";
@@ -495,8 +480,8 @@ function renderMnemosyconsRules(mnemosyconName, rulesDetails){
 				}
 
 				panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+mnemosyconRuleSource+"</td><td>"+mnemosyconRuleLocation+"</td><td>"+ mnemosyconRuleUntilTimeValue  + mnemosyconRuleUntilTimeUnit+"</td><td>"+deleteOlderThan+"</td><td>" + rowsDeleted +"</td><td>" + mnemosyconRuleExecutionMillis +"</td></tr>";
-
-			}else if(mnemosyconRuleSource.equals(TeleonomeConstants.MNEMOSYCON_DATA_SOURCE_FILE_SYSTEM)) {
+			}
+		}else if(mnemosyconRuleSource.equals(TeleonomeConstants.MNEMOSYCON_DATA_SOURCE_FILE_SYSTEM)) {
 
 
 
