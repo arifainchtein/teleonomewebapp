@@ -69,7 +69,7 @@ public class GetMnemosyconRulesDetailsProcessingHandler extends ProcessingFormHa
 										) {
 									//
 									// this rule processing belongs to the same 
-									toReturn.put(ruleProcessingDeneWordJSONObject);
+									toReturn.put(ruleProcessingJSONObject);
 									break found;
 								}
 							}
