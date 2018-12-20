@@ -39,7 +39,8 @@ public class GetMnemosyconRulesDetailsProcessingHandler extends ProcessingFormHa
 		logger.debug("requestedMnemosyconName=" + requestedMnemosyconName + " timemillis=" + timemillis + " telonomeName=" + telonomeName);
 		Identity identity = new Identity(telonomeName,TeleonomeConstants.NUCLEI_PURPOSE, TeleonomeConstants.DENECHAIN_MNEMOSYCON_PROCESSING);
 		JSONObject mnemosyconProcessingDeneChain;
-		String deneWordName, deneWordValue;
+		String deneWordName;
+		Object deneWordValue;
 		JSONArray toReturn = new JSONArray();
 		if(pulseJSONObject!=null) {
 			try {
@@ -60,7 +61,7 @@ public class GetMnemosyconRulesDetailsProcessingHandler extends ProcessingFormHa
 								ruleProcessingDeneWordJSONObject = ruleProcessingDeneWordsJSONArray.getJSONObject(j);
 								logger.debug(ruleProcessingDeneWordJSONObject.toString(4));
 								deneWordName = ruleProcessingDeneWordJSONObject.getString(TeleonomeConstants.DENEWORD_NAME_ATTRIBUTE);
-								deneWordValue = ruleProcessingDeneWordJSONObject.getString(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+								deneWordValue = ruleProcessingDeneWordJSONObject.get(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
 
 								logger.debug("deneWordName=" + deneWordName + " deneWordValue=" + deneWordValue);
 								if(deneWordName.equals(TeleonomeConstants.CODON) &&
