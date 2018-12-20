@@ -965,6 +965,13 @@ body.modal-open .modal .modal-dialog {
                     searchFunctions.displayPulse(teleonomeName, pulseMillis);
                 });
             
+                
+                $(document).on('click', ".MnemosyconRulesDetails",function(e) {
+                    e.preventDefault();
+                    var mnemosyconName = $(this).data("mnemosyconname");
+                    var pulseMillis = $(this).data("time");
+                    searchFunctions.displayMnemosyconRulesDetails(mnemosyconName, pulseMillis);
+                });
             
             $(document).on('click', "#RefreshCounter",function(e) {
                     refreshCounterStatus=!refreshCounterStatus;

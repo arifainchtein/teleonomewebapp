@@ -4,10 +4,41 @@ class SearchFunctions{
 		
 	}
 	
+	displayMnemosyconRulesDetails(mnemosyconName, pulseMillis){
+		$('#WaitingWheel').show();
+        var formName="GetMnemosyconRulesDetails";
+       
+        
+     $.ajax({
+                
+                type: "GET",
+                url: "/TeleonomeServlet",
+                data: {formName:formName, MnemosyconName:mnemosyconName, PulseMillis:pulseMillis},
+                success: function (data) {
+                   // // console.log("data=" + JSON.stringify(data));
+                   var rulesDetails = JSON.parse(data);
+                   var rulesDetailsRenderedHTML=renderMnemosyconsRules(mnemosyconName,rulesDetails);
+                   
+                   var d =  new Date(pulseMillis);
+                   var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +d.getHours() + ":" + d.getMinutes()+ ":" + d.getSeconds();
+                    $('#DisplayPulseTitle').html(mnemosyconName+ " " + datestring);
+                    $('#DisplayPulseData').html(rulesDetailsRenderedHTML);
+                    $('#WaitingWheel').hide();
+                },
+                error: function(data){
+                    $('#WaitingWheel').hide();
+                    // console.log("error getting log file:" + JSON.stringify(data));
+                    alert("Error getting log:" + JSON.stringify(data));
+                    return false;
+                }
+            });
+	}
+	
+	
 	displayPulse(teleonomeName, pulseMillis){
 	    
         $('#WaitingWheel').show();
-        var formName="getOrganismPulseByTeleonomeNameAndTimestamp";
+        var formName="GetOrganismPulseByTeleonomeNameAndTimestamp";
        
         
      $.ajax({
@@ -21,7 +52,7 @@ class SearchFunctions{
                    var d =  new Date(pulseMillis);
                    var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +d.getHours() + ":" + d.getMinutes()+ ":" + d.getSeconds();
                     $('#DisplayPulseTitle').html(teleonomeName + " " + datestring);
-                    $('#DisplayPulseData').html(pulseJson)
+                    $('#DisplayPulseData').html(pulseJson);
                     $('#WaitingWheel').hide();
                 },
                 error: function(data){

@@ -35,7 +35,7 @@ function monitorBetweenPulses() {
 	timeStringSinceLastPulse = msToTime(timeSinceLastPulse);
 	$("#TimeSinceLastPulse").html(timeStringSinceLastPulse);
 	//// console.log("timeStringSinceLastPulse=" + timeStringSinceLastPulse);
-	
+
 	//
 	// now calculate if we should change the color to indicate that is late
 	// the logic is as follows:
@@ -57,31 +57,31 @@ function monitorBetweenPulses() {
 		var timeBeforeLate = numberOfPulsesBeforeLate*(currentPulseGenerationDuration+currentPulseFrequency);
 		//timeBeforeLate = 60000;
 		//// console.log("timeBeforeLate=" + timeBeforeLate + " timeSinceLastPulse=" + timeSinceLastPulse);
-			if(timeSinceLastPulse>timeBeforeLate){
-				//
-				// set the status to blinking yellow
-				//
-				if ($(window).width() < 480) {
-					$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-danger');
-				}else{
-					$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-danger');
-				}
-			}else if(timeSinceLastPulse>timeBeforeLate/2){ 
-				if ($(window).width() < 480) {
-					$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-warning');
-				}else{
-					$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-warning');
-				}
+		if(timeSinceLastPulse>timeBeforeLate){
+			//
+			// set the status to blinking yellow
+			//
+			if ($(window).width() < 480) {
+				$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-danger');
 			}else{
-				//
-				// set the status to blinking yellow
-				//	
-				if ($(window).width() < 480) {
-					$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-success');
-				}else{
-					$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
-				}
+				$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-danger');
 			}
+		}else if(timeSinceLastPulse>timeBeforeLate/2){ 
+			if ($(window).width() < 480) {
+				$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-warning');
+			}else{
+				$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-warning');
+			}
+		}else{
+			//
+			// set the status to blinking yellow
+			//	
+			if ($(window).width() < 480) {
+				$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-success');
+			}else{
+				$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
+			}
+		}
 	}
 } 
 
@@ -93,14 +93,14 @@ function renderCommandRequestTable(commandsInfo){
 	var offset = commandsInfo.Offset;
 	var numberOfPagesToShow = 5;
 	var numberOfPages = total/commandsPerPage;
-	
+
 	if ($(window).width() < 480) {
 		commandsPerPage=5;
 		var panelHTML = "<table class=\"table\"><tbody>";
-		
+
 		for (var i = 0; i < allCommands.length; i++) {
 			var command = allCommands[i];
-			
+
 			var createdOnDate = new Date(command.Createdon);
 			var createdOnDateFormated = getISOStringWithoutSecsAndMillisecs(createdOnDate);
 			var executedOnDateFormated="";
@@ -138,7 +138,7 @@ function renderCommandRequestTable(commandsInfo){
 		panelHTML += "<thead><tr><th>Id</th><th>Client Ip</th><th>Created On</th><th>ExecutedOn</th><th>Command</th><th>Payload</th><th>Status</th></tr></thead><tbody>";
 		for (var i = 0; i < allCommands.length; i++) {
 			var command = allCommands[i];
-			
+
 			var createdOnDate = new Date(command.Createdon);
 			var createdOnDateFormated = getISOStringWithoutSecsAndMillisecs(createdOnDate);
 			var executedOnDateFormated="";
@@ -180,7 +180,7 @@ function renderCommandRequestTable(commandsInfo){
 		}
 		panelHTML += "	<li class=\"page-item\"><a data-offset=\""+(offset + numberOfPagesToShow) +"\"  class=\"page-link\" href=\"#\"> ...</a></li>";
 		panelHTML += "	<li class=\"page-item\"><a data-offset=\""+numberOfPages +"\" class=\"page-link\" href=\"#\"> " + numberOfPages +"</a></li>";
-		
+
 		panelHTML += "	<li class=\"page-item\">";
 		panelHTML += "	<a class=\"page-link\" href=\"#\">Next</a>";
 		panelHTML += "</li>";
@@ -191,7 +191,6 @@ function renderCommandRequestTable(commandsInfo){
 	}
 	return panelHTML;
 }
-
 function renderMnemosycons(mnemosyconProcessingAddressPointer){
 	//
 	// mnemosyconProcessingAddressPointer will contain the complete address
@@ -208,60 +207,60 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 	//
 	// the deneName represents all the denes which will be part f the report
 	var deneName = identity.deneName;
-	
+
 	//
 	// now make an identity for the parent, ie @Sento:Mnemosyne:Mnemosyne Current Week:
 	var parentMnemosyconProcessingAddressPointer =  "@" +teleonomeName + ":" + nucleusName + ":" +deneChainName;
-	
+
 	var parentMnemosyconProcessingDenesDeneChain = getDeneChainByIdentityPointer(parentMnemosyconProcessingAddressPointer);
-    var denes = parentMnemosyconProcessingDenesDeneChain["Denes"];	
-    //
-    // now loop over all the denes and store the ones that match in  a hashmap to be sorted
-    //
-    var unsortedHashMap = new HashMap();
-    
-    for (var i = 0; i < denes.length; i++) {
+	var denes = parentMnemosyconProcessingDenesDeneChain["Denes"];	
+	//
+	// now loop over all the denes and store the ones that match in  a hashmap to be sorted
+	//
+	var unsortedHashMap = new HashMap();
+
+	for (var i = 0; i < denes.length; i++) {
 		var dene = denes[i];
 		//
 		if(dene.Name == deneName){
 			unsortedHashMap.put(dene.Position,dene);
 		}
-    }
-    var sorted = sortHashMap(unsortedHashMap);
-    if(sorted["_size"]==0) return "";
-    
-    var mnemosyneDataSortedArrayMap = sorted["_map"];
-    var dataDene;
-    var dataDeneWords, mnemosyconName;
-    var deneWord;
-   var rowStatus="text-center";
-   var freeSpaceBefore, freeSpaceAfter, numberRules, totalTime, pulseTimestampString;
-   
+	}
+	var sorted = sortHashMap(unsortedHashMap);
+	if(sorted["_size"]==0) return "";
 
-   
+	var mnemosyneDataSortedArrayMap = sorted["_map"];
+	var dataDene;
+	var dataDeneWords, mnemosyconName;
+	var deneWord;
+	var rowStatus="text-center";
+	var freeSpaceBefore, freeSpaceAfter, numberRules, totalTime, pulseTimestampString, pulseTimestampMillis, rulesDetailsLink;
+
+
+
 	if ($(window).width() < 480) {
 		//
 		// the get the name of the mnemosycon just get the codon of 
 		// one of the denes 
 		for(var property in mnemosyneDataSortedArrayMap) {
-	        dataDene = mnemosyneDataSortedArrayMap[property];  
-	        dataDeneWords = dataDene.DeneWords;
-	        for( l=0;l<dataDeneWords.length;l++){
+			dataDene = mnemosyneDataSortedArrayMap[property];  
+			dataDeneWords = dataDene.DeneWords;
+			for( l=0;l<dataDeneWords.length;l++){
 				deneWord = dataDeneWords[l];
 				if(deneWord["Name"]=== CODON){
 					mnemosyconName=deneWord["Value"];
 					break;
 				}
-	        }
+			}
 		} 
 		var panelHTML = "<h4 class=\"text-center\">"+ mnemosyconName +"</h4><br><table class=\"table\"><tbody>";
-		
+
 		for(var property in mnemosyneDataSortedArrayMap) {
-	        //
-	        //after every three panels 
-	        dataDene = mnemosyneDataSortedArrayMap[property];  
-	        dataDeneWords = dataDene.DeneWords;
-	        for( l=0;l<dataDeneWords.length;l++){
+			//
+			//after every three panels 
+			dataDene = mnemosyneDataSortedArrayMap[property];  
+			dataDeneWords = dataDene.DeneWords;
+			for( l=0;l<dataDeneWords.length;l++){
 				deneWord = dataDeneWords[l];
 				if(deneWord["Name"]===DENEWORD_FREE_SPACE_BEFORE_MNEMOSYCON){
 					freeSpaceBefore=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
@@ -273,402 +272,607 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 					numberRules=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== PULSE_TIMESTAMP){
 					pulseTimestampString=deneWord["Value"];
+				}else if(deneWord["Name"]=== PULSE_TIMESTAMP_MILLISECONDS){
+					pulseTimestampMillis=deneWord["Value"];
 				}
-	        }
-	        
-			
+			}
+			rulesDetailsLink = '<a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"MnemosyconRulesDetails\" data-time=\"' + pulseTimestampMillis + '\"  data-mnemosyconname=\"'+ mnemosyconName +'\">' + numberRules + '</a>';
+
+
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td>";
 			panelHTML += "<table table-borderless>";
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Pulse Time</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+pulseTimestampString+"</td></tr>";
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Free Space Before</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+freeSpaceBefore+"</td></tr>";
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Free Space After</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+ freeSpaceAfter +"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Rules Processed</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+numberRules+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Rules Processed</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+rulesDetailsLink+"</td></tr>";
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Processing Time (<i> ms</i>)</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" + totalTime +"</td></tr>";
 			panelHTML += "</table>";
 			panelHTML += "</td></tr>";
 		}
 		panelHTML += "</tbody></table>";
 	}else{
-		
+
 		for(var property in mnemosyneDataSortedArrayMap) {
-	        dataDene = mnemosyneDataSortedArrayMap[property];  
-	        dataDeneWords = dataDene.DeneWords;
-	        for( l=0;l<dataDeneWords.length;l++){
+			dataDene = mnemosyneDataSortedArrayMap[property];  
+			dataDeneWords = dataDene.DeneWords;
+			for( l=0;l<dataDeneWords.length;l++){
 				deneWord = dataDeneWords[l];
 				if(deneWord["Name"]=== CODON){
 					mnemosyconName=deneWord["Value"];
 					break;
 				}
-	        }
+			}
 		} 
 		var panelHTML = "<h4 class=\"text-center\">"+ mnemosyconName +"</h4><br><table class=\"table table-responsive\">";
 		panelHTML += "<thead><tr><th class=\""+ rowStatus+"\">Pulse Timestamp</th><th class=\""+ rowStatus+"\">Free Space Before</th><th class=\""+ rowStatus+"\">Free Space After</th><th class=\""+ rowStatus+"\">Rules Processed</th><th class=\""+ rowStatus+"\">Processing Time</th></tr></thead><tbody>";
 		for(var property in mnemosyneDataSortedArrayMap) {
-	        //
-	        //after every three panels 
-	        dataDene = mnemosyneDataSortedArrayMap[property];
-	        dataDeneWords = dataDene.DeneWords;
-	        for( l=0;l<dataDeneWords.length;l++){
+			//
+			//after every three panels 
+			dataDene = mnemosyneDataSortedArrayMap[property];
+			dataDeneWords = dataDene.DeneWords;
+			for( l=0;l<dataDeneWords.length;l++){
 				deneWord = dataDeneWords[l];
 				if(deneWord["Name"]===DENEWORD_FREE_SPACE_BEFORE_MNEMOSYCON){
-					freeSpaceBefore=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					freeSpaceBefore=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_FREE_SPACE_AFTER_MNEMOSYCON){
-					freeSpaceAfter=deneWord["Value"] + "nbsp;" + deneWord["Units"];
+					freeSpaceAfter=deneWord["Value"] + "&nbsp;" + deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_EXECUTION_TIME){
-					totalTime=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					totalTime=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_RULES_PROCESSED){
-					numberRules=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					numberRules=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== PULSE_TIMESTAMP){
 					pulseTimestampString=deneWord["Value"];
+				}else if(deneWord["Name"]=== PULSE_TIMESTAMP_MILLISECONDS){
+					pulseTimestampMillis=deneWord["Value"];
 				}
-	        }
-	        
-	        panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+pulseTimestampString+"</td><td>"+freeSpaceBefore+"</td><td>"+ freeSpaceAfter +"</td><td>"+numberRules+"</td><td>" + totalTime +"</td></tr>";
-			
+			}
+			rulesDetailsLink = '<a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"MnemosyconRulesDetails\" data-time=\"' + pulseTimestampMillis + '\"  data-mnemosyconname=\"'+ mnemosyconName +'\">' + numberRules + '</a>';
+			"
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+pulseTimestampString+"</td><td>"+freeSpaceBefore+"</td><td>"+ freeSpaceAfter +"</td><td>"+rulesDetailsLink+"</td><td>" + totalTime +"</td></tr>";
+
+
+			var formatedTime = new Date(item["Pulse Timestamp in Milliseconds"]);
+			var forMin;
+			if(formatedTime.getMinutes()<10){
+				forMin="0" + formatedTime.getMinutes();
+			}else{
+				forMin=formatedTime.getMinutes();
+			}
+			var ft = formatedTime.getDate()+"/" +  (formatedTime.getMonth()+1)+"/" + formatedTime.getFullYear()+" " + formatedTime.getHours()+":" +forMin;
+
+			if(item.Value != undefined &&  !isNaN(formatedTime.getDate()) ){
+
+				panelHTML += '<tr><td><a href=\"#bannerformmodal\" data-target=\"#bannerformmodal\"  data-toggle=\"modal\" class=\"PulseTime\" data-time=\"' + item["Pulse Timestamp in Milliseconds"] + '\"  data-teleonomeName=\"'+ anyTeleonomeName +'\">' + ft + '</a></td><td>' + item.Value + '</td></tr>';
+			}
+
+
 		}
 		panelHTML += "</tbody></table>";
 	}
 	return panelHTML;
 }
 
-function renderAsyncCommands(includeClient,includeInternal, limit, offset ){
-	$.ajax({
-		type: "POST",
-		url: "/TeleonomeServlet",
-		data: {formName:"GetAllCommandRequests", IncludeClient:includeClient, IncludeInternal:includeInternal,limit:limit,offset:offset },
-		success: function (data) {
-			// console.log("GetAllCommandRequests res," + data);
-			var commandsInfo = JSON.parse(data);
-			var allCommands = commandsInfo.Values;
-			if(allCommands.length>0){
-				$('#AynchronousLog').empty();
-				var panelHTML = renderCommandRequestTable(commandsInfo);
-				$('#AynchronousLog').append(panelHTML);
-				$('#AynchronousLog').show();
-			}
-
-		},
-		error: function(data){
-			// console.log("error getting commanda data:" + data);
-			alert("Error getting commanda data:" +  data);
-			return false;
-		}
-	});
-}
-
-function receivedCommandResponse(cr){
+function renderMnemosyconsRules(mnemosyconName, rulesDetails){
 	//
-	// text contains the numerical id of the command
-	// that was completed,
-	// now ask for the server to send you a new version 
-	// of the Teleonome.denome that would have been 
-	// updated.  Note that this will come from tomcat
-	// not the heart
-	var commandResponse = JSON.parse(cr);
-	$.ajax({
-		type: "GET",
-		url: "/TeleonomeServlet",
-		data: {formName:"GetDenome", },
-		success: function (data) {
-			//// console.log("data=" + data);
-			loadDenomeRefreshInterface(data);
-			var result="info";
-			var commandResultText="";
-			var commandCode="";
-			if(commandResponse.Command==COMMAND_REBOOT || 
-				commandResponse.Command == COMMAND_REBOOT_TEXT ||
-				commandResponse.Command == COMMAND_SHUTDOWN ||
-				commandResponse.Command == COMMAND_SHUTDOWN_TEXT ){
+	// rulesDetailsis a json array that contains denes.
+	// these denes are tne Mnemosycon Rule Processing Dene
+
+
+
+
+
+
+	var dataDene;
+	var dataDeneWords, mnemosyconName;
+	var deneWord;
+	var rowStatus="text-center";
+	var mnemosyconRuleExecutionMillis, mnemosyconRuleUntilTimeValue, mnemosyconRuleUntilTimeUnit, mnemosyconRuleSource;
+	var mnemosyconRuleLocation,deleteOlderThan, rowsDeleted;   
+	var freeSpaceBeforeRule,freeSpaceAfterRule, deletedFileCounter, oldestFileNameDeleted,newestFileNameDeleted;
+
+
+	if ($(window).width() < 480) {
+
+		var panelHTML = "<h4 class=\"text-center\">"+ mnemosyconName +"</h4><br><table class=\"table\"><tbody>";
+
+
+
+		//public static final String MNEMOSYCON_RULE_FILE_PREFIX="Mnemosycon Rule File Prefix";
+
+		for( l=0;l<rulesDetails.length;l++){
+			//
+			//after every three panels 
+			dataDene = rulesDetails[l];  
+			dataDeneWords = dataDene.DeneWords;
+
+
+			if(mnemosyconRuleSource.equals(TeleonomeConstants.MNEMOSYCON_DATA_SOURCE_DATABASE)) {
+
+				for( m=0;m<dataDeneWords.length;m++){
+					deneWord = dataDeneWords[l];
+					if(deneWord["Name"]===MNEMOSYCON_RULE_EXECUTION_MILLIS){
+						mnemosyconRuleExecutionMillis=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_TIME_UNIT){
+						mnemosyconRuleUntilTimeUnit=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_TIME_UNIT_VALUE){
+						mnemosyconRuleUntilTimeValue=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_SOURCE){
+						mnemosyconRuleSource=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_LOCATION){
+						mnemosyconRuleLocation=deneWord["Value"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_DELETE_OLDER_THAN){
+						deleteOlderThan=deneWord["Value"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_ROWS_DELETED){
+						rowsDeleted=deneWord["Value"];
+					}
+				}
+
+				panelHTML += "<tr class=\""+ rowStatus+"\"><td>";
+				panelHTML += "<table table-borderless>";
+				panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Source</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+mnemosyconRuleSource+"</td></tr>";
+				panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Location</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+mnemosyconRuleLocation+"</td></tr>";
+				panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Timeframe</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+ mnemosyconRuleUntilTimeValue +mnemosyconRuleUntilTimeUnit  +"</td></tr>";
+				panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Delete Older Than Processed</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+deleteOlderThan+"</td></tr>";
+				panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Rows Deleted</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" +rowsDeleted +"</td></tr>";
+				panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Execution Millis</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" + mnemosyconRuleExecutionMillis +"</td></tr>";
+				panelHTML += "</table>";
+				panelHTML += "</td></tr>";
+			}else if(mnemosyconRuleSource.equals(TeleonomeConstants.MNEMOSYCON_DATA_SOURCE_FILE_SYSTEM)) {
+				for( m=0;m<dataDeneWords.length;m++){
+					deneWord = dataDeneWords[l];
+					if(deneWord["Name"]===DISK_SPACE_BEFORE_MNEMOSYCON_RULE){
+						freeSpaceBeforeRule=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== DISK_SPACE_AFTER_MNEMOSYCON_RULE){
+						freeSpaceAfterRule=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_FILES_DELETED){
+						deletedFileCounter=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_SOURCE){
+						mnemosyconRuleSource=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_LOCATION){
+						mnemosyconRuleLocation=deneWord["Value"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_OLDEST_FILE_DELETED){
+						oldestFileNameDeleted=deneWord["Value"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_NEWEST_FILE_DELETED){
+						newestFileNameDeleted=deneWord["Value"];
+					}
+					
+					panelHTML += "<tr class=\""+ rowStatus+"\"><td>";
+					panelHTML += "<table table-borderless>";
+					panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Source</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+mnemosyconRuleSource+"</td></tr>";
+					panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Location</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+mnemosyconRuleLocation+"</td></tr>";
+					panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>>Space Before</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+ freeSpaceBeforeRule  +"</td></tr>";
+					panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Space After</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+freeSpaceAfterRule+"</td></tr>";
+					panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Files Deleted</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" +deletedFileCounter +"</td></tr>";
+					panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Oldest File Deleted</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" + oldestFileNameDeleted +"</td></tr>";
+					panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Newest File Deleted</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" + newestFileNameDeleted +"</td></tr>";
+					
+					panelHTML += "</table>";
+					panelHTML += "</td></tr>";
+				}
+			}
+			}
+		}
+		panelHTML += "</tbody></table>";
+	}else{
+
+		for(var property in mnemosyneDataSortedArrayMap) {
+			dataDene = mnemosyneDataSortedArrayMap[property];  
+			dataDeneWords = dataDene.DeneWords;
+			for( l=0;l<dataDeneWords.length;l++){
+				deneWord = dataDeneWords[l];
+				if(deneWord["Name"]=== CODON){
+					mnemosyconName=deneWord["Value"];
+					break;
+				}
+			}
+		} 
+		var panelHTML = "<h4 class=\"text-center\">"+ mnemosyconName +"</h4><br><table class=\"table table-responsive\">";
+
+		if(mnemosyconRuleSource.equals(TeleonomeConstants.MNEMOSYCON_DATA_SOURCE_DATABASE)) {
+			panelHTML += "<thead><tr><th class=\""+ rowStatus+"\">Source</th><th class=\""+ rowStatus+"\">Location</th><th class=\""+ rowStatus+"\">Timeframe</th><th class=\""+ rowStatus+"\">Delete Older Than</th><th class=\""+ rowStatus+"\">Rows Deleted</th><th class=\""+ rowStatus+"\">Execution Millis</th></tr></thead><tbody>";
+			for( l=0;l<rulesDetails.length;l++){
+				//
+				//after every three panels 
+				dataDene = rulesDetails[l];  
+				dataDeneWords = dataDene.DeneWords;
+				for( m=0;m<dataDeneWords.length;m++){
+					deneWord = dataDeneWords[l];
+					if(deneWord["Name"]===MNEMOSYCON_RULE_EXECUTION_MILLIS){
+						mnemosyconRuleExecutionMillis=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_TIME_UNIT){
+						mnemosyconRuleUntilTimeUnit=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_TIME_UNIT_VALUE){
+						mnemosyconRuleUntilTimeValue=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_SOURCE){
+						mnemosyconRuleSource=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_LOCATION){
+						mnemosyconRuleLocation=deneWord["Value"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_DELETE_OLDER_THAN){
+						deleteOlderThan=deneWord["Value"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_ROWS_DELETED){
+						rowsDeleted=deneWord["Value"];
+					}
+				}
+
+				panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+mnemosyconRuleSource+"</td><td>"+mnemosyconRuleLocation+"</td><td>"+ mnemosyconRuleUntilTimeValue  + mnemosyconRuleUntilTimeUnit+"</td><td>"+deleteOlderThan+"</td><td>" + rowsDeleted +"</td><td>" + mnemosyconRuleExecutionMillis +"</td></tr>";
+
+			}else if(mnemosyconRuleSource.equals(TeleonomeConstants.MNEMOSYCON_DATA_SOURCE_FILE_SYSTEM)) {
+
+
+
+				panelHTML += "<thead><tr><th class=\""+ rowStatus+"\">Source</th><th class=\""+ rowStatus+"\">Location</th><th class=\""+ rowStatus+"\">Space Before</th><th class=\""+ rowStatus+"\">Space After</th><th class=\""+ rowStatus+"\">Files Deleted</th><th class=\""+ rowStatus+"\">Oldest File</th><th class=\""+ rowStatus+"\">Newest File</th></tr></thead><tbody>";
+				for( l=0;l<rulesDetails.length;l++){
+					//
+					//after every three panels 
+					dataDene = rulesDetails[l];  
+					dataDeneWords = dataDene.DeneWords;
+					for( m=0;m<dataDeneWords.length;m++){
+						deneWord = dataDeneWords[l];
+						if(deneWord["Name"]===DISK_SPACE_BEFORE_MNEMOSYCON_RULE){
+							freeSpaceBeforeRule=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+						}else if(deneWord["Name"]=== DISK_SPACE_AFTER_MNEMOSYCON_RULE){
+							freeSpaceAfterRule=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+						}else if(deneWord["Name"]=== MNEMOSYCON_RULE_FILES_DELETED){
+							deletedFileCounter=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+						}else if(deneWord["Name"]=== MNEMOSYCON_RULE_SOURCE){
+							mnemosyconRuleSource=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+						}else if(deneWord["Name"]=== MNEMOSYCON_RULE_LOCATION){
+							mnemosyconRuleLocation=deneWord["Value"];
+						}else if(deneWord["Name"]=== MNEMOSYCON_RULE_OLDEST_FILE_DELETED){
+							oldestFileNameDeleted=deneWord["Value"];
+						}else if(deneWord["Name"]=== MNEMOSYCON_RULE_NEWEST_FILE_DELETED){
+							newestFileNameDeleted=deneWord["Value"];
+						}
+					}
+
+					panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+mnemosyconRuleSource+"</td><td>"+mnemosyconRuleLocation+"</td><td>"+ freeSpaceBeforeRule+"</td><td>"+freeSpaceAfterRule+"</td><td>" + deletedFileCounter +"</td><td>" + oldestFileNameDeleted +"</td><td>" + newestFileNameDeleted +"</td></tr>";
+
+				}  
+
+			}
+			panelHTML += "</tbody></table>";
+		}
+		return panelHTML;
+	}
+
+	function renderAsyncCommands(includeClient,includeInternal, limit, offset ){
+		$.ajax({
+			type: "POST",
+			url: "/TeleonomeServlet",
+			data: {formName:"GetAllCommandRequests", IncludeClient:includeClient, IncludeInternal:includeInternal,limit:limit,offset:offset },
+			success: function (data) {
+				// console.log("GetAllCommandRequests res," + data);
+				var commandsInfo = JSON.parse(data);
+				var allCommands = commandsInfo.Values;
+				if(allCommands.length>0){
+					$('#AynchronousLog').empty();
+					var panelHTML = renderCommandRequestTable(commandsInfo);
+					$('#AynchronousLog').append(panelHTML);
+					$('#AynchronousLog').show();
+				}
+
+			},
+			error: function(data){
+				// console.log("error getting commanda data:" + data);
+				alert("Error getting commanda data:" +  data);
+				return false;
+			}
+		});
+	}
+
+	function receivedCommandResponse(cr){
+		//
+		// text contains the numerical id of the command
+		// that was completed,
+		// now ask for the server to send you a new version 
+		// of the Teleonome.denome that would have been 
+		// updated.  Note that this will come from tomcat
+		// not the heart
+		var commandResponse = JSON.parse(cr);
+		$.ajax({
+			type: "GET",
+			url: "/TeleonomeServlet",
+			data: {formName:"GetDenome", },
+			success: function (data) {
+				//// console.log("data=" + data);
+				loadDenomeRefreshInterface(data);
+				var result="info";
+				var commandResultText="";
+				var commandCode="";
+				if(commandResponse.Command==COMMAND_REBOOT || 
+						commandResponse.Command == COMMAND_REBOOT_TEXT ||
+						commandResponse.Command == COMMAND_SHUTDOWN ||
+						commandResponse.Command == COMMAND_SHUTDOWN_TEXT ){
 					$('#WaitingWheel').hide();
 					powerButtonDisabled=false;
 					if(commandResponse.Status==COMMAND_REQUEST_EXECUTED){
 						if(commandResponse.Command==COMMAND_REBOOT || 
-							commandResponse.Command == COMMAND_REBOOT_TEXT){
-								alert("Restarting ....");
-							}else{
-								alert("Shutting down ....");
-							}
+								commandResponse.Command == COMMAND_REBOOT_TEXT){
+							alert("Restarting ....");
+						}else{
+							alert("Shutting down ....");
+						}
 					}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
 						alert("Invalid Code");
 						$("#MainPowerButton").attr("disabled", false);
 						$("#MainPowerButton").addClass('btn-success').removeClass('btn-warning');
 					}
-					
 
-			}else{
-				if(commandResponse.Status==COMMAND_REQUEST_EXECUTED){
-					result="success";
-					commandResultText=commandResponse.Command + " was executed succesfully";
-					if(commandResponse.RestartRequired){
-						$("#MainPowerButton").addClass('btn-danger').removeClass('btn-success');
+
+				}else{
+					if(commandResponse.Status==COMMAND_REQUEST_EXECUTED){
+						result="success";
+						commandResultText=commandResponse.Command + " was executed succesfully";
+						if(commandResponse.RestartRequired){
+							$("#MainPowerButton").addClass('btn-danger').removeClass('btn-success');
+						}
+					}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
+						result="danger";
+						commandResultText=commandResponse.commandCode + " was not correct";
 					}
-				}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
-					result="danger";
-					commandResultText=commandResponse.commandCode + " was not correct";
+
+					$('#CommandRequestStatus').removeClass().addClass('label label-sm label-' + result);
+					$('#CommandRequestStatus').html(commandResultText);
+					$('#CommandRequestStatus').show();
 				}
-	
-				$('#CommandRequestStatus').removeClass().addClass('label label-sm label-' + result);
-				$('#CommandRequestStatus').html(commandResultText);
-				$('#CommandRequestStatus').show();
+
+
+
+			},
+			error: function(data){
+				var errorText = "error receiving updated Denome after command response, error was:" + JSON.stringify(data);
+				// console.log(errorText);
+				alert(errorText);
+				return false;
 			}
-			
+		});	
+	}
 
-
-		},
-		error: function(data){
-			var errorText = "error receiving updated Denome after command response, error was:" + JSON.stringify(data);
-			// console.log(errorText);
-			alert(errorText);
-			return false;
-		}
-	});	
-}
-
-function asyncUpdate(text){
-	//
-	// the format is a json object like
-	//  {
+	function asyncUpdate(text){
+		//
+		// the format is a json object like
+		//  {
 //		pointer:value,
 //		pointer,value
 //		}
-	// now loop over every element
-	// update it in the denome
-	// and call refreshInterface to update
-	var myDate = new Date();
-//	var theyear = myDate.getFullYear();
-//	var themonth = myDate.getMonth() + 1;
-//	var thetoday = myDate.getDate();
-	var hours = "";
-	var h = myDate.getHours();
-	if(h<10)hours="0"+h;
-	else hours=""+h;
-	var min = myDate.getMinutes();
-	var minutes="";
-	if(min<10)minutes="0"+min;
-	else minutes=""+min;
-	var sec = myDate.getSeconds();
-	var seconds="";
-	if(sec<10)seconds="0"+sec;
-	else seconds=""+sec;
-	
-	var timeString = hours + ":" + minutes + ":" + seconds;
-	
-	$('#PulseStatusInfo').text("Updated " + timeString);
-	var updateJson = JSON.parse(text);
-	var value;
-	var identity;
+		// now loop over every element
+		// update it in the denome
+		// and call refreshInterface to update
+		var myDate = new Date();
+//		var theyear = myDate.getFullYear();
+//		var themonth = myDate.getMonth() + 1;
+//		var thetoday = myDate.getDate();
+		var hours = "";
+		var h = myDate.getHours();
+		if(h<10)hours="0"+h;
+		else hours=""+h;
+		var min = myDate.getMinutes();
+		var minutes="";
+		if(min<10)minutes="0"+min;
+		else minutes=""+min;
+		var sec = myDate.getSeconds();
+		var seconds="";
+		if(sec<10)seconds="0"+sec;
+		else seconds=""+sec;
 
-	if(identityFactory!=null && nucleiJSONArray!=null){
-		identityFactory = new IdentityFactory();
-		for (var pointer in updateJson){
-			value = updateJson[pointer];
-			setDeneWordValueByIdentityPointer(pointer, value)
-		}
-		if(refreshActive){
-			RefreshInterface();
-		}
-	}
-	
-}
-	
+		var timeString = hours + ":" + minutes + ":" + seconds;
 
-function updatePulseStatusInfo(text){
-	$('#PulseStatusInfo').text(text);
-}
-function updatePulseStatusInfoSecundary(text){
-	$('#PulseStatusInfoSecundary').text(text);
-}
+		$('#PulseStatusInfo').text("Updated " + timeString);
+		var updateJson = JSON.parse(text);
+		var value;
+		var identity;
 
-function setAvailableSSIDs(ssids){
-	// console.log("Ssids=" + JSON.stringify(ssids));
-	availableSSIDSArray=ssids;
-}
-
-
-function updateOrganismView(text){
-	 organismInfoJsonData = JSON.parse(text);
-	 refreshOrganismView();
-}
-function refreshOrganismView(){
-	if(organismInfoJsonData != undefined){
-		var panelHTML="";
-		$('#OrganismView').empty();
-		for(var i in organismInfoJsonData){
-			if(i != teleonomeName){
-			panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
-			panelHTML += "<a href=\"http://"+i+".local\" class=\"btn btn-lg btn-"+ organismInfoJsonData[i] +"\">"+i+"</a>";
-			panelHTML += "</div>";	
+		if(identityFactory!=null && nucleiJSONArray!=null){
+			identityFactory = new IdentityFactory();
+			for (var pointer in updateJson){
+				value = updateJson[pointer];
+				setDeneWordValueByIdentityPointer(pointer, value)
+			}
+			if(refreshActive){
+				RefreshInterface();
 			}
 		}
-		//
-		//
-//		panelHTML += "<div id=\"OrganismDetail\" class=\"row hidden\">";
-//		panelHTML += "<div class=\"col-lg-12 col-md-12 col-sm-12 col-sm-12 col-xs-12 text-center top-buffer\">";
-//		panelHTML += "<div id=\"DetailText\"></div></div></div>";
-		
-		$('#OrganismView').append(panelHTML);
-	}
-	
-}
 
-function loadDenomeRefreshInterface(denomeFileInString) {
-	// console.log("pulse arrive at " + new Date() );
-	if(betweenPulseInterval!= undefined)clearInterval(betweenPulseInterval);
-	if ($(window).width() < 480) {
-		$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-success');
-	}else{
-		$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
-	}
-	
-	$('#CommandRequestStatus').hide();
-	pulseJSONObject= JSON.parse(denomeFileInString);
-	if(!$('#bannerformmodal').hasClass('in') && refreshActive){
-	
-		RefreshInterface();
-	
-	}else{
-		//
-		// we are not refreshing the interface
-		// because there is a modal window open,
-		// set the flag so that closing it will refreshinterface
-		refreshInterfaceAfterModalNeeded=true;
-	}
-}
-
-function RefreshInterface(){
-	
-	identityFactory = new IdentityFactory();
-	denomeJSONObject = pulseJSONObject.Denome;
-	teleonomeName=denomeJSONObject.Name;
-	humanInterfaceDeneChainArray = getHumanInterfaceDeneChainsForVisualizer();
-	
-	$('title').text(teleonomeName);
-	pulseTimestamp = pulseJSONObject["Pulse Timestamp"];
-	pulseTimestampMilliseconds = pulseJSONObject["Pulse Timestamp in Milliseconds"];
-	var pulseCreationTimeMilliseconds = pulseJSONObject["Pulse Creation Duration Millis"];
-	
-	var operationalModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_OPERATIONAL_MODE;
-	operationalMode = getDeneWordByIdentityPointer(operationalModePointer, DENEWORD_VALUE_ATTRIBUTE);
-
-	
-	pulseCreationTime = msToTime(pulseCreationTimeMilliseconds);
-	timeSinceLastPulse = new Date().getTime()-pulseTimestampMilliseconds;
-	timeStringSinceLastPulse = msToTime(timeSinceLastPulse);
-	
-	 chartDataSourcePointerHashMap = new HashMap();
-	 chartStyleHashMap = new HashMap();
-	 var pathologyDenes = getPathologyDenes();
-	 var mnemosynePathologyDenes = getMnemosynePathologyDenes();
-	 
-	 currentPathologyDeneCount = pathologyDenes.length + mnemosynePathologyDenes.length;
-	 if(currentPathologyDeneCount>0){
-		// $('#Pathology').show();
-		
-		// $('#ErrorText').html("See Pathology (" + pathologyDenes.length + ")");
-		// // console.log("Pathology Denes:" + JSON.stringify(pathologyDenes));
-		// // console.log("Mnemosyne Pathology Denes:" + JSON.stringify(mnemosynePathologyDenes));
-		 
-	 }else{
-		 $('#Pathology').hide();
-		 $('#ErrorText').html("");
-	 }
-	
-	//// console.log("humanInterfaceDeneChainArray=" + humanInterfaceDeneChainArray);
-	var pointer;
-	var humanInterfaceDeneChainJSONObject={};
-	for( i=0;i<humanInterfaceDeneChainArray.length;i++){
-		pointer = "@" + teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":"+ humanInterfaceDeneChainArray[i]["Name"];
-		humanInterfaceDeneChainIndex.put(pointer, humanInterfaceDeneChainArray[i]);
-		humanInterfaceDeneChainJSONObject[pointer]=humanInterfaceDeneChainArray[i];
-	}
-	localStorage.setItem("HumanInterfaceDeneChainIndex", JSON.stringify(humanInterfaceDeneChainJSONObject));
-
-	var teleonomeStatusBootstrapValuePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_OPERATIONAL_STATUS_BOOTSTRAP_EQUIVALENT;
-	//// console.log("teleonomeStatusBootstrapValuePointer=" + teleonomeStatusBootstrapValuePointer);
-	teleonomeStatusBootstrapValue = getDeneWordByIdentityPointer(teleonomeStatusBootstrapValuePointer, DENEWORD_VALUE_ATTRIBUTE);
-	
-	var currentPulseFrequencyPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_PULSE_FREQUENCY;
-	//// console.log("currentPulseFrequencyPointer=" + currentPulseFrequencyPointer);
-	currentPulseFrequency = getDeneWordByIdentityPointer(currentPulseFrequencyPointer, DENEWORD_VALUE_ATTRIBUTE);
-	//// console.log("currentPulseFrequency=" + currentPulseFrequency);
-
-	var currentPulseGenerationDurationPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_PULSE_GENERATION_DURATION;
-	//// console.log("currentPulseGenerationDurationPointer=" + currentPulseGenerationDurationPointer);
-	currentPulseGenerationDuration = getDeneWordByIdentityPointer(currentPulseGenerationDurationPointer, DENEWORD_VALUE_ATTRIBUTE);
-	//// console.log("currentPulseGenerationDuration=" + currentPulseGenerationDuration);
-
-	var numberOfPulsesBeforeLatePointer = "@" +teleonomeName + ":" + NUCLEI_INTERNAL + ":" +DENECHAIN_DESCRIPTIVE + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_NUMBER_PULSES_BEFORE_LATE;
-	//// console.log("numberOfPulsesBeforeLatePointer=" + numberOfPulsesBeforeLatePointer);
-	numberOfPulsesBeforeLate = getDeneWordByIdentityPointer(numberOfPulsesBeforeLatePointer, DENEWORD_VALUE_ATTRIBUTE);
-	//// console.log("numberOfPulsesBeforeLate=" + numberOfPulsesBeforeLate);
-
-	identityFactory.init(teleonomeName);
-	if(pageToDisplay === -1){
-		pageToDisplay = 1;
 	}
 
-	
+
+	function updatePulseStatusInfo(text){
+		$('#PulseStatusInfo').text(text);
+	}
+	function updatePulseStatusInfoSecundary(text){
+		$('#PulseStatusInfoSecundary').text(text);
+	}
+
+	function setAvailableSSIDs(ssids){
+		// console.log("Ssids=" + JSON.stringify(ssids));
+		availableSSIDSArray=ssids;
+	}
+
+
+	function updateOrganismView(text){
+		organismInfoJsonData = JSON.parse(text);
+		refreshOrganismView();
+	}
+	function refreshOrganismView(){
+		if(organismInfoJsonData != undefined){
+			var panelHTML="";
+			$('#OrganismView').empty();
+			for(var i in organismInfoJsonData){
+				if(i != teleonomeName){
+					panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+					panelHTML += "<a href=\"http://"+i+".local\" class=\"btn btn-lg btn-"+ organismInfoJsonData[i] +"\">"+i+"</a>";
+					panelHTML += "</div>";	
+				}
+			}
+			//
+			//
+//			panelHTML += "<div id=\"OrganismDetail\" class=\"row hidden\">";
+//			panelHTML += "<div class=\"col-lg-12 col-md-12 col-sm-12 col-sm-12 col-xs-12 text-center top-buffer\">";
+//			panelHTML += "<div id=\"DetailText\"></div></div></div>";
+
+			$('#OrganismView').append(panelHTML);
+		}
+
+	}
+
+	function loadDenomeRefreshInterface(denomeFileInString) {
+		// console.log("pulse arrive at " + new Date() );
+		if(betweenPulseInterval!= undefined)clearInterval(betweenPulseInterval);
+		if ($(window).width() < 480) {
+			$('#TeleonomeDataStatus').removeClass().addClass('label label-xs label-success');
+		}else{
+			$('#TeleonomeDataStatus').removeClass().addClass('label label-lg label-success');
+		}
+
+		$('#CommandRequestStatus').hide();
+		pulseJSONObject= JSON.parse(denomeFileInString);
+		if(!$('#bannerformmodal').hasClass('in') && refreshActive){
+
+			RefreshInterface();
+
+		}else{
+			//
+			// we are not refreshing the interface
+			// because there is a modal window open,
+			// set the flag so that closing it will refreshinterface
+			refreshInterfaceAfterModalNeeded=true;
+		}
+	}
+
+	function RefreshInterface(){
+
+		identityFactory = new IdentityFactory();
+		denomeJSONObject = pulseJSONObject.Denome;
+		teleonomeName=denomeJSONObject.Name;
+		humanInterfaceDeneChainArray = getHumanInterfaceDeneChainsForVisualizer();
+
+		$('title').text(teleonomeName);
+		pulseTimestamp = pulseJSONObject["Pulse Timestamp"];
+		pulseTimestampMilliseconds = pulseJSONObject["Pulse Timestamp in Milliseconds"];
+		var pulseCreationTimeMilliseconds = pulseJSONObject["Pulse Creation Duration Millis"];
+
+		var operationalModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_OPERATIONAL_MODE;
+		operationalMode = getDeneWordByIdentityPointer(operationalModePointer, DENEWORD_VALUE_ATTRIBUTE);
+
+
+		pulseCreationTime = msToTime(pulseCreationTimeMilliseconds);
+		timeSinceLastPulse = new Date().getTime()-pulseTimestampMilliseconds;
+		timeStringSinceLastPulse = msToTime(timeSinceLastPulse);
+
+		chartDataSourcePointerHashMap = new HashMap();
+		chartStyleHashMap = new HashMap();
+		var pathologyDenes = getPathologyDenes();
+		var mnemosynePathologyDenes = getMnemosynePathologyDenes();
+
+		currentPathologyDeneCount = pathologyDenes.length + mnemosynePathologyDenes.length;
+		if(currentPathologyDeneCount>0){
+			// $('#Pathology').show();
+
+			// $('#ErrorText').html("See Pathology (" + pathologyDenes.length + ")");
+			// // console.log("Pathology Denes:" + JSON.stringify(pathologyDenes));
+			// // console.log("Mnemosyne Pathology Denes:" + JSON.stringify(mnemosynePathologyDenes));
+
+		}else{
+			$('#Pathology').hide();
+			$('#ErrorText').html("");
+		}
+
+		//// console.log("humanInterfaceDeneChainArray=" + humanInterfaceDeneChainArray);
+		var pointer;
+		var humanInterfaceDeneChainJSONObject={};
+		for( i=0;i<humanInterfaceDeneChainArray.length;i++){
+			pointer = "@" + teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":"+ humanInterfaceDeneChainArray[i]["Name"];
+			humanInterfaceDeneChainIndex.put(pointer, humanInterfaceDeneChainArray[i]);
+			humanInterfaceDeneChainJSONObject[pointer]=humanInterfaceDeneChainArray[i];
+		}
+		localStorage.setItem("HumanInterfaceDeneChainIndex", JSON.stringify(humanInterfaceDeneChainJSONObject));
+
+		var teleonomeStatusBootstrapValuePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_OPERATIONAL_STATUS_BOOTSTRAP_EQUIVALENT;
+		//// console.log("teleonomeStatusBootstrapValuePointer=" + teleonomeStatusBootstrapValuePointer);
+		teleonomeStatusBootstrapValue = getDeneWordByIdentityPointer(teleonomeStatusBootstrapValuePointer, DENEWORD_VALUE_ATTRIBUTE);
+
+		var currentPulseFrequencyPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_PULSE_FREQUENCY;
+		//// console.log("currentPulseFrequencyPointer=" + currentPulseFrequencyPointer);
+		currentPulseFrequency = getDeneWordByIdentityPointer(currentPulseFrequencyPointer, DENEWORD_VALUE_ATTRIBUTE);
+		//// console.log("currentPulseFrequency=" + currentPulseFrequency);
+
+		var currentPulseGenerationDurationPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_PULSE_GENERATION_DURATION;
+		//// console.log("currentPulseGenerationDurationPointer=" + currentPulseGenerationDurationPointer);
+		currentPulseGenerationDuration = getDeneWordByIdentityPointer(currentPulseGenerationDurationPointer, DENEWORD_VALUE_ATTRIBUTE);
+		//// console.log("currentPulseGenerationDuration=" + currentPulseGenerationDuration);
+
+		var numberOfPulsesBeforeLatePointer = "@" +teleonomeName + ":" + NUCLEI_INTERNAL + ":" +DENECHAIN_DESCRIPTIVE + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_NUMBER_PULSES_BEFORE_LATE;
+		//// console.log("numberOfPulsesBeforeLatePointer=" + numberOfPulsesBeforeLatePointer);
+		numberOfPulsesBeforeLate = getDeneWordByIdentityPointer(numberOfPulsesBeforeLatePointer, DENEWORD_VALUE_ATTRIBUTE);
+		//// console.log("numberOfPulsesBeforeLate=" + numberOfPulsesBeforeLate);
+
+		identityFactory.init(teleonomeName);
+		if(pageToDisplay === -1){
+			pageToDisplay = 1;
+		}
+
+
 		renderPageToDisplay();
-	
-	//
-	// now generate the bottomname
-	// <div class="col-xs-2 text-center">
-	// <a href="javascript:setPageToDisplay(1)"><i class="glyphicon glyphicon-home"></i><br>Home</a>
-	// </div>
-	var deneChainControlParamPointer = "@" +teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":" +DENECHAIN_TYPE_HUMAN_INTERFACE_CONTROL_PARAMETERS;
-	var  deneChainControlParam = getDeneChainByIdentityPointer(deneChainControlParamPointer);
-	var bottomNavHTML = extraLowerNavInfo(deneChainControlParam);
-	
-	$("#bottomNav").empty();
-	$("#bottomNav").append(bottomNavHTML);
-	
-	refreshOrganismView();
-	betweenPulseInterval = setInterval(monitorBetweenPulses, 10 * 1000);
 
-}	
+		//
+		// now generate the bottomname
+		// <div class="col-xs-2 text-center">
+		// <a href="javascript:setPageToDisplay(1)"><i class="glyphicon glyphicon-home"></i><br>Home</a>
+		// </div>
+		var deneChainControlParamPointer = "@" +teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":" +DENECHAIN_TYPE_HUMAN_INTERFACE_CONTROL_PARAMETERS;
+		var  deneChainControlParam = getDeneChainByIdentityPointer(deneChainControlParamPointer);
+		var bottomNavHTML = extraLowerNavInfo(deneChainControlParam);
 
-function setPageToDisplay(p){
-	pageToDisplay=p;
-	refreshActive=true;
+		$("#bottomNav").empty();
+		$("#bottomNav").append(bottomNavHTML);
 
-	renderPageToDisplay();
-}
+		refreshOrganismView();
+		betweenPulseInterval = setInterval(monitorBetweenPulses, 10 * 1000);
+
+	}	
+
+	function setPageToDisplay(p){
+		pageToDisplay=p;
+		refreshActive=true;
+
+		renderPageToDisplay();
+	}
 
 
-function renderPageToDisplay(){
-	var pagePosition, pageDefinintionPointer;
-	var controlParameterDenes,controlParameterDene, deneWords, deneWord;
-	// console.log("entering render page to display, with pageToDisplay=" + pageToDisplay );
-	for( j=0;j<humanInterfaceDeneChainArray.length;j++){
-		if( humanInterfaceDeneChainArray[j]["DeneChain Type"]===HUMAN_INTERFACE_CONTROL_PARAMETERS){
-			controlParameterDenes = humanInterfaceDeneChainArray[j]["Denes"];
-			for( k=0;k<controlParameterDenes.length;k++){
-				controlParameterDene = controlParameterDenes[k];
-				deneWords = controlParameterDene["DeneWords"];
-				for( l=0;l<deneWords.length;l++){
-					deneWord = deneWords[l];
-					if(deneWord["Name"]===DENEWORD_HUMAN_INTERFACE_WEB_PAGE_PAGE_POSITION){
-						pagePosition =  deneWord["Value"];
-						if(pageToDisplay===pagePosition){
-							pageDefinintionPointer = getDeneWordAttributeByDeneWordTypeFromDene(controlParameterDene, DENEWORD_TYPE_WEB_PAGE_VIEW_DEFINITION_POINTER,DENEWORD_VALUE_ATTRIBUTE);
-							//// console.log("pageDefinintionPointer=" +pageDefinintionPointer);
-							//
-							// if this is not the first page, hide
-							// the PulseInfo
-							if(pageToDisplay==1){
-								$('#PulseActivityPanel').show();
-							}else{
-								$('#PulseActivityPanel').hide();
-							}	
-							renderPageByPointer(pageDefinintionPointer, "EntryPoint");
+	function renderPageToDisplay(){
+		var pagePosition, pageDefinintionPointer;
+		var controlParameterDenes,controlParameterDene, deneWords, deneWord;
+		// console.log("entering render page to display, with pageToDisplay=" + pageToDisplay );
+		for( j=0;j<humanInterfaceDeneChainArray.length;j++){
+			if( humanInterfaceDeneChainArray[j]["DeneChain Type"]===HUMAN_INTERFACE_CONTROL_PARAMETERS){
+				controlParameterDenes = humanInterfaceDeneChainArray[j]["Denes"];
+				for( k=0;k<controlParameterDenes.length;k++){
+					controlParameterDene = controlParameterDenes[k];
+					deneWords = controlParameterDene["DeneWords"];
+					for( l=0;l<deneWords.length;l++){
+						deneWord = deneWords[l];
+						if(deneWord["Name"]===DENEWORD_HUMAN_INTERFACE_WEB_PAGE_PAGE_POSITION){
+							pagePosition =  deneWord["Value"];
+							if(pageToDisplay===pagePosition){
+								pageDefinintionPointer = getDeneWordAttributeByDeneWordTypeFromDene(controlParameterDene, DENEWORD_TYPE_WEB_PAGE_VIEW_DEFINITION_POINTER,DENEWORD_VALUE_ATTRIBUTE);
+								//// console.log("pageDefinintionPointer=" +pageDefinintionPointer);
+								//
+								// if this is not the first page, hide
+								// the PulseInfo
+								if(pageToDisplay==1){
+									$('#PulseActivityPanel').show();
+								}else{
+									$('#PulseActivityPanel').hide();
+								}	
+								renderPageByPointer(pageDefinintionPointer, "EntryPoint");
+							}
 						}
 					}
 				}
 			}
 		}
+
 	}
-	
-}
 
 
 
@@ -697,14 +901,14 @@ function renderPageToDisplay(){
 		var panelPointerExternalDataSourcePointerHashMap = new HashMap();
 		var panelPointerExternalTimestampDataSourcePointerHashMap = new HashMap();
 		var panelVisibleHashMap = new HashMap();
-		
+
 		//
 		// re initialize the charts data holders
-		 chartDataSourcePointerHashMap = new HashMap();
-		 chartStyleHashMap = new HashMap();
+		chartDataSourcePointerHashMap = new HashMap();
+		chartStyleHashMap = new HashMap();
 
-		
-		
+
+
 		var deneWord;
 		var denePanel;
 		var panelVisualizationStyle;
@@ -752,11 +956,11 @@ function renderPageToDisplay(){
 			if(panelVisualStyle!="" &&  panelDeneChainPointer!=""){
 				panelPointerVisualStyleHashMap.put(panelDeneChainPointer,panelVisualStyle);
 			}
-			
+
 			if(panelExternalDataSourcePointer!="" &&  panelDeneChainPointer!=""){
 				panelPointerExternalDataSourcePointerHashMap.put(panelDeneChainPointer,panelExternalDataSourcePointer);
 			}
-			
+
 			if(panelDataSourcePointer!="" &&  panelExternalTimestampDataSourcePointer!=""){
 				panelPointerExternalTimestampDataSourcePointerHashMap.put(panelDeneChainPointer,panelExternalTimestampDataSourcePointer);
 			}
@@ -772,14 +976,14 @@ function renderPageToDisplay(){
 		$("#" + locationId).empty();
 		$("#teleonomeName").html(teleonomeName);
 		$("#PulseTimestamp").html(pulseTimestamp);
-		
+
 
 		$("#PulseCreationTime").html(pulseCreationTime);
 		//if(operationalMode!=OPERATIONAL_MODE_NORMAL){
-			$("#WPSInfo").html(operationalMode);
+		$("#WPSInfo").html(operationalMode);
 		//}
 		$("#TimeSinceLastPulse").html(timeStringSinceLastPulse);
-		
+
 		if ($(window).width() < 480) {
 			$('#TeleonomeStatus').removeClass().addClass('label label-xs label-' + teleonomeStatusBootstrapValue);
 
@@ -811,7 +1015,7 @@ function renderPageToDisplay(){
 		}
 
 		panelHTML ="";
-		
+
 		var numberOfPanelsPerRow=2;
 		var obj =  sorted["_map"];
 		var obj2 = panelPointerVisualStyleHashMap["_map"];
@@ -833,7 +1037,7 @@ function renderPageToDisplay(){
 			mainPanelVisualStyle= obj2[deneChainPointer];
 			panelExternalDataSourcePointer = obj3[deneChainPointer];
 			panelExternalTimestampDataSourcePointer = obj4[deneChainPointer];
-			
+
 			// console.log("line 197 deneChainPointer=" + deneChainPointer +" mainPanelVisualStyle=" + mainPanelVisualStyle);
 
 			panelDeneChain = humanInterfaceDeneChainIndex["_map"][deneChainPointer];
@@ -845,7 +1049,7 @@ function renderPageToDisplay(){
 			// the sorted
 			//
 
-			
+
 			// start rendering the html for this panel
 			//
 			if(mainPanelVisualStyle===PANEL_VISUALIZATION_ORGANISM_VIEW){
@@ -853,7 +1057,7 @@ function renderPageToDisplay(){
 				var organismView = new OrganismView();
 				panelHTML += organismView.process(title);
 				refreshOrganismView();
-		
+
 
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_SETTINGS_INFO){
 				//
@@ -869,20 +1073,20 @@ function renderPageToDisplay(){
 				var pointer;
 				var systemInfoChain;
 				var systemInfoDeneChainPanelJSON={};
-				
+
 				for( var q=0;q<systemInfoPointers.length;q++){
 					pointer = systemInfoPointers[q].Value;
 					systemInfoChain = humanInterfaceDeneChainIndex["_map"][pointer];
 					systemInfoDeneChainPanelJSON[pointer] = systemInfoChain;
-					
+
 				}
 
 				localStorage.setItem("SystemInfo", JSON.stringify(systemInfoDeneChainPanelJSON));
-				
-				 var settingsInfo = new SettingsInfo();
-				 panelHTML += settingsInfo.process();
-				 
-				    
+
+				var settingsInfo = new SettingsInfo();
+				panelHTML += settingsInfo.process();
+
+
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_DIAGNOSTICS_INFO){
 				//
 				// in this case, denes will contain one dene,
@@ -895,60 +1099,60 @@ function renderPageToDisplay(){
 				var pointer;
 				var systemInfoChain;
 				var systemInfoDeneChainPanelJSON={};
-				
+
 				for( var q=0;q<systemInfoPointers.length;q++){
 					pointer = systemInfoPointers[q].Value;
 					systemInfoChain = humanInterfaceDeneChainIndex["_map"][pointer];
 					systemInfoDeneChainPanelJSON[pointer] = systemInfoChain;
-					
+
 				}
 
 				localStorage.setItem("DiagnosticInfo", JSON.stringify(systemInfoDeneChainPanelJSON));
-				
-				 var diagnosticsInfo = new DiagnosticsInfo();
-				 panelHTML += diagnosticsInfo.process();
-				 
-				    
+
+				var diagnosticsInfo = new DiagnosticsInfo();
+				panelHTML += diagnosticsInfo.process();
+
+
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_NETWORK_MODE_SELECTOR){
-				
+
 				var aNetworking = new Networking();
 				panelHTML += aNetworking.process();
-				
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_ACTION_EVALUATION_REPORT){
 				var sourceDataPointer = denes[0].DeneWords[0].Value;
 				var anActionEvaluationReport = new ActionEvaluationReport();
 				panelHTML += anActionEvaluationReport.process(sourceDataPointer);
-				
-				
+
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_COMPLETE_WIDTH){
-				
-				
+
+
 				var title =  panelDeneChain["Name"]
-				
-				 var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-		        var object = panelPositionInPanelHashMap["_map"];
-		       
-				
+
+				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
+				var object = panelPositionInPanelHashMap["_map"];
+
+
 				var aSingleValuePanel = new SingleValuePanel();
 				panelHTML += aSingleValuePanel.process(true, title, object);
-				
 
-				
+
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SHORT_TERM_WEATHER_FORECAST){
 				var sourceDataPointer = denes[0].DeneWords[0].Value;
 				var title = panelDeneChain["Name"];
 				var aShortTermWeatherForecast = new ShortTermWeatherForecast();
 				panelHTML += aShortTermWeatherForecast.process(title, sourceDataPointer);
 
-				
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_DAILY_WEATHER_FORECAST){
 				var sourceDataPointer = denes[0].DeneWords[0].Value;
 				var title = panelDeneChain["Name"];
 				var aDailyWeatherForecast = new DailyWeatherForecast();
 				panelHTML += aDailyWeatherForecast.process(title, sourceDataPointer);
-			   
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_DENEWORD_TABLE){
-				
+
 				var panelDeneWords = denes[0].DeneWords;
 				for(var i34=0;i34<panelDeneWords.length;i34++){
 					processingDeneWord = panelDeneWords[i34];
@@ -959,14 +1163,14 @@ function renderPageToDisplay(){
 				}
 				var deneWordTable = new DeneWordTable();
 				panelHTML += deneWordTable.process(panelTitle, denes);
-			
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL){
 				var title =  panelDeneChain["Name"]
-				
-				 var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-		        var object = panelPositionInPanelHashMap["_map"];
-		       
-				
+
+				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
+				var object = panelPositionInPanelHashMap["_map"];
+
+
 				var aSingleValuePanel = new SingleValuePanel();
 				panelHTML += aSingleValuePanel.process(false, title, object);
 
@@ -978,56 +1182,56 @@ function renderPageToDisplay(){
 				var sourceDataPointer = denes[0].DeneWords[0].Value;
 				var aWellSingleValuePanel = new WellSingleValuePanel();
 				panelHTML += aWellSingleValuePanel.process(sourceDataPointer);
-				
-				
+
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_TIMESTAMP){
 				var aSingleValuePanelExternalTimestamp = new SingleValuePanelExternalTimestamp();
 				var title  = panelDeneChain["Name"];
 				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
 				var object = panelPositionInPanelHashMap["_map"];
-				
+
 				panelHTML += aSingleValuePanelExternalTimestamp.process( title, panelExternalTimestampDataSourcePointer, object);
 
 
-				
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_DATA){
 				var title  = panelDeneChain["Name"];
 				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-		        var object = panelPositionInPanelHashMap["_map"];
+				var object = panelPositionInPanelHashMap["_map"];
 				var aSingleValuePanelExternalData = new SingleValuePanelExternalData();
 				panelHTML += aSingleValuePanelExternalData.process(title, false, panelExternalDataSourcePointer, object);
 
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_COMPLETE_WIDTH_EXTERNAL_DATA){
 				var title  = panelDeneChain["Name"];
 				var panelPositionInPanelHashMap = sortDenesInASingleValuePanel(panelDeneChain);
-		        var object = panelPositionInPanelHashMap["_map"];
+				var object = panelPositionInPanelHashMap["_map"];
 				var aSingleValuePanelExternalData = new SingleValuePanelExternalData();
 				panelHTML += aSingleValuePanelExternalData.process(title, true, panelExternalDataSourcePointer, object);
-				
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_COMPLETE_DENE_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_DATA){
-			
+
 				var sourceDataPointer = denes[0].DeneWords[0].Value;
 
 				var title = panelDeneChain["Name"];
 				var aCompleteDeneSingleValuePanelExternalData = new CompleteDeneSingleValuePanelExternalData();
 				panelHTML += aCompleteDeneSingleValuePanelExternalData.process(sourceDataPointer, title);
-				
-				
+
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_SEARCH_PANEL){
-			
+
 				var aSearchPanel = new SearchPanel();
 				panelHTML += aSearchPanel.process();
 				inSearch=true;
-				
-				
+
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART ||
 					mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART||
 					mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PIE_CHART
-					){
+			){
 				//
 				// decide what type of chart
 				// and invoke the function
-				
+
 				panelHTML += "<div class=\"col-lg-6\">";   
 				panelHTML += "<div class=\"bs-component\">";
 				panelHTML += "<div class=\"panel panel-default\">";
@@ -1038,45 +1242,45 @@ function renderPageToDisplay(){
 				panelHTML += "<div id=\""+ id +"\" class=\"col-lg-12 col-md-12 col-sm12 col-xs-12\">";
 				panelHTML += "</div>";
 				panelHTML += "</div>";
-				
+
 				var panelDataSourcePointer = extractDeneWordValueByDeneWordTypeFromDeneChain(panelDeneChain, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER);
 				renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
-				
-		
+
+
 				// console.log("before rendering chart");
 				chartDataSourcePointerHashMap.put(id,renderedDataSourceDeneWord);
 				chartStyleHashMap.put(id,mainPanelVisualStyle);
 			}else if(mainPanelVisualStyle == PANEL_VISUALIZATION_STYLE_IMAGE){
-				
+
 				var sourceDataPointer = denes[0].DeneWords[0].Value;
 				var imageFileName = getDeneWordByIdentityPointer(sourceDataPointer, DENEWORD_VALUE_ATTRIBUTE);
-				
+
 				panelHTML += "<div class=\"col-lg-12\">";
 				panelHTML += "<div class=\"bs-component\">";
 				panelHTML += "<div class=\"panel panel-default\">";
 				panelHTML += " <div class=\"panel-heading\"><h4>Status</h4></div>";
 				panelHTML += "<div class=\"panel-body\">";
 				panelHTML += "<img class=\"img-responsive\" src=\"images/"+imageFileName+"\" >";
-				
-				
+
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MNEMOSYNE_TABLE){
 				var panelDeneWords = denes[0].DeneWords;
 				var aMnemosyneTable = new MnemosyneTable();
 				panelHTML += aMnemosyneTable.process(panelDeneWords);
 
-				
-				
+
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PATHOLOGY){
 				var aPathologyPanel = new PathologyPanel();
 				panelHTML += aPathologyPanel.process();
 
-				
+
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MANUAL_ACTION_WITH_TIMER){
 			}else{
-			
+
 			}
-				//// console.log("unidentified style, mainPanelVisualStyle=" + mainPanelVisualStyle)
-			
+			//// console.log("unidentified style, mainPanelVisualStyle=" + mainPanelVisualStyle)
+
 			panelHTML += "</div>";    // closing <div class=\"panel-body text-center\"
 			panelHTML += "</div>";    // closing <div class=\"panel-heading\"
 			panelHTML += "</div>";    // closing <div class=\"panel panel-default\"
@@ -1104,17 +1308,17 @@ function renderPageToDisplay(){
 		panelHTML += "</div>";// clossing class=\"row top-buffer\">";
 		//// console.log("finished rendering page " + panelHTML);
 		$("#" + locationId).append(panelHTML);
-		
+
 		//
 		// check to see if secundaryView is not empty,
 		// if its not, then refresh it by invoking the function
 		// in the ViewManager
 		var currentViewObjectU = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
-		
+
 		if(currentViewObjectU != null && currentViewObjectU != undefined){
 			var currentViewObject = JSON.parse(currentViewObjectU);
 			var secundaryView = currentViewObject["SecundaryView"];
-			
+
 			if( secundaryView !=""){
 				viewManager[secundaryView]();
 			}
@@ -1125,7 +1329,7 @@ function renderPageToDisplay(){
 		//
 		if(powerButtonDisabled){
 			$("#MainPowerButton").attr("disabled", true);
-		  	$("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
+			$("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
 		}
 		if(powerButtonRed){
 			$("#MainPowerButton").addClass('btn-danger').removeClass('btn-warning').removeClass('btn-success');
@@ -1135,7 +1339,7 @@ function renderPageToDisplay(){
 
 
 
-		
+
 
 
 		if(inSearch){
@@ -1149,7 +1353,7 @@ function renderPageToDisplay(){
 		for(var pId in obj3) {
 			var renderedDataSourceDeneWord= obj3[pId];
 			var mainPanelVisualStyle = obj4[pId];
-			
+
 			if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART){
 				drawTimeSeriesLineChart(pId, renderedDataSourceDeneWord);	
 			}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART){
@@ -1160,11 +1364,11 @@ function renderPageToDisplay(){
 				drawPieChart(pId,renderedDataSourceDeneWord)
 			}
 		}
-		
-		
-		
-		
-		
+
+
+
+
+
 		//
 		// set up the available ssids
 		//
@@ -1175,22 +1379,22 @@ function renderPageToDisplay(){
 		// console.log("availableSSIDs=" + availableSSIDs);
 		var $el = $("#AvailableNetworks");
 		$(function() {
-		    $.each(availableSSIDs, function(i, item) {
-		    	var security="";
-		    	if(item["Authentication"]!=null && item["Authentication"].indexOf("PSK")>-1)security="Password";
-		    	var key = item["SSID"]+ "-" + item["Signal"] + " " + security;
-		    	var value=item["SSID"] ;
-		    	 $el.append($("<option></option>").attr("value", value).text(key)); 
-		    });
+			$.each(availableSSIDs, function(i, item) {
+				var security="";
+				if(item["Authentication"]!=null && item["Authentication"].indexOf("PSK")>-1)security="Password";
+				var key = item["SSID"]+ "-" + item["Signal"] + " " + security;
+				var value=item["SSID"] ;
+				$el.append($("<option></option>").attr("value", value).text(key)); 
+			});
 		});
 		//
 		// end of network identity
 		//
-		
-		
-		
+
+
+
 	}
 
-	
+
 
 

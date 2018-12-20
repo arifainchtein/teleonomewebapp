@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import com.teleonome.framework.exception.ServletProcessingException;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.webapp.servlet.ProcessingFormHandler;
-
+              
 public class GetOrganismPulseByTeleonomeNameAndTimestampProcessingHandler extends ProcessingFormHandler {
 
 	public GetOrganismPulseByTeleonomeNameAndTimestampProcessingHandler(HttpServletRequest req, HttpServletResponse res,
