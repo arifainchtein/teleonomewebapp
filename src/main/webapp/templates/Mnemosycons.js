@@ -17,6 +17,10 @@ class Mnemosycons{
 	        var diagnosticInfoDeneChainPanelJSON = JSON.parse(diagnosticInfoDeneChainPanelJSONU);
 	        var pointer = "@" +teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":" +"Mnemosycons Panel";   
 	        var mnemosyconsPanelDeneChain = diagnosticInfoDeneChainPanelJSON[pointer];
+	        //
+	        // check that the data has already being initialized, if not, return empty
+	        //
+	        if(mnemosyconsPanelDeneChain == undefined)return "";
 	        var denePanel;
 	        var deneWords;
 	        var panelInPagePosition=-1;

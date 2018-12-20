@@ -629,7 +629,7 @@ var MNEMOSYCON_PATHOLOGY_MNEMOSYNE_LOCATION="Mnemosycon Pathology Mnemosyne Loca
 
 
 var DENEWORD_FREE_SPACE_BEFORE_MNEMOSYCON = "Free Space Before Mnemosycon";
-var DENEWORD_FREE_SPACE_AFTER_MNEMOSYCON = "Free Space AFTER Mnemosycon";
+var DENEWORD_FREE_SPACE_AFTER_MNEMOSYCON = "Free Space After Mnemosycon";
 var DENEWORD_MNEMOSYCON_EXECUTION_TIME = "Total Execution Duration Milliseconds";
 var DENEWORD_MNEMOSYCON_RULES_PROCESSED = "Number Rules Processed";
 var DENEWORD_MNEMOSYCON_NUMBER_RULES = "Number Rules";
