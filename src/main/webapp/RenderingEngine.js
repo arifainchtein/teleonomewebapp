@@ -192,6 +192,85 @@ function renderCommandRequestTable(commandsInfo){
 	return panelHTML;
 }
 
+function renderMnemosycons(mnemosyconProcessingAddressPointer){
+	//
+	// mnemosyconProcessingAddressPointer will contain the complete address
+	// ie @Sento:Mnemosyne:Mnemosyne Current Week:Static Mnemosycon Processing
+	// but because this is the mnemosyne, there will be many instances
+	// of Static Mnemosycon Processing inside of Mnemosyne Current Week
+	// as well as other denes that are not Static Mnemosycon Processing
+	// so first separate the denes called Static Mnemosycon Processing
+	// then sort them by Position
+	var mnemosyconProcessingAddressIdentity = identityFactory.createIdentityByPointer(mnemosyconProcessingAddressPointer);
+	var teleonomeName = identity.teleonomeName;
+	var nucleusName = identity.nucleusName;
+	var deneChainName = identity.deneChainName;
+	//
+	// the deneName represents all the denes which will be part f the report
+	var deneName = identity.deneName;
+	
+	//
+	// now make an identity for the parent, ie @Sento:Mnemosyne:Mnemosyne Current Week:
+	var parentMnemosyconProcessingAddressPointer =  "@" +teleonomeName + ":" + nucleusName + ":" +deneChainName;
+	
+	var parentMnemosyconProcessingDenesDeneChain = humanInterfaceDeneChainIndex["_map"][parentMnemosyconProcessingAddressPointer];
+    denes = parentMnemosyconProcessingDenesDeneChain["Denes"];	
+    //
+    // now loop over all the denes and store the ones that match in  a hashmap to be sorted
+    //
+    var unsortedHashMap = new HashMap();
+    
+    for (var i = 0; i < denes.length; i++) {
+		var dene = denes[i];
+		//
+		if(dene.Name == deneName){
+			unsortedHashMap.put(dene.Position,dene);
+		}
+    }
+    sorted = sortHashMap(unsortedHashMap);
+    
+    
+    var mnemosyneDataSortedArrayMap = sorted["_map"];
+    var dataDene;
+    var dataDeneWords;
+    var dataDeneWord;
+   
+        
+	if ($(window).width() < 480) {
+		
+		var panelHTML = "<table class=\"table\"><tbody>";
+		
+		for(var property in mnemosyneDataSortedArrayMap) {
+	        //
+	        //after every three panels 
+	        dataDene = mnemosyneDataSortedArrayMap[property];  
+		
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td>";
+			panelHTML += "<table table-borderless>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Pulse Time</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+dataDene["Pulse Timestamp"]+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Free Space Before</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+dataDene["Free Space Before Mnemosycon"]+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Free Space After</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+ dataDene["Free Space After Mnemosycon"] +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Rules Processed</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+dataDene["Number Rules Processed"]+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Processing Time (<i> ms</i>)</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" + dataDene["Total Execution Duration Milliseconds"] +"</td></tr>";
+			panelHTML += "</table>";
+			panelHTML += "</td></tr>";
+		}
+		panelHTML += "</tbody></table>";
+	}else{
+		var panelHTML = "<table class=\"table table-responsive\">";
+		panelHTML += "<thead><tr><th>Pulse Timestamp</th><th>Free Space Before</th><th>Free Space After</th><th>Rules Processed</th><th>Processing Time</th></tr></thead><tbody>";
+		for(var property in mnemosyneDataSortedArrayMap) {
+	        //
+	        //after every three panels 
+	        dataDene = mnemosyneDataSortedArrayMap[property];
+	        panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+dataDene["Pulse Timestamp"]+"</td><td>"+dataDene["Free Space Before Mnemosycon"]+"</td><td>"+ dataDene["Free Space After Mnemosycon"] +"</td><td>"+dataDene["Number Rules Processed"]+"</td><td>" + dataDene["Total Execution Duration Milliseconds"] +"</td></tr>";
+			
+		}
+		panelHTML += "</tbody></table>";
+	}
+	return panelHTML;
+}
+
 function renderAsyncCommands(includeClient,includeInternal, limit, offset ){
 	$.ajax({
 		type: "POST",
@@ -747,9 +826,9 @@ function renderPageToDisplay(){
 			}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_DIAGNOSTICS_INFO){
 				//
 				// in this case, denes will contain one dene,
-				// which in turn will contain 3 denewords
+				// which in turn will contain 4 denewords
 				// the value of each of these denewords is a pointer
-				// to the denechain panel for the Synchronous, Asynchronous and System
+				// to the denechain panel for the Synchronous, Asynchronous , System and Mnemosycons
 				// using the pointers, get the chains and store them in localStorage
 				// since the classes will use them later
 				var systemInfoPointers = denes[0]['DeneWords'];

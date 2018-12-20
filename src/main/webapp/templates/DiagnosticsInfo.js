@@ -9,6 +9,7 @@ class DiagnosticsInfo{
 			if( secundaryView !="" && 
                 secundaryView!="AsynchronousDiagnostics" &&
                 secundaryView!="SynchronousDiagnostics" && 
+                secundaryView!="MnemosyconsDiagnostics" && 
                 secundaryView!="SystemDiagnostics")
             {
                 localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
