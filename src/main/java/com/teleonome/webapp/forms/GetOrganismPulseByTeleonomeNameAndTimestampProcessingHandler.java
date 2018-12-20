@@ -26,9 +26,16 @@ public class GetOrganismPulseByTeleonomeNameAndTimestampProcessingHandler extend
 		// TODO Auto-generated method stub
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 		
-		String teleonomeName = request.getParameter("TeleonomeName");
+		String requestedTeleonomeName = request.getParameter("TeleonomeName");
 		long timemillis = Long.parseLong(request.getParameter("PulseMillis"));
-		JSONObject pulseJSONObject = aDBManager.getOrganismPulseByTeleonomeNameAndTimestamp( teleonomeName,  timemillis);
+		JSONObject pulseJSONObject = new JSONObject();
+		String telonomeName = (String) servletContext.getAttribute("TeleonomeName");
+		if(requestedTeleonomeName.equals(telonomeName)) {
+			pulseJSONObject = aDBManager.getPulseByTimestamp(  timemillis);
+		}else {
+			pulseJSONObject = aDBManager.getOrganismPulseByTeleonomeNameAndTimestamp( requestedTeleonomeName,  timemillis);
+		}
+		
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.print(pulseJSONObject.toString(4));

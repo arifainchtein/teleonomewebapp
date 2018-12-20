@@ -228,13 +228,13 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 		}
     }
     var sorted = sortHashMap(unsortedHashMap);
-    
+    if(sorted["_size"]==0) return "";
     
     var mnemosyneDataSortedArrayMap = sorted["_map"];
     var dataDene;
     var dataDeneWords, mnemosyconName;
     var deneWord;
-   var rowStatus="";
+   var rowStatus="text-center";
    var freeSpaceBefore, freeSpaceAfter, numberRules, totalTime, pulseTimestampString;
    
 
@@ -254,7 +254,7 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 				}
 	        }
 		} 
-		var panelHTML = "<h3>"+ mnemosyconName +"</h3><br><table class=\"table\"><tbody>";
+		var panelHTML = "<h4 class=\"text-center\">"+ mnemosyconName +"</h4><br><table class=\"table\"><tbody>";
 		
 		for(var property in mnemosyneDataSortedArrayMap) {
 	        //
@@ -264,17 +264,15 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 	        for( l=0;l<dataDeneWords.length;l++){
 				deneWord = dataDeneWords[l];
 				if(deneWord["Name"]===DENEWORD_FREE_SPACE_BEFORE_MNEMOSYCON){
-					freeSpaceBefore=deneWord["Value"] + deneWord["Units"];
+					freeSpaceBefore=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_FREE_SPACE_AFTER_MNEMOSYCON){
-					freeSpaceAfter=deneWord["Value"] + deneWord["Units"];
+					freeSpaceAfter=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_EXECUTION_TIME){
-					totalTime=deneWord["Value"] + deneWord["Units"];
+					totalTime=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_RULES_PROCESSED){
-					numberRules=deneWord["Value"] + deneWord["Units"];
+					numberRules=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== PULSE_TIMESTAMP){
 					pulseTimestampString=deneWord["Value"];
-				}else if(deneWord["Name"]=== CODON){
-					mnemosyconName=deneWord["Value"];
 				}
 	        }
 	        
@@ -303,8 +301,8 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 				}
 	        }
 		} 
-		var panelHTML = "<h3>"+ mnemosyconName +"</h3><br><table class=\"table table-responsive\">";
-		panelHTML += "<thead><tr><th>Pulse Timestamp</th><th>Free Space Before</th><th>Free Space After</th><th>Rules Processed</th><th>Processing Time</th></tr></thead><tbody>";
+		var panelHTML = "<h4 class=\"text-center\">"+ mnemosyconName +"</h4><br><table class=\"table table-responsive\">";
+		panelHTML += "<thead><tr><th class=\""+ rowStatus+"\">Pulse Timestamp</th><th class=\""+ rowStatus+"\">Free Space Before</th><th class=\""+ rowStatus+"\">Free Space After</th><th class=\""+ rowStatus+"\">Rules Processed</th><th class=\""+ rowStatus+"\">Processing Time</th></tr></thead><tbody>";
 		for(var property in mnemosyneDataSortedArrayMap) {
 	        //
 	        //after every three panels 
@@ -313,13 +311,13 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 	        for( l=0;l<dataDeneWords.length;l++){
 				deneWord = dataDeneWords[l];
 				if(deneWord["Name"]===DENEWORD_FREE_SPACE_BEFORE_MNEMOSYCON){
-					freeSpaceBefore=deneWord["Value"] + deneWord["Units"];
+					freeSpaceBefore=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_FREE_SPACE_AFTER_MNEMOSYCON){
-					freeSpaceAfter=deneWord["Value"] + deneWord["Units"];
+					freeSpaceAfter=deneWord["Value"] + "nbsp;" + deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_EXECUTION_TIME){
-					totalTime=deneWord["Value"] + deneWord["Units"];
+					totalTime=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_RULES_PROCESSED){
-					numberRules=deneWord["Value"] + deneWord["Units"];
+					numberRules=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== PULSE_TIMESTAMP){
 					pulseTimestampString=deneWord["Value"];
 				}
