@@ -201,7 +201,7 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 	// as well as other denes that are not Static Mnemosycon Processing
 	// so first separate the denes called Static Mnemosycon Processing
 	// then sort them by Position
-	var mnemosyconProcessingAddressIdentity = identityFactory.createIdentityByPointer(mnemosyconProcessingAddressPointer);
+	var identity = identityFactory.createIdentityByPointer(mnemosyconProcessingAddressPointer);
 	var teleonomeName = identity.teleonomeName;
 	var nucleusName = identity.nucleusName;
 	var deneChainName = identity.deneChainName;
@@ -213,8 +213,8 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 	// now make an identity for the parent, ie @Sento:Mnemosyne:Mnemosyne Current Week:
 	var parentMnemosyconProcessingAddressPointer =  "@" +teleonomeName + ":" + nucleusName + ":" +deneChainName;
 	
-	var parentMnemosyconProcessingDenesDeneChain = humanInterfaceDeneChainIndex["_map"][parentMnemosyconProcessingAddressPointer];
-    denes = parentMnemosyconProcessingDenesDeneChain["Denes"];	
+	var parentMnemosyconProcessingDenesDeneChain = getDeneChainByIdentityPointer(parentMnemosyconProcessingAddressPointer);
+    var denes = parentMnemosyconProcessingDenesDeneChain["Denes"];	
     //
     // now loop over all the denes and store the ones that match in  a hashmap to be sorted
     //
@@ -227,15 +227,16 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 			unsortedHashMap.put(dene.Position,dene);
 		}
     }
-    sorted = sortHashMap(unsortedHashMap);
+    var sorted = sortHashMap(unsortedHashMap);
     
     
     var mnemosyneDataSortedArrayMap = sorted["_map"];
     var dataDene;
     var dataDeneWords;
     var dataDeneWord;
+   var rowStatus="";
+   var freeSpaceBefore, freeSpaceAfter, numberRules, totalTime, pulseTimestampString;
    
-        
 	if ($(window).width() < 480) {
 		
 		var panelHTML = "<table class=\"table\"><tbody>";
@@ -244,14 +245,29 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 	        //
 	        //after every three panels 
 	        dataDene = mnemosyneDataSortedArrayMap[property];  
-		
+	        dataDeneWords = dataDene.DeneWords;
+	        for( l=0;l<deneWords.length;l++){
+				deneWord = deneWords[l];
+				if(deneWord["Name"]===DENEWORD_FREE_SPACE_BEFORE_MNEMOSYCON){
+					freeSpaceBefore=deneWord["Value"] + deneWord["Units"];
+				}else if(deneWord["Name"]=== DENEWORD_FREE_SPACE_AFTER_MNEMOSYCON){
+					freeSpaceAfter=deneWord["Value"] + deneWord["Units"];
+				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_EXECUTION_TIME){
+					totalTime=deneWord["Value"] + deneWord["Units"];
+				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_RULES_PROCESSED){
+					numberRules=deneWord["Value"] + deneWord["Units"];
+				}else if(deneWord["Name"]=== PULSE_TIMESTAMP){
+					pulseTimestampString=deneWord["Value"];
+				}
+	        }
+	        
 			panelHTML += "<tr class=\""+ rowStatus+"\"><td>";
 			panelHTML += "<table table-borderless>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Pulse Time</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+dataDene["Pulse Timestamp"]+"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Free Space Before</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+dataDene["Free Space Before Mnemosycon"]+"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Free Space After</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+ dataDene["Free Space After Mnemosycon"] +"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Rules Processed</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+dataDene["Number Rules Processed"]+"</td></tr>";
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Processing Time (<i> ms</i>)</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" + dataDene["Total Execution Duration Milliseconds"] +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Pulse Time</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+pulseTimestampString+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Free Space Before</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+freeSpaceBefore+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Free Space After</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+ freeSpaceAfter +"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Rules Processed</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;"+numberRules+"</td></tr>";
+			panelHTML += "<tr class=\""+ rowStatus+"\"><td><b>Processing Time (<i> ms</i>)</b></td><td>&nbsp;&nbsp;&nbsp;&nbsp;" + totalTime +"</td></tr>";
 			panelHTML += "</table>";
 			panelHTML += "</td></tr>";
 		}
@@ -263,7 +279,23 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 	        //
 	        //after every three panels 
 	        dataDene = mnemosyneDataSortedArrayMap[property];
-	        panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+dataDene["Pulse Timestamp"]+"</td><td>"+dataDene["Free Space Before Mnemosycon"]+"</td><td>"+ dataDene["Free Space After Mnemosycon"] +"</td><td>"+dataDene["Number Rules Processed"]+"</td><td>" + dataDene["Total Execution Duration Milliseconds"] +"</td></tr>";
+	        dataDeneWords = dataDene.DeneWords;
+	        for( l=0;l<deneWords.length;l++){
+				deneWord = deneWords[l];
+				if(deneWord["Name"]===DENEWORD_FREE_SPACE_BEFORE_MNEMOSYCON){
+					freeSpaceBefore=deneWord["Value"] + deneWord["Units"];
+				}else if(deneWord["Name"]=== DENEWORD_FREE_SPACE_AFTER_MNEMOSYCON){
+					freeSpaceAfter=deneWord["Value"] + deneWord["Units"];
+				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_EXECUTION_TIME){
+					totalTime=deneWord["Value"] + deneWord["Units"];
+				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_RULES_PROCESSED){
+					numberRules=deneWord["Value"] + deneWord["Units"];
+				}else if(deneWord["Name"]=== PULSE_TIMESTAMP){
+					pulseTimestampString=deneWord["Value"];
+				}
+	        }
+	        
+	        panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+pulseTimestampString+"</td><td>"+freeSpaceBefore+"</td><td>"+ freeSpaceAfter +"</td><td>"+numberRules+"</td><td>" + totalTime +"</td></tr>";
 			
 		}
 		panelHTML += "</tbody></table>";

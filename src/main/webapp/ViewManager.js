@@ -32,6 +32,14 @@ class ViewManager{
         $('#DiagnosticsWorkArea').show();
 
      }
+     
+     MnemosyconsDiagnostics(){
+         var n = new Mnemosycons();
+         var html = n.process();
+         $('#DiagnosticsWorkArea').html(html);
+         $('#DiagnosticsWorkArea').show();
+
+      }
 
 
     //
