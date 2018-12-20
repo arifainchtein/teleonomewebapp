@@ -58,6 +58,7 @@ public class GetMnemosyconRulesDetailsProcessingHandler extends ProcessingFormHa
 						found:
 							for(int j=0;j<ruleProcessingDeneWordsJSONArray.length();j++) {
 								ruleProcessingDeneWordJSONObject = ruleProcessingDeneWordsJSONArray.getJSONObject(j);
+								logger.debug(ruleProcessingDeneWordJSONObject.toString(4));
 								deneWordName = ruleProcessingDeneWordJSONObject.getString(TeleonomeConstants.DENEWORD_NAME_ATTRIBUTE);
 								deneWordValue = ruleProcessingDeneWordJSONObject.getString(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
 
