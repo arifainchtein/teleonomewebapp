@@ -14,9 +14,9 @@ class SearchFunctions{
                 type: "GET",
                 url: "/TeleonomeServlet",
                 data: {formName:formName, MnemosyconName:mnemosyconName, PulseMillis:pulseMillis},
-                success: function (data) {
+                success: function (rulesDetails) {
                    // // console.log("data=" + JSON.stringify(data));
-                   var rulesDetails = JSON.parse(data);
+                  // var rulesDetails = JSON.parse(data);
                    var rulesDetailsRenderedHTML=renderMnemosyconsRules(mnemosyconName,rulesDetails);
                    
                    var d =  new Date(pulseMillis);

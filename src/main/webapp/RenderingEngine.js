@@ -263,13 +263,13 @@ function renderMnemosycons(mnemosyconProcessingAddressPointer){
 			for( l=0;l<dataDeneWords.length;l++){
 				deneWord = dataDeneWords[l];
 				if(deneWord["Name"]===DENEWORD_FREE_SPACE_BEFORE_MNEMOSYCON){
-					freeSpaceBefore=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					freeSpaceBefore=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_FREE_SPACE_AFTER_MNEMOSYCON){
-					freeSpaceAfter=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					freeSpaceAfter=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_EXECUTION_TIME){
-					totalTime=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					totalTime=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== DENEWORD_MNEMOSYCON_RULES_PROCESSED){
-					numberRules=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+					numberRules=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
 				}else if(deneWord["Name"]=== PULSE_TIMESTAMP){
 					pulseTimestampString=deneWord["Value"];
 				}else if(deneWord["Name"]=== PULSE_TIMESTAMP_MILLISECONDS){
@@ -339,11 +339,6 @@ function renderMnemosyconsRules(mnemosyconName, rulesDetails){
 	// rulesDetailsis a json array that contains denes.
 	// these denes are tne Mnemosycon Rule Processing Dene
 
-
-
-
-
-
 	var dataDene;
 	var dataDeneWords, mnemosyconName;
 	var deneWord;
@@ -356,11 +351,7 @@ function renderMnemosyconsRules(mnemosyconName, rulesDetails){
 	if ($(window).width() < 480) {
 
 		var panelHTML = "<h4 class=\"text-center\">"+ mnemosyconName +"</h4><br><table class=\"table\"><tbody>";
-
-
-
 		//public static final String MNEMOSYCON_RULE_FILE_PREFIX="Mnemosycon Rule File Prefix";
-
 		for( l=0;l<rulesDetails.length;l++){
 			//
 			//after every three panels 
@@ -460,16 +451,12 @@ function renderMnemosyconsRules(mnemosyconName, rulesDetails){
 		
 		if(mnemosyconRuleSource === MNEMOSYCON_DATA_SOURCE_DATABASE) {
 			panelHTML += "<thead><tr><th class=\""+ rowStatus+"\">Source</th><th class=\""+ rowStatus+"\">Location</th><th class=\""+ rowStatus+"\">Timeframe</th><th class=\""+ rowStatus+"\">Delete Older Than</th><th class=\""+ rowStatus+"\">Rows Deleted</th><th class=\""+ rowStatus+"\">Execution Millis</th></tr></thead><tbody>";
-			for( l=0;l<rulesDetails.length;l++){
-				
-				
+			for( l=0;l<rulesDetails.length;l++){			
 				//
 				//after every three panels 
 				dataDene = rulesDetails[l];  
 				dataDeneWords = dataDene.DeneWords;
-				
-				
-				for( m=0;m<dataDeneWords.length;m++){
+				for(var m=0;m<dataDeneWords.length;m++){
 					deneWord = dataDeneWords[l];
 					if(deneWord["Name"]===MNEMOSYCON_RULE_EXECUTION_MILLIS){
 						mnemosyconRuleExecutionMillis=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
@@ -487,13 +474,9 @@ function renderMnemosyconsRules(mnemosyconName, rulesDetails){
 						rowsDeleted=deneWord["Value"];
 					}
 				}
-
 				panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+mnemosyconRuleSource+"</td><td>"+mnemosyconRuleLocation+"</td><td>"+ mnemosyconRuleUntilTimeValue  + mnemosyconRuleUntilTimeUnit+"</td><td>"+deleteOlderThan+"</td><td>" + rowsDeleted +"</td><td>" + mnemosyconRuleExecutionMillis +"</td></tr>";
 			}
 		}else if(mnemosyconRuleSource === MNEMOSYCON_DATA_SOURCE_FILE_SYSTEM) {
-
-
-
 				panelHTML += "<thead><tr><th class=\""+ rowStatus+"\">Source</th><th class=\""+ rowStatus+"\">Location</th><th class=\""+ rowStatus+"\">Space Before</th><th class=\""+ rowStatus+"\">Space After</th><th class=\""+ rowStatus+"\">Files Deleted</th><th class=\""+ rowStatus+"\">Oldest File</th><th class=\""+ rowStatus+"\">Newest File</th></tr></thead><tbody>";
 				for( l=0;l<rulesDetails.length;l++){
 					//
@@ -520,9 +503,7 @@ function renderMnemosyconsRules(mnemosyconName, rulesDetails){
 					}
 
 					panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+mnemosyconRuleSource+"</td><td>"+mnemosyconRuleLocation+"</td><td>"+ freeSpaceBeforeRule+"</td><td>"+freeSpaceAfterRule+"</td><td>" + deletedFileCounter +"</td><td>" + oldestFileNameDeleted +"</td><td>" + newestFileNameDeleted +"</td></tr>";
-
 				}  
-
 			}
 			panelHTML += "</tbody></table>";
 		}
