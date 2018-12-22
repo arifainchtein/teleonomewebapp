@@ -84,25 +84,21 @@ class SystemDiagnostics{
 		if(currentViewObjectU != null && currentViewObjectU != undefined){
 			var currentViewObject = JSON.parse(currentViewObjectU);
 			var secundaryView = currentViewObject["SecundaryView"];
-			if( secundaryView != "AsynchronousDiagnostics"){
+			if( secundaryView != "SystemDiagnostics"){
 				localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
 				var currentViewObject ={};
-				var jsonData = {
-						offset:0,
-						limit:5,
-						userLogs:"Yes",
-						systemLogs:"Yes"
-				}
+				var jsonData = {};
+//						offset:0,
+//						limit:5,
+//						userLogs:"Yes",
+//						systemLogs:"Yes"
+//				}
 				var s = JSON.stringify(jsonData);
 				currentViewObject["Data"]=s;
-				currentViewObject["SecundaryView"]="AsynchronousDiagnostics";  
+				currentViewObject["SecundaryView"]="SystemDiagnostics";  
 				localStorageManager.setItem(LOCAL_STORAGE_CURRENT_VIEW_KEY, currentViewObject);
-				renderAsyncCommands("Yes","Yes", 5, 0 );
-			}else{
-				var data = currentViewObject["Data"];
-				var stateData = JSON.parse(data);
-				renderAsyncCommands(stateData.userLogs,stateData.systemLogs, stateData.limit, stateData.offset );
-			} 
+				
+			}
 		}
 
 

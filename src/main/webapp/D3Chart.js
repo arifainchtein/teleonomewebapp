@@ -86,13 +86,13 @@ function drawPieChart(id, data){
   
   .attr("transform", function(d,i){
 	//return "translate(" + i*230 + "," + (i * 1 + 450) + ")"; // place each legend on the right and bump each one down 15 pixels
-	return "translate(" + (width -50) + "," + (i * 55) + ")"; // place each legend on the right and bump each one down 15 pixels
+	return "translate(" + (width -30) + "," + (i * 35) + ")"; // place each legend on the right and bump each one down 15 pixels
  })
  .attr("class", "legend");   
 
 legendG.append("rect") // make a matching color rect
-  .attr("width", 30)
-  .attr("height", 30)
+  .attr("width", 20)
+  .attr("height", 20)
   .attr("y",10)
   .attr("fill", function(d) {
     return d3.rgb(d.data.Color);
@@ -103,7 +103,7 @@ legendG.append("text") // add the text
     return  d.data.Name + " ("+ d.data.Value +d.data.Units+")";
   })
   .style("font-size", 16)
-  .attr("y", 25)
+  .attr("y", 30)
   .attr("x", 35);
 
 //  legendG.append("text") // add the text
