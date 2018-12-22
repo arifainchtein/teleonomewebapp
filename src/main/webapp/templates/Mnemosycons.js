@@ -120,7 +120,7 @@ class Mnemosycons{
 	        panelHTML += "				                <div class=\"modal-header \">";
 	        panelHTML += "				                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" id=\"dismissbannerformmodal\">&times;</button>";
 	        panelHTML += "                                    <h4 class=\"modal-title text-center\" id=\"DisplayPulseTitle\"></h4>";
-	        //panelHTML += "                                    <button type=\"button\"   onclick=\"CopyToClipboard('DisplayPulseData')\" id=\"CopyPulseData\">Copy</button>  ";                                  
+	        panelHTML += "                                    <button type=\"button\"   onclick=\"CopyToClipboard('DisplayPulseData')\" id=\"CopyPulseData\">Copy</button>  ";                                  
 	        panelHTML += "				                </div>";
 	        panelHTML += "				                <div id=\"DisplayPulseData\" class=\"modal-body\"></div>";
 	        panelHTML += "				                <div class=\"modal-footer\"></div>  ";   
