@@ -370,11 +370,11 @@ function renderMnemosyconsRules(mnemosyconName, rulesDetails){
 				for( m=0;m<dataDeneWords.length;m++){
 					deneWord = dataDeneWords[m];
 					if(deneWord["Name"]===MNEMOSYCON_RULE_EXECUTION_MILLIS){
-						mnemosyconRuleExecutionMillis=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+						mnemosyconRuleExecutionMillis=deneWord["Value"] ;
 					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_TIME_UNIT){
-						mnemosyconRuleUntilTimeUnit=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+						mnemosyconRuleUntilTimeUnit=deneWord["Value"] ;
 					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_TIME_UNIT_VALUE){
-						mnemosyconRuleUntilTimeValue=deneWord["Value"] + "nbsp;"+ deneWord["Units"];
+						mnemosyconRuleUntilTimeValue=deneWord["Value"] ;
 					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_SOURCE){
 						mnemosyconRuleSource=deneWord["Value"];
 					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_LOCATION){
