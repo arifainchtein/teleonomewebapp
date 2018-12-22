@@ -626,6 +626,10 @@ var DENEWORD_TYPE_MNEMOSYCON_FORGET_APPROACH="Mnemosycon Forget Approach";
 var DENEWORD_TYPE_MNEMOSYCON_EXPRESSION_VARIABLE_DEFINITION = "Mnemosycon Expression Variable Definition";
 var DENEWORD_EXECUTION_POSITION="Execution Position";
 var MNEMOSYCON_PATHOLOGY_MNEMOSYNE_LOCATION="Mnemosycon Pathology Mnemosyne Location";
+var DENEWORD_TYPE_MNEMOSYCON_TYPE="Mnemosycon Type";
+var MNEMOSYCON_TYPE_STATIC="Static";
+var MNEMOSYCON_TYPE_DYNAMIC="Dynamic";
+var DENEWORD_TYPE_MNEMOSYCON_DATABASE_FIELD="Mnemosycon Rule Database Field";
 
 var DISK_SPACE_BEFORE_MNEMOSYCON_RULE="Disk Space Before Rule";
 var DISK_SPACE_AFTER_MNEMOSYCON_RULE="Disk Space After Rule";
