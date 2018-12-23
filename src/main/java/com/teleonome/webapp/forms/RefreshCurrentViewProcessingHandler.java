@@ -95,7 +95,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 				}
 				
 				if(showAvg) {
-					JSONObject avgDataInfo = aDBManager.getStatsInfoForRemeberedDeneWord(timeZone, identityPointer, fromMillis, untilMillis, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
+					JSONObject avgDataInfo = aDBManager.getStatsInfoForRemeberedDeneWord(timeZone, identityPointer, fromMillis, untilMillis, TeleonomeConstants.DENEWORD_AVERAGE_ATTRIBUTE);
 					toReturnElement.put("avgDataInfo", avgDataInfo);
 				}
 				toReturnElement.put("liveUpdate", liveUpdate);

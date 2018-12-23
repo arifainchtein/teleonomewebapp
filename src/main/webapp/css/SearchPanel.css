@@ -83,6 +83,45 @@
     font-size:14px;
 }
 
+<!-- Stats -->
+.statValueUnits{
+    font-size:20px;
+    margin-left:40px;
+}
+
+.statValue{
+    margin-left:20px;
+    margin-right:20px;
+    padding-top:50px;
+    font-size:32px;
+}
+.statValueTimeString{
+	
+    font-size:14px;
+}
+.statValuePanelSmall{ 
+    margin-top:0px;
+    padding:10px;
+}
+
+.statValueUnitsSmall{
+    font-size:16px;
+    margin-right:20px;
+    
+}
+
+.statValueSmall{
+    margin-left:20px;
+    font-size:20px;
+    margin-right:5px;
+}
+
+.statValueTimeStringSmall{
+	margin-left:20px;
+    font-size:14px;
+}
+
+
 .form-elements-small{
 	padding:20px;
 	margin-right:10px;

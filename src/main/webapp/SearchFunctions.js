@@ -283,19 +283,19 @@ class SearchFunctions{
                                     	
                                     	
                                     	if(showMax){
-	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary LastValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"lastValueSmall\">Maximum:<strong>"+maxValue +"</strong></span><span class=\"lastValueUnitsSmall\"><span>"+units+"</span><span class=\"lastValueTimeStringSmall\">"+maxValueTimeString+"</span>";
+	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statValuePanelSmall\">";            
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"statValueSmall\">Maximum:<strong>"+maxValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+maxValueTimeString+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
                                     	if(showMin){
-	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary LastValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"lastValueSmall\">Minimum:<strong>"+minValue +"</strong></span><span class=\"lastValueUnitsSmall\"><span>"+units+"</span><span class=\"lastValueTimeStringSmall\">"+minValueTimeString+"</span>";
+	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statsValuePanelSmall\">";            
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"statValueSmall\">Minimum:<strong>"+minValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+minValueTimeString+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
        
                                     	if(showAvg){
-	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary LastValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"AvgValue\"><span class=\"lastValueSmall\">Minimum:<strong>"+avgValue +"</strong></span><span class=\"lastValueUnitsSmall\"><span>"+units+"</span>";
+	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statsValuePanelSmall\">";            
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"AvgValue\"><span class=\"statValueSmall\">Average:<strong>"+avgValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
                                     	
@@ -318,6 +318,29 @@ class SearchFunctions{
                                         panelHTML +=                    "</div>";
                                     }
 			                    	
+                                    if(statsColumnWidth>0){
+                                    	panelHTML +=                 "<div class=\"row-fluid \">";
+                                    	
+                                    	
+                                    	if(showMax){
+	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statValuePanelSmall\">";            
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"statValueSmall\">Maximum:<strong>"+maxValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+maxValueTimeString+"</span>";
+	                                        panelHTML +=                    "</div>";
+                                    	}
+                                    	if(showMin){
+	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statsValuePanelSmall\">";            
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"statValueSmall\">Minimum:<strong>"+minValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+minValueTimeString+"</span>";
+	                                        panelHTML +=                    "</div>";
+                                    	}
+       
+                                    	if(showAvg){
+	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statsValuePanelSmall\">";            
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"AvgValue\"><span class=\"statValueSmall\">Average:<strong>"+avgValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span>";
+	                                        panelHTML +=                    "</div>";
+                                    	}
+                                    	
+                                    	panelHTML +=                    "</div>";
+                                    }
 			                    }
 		                    	
 		                    	
