@@ -43,6 +43,10 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 			String formName2 = dataElement.getString("formName");
 			String chartTitle = dataElement.getString("chartTitle");
 			String chartDivId = dataElement.getString("chartDivId");
+			boolean showMax = dataElement.getBoolean("showMax");
+			boolean showMin = dataElement.getBoolean("showMin");
+			boolean showAvg = dataElement.getBoolean("showAvg");
+			logger.debug("showMax="  + showMax + " showMin=" + showMin + " showAvg=" + showAvg);
 			String localStoreageKey = dataElement.getString("localStoreageKey");
 			String visualizationStyle = dataElement.getString("visualizationStyle");
 			long fromMillis = dataElement.getLong("fromMillis");
@@ -75,6 +79,25 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 
 				JSONObject toReturnElement = new JSONObject();
 				toReturnElement.put("Value", values);
+				
+				
+				toReturnElement.put("showMax", showMax);
+				toReturnElement.put("showMin", showMin);
+				toReturnElement.put("showAvg", showAvg);
+				
+				if(showMax) {
+					JSONObject maxDataInfo = aDBManager.getStatsInfoForRemeberedDeneWord(timeZone, identityPointer, fromMillis, untilMillis, TeleonomeConstants.DENEWORD_MAXIMUM_ATTRIBUTE);
+					toReturnElement.put("maxDataInfo", maxDataInfo);
+				}
+				if(showMin) {
+					JSONObject minDataInfo = aDBManager.getStatsInfoForRemeberedDeneWord(timeZone, identityPointer, fromMillis, untilMillis, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
+					toReturnElement.put("minDataInfo", minDataInfo);
+				}
+				
+				if(showAvg) {
+					JSONObject avgDataInfo = aDBManager.getStatsInfoForRemeberedDeneWord(timeZone, identityPointer, fromMillis, untilMillis, TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE);
+					toReturnElement.put("avgDataInfo", avgDataInfo);
+				}
 				toReturnElement.put("liveUpdate", liveUpdate);
 				toReturnElement.put("liveUpdateMinutes", liveUpdateMinutes);
 				JSONObject deneWordsToRemember = (JSONObject) getServletContext().getAttribute("DeneWordsToRemember");

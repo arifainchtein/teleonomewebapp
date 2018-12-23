@@ -966,7 +966,7 @@ body.modal-open .modal .modal-dialog {
                 });
             
                 
-                $(document).on('click', ".MnemosyconRulesDSysteetails",function(e) {
+                $(document).on('click', ".MnemosyconRulesDetails",function(e) {
                     e.preventDefault();
                     var mnemosyconName = $(this).data("mnemosyconname");
                     var pulseMillis = $(this).data("time");
@@ -1035,6 +1035,10 @@ body.modal-open .modal .modal-dialog {
 		       
 		        var visualizationStyle = $('#VisualisationType').find(":selected").val();
 		        var identityPointer = document.getElementById("Identity").value;
+		        var showMax = $("#StatsMax").is(':checked');
+		        var showMin = $("#StatsMin").is(':checked');
+		        var showAvg = $("#StatsAvg").is(':checked');
+		        
 		        var fromDate = document.getElementById("fromDate").value;
 		        var fromTime = document.getElementById("fromTime").value;
 		        var fromMillis = (new Date(fromDate + " " + fromTime)).getTime();
@@ -1122,6 +1126,10 @@ body.modal-open .modal .modal-dialog {
 					liveUpdateMinutes:liveUpdateMinutes,
 					chartTitle:chartTitle,
 					chartDivId:chartDivId,
+					showMax:showMax,
+					showMin:showMin,
+					showAvg:showAvg,
+					
 		            fromMillis:fromMillis,
 		            untilMillis:untilMillis,
 					position:numberOfObjects,

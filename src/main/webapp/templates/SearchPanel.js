@@ -146,7 +146,7 @@ class SearchPanel{
 	        panelHTML += "                                                <option value=\"LineGraph\">Line Graph</option>";
 	        panelHTML += "                                                <option value=\"DataTable\">Data Table</option>";
 	        panelHTML += "                                            </select>";
-	        panelHTML += "                                    </div>";
+	        panelHTML += "                                    </div>"; 
 	        panelHTML += "                                    <div class=\"form-group col-md-3\">";
 	        panelHTML += "                                        <div class=\"form-check form-check-inline\">";
 	        panelHTML += "                                            <input class=\"form-check-input BSswitch\" type=\"checkbox\" id=\"AppendChart\" >";
@@ -166,6 +166,40 @@ class SearchPanel{
 	        panelHTML += "                                        </div>";
 			panelHTML += "                                    </div>";
 	        panelHTML += "                                </div>";
+	        
+	        
+	        
+	        //
+	        // the stats section
+	        panelHTML += "                                    		<div class=\"form-row\" id=\"Stats\">";
+	  
+	        panelHTML += "                                        		<div class=\"form-check form-check-inline\">";
+	        panelHTML += "                                    				<input class=\"form-check-input BSswitch\" type=\"checkbox\" value=\"\" id=\"StatsMax\" checked data-on-text=\"Yes\" data-off-text=\"No\">";
+	        panelHTML += "                                    				<label class=\"form-check-label\" for=\"StatsMax\">";
+	        panelHTML += "                                    					Show Maximum";
+	        panelHTML += "                                    				</label>";
+	        panelHTML += "                                        		</div>";
+	        
+	        
+	        panelHTML += "                                        		<div class=\"form-check form-check-inline\">";
+	        panelHTML += "                                    				<input class=\"form-check-input BSswitch\" type=\"checkbox\" value=\"\" id=\"StatsMin\" checked data-on-text=\"Yes\" data-off-text=\"No\">";
+	        panelHTML += "                                    				<label class=\"form-check-label\" for=\"StatsMin\">";
+	        panelHTML += "                                    					Show Minimum";
+	        panelHTML += "                                    				</label>";
+	        panelHTML += "                                        		</div>";
+	       
+	        
+	        panelHTML += "                                        		<div class=\"form-check form-check-inline\">";
+	        panelHTML += "                                    				<input class=\"form-check-input BSswitch\" type=\"checkbox\" value=\"\" id=\"StatsAvg\" checked data-on-text=\"Yes\" data-off-text=\"No\">";
+	        panelHTML += "                                    				<label class=\"form-check-label\" for=\"StatsAvg\">";
+	        panelHTML += "                                    					Show Average";
+	        panelHTML += "                                    				</label>";
+	        panelHTML += "                                        		</div>";
+	        
+	        panelHTML += "                                    	</div>"; // end stats
+	        
+	        
+	        
 	        panelHTML += "                                <div class=\"form-row\">";
 	        panelHTML += "                                    <div class=\"pull-right SearchConfiguratorButtons\">";
 	        panelHTML += "                                        <button id=\"CancelSearch\" class=\"btn btn-default\" type=\"button\" type=\"submit\" value=\"Submit\">Cancel</button>";
@@ -230,6 +264,43 @@ class SearchPanel{
 	        panelHTML += "                                        </div>";
 			panelHTML += "                                    </div>";
 	        panelHTML += "                                </div>";
+	        
+	        
+	        //
+	        // the stats section
+	        panelHTML += "                                    		<div class=\"form-row form-elements-small\" id=\"Stats\">";
+	  
+	        panelHTML += "                                    <div class=\"form-group col-xs-4\">";
+	        panelHTML += "                                        		<div class=\"form-check form-check-inline\">";
+	        panelHTML += "                                    				<input class=\"form-check-input BSswitch\" type=\"checkbox\" value=\"\" id=\"StatsMax\" checked data-on-text=\"Yes\" data-off-text=\"No\">";
+	        panelHTML += "                                    				<label class=\"form-check-label\" for=\"StatsMax\">";
+	        panelHTML += "                                    					Show Max";
+	        panelHTML += "                                    				</label>";
+	        panelHTML += "                                        		</div>";
+	        panelHTML += "                                        		</div>";
+	        
+	        panelHTML += "                                    <div class=\"form-group col-xs-4\">";
+	        panelHTML += "                                        		<div class=\"form-check form-check-inline\">";
+	        panelHTML += "                                    				<input class=\"form-check-input BSswitch\" type=\"checkbox\" value=\"\" id=\"StatsMin\" checked data-on-text=\"Yes\" data-off-text=\"No\">";
+	        panelHTML += "                                    				<label class=\"form-check-label\" for=\"StatsMin\">";
+	        panelHTML += "                                    					Show Min";
+	        panelHTML += "                                    				</label>";
+	        panelHTML += "                                        		</div>";
+	        panelHTML += "                                        		</div>";
+	        
+	        panelHTML += "                                    <div class=\"form-group col-xs-4\">";
+	        panelHTML += "                                        		<div class=\"form-check form-check-inline\">";
+	        panelHTML += "                                    				<input class=\"form-check-input BSswitch\" type=\"checkbox\" value=\"\" id=\"StatsAvg\" checked data-on-text=\"Yes\" data-off-text=\"No\">";
+	        panelHTML += "                                    				<label class=\"form-check-label\" for=\"StatsAvg\">";
+	        panelHTML += "                                    					Show Avg";
+	        panelHTML += "                                    				</label>";
+	        panelHTML += "                                        		</div>";
+	        panelHTML += "                                        		</div>";
+	        
+	        panelHTML += "                                    	</div>"; // end stats
+	        
+	        
+	        
 	        panelHTML += "                                <div class=\"form-row\">";
 	        panelHTML += "                                    <div class=\"pull-right SearchConfiguratorButtonsSmall\">";
 	        panelHTML += "                                        <button id=\"CancelSearch\" class=\"btn btn-default\" type=\"button\" type=\"submit\" value=\"Submit\">Cancel</button>";

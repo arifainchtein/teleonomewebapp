@@ -127,6 +127,10 @@ class SearchFunctions{
 		            var fromMillis = graphData.fromMillis;
 		            var untilMillis = graphData.untilMillis;
 		            var formName=graphData.formName;
+		            var showMax=graphData.showMax;
+		            var showMin=graphData.showMin;
+		            var showAvg=graphData.showAvg;
+		            
 		            var appendChart = graphData.appendChart;
                     var chartTitle = graphData.chartTitle;
                     var chartDivId = graphData.chartDivId;
@@ -151,6 +155,10 @@ class SearchFunctions{
                     serverRequest.localStoreageKey=localStoreageKey;
                     serverRequest.formName=formName;
                     serverRequest.chartDivId=chartDivId ;
+                    serverRequest.showMax=showMax ;
+                    serverRequest.showMin=showMin ;
+                    serverRequest.showAvg=showAvg ;
+                    
                     serverRequest.liveUpdateMinutes=liveUpdateMinutes;
                     serverRequest.liveUpdate=liveUpdate;
                     serverRequest.chartTitle=chartTitle;
@@ -190,6 +198,8 @@ class SearchFunctions{
                             var liveUpdate = data.liveUpdate;
                             var liveUpdateMinutes=data.liveUpdateMinutes;
 		                    var lastValueMillis = data.Value[data.Value.length-1]["Pulse Timestamp in Milliseconds"];
+		                    
+		                    
 		                    var lastValueTimestamp = new Date(lastValueMillis);
 		                    var visualizationStyle =data.VisualizationStyle;
 		                    var forHour;
@@ -206,7 +216,40 @@ class SearchFunctions{
 		                        forMin=lastValueTimestamp.getMinutes();
                             }
                             
-                           
+		                    var showMax=data.showMax;
+				            var showMin=data.showMin;
+				            var showAvg=data.showAvg;
+				            var statsColumnWidth=0;
+				            var maxValue=0;
+				            var maxValueTimeString="";
+				            if(showMax){
+				            	statsColumnWidth++;
+				            	var maxDataMillis = data.maxDataInfo["Pulse Timestamp in Milliseconds"];
+				            	var maxDate =  new Date(maxDataMillis);
+				            	maxValueTimeString = getISOStringWithoutSecsAndMillisecs(maxDate)
+				                maxValue = data.maxDataInfo.Value;
+				            }
+
+				            var minValue=0;
+				            var minValueTimeString="";
+				            if(showMin){
+				            	statsColumnWidth++;
+				            	var minDataMillis = data.minDataInfo["Pulse Timestamp in Milliseconds"];
+				            	var minDate =  new Date(minDataMillis);
+				            	minValueTimeString = getISOStringWithoutSecsAndMillisecs(minDate)
+				                minValue = data.minDataInfo.Value;
+				            }
+
+				            var avgValue=0;
+				            if(showAvg){
+				            	statsColumnWidth++;
+				                minValue = data.avgDataInfo.Value;
+				            }
+
+				            if(statsColumnWidth>0){
+				            	statsColumnWidth = 12/statsColumnWidth;
+				            }
+				            
 		                    var lastValueDisplayString = lastValueTimestamp.getDate()+"/" +  (lastValueTimestamp.getMonth()+1)+"/" + lastValueTimestamp.getFullYear()+" " + forHour+":" +forMin;
 		                    // console.log("painting " + chartTitle);
 		                    panelHTML = "<div class=\"row\">";  
@@ -232,9 +275,33 @@ class SearchFunctions{
                                     if(liveUpdate){
                                         panelHTML +=                 "<div class=\"row-fluid \">";
                                         panelHTML +=                    "<div class=\"col-xs-12 column label label-primary LastValuePanelSmall\">";            
-                                        panelHTML +=                        "<div id=\""+chartTitle+"LastValue\"><span class=\"lastValueSmall\">"+rendLastValue +"</span><span class=\"lastValueUnitsSmall\"><span>"+units+"</span><span class=\"lastValueTimeStringSmall\"><span>"+lastValueDisplayString+"</span>";
+                                        panelHTML +=                        "<div id=\""+chartTitle+"LastValue\"><span class=\"lastValueSmall\">"+rendLastValue +"</span><span class=\"lastValueUnitsSmall\"><span>"+units+"</span><span class=\"lastValueTimeStringSmall\">"+lastValueDisplayString+"</span>";
                                         panelHTML +=                    "</div>";
                                     }
+                                    if(statsColumnWidth>0){
+                                    	panelHTML +=                 "<div class=\"row-fluid \">";
+                                    	
+                                    	
+                                    	if(showMax){
+	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary LastValuePanelSmall\">";            
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"lastValueSmall\">Maximum:<strong>"+maxValue +"</strong></span><span class=\"lastValueUnitsSmall\"><span>"+units+"</span><span class=\"lastValueTimeStringSmall\">"+maxValueTimeString+"</span>";
+	                                        panelHTML +=                    "</div>";
+                                    	}
+                                    	if(showMin){
+	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary LastValuePanelSmall\">";            
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"lastValueSmall\">Minimum:<strong>"+minValue +"</strong></span><span class=\"lastValueUnitsSmall\"><span>"+units+"</span><span class=\"lastValueTimeStringSmall\">"+minValueTimeString+"</span>";
+	                                        panelHTML +=                    "</div>";
+                                    	}
+       
+                                    	if(showAvg){
+	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary LastValuePanelSmall\">";            
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"AvgValue\"><span class=\"lastValueSmall\">Minimum:<strong>"+avgValue +"</strong></span><span class=\"lastValueUnitsSmall\"><span>"+units+"</span>";
+	                                        panelHTML +=                    "</div>";
+                                    	}
+                                    	
+                                    	panelHTML +=                    "</div>";
+                                    }
+                                    
 			                    }else{
                                     if(liveUpdate){
                                         panelHTML +=                     "<div class=\"col-xs-10 column\"> ";
@@ -385,6 +452,7 @@ class SearchFunctions{
         //                 //var maxDate = convertUTCDateToLocalDate(max);
         //                 var screensize = document.documentElement.clientWidth;
         //                 if(screensize>500){
+        
         //                 	textValue+=   " (From:" + getISOStringWithoutSecsAndMillisecs(minDate) + "    Until:" + getISOStringWithoutSecsAndMillisecs(maxDate)  + ")";
         //                 }else{
         //                 	textValue+=   " (" + getISOStringDateOnly(minDate) + "-" + getISOStringDateOnly(maxDate)  + ")";
