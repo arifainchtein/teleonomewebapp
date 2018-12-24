@@ -284,12 +284,12 @@ class SearchFunctions{
                                     	
                                     	if(showMax){
 	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"statValueSmall\">Maximum:<strong>"+maxValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+maxValueTimeString+"</span>";
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"statValueSmall\">Max:<strong>"+maxValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+maxValueTimeString+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
                                     	if(showMin){
 	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statsValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"statValueSmall\">Minimum:<strong>"+minValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+minValueTimeString+"</span>";
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"statValueSmall\">Min:<strong>"+minValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+minValueTimeString+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
        
@@ -317,19 +317,19 @@ class SearchFunctions{
                                         panelHTML +=                         "</div>";
                                         panelHTML +=                    "</div>";
                                     }
-			                    	
+                                    panelHTML +=                    "</div>";
                                     if(statsColumnWidth>0){
                                     	panelHTML +=                 "<div class=\"row-fluid \">";
                                     	
                                     	
                                     	if(showMax){
 	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"statValueSmall\">Maximum:<strong>"+maxValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+maxValueTimeString+"</span>";
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"statValueSmall\">Max:<strong>"+maxValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+maxValueTimeString+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
                                     	if(showMin){
 	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statsValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"statValueSmall\">Minimum:<strong>"+minValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+minValueTimeString+"</span>";
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"statValueSmall\">Min:<strong>"+minValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+minValueTimeString+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
        
