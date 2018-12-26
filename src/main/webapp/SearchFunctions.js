@@ -243,7 +243,7 @@ class SearchFunctions{
 				            var avgValue=0;
 				            if(showAvg){
 				            	statsColumnWidth++;
-				                minValue = data.avgDataInfo.Value;
+				            	avgValue = data.avgDataInfo.Value;
 				            }
 
 				            if(statsColumnWidth>0){
@@ -284,18 +284,18 @@ class SearchFunctions{
                                     	
                                     	if(showMax){
 	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"statValueSmall\">Max:<strong>"+maxValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+maxValueTimeString+"</span>";
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"statValueSmall\">Max:&nbsp;<strong>"+maxValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+maxValueTimeString+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
                                     	if(showMin){
 	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statsValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"statValueSmall\">Min:<strong>"+minValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+minValueTimeString+"</span>";
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"statValueSmall\">Min:&nbsp;<strong>"+minValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+minValueTimeString+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
        
                                     	if(showAvg){
 	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statsValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"AvgValue\"><span class=\"statValueSmall\">Average:<strong>"+avgValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span>";
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"AvgValue\"><span class=\"statValueSmall\">Average:&nbsp;<strong>"+avgValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
                                     	
@@ -324,18 +324,18 @@ class SearchFunctions{
                                     	
                                     	if(showMax){
 	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"statValueSmall\">Max:<strong>"+maxValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+maxValueTimeString+"</span>";
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MaxValue\"><span class=\"statValueSmall\">Max:&nbsp;<strong>"+maxValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+maxValueTimeString+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
                                     	if(showMin){
 	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statsValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"statValueSmall\">Min:<strong>"+minValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+minValueTimeString+"</span>";
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"MinValue\"><span class=\"statValueSmall\">Min:&nbsp;<strong>"+minValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span><span class=\"statValueTimeStringSmall\">"+minValueTimeString+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
        
                                     	if(showAvg){
 	                                        panelHTML +=                    "<div class=\"col-xs-12 column label label-primary statsValuePanelSmall\">";            
-	                                        panelHTML +=                        "<div id=\""+chartTitle+"AvgValue\"><span class=\"statValueSmall\">Average:<strong>"+avgValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span>";
+	                                        panelHTML +=                        "<div id=\""+chartTitle+"AvgValue\"><span class=\"statValueSmall\">Average:&nbsp;<strong>"+avgValue +"</strong></span><span class=\"statValueUnitsSmall\"><span>"+units+"</span>";
 	                                        panelHTML +=                    "</div>";
                                     	}
                                     	
