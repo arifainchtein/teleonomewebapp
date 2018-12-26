@@ -25,6 +25,9 @@ var betweenPulseInterval;
 var teleonomeStatusBootstrapValue="info";
 var chartDataSourcePointerHashMap = new HashMap();
 var chartStyleHashMap = new HashMap();
+var chartTimeStringHashMap = new HashMap();
+var chartTitleHashMap = new HashMap();
+
 var organismInfoJsonData;
 var pulseCreationTime="";
 var currentPathologyDeneCount=0;
@@ -740,6 +743,9 @@ function RefreshInterface(){
 
 	chartDataSourcePointerHashMap = new HashMap();
 	chartStyleHashMap = new HashMap();
+	chartTimeStringHashMap = new HashMap();
+	chartTitleHashMap = new HashMap();
+	
 	var pathologyDenes = getPathologyDenes();
 	var mnemosynePathologyDenes = getMnemosynePathologyDenes();
 
@@ -885,7 +891,8 @@ function renderPageByPointer(pagePointer, locationId){
 	// re initialize the charts data holders
 	chartDataSourcePointerHashMap = new HashMap();
 	chartStyleHashMap = new HashMap();
-
+	chartTimeStringHashMap = new HashMap();
+	chartTitleHashMap = new HashMap();
 
 
 	var deneWord;
@@ -1225,10 +1232,22 @@ function renderPageByPointer(pagePointer, locationId){
 			var panelDataSourcePointer = extractDeneWordValueByDeneWordTypeFromDeneChain(panelDeneChain, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER);
 			renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
 
-
+			
+			var timeScale = extractDeneWordValueByDeneWordTypeFromDeneChain(panelDeneChain, DENEWORD_TYPE_CHART_TIME_SCALE_STRING);
+			if(timeScale==null || timeScale== undefined)timeScale="%H:%M";
+		
+			var title = extractDeneWordValueByDeneWordTypeFromDeneChain(panelDeneChain, PANEL_TITLE);
+			if(title==null || title== undefined)title="";
+		
+			
 			// console.log("before rendering chart");
 			chartDataSourcePointerHashMap.put(id,renderedDataSourceDeneWord);
 			chartStyleHashMap.put(id,mainPanelVisualStyle);
+			chartTimeScaleHashMap.put(id,timeScale);
+			chartTitleHashMap.put(id,title);
+			
+			
+			
 		}else if(mainPanelVisualStyle == PANEL_VISUALIZATION_STYLE_IMAGE){
 
 			var sourceDataPointer = denes[0].DeneWords[0].Value;
@@ -1329,18 +1348,25 @@ function renderPageByPointer(pagePointer, locationId){
 	//
 	var obj3 = chartDataSourcePointerHashMap["_map"];
 	var obj4 = chartStyleHashMap["_map"];
+	var obj5 = chartTimeStringHashMap["_map"];
+	var obj6 = chartTitleHashMap["_map"];
+	
 	for(var pId in obj3) {
 		var renderedDataSourceDeneWord= obj3[pId];
 		var mainPanelVisualStyle = obj4[pId];
-
+		var timeString = obj5[pId];
+		var title = obj6[pId];
+		
 		if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART){
-			drawTimeSeriesLineChart(pId, renderedDataSourceDeneWord);	
+			drawTimeSeriesLineChart(pId, renderedDataSourceDeneWord, title, timeString);	
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART){
 			var fileName = renderedDataSourceDeneWord.Value.replace('$Webserver_Root/','');
 			var units = renderedDataSourceDeneWord.Units;
 			drawTimeSeriesMultiLineChart(pId, fileName, units);
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PIE_CHART){
-			drawPieChart(pId,renderedDataSourceDeneWord)
+			drawPieChart(pId,renderedDataSourceDeneWord, title);
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_BAR_CHART){
+			drawBarChart(pId,renderedDataSourceDeneWord, title, timeString)
 		}
 	}
 
