@@ -433,7 +433,7 @@ function getDeneWordMapByDeneWordName(dene){
 	
 
 
-function (identityPointer){
+function getDeneChainByIdentityPointer(identityPointer){
 	var identity = identityFactory.createIdentityByPointer(identityPointer);
 	var i3=0,j3=0,k3=0;
 	for( i3=0;i3<nucleiJSONArray.length;i3++){

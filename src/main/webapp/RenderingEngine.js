@@ -1243,7 +1243,7 @@ function renderPageByPointer(pagePointer, locationId){
 			// console.log("before rendering chart");
 			chartDataSourcePointerHashMap.put(id,renderedDataSourceDeneWord);
 			chartStyleHashMap.put(id,mainPanelVisualStyle);
-			chartTimeScaleHashMap.put(id,timeScale);
+			chartTimeStringHashMap.put(id,timeScale);
 			chartTitleHashMap.put(id,title);
 			
 			
