@@ -1213,6 +1213,7 @@ function renderPageByPointer(pagePointer, locationId){
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART ||
 				mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART||
 				mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PIE_CHART
+				mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_BAR_CHART
 		){
 			//
 			// decide what type of chart
@@ -1316,9 +1317,21 @@ function renderPageByPointer(pagePointer, locationId){
 	if(currentViewObjectU != null && currentViewObjectU != undefined){
 		var currentViewObject = JSON.parse(currentViewObjectU);
 		var secundaryView = currentViewObject["SecundaryView"];
-
+		
 		if( secundaryView !=""){
-			viewManager[secundaryView]();
+			
+			if(currentViewObject.hasOwnProperty("Data"){
+				var data = currentViewObject.Data;
+				if(data.hasOwnProperty("ViewManagerParam")){
+					viewManager[secundaryView](data.ViewManagerParam);
+				}else{
+					viewManager[secundaryView]();
+				}
+			}else{
+				viewManager[secundaryView]();
+			}
+			
+			
 		}
 	}
 
@@ -1366,7 +1379,7 @@ function renderPageByPointer(pagePointer, locationId){
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PIE_CHART){
 			drawPieChart(pId,renderedDataSourceDeneWord, title);
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_BAR_CHART){
-			drawBarChart(pId,renderedDataSourceDeneWord, title, timeString)
+			drawTimeSeriesBartChart(pId,renderedDataSourceDeneWord, title, timeString)
 		}
 	}
 

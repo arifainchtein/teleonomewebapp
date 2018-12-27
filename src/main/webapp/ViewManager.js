@@ -25,10 +25,11 @@ class ViewManager{
 
      } 
      
-     SystemDiagnostics(){
+     SystemDiagnostics(panelPointer){
         var n = new SystemDiagnostics();
         var html = n.process();
-        $('#DiagnosticsWorkArea').html(html);
+        var systemDiagnosticsPanelPointer = "@" +teleonomeName + ":" + NUCLEI_HUMAN_INTERFACE + ":" +panelPointer;
+		renderPageByPointer(systemDiagnosticsPanelPointer, "DiagnosticsWorkArea");
         $('#DiagnosticsWorkArea').show();
 
      }

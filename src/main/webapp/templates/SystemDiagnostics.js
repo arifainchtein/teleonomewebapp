@@ -4,7 +4,7 @@ class SystemDiagnostics{
 
 	}
 
-	process(){
+	process(panelPointer){
 		var currentViewObjectU = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
 		if(currentViewObjectU != null && currentViewObjectU != undefined){
 			var currentViewObject = JSON.parse(currentViewObjectU);
@@ -12,6 +12,12 @@ class SystemDiagnostics{
 			if( secundaryView != "SystemDiagnostics"){
 				localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
 				var currentViewObject ={};
+				var jsonData = {
+					ViewManagerParam:panelPointer,
+				};
+				var s = JSON.stringify(jsonData);
+				currentViewObject["Data"]=s;
+		
 				currentViewObject["SecundaryView"]="SystemDiagnostics";  
 				localStorageManager.setItem(LOCAL_STORAGE_CURRENT_VIEW_KEY, currentViewObject);
 			}

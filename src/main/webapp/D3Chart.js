@@ -79,14 +79,7 @@ function drawPieChart(id, data, title){
 		return "";
 	});
 
-	chart1.append("text")
-	.attr("x", (width / 2))             
-	.attr("y", 0 - (margin.top / 2))
-	.attr("text-anchor", "middle")  
-	.style("font-size", "16px") 
-	.style("text-decoration", "underline")  
-	.text(graphTitle);
-
+	
 	
 
 	var legendG = mySvg.selectAll(".legend") // note appending it to mySvg and not svg to make positioning easier
@@ -172,7 +165,7 @@ function drawTimeSeriesLineChart(id, dataSource, graphTitle, timeScale){
 	if(height<170)height = 247 - margin.top - margin.bottom;
 ////	// // // console.log("starting drawtimeseries");
 //	Parse the date / time
-	var	parseDate = d3.time.format("%H:%M").parse;
+	var	parseDate = d3.time.format(timeScale).parse;
 
 //	Set the ranges
 	var	x = d3.time.scale().range([0, width]);
@@ -272,7 +265,7 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 
 
 //	Set the dimensions of the canvas / graph
-	var	margin = {top: 30, right: 20, bottom: 30, left: 50},
+	var	margin = {top: 30, right: 20, bottom: 50, left: 50},
 //	width = 540 - margin.left - margin.right,
 //	height = 247 - margin.top - margin.bottom;
 	width = parseInt(d3.select("#"+id).style("width")) - margin.left - margin.right,
@@ -301,10 +294,7 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 	var	yAxis = d3.svg.axis().scale(y)
 	.orient("left").ticks(10);
 
-//	Define the line
-	var	valueline = d3.svg.line()
-	.x(function(d) { return x(d.date); })
-	.y(function(d) { return y(d.close); });
+
 
 //	Adds the svg canvas
 	var	chart1 = d3.select("#"+id)
@@ -327,16 +317,9 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 	
 	
 	//var yDomainMin=dataSource.Minimum;
-	y.domain([0, d3.max(data, function(d) { return d.value; })]);
-//	if(yDomainMin == undefined){
-//		yDomainMin=0;
-//	}
-	//var yMax = d3.max(data, function(d) { return d.close; });
-
-//	Scale the range of the data
-	//x.domain(d3.extent(data, function(d) { return d.date; }));
 	x.domain(data.map(function(d) { return d.date; }));
-
+	y.domain([0, d3.max(data, function(d) { return d.Value; })]);
+	
 //	Add the X Axis
 	chart1.append("g")
 	.attr("class", "x axis")
@@ -345,8 +328,9 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 	.selectAll("text")
     	.style("text-anchor", "end")
     	.attr("dx", "-.8em")
-    	.attr("dy", "-.55em")
-    	.attr("transform", "rotate(-90)" );;
+    	.attr("dy", "-.35em")
+    	.attr("transform", "rotate(-90)" )
+	    .style("font-size","14px");
 
 //	Add the Y Axis
 	chart1.append("g")
@@ -363,13 +347,13 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 	
 //	graphtitle
 
-	chart1.append("text")
-	.attr("x", (width / 2))             
-	.attr("y", 0 - (margin.top / 2))
-	.attr("text-anchor", "middle")  
-	.style("font-size", "16px") 
-	.style("text-decoration", "underline")  
-	.text(graphTitle);
+//	chart1.append("text")
+//	.attr("x", (width / 2))             
+//	.attr("y", 0 - (margin.top / 2))
+//	.attr("text-anchor", "middle")  
+//	.style("font-size", "16px") 
+//	.style("text-decoration", "underline")  
+//	.text(graphTitle);
 
 
 	chart1.append("text")
@@ -383,18 +367,27 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 	.text(dataSource.Units);
 
 
-	svg.selectAll("bar")
+	chart1 .selectAll("bar")
     .data(data)
   .enter().append("rect")
     .style("fill", "steelblue")
     .attr("x", function(d) { return x(d.date); })
     .attr("width", x.rangeBand())
-    .attr("y", function(d) { return y(d.value); })
-    .attr("height", function(d) { return height - y(d.value); });
+    .attr("y", function(d) { return y(d.Value); })
+    .attr("height", function(d) { return height - y(d.Value); });
 
-
-
-
+	chart1.selectAll(".text")
+    .data(data)
+    .enter()
+    .append("text")
+    .attr("class","label")
+    .attr("x", (function(d) { return x(d.date) + x.rangeBand()/3 ; }  ))
+    .attr("y", function(d) { return y(d.Value) +20; })
+    .attr("dy", ".75em")
+    .style("font-size", "16px")
+    .style("fill", "white")
+    .text(function(d) { return d.Value; });
+	
 
 ////	// // console.log("finsished drawlineseries");
 }
