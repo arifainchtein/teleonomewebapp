@@ -1212,7 +1212,7 @@ function renderPageByPointer(pagePointer, locationId){
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART ||
 				mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART||
-				mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PIE_CHART
+				mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PIE_CHART ||
 				mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_BAR_CHART
 		){
 			//
@@ -1314,13 +1314,13 @@ function renderPageByPointer(pagePointer, locationId){
 	// in the ViewManager
 	var currentViewObjectU = localStorageManager.getItem(LOCAL_STORAGE_CURRENT_VIEW_KEY);
 
-	if(currentViewObjectU != null && currentViewObjectU != undefined){
+	if(locationId=="EntryPoint" && currentViewObjectU != null && currentViewObjectU != undefined){
 		var currentViewObject = JSON.parse(currentViewObjectU);
 		var secundaryView = currentViewObject["SecundaryView"];
 		
+		
 		if( secundaryView !=""){
-			
-			if(currentViewObject.hasOwnProperty("Data"){
+			if(currentViewObject.hasOwnProperty("Data")){
 				var data = currentViewObject.Data;
 				if(data.hasOwnProperty("ViewManagerParam")){
 					viewManager[secundaryView](data.ViewManagerParam);
@@ -1330,9 +1330,9 @@ function renderPageByPointer(pagePointer, locationId){
 			}else{
 				viewManager[secundaryView]();
 			}
-			
-			
 		}
+		
+		
 	}
 
 	//
@@ -1345,14 +1345,6 @@ function renderPageByPointer(pagePointer, locationId){
 	if(powerButtonRed){
 		$("#MainPowerButton").addClass('btn-danger').removeClass('btn-warning').removeClass('btn-success');
 	}
-
-
-
-
-
-
-
-
 	if(inSearch){
 		searchFunctions.generateAllGraphs();
 	}

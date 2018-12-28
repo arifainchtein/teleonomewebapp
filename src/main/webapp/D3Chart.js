@@ -22,10 +22,23 @@ function drawPieChart(id, data, title){
 		obj.Value = Number(obj.Value);
 	}
 
+
+	var screensize = document.documentElement.clientWidth;
+
+	var pieHeight=200;
+	var pieWidth=200;
+	var legendHeight=0;
+	var width = 500;
+
+	if(screensize<500){
+		legendHeight=data.Value.length*40;
+		$("#"+id).height(pieHeight+legendHeight);
+		// $("#"+id).width(400);
+	}
+
 	var pie_data = data.Value;
-	var width = 300,
-	height = 240,
-	radius = (Math.min(width, height) / 2);
+	height = pieHeight+legendHeight,
+	radius = (Math.min(pieWidth, pieHeight) / 2);
 
 
 	//var color = d3.scale.linear()
@@ -45,12 +58,12 @@ function drawPieChart(id, data, title){
 	});
 
 	var mySvg = d3.select("#"+id).append("svg")
-	.attr("width", width+300)
+	.attr("width", width+400)
 	.attr("height", height)
 
 
 	var svg = mySvg.append("g")
-	.attr("transform", "translate(" + ((width / 2)-30) + "," + ((height / 2)) + ")");
+	.attr("transform", "translate(120 ,100)");
 
 	var g = svg.selectAll(".arc")
 	.data(pie(pie_data))
@@ -79,16 +92,19 @@ function drawPieChart(id, data, title){
 		return "";
 	});
 
-	
-	
+
+	var screensize = document.documentElement.clientWidth;
 
 	var legendG = mySvg.selectAll(".legend") // note appending it to mySvg and not svg to make positioning easier
 	.data(pie(pie_data))
 	.enter().append("g")
-
 	.attr("transform", function(d,i){
 		//return "translate(" + i*230 + "," + (i * 1 + 450) + ")"; // place each legend on the right and bump each one down 15 pixels
-		return "translate(" + (width -30) + "," + (i * 35) + ")"; // place each legend on the right and bump each one down 15 pixels
+		if(screensize<500){
+			return "translate(" + (30) + "," + (pieHeight+10 + (i * 35)) + ")"; // place each legend on the right and bump each one down 15 pixels
+		}else{
+			return "translate(" + (pieWidth+30) + "," + (i * 35) + ")"; // place each legend on the right and bump each one down 15 pixels
+		}
 	})
 	.attr("class", "legend");   
 
@@ -262,29 +278,36 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 	if (arguments.length == 2) {
 		graphTitle="";
 	}
+	var  baseH=1;
+	var hh= parseInt(d3.select("#"+id).style("height"));
+	if(!isNaN(hh)){
+		baseH=hh;
+	}
 
+	var data = dataSource.Value;
 
+	var screensize = document.documentElement.clientWidth;
+	var  barLabelFontSize="16px";
+	if(screensize<500){
+		width=350;
+		barLabelFontSize="12px";
+	}else{
+		width=500;
+	}
 //	Set the dimensions of the canvas / graph
-	var	margin = {top: 30, right: 20, bottom: 50, left: 50},
-//	width = 540 - margin.left - margin.right,
-//	height = 247 - margin.top - margin.bottom;
-	width = parseInt(d3.select("#"+id).style("width")) - margin.left - margin.right,
-	height = parseInt(d3.select("#"+id).style("height")) - margin.top - margin.bottom;
+	var	margin = {top: 30, right: 20, bottom: 50, left: 40},
+	width = width - margin.left - margin.right,
+	height = baseH - margin.top - margin.bottom;
 
 
-////	// // console.log("calculated height=" + height);
 	if(height<170)height = 247 - margin.top - margin.bottom;
-////////// console.log("starting drawtimeseries");
-//	Parse the date / time
-	//dateRange should somehting like "%y/%m/%d"
+//	if(width<490)width=560- margin.left-margin.right;
 	var	parseDate = d3.time.format(dateRange).parse;
 
-//	Set the ranges
-//	var	x = d3.time.scale().range([0, width]);
-//	var	y = d3.scale.linear().range([height, 0]);
 
 	var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
 	var y = d3.scale.linear().range([height, 0]);
+
 
 
 //	Define the axes
@@ -305,46 +328,44 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-	var data = dataSource.Value;
 
 	data.forEach(function(d) {
 		d.date = new Date(d["Pulse Timestamp in Milliseconds"]);
 		d.Value = +d.Value;
 	});
 
-	window.addEventListener('resize', chart1.render);
 
-	
-	
+
+
 	//var yDomainMin=dataSource.Minimum;
 	x.domain(data.map(function(d) { return d.date; }));
 	y.domain([0, d3.max(data, function(d) { return d.Value; })]);
-	
+
 //	Add the X Axis
 	chart1.append("g")
 	.attr("class", "x axis")
 	.attr("transform", "translate(0," + height + ")")
 	.call(xAxis)
 	.selectAll("text")
-    	.style("text-anchor", "end")
-    	.attr("dx", "-.8em")
-    	.attr("dy", "-.35em")
-    	.attr("transform", "rotate(-90)" )
-	    .style("font-size","14px");
+	.style("text-anchor", "end")
+	.attr("dx", "-.8em")
+	.attr("dy", "-.35em")
+	.attr("transform", "rotate(-90)" )
+	.style("font-size","14px");
 
 //	Add the Y Axis
 	chart1.append("g")
 	.attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Value ($)");
+	.call(yAxis)
+	.append("text")
+	.attr("transform", "rotate(-90)")
+	.attr("y", 6)
+	.attr("dy", ".71em")
+	.style("text-anchor", "end")
+	.text("Value ($)");
 
-	
-	
+
+
 //	graphtitle
 
 //	chart1.append("text")
@@ -368,30 +389,72 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 
 
 	chart1 .selectAll("bar")
-    .data(data)
-  .enter().append("rect")
-    .style("fill", "steelblue")
-    .attr("x", function(d) { return x(d.date); })
-    .attr("width", x.rangeBand())
-    .attr("y", function(d) { return y(d.Value); })
-    .attr("height", function(d) { return height - y(d.Value); });
+	.data(data)
+	.enter().append("rect")
+	.style("fill", "steelblue")
+	.attr("x", function(d) { return x(d.date); })
+	.attr("width", x.rangeBand())
+//	.attr("width", Math.min(x.rangeBand()-2, 20))
+	.attr("y", function(d) { return y(d.Value); })
+	.attr("height", function(d) { return height - y(d.Value); });
 
 	chart1.selectAll(".text")
-    .data(data)
-    .enter()
-    .append("text")
-    .attr("class","label")
-    .attr("x", (function(d) { return x(d.date) + x.rangeBand()/3 ; }  ))
-    .attr("y", function(d) { return y(d.Value) +20; })
-    .attr("dy", ".75em")
-    .style("font-size", "16px")
-    .style("fill", "white")
-    .text(function(d) { return d.Value; });
-	
+	.data(data)
+	.enter()
+	.append("text")
+	.attr("class","label")
+	.attr("x", (function(d) { return x(d.date) + x.rangeBand()/4 ; }  ))
+	.attr("y", function(d) { return y(d.Value) +10; })
+	.attr("dy", ".75em")
+	.style("font-size", barLabelFontSize)
+	.style("fill", "white")
+	.text(function(d) { return d.Value; });
 
-////	// // console.log("finsished drawlineseries");
+
+
+
+	document.addEventListener("DOMContentLoaded", resize);
+	d3.select(window).on('resize', resize); 
+
+	function resize() {
+		console.log('----resize function----');
+		// update width
+		width = parseInt(d3.select("#"+id).style('width'), 10);
+		width = width - margin.left - margin.right;
+
+		height = parseInt(d3.select("#"+id).style("height"));
+		height = height - margin.top - margin.bottom;
+		console.log('----resiz width----'+width);
+		console.log('----resiz height----'+height);
+		// resize the chart
+
+		x.range([0, width]);
+		x.rangeRoundBands([0, width], .03);
+		y.range([height, 0]);
+
+		yAxis.ticks(Math.max(height/50, 2));
+		xAxis.ticks(Math.max(width/50, 2));
+
+		d3.select(chart1.node().parentNode)
+		.style('width', (width + margin.left + margin.right) + 'px');
+
+		chart1.selectAll('.bar')
+		.attr("x", function(d) { return x(d.date); })
+		.attr("width", x.rangeBand());
+
+		chart1.selectAll("text")          
+		// .attr("x", function(d) { return xScale(d.food); })
+		.attr("x", (function(d) { return x(d.date    ) + x.rangeBand() / 2 ; }  ))
+		.attr("y", function(d) { return yScale(d.Value) + 1; })
+		.attr("width", Math.min(x.rangeBand()-2, 20))
+		.attr("dy", ".75em");             
+
+		chart1.select('.x.axis').call(xAxis.orient('bottom')).selectAll("text").attr("y",10).call(wrap, x.rangeBand());
+		// Swap the version below for the one above to disable rotating the titles
+		// svgContainer.select('.x.axis').call(xAxis.orient('top')).selectAll("text").attr("x",55).attr("y",-25);
+
+
+	}
+
 }
-
-
-
 
