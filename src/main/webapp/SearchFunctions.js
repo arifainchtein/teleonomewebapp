@@ -20,9 +20,16 @@ class SearchFunctions{
                    var rulesDetailsRenderedHTML=renderMnemosyconsRules(mnemosyconName,rulesDetails);
                    
                    var d =  new Date(pulseMillis);
-                   var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +d.getHours() + ":" + d.getMinutes()+ ":" + d.getSeconds();
-                    $('#DisplayPulseTitle').html(mnemosyconName+ " " + datestring);
+                   //var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +d.getHours() + ":" + d.getMinutes()+ ":" + d.getSeconds();
+                   
+                   var datestring = ("0" + d.getDate()).slice(-2) + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" +
+                   d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+
+                   
+                    $('#DisplayPulseTitle').html(mnemosyconName);
+                    $('#DisplayPulseDate').html(datestring);
                     $('#DisplayPulseData').html(rulesDetailsRenderedHTML);
+                    $('#CopyPulseData').hide(); 
                     $('#WaitingWheel').hide();
                 },
                 error: function(data){
@@ -51,7 +58,13 @@ class SearchFunctions{
                    var pulseJson = JSON.stringify(data, null, 2);
                    var d =  new Date(pulseMillis);
                    var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +d.getHours() + ":" + d.getMinutes()+ ":" + d.getSeconds();
-                    $('#DisplayPulseTitle').html(teleonomeName + " " + datestring);
+                   $('#DisplayPulseTitle').html(mnemosyconName);
+                   $('#DisplayPulseDate').html(datestring);
+                   if ($(window).width() > 900) {
+       	        		$('#CopyPulseData').show();                                  	
+       	        	}else{
+       	        		$('#CopyPulseData').hide(); 
+       	        	}
                     $('#DisplayPulseData').html(pulseJson);
                     $('#WaitingWheel').hide();
                 },

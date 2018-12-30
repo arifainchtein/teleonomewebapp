@@ -2,6 +2,10 @@ package com.teleonome.webapp.forms;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +45,13 @@ public class GetMnemosyconRulesDetailsProcessingHandler extends ProcessingFormHa
 		JSONObject mnemosyconProcessingDeneChain;
 		String deneWordName;
 		Object deneWordValue;
-		JSONArray toReturn = new JSONArray();
+		JSONObject toReturn = new JSONObject();
+		ArrayList unsortedRules = new ArrayList();
+		JSONArray databaseRules = new JSONArray();
+		JSONArray filesRules = new JSONArray();
+		toReturn.put("DatabaseRules", databaseRules);
+		toReturn.put("FilesRules", filesRules);
+		
 		if(pulseJSONObject!=null) {
 			try {
 				mnemosyconProcessingDeneChain = DenomeUtils.getDeneChainByIdentity(pulseJSONObject, identity);
@@ -57,23 +67,42 @@ public class GetMnemosyconRulesDetailsProcessingHandler extends ProcessingFormHa
 						ruleProcessingJSONObject = allRuleDenes.getJSONObject(i);
 						ruleProcessingDeneWordsJSONArray = ruleProcessingJSONObject.getJSONArray("DeneWords");
 						found:
-							for(int j=0;j<ruleProcessingDeneWordsJSONArray.length();j++) {
-								ruleProcessingDeneWordJSONObject = ruleProcessingDeneWordsJSONArray.getJSONObject(j);
-								logger.debug(ruleProcessingDeneWordJSONObject.toString(4));
-								deneWordName = ruleProcessingDeneWordJSONObject.getString(TeleonomeConstants.DENEWORD_NAME_ATTRIBUTE);
-								deneWordValue = ruleProcessingDeneWordJSONObject.get(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+						for(int j=0;j<ruleProcessingDeneWordsJSONArray.length();j++) {
+							ruleProcessingDeneWordJSONObject = ruleProcessingDeneWordsJSONArray.getJSONObject(j);
+							
+							logger.debug(ruleProcessingDeneWordJSONObject.toString(4));
+							deneWordName = ruleProcessingDeneWordJSONObject.getString(TeleonomeConstants.DENEWORD_NAME_ATTRIBUTE);
+							deneWordValue = ruleProcessingDeneWordJSONObject.get(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
 
-								logger.debug("deneWordName=" + deneWordName + " deneWordValue=" + deneWordValue);
-								if(deneWordName.equals(TeleonomeConstants.CODON) &&
-										deneWordValue.equals(requestedMnemosyconName)
-										) {
-									//
-									// this rule processing belongs to the same 
-									toReturn.put(ruleProcessingJSONObject);
-									break found;
-								}
+							logger.debug("deneWordName=" + deneWordName + " deneWordValue=" + deneWordValue);
+							if(deneWordName.equals(TeleonomeConstants.CODON) &&
+									deneWordValue.equals(requestedMnemosyconName)
+									) {
+										//
+										// this rule processing belongs to the same 
+								unsortedRules.add(ruleProcessingJSONObject);
+								break found;
 							}
+						}
 					}
+					//
+					// now separate them into database ad file
+					//
+					String mnemosyconRuleSource="";
+					
+					for(int i=0;i<unsortedRules.size();i++) {
+						ruleProcessingJSONObject = (JSONObject) unsortedRules.get(i);
+						mnemosyconRuleSource = (String) DenomeUtils.getDeneWordAttributeByDeneWordNameFromDene(ruleProcessingJSONObject, TeleonomeConstants.MNEMOSYCON_RULE_SOURCE, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+						if(mnemosyconRuleSource.equals(TeleonomeConstants.MNEMOSYCON_DATA_SOURCE_DATABASE)) {
+							
+							databaseRules.put(ruleProcessingJSONObject);
+							
+						}else if(mnemosyconRuleSource.equals(TeleonomeConstants.MNEMOSYCON_DATA_SOURCE_FILE_SYSTEM)) {
+							filesRules.put(ruleProcessingJSONObject);
+							
+						}
+					}
+					
 				}
 				
 			} catch (InvalidDenomeException e) {
@@ -81,6 +110,9 @@ public class GetMnemosyconRulesDetailsProcessingHandler extends ProcessingFormHa
 				logger.warn(Utils.getStringException(e));
 			}
 		}
+		
+		
+		
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.print(toReturn.toString());
