@@ -25,23 +25,29 @@ class Networking{
         //
 
         var panelHTML = "<div class=\"col-lg-12\">";
-        panelHTML += "<div class=\"bs-component\">";
-        panelHTML += "<div class=\"panel panel-default\">";
-        panelHTML += " <div class=\"panel-heading\"><h4>"+panelTitle+"</h4></div>";
-        panelHTML += "<div class=\"panel-body text-center\">";
-
-        panelHTML += "<ul class=\"list-inline\">";
+        panelHTML += "		<div class=\"bs-component\">";
+        panelHTML += "			<div class=\"panel with-nav-tabs panel-primary\">";
+        panelHTML += "				<div class=\"panel-heading\"><h4>Networking Configuration</h4></div>";
+        panelHTML += "					<ul class=\"nav nav-tabs\">";
         if(hasWlan0){
-            panelHTML += "<li><a id=\"wlan0\" href=\"#\">wlan0</a></li>";
+            panelHTML += "					<li><a id=\"wlan0\" href=\"#\" data-toggle=\"tab\">wlan0</a></li>";
         }
         if(hasWlan1){
-            panelHTML += "<li><a id=\"wlan1\" href=\"#\">wlan1</a></li>";
+            panelHTML += "					<li><a id=\"wlan1\" href=\"#\" data-toggle=\"tab\">wlan1</a></li>";
         }
         if(hasEth0){
-            panelHTML += "<li><a id=\"eth0\" href=\"#\">eth0</a></li>";
+            panelHTML += "					<li><a id=\"eth0\" href=\"#\" data-toggle=\"tab\">eth0</a></li>";
         }
-        panelHTML += "</ul>";
-        panelHTML += "<div id=\"NetworkingInfoArea\"></div>";
+        panelHTML += "					</ul>";
+        panelHTML += "				</div>";
+        panelHTML += "				<div class=\"panel-body text-center\">";
+        panelHTML += "					<div class=\"tab-content\">";
+        panelHTML += "						<div id=\"NetworkingInfoArea\"></div>";
+        panelHTML += "					</div>";
+        panelHTML += "				</div>";
+        panelHTML += "			</div>";
+        panelHTML += "		</div>";
+        panelHTML += "	</div>";
         return panelHTML;     
     }
 

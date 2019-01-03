@@ -1327,6 +1327,7 @@ body.modal-open .modal .modal-dialog {
 					// now check if there is a wlan
 					$("#NetworkingInfoArea").empty();
 					var panelHtml = renderWlan0();
+					$(".BSswitch").bootstrapSwitch();
 					$("#NetworkingInfoArea").append(panelHtml);
 				});
 
@@ -1574,8 +1575,6 @@ body.modal-open .modal .modal-dialog {
 	                    panelHTML += "<div class=\"col-xs-12\" style=\"height: 20px;\"></div>";
 	                    panelHTML += "</div>";
 	                    panelHTML += "</center>";
-	                    
-	                    
 	                    panelHTML += "<div id=\"NetworkMode\">";
 	                    panelHTML += "<center>";
 	                    panelHTML += "<div class=\"row\">";
@@ -1583,22 +1582,16 @@ body.modal-open .modal .modal-dialog {
 	                    panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
 	                    panelHTML += "</div>";
 	                    panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 20px;\"></div></div>";
-	        
 	                    panelHTML += "<div class=\"row\">";
 	                    panelHTML += "<div id=\"AvailableNetworkSection\">";
 	                    panelHTML += "<label>Available Networks:</label><br>";
 	                    panelHTML += "<select id=\"AvailableNetworks\" name=\"AvailableNetworks\"></select>";
-	                    
-	                    
-	        
-	                   
 	                    panelHTML += "</select>";
 	                    panelHTML += "</div>";
 	                    panelHTML += "</div>";
 	                    panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 30px;\"></div></div>";
 	                    panelHTML += "<div class=\"row\">";
 	                    panelHTML += "<div id=\"ssidPassword\">";
-	                    
 	                    panelHTML += "<label>Input Password:</label><br>";
 	                    panelHTML += "<input type=\"password\" id=\"password\" name=\"password\"></select>";
 	                    panelHTML += "</div>";
