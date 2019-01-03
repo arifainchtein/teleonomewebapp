@@ -1325,7 +1325,9 @@ body.modal-open .modal .modal-dialog {
 					//
 					// if we are here it means that there is a wlan0 
 					// now check if there is a wlan
-					renderWlan0();
+					$("#NetworkingInfoArea").empty();
+					var panelHtml = renderWlan0();
+					$("#NetworkingInfoArea").append(panelHtml);
 				});
 
 				$(document).on('click', '#RestartButton',function(e){
@@ -1544,7 +1546,7 @@ body.modal-open .modal .modal-dialog {
 			
 			
 		function renderWlan0(){
-	                $("#NetworkingInfoArea").empty();
+	                
 
 	                var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
 	                var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
