@@ -18,7 +18,7 @@ class SearchFunctions{
                    // // console.log("data=" + JSON.stringify(data));
                   // var rulesDetails = JSON.parse(data);
                    var rulesDetailsRenderedHTML=renderMnemosyconsRules(mnemosyconName,rulesDetails);
-                   
+                   $('#DisplayPulseData').html(rulesDetailsRenderedHTML);
                    var d =  new Date(pulseMillis);
                    //var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +d.getHours() + ":" + d.getMinutes()+ ":" + d.getSeconds();
                    
@@ -58,7 +58,7 @@ class SearchFunctions{
                    var pulseJson = JSON.stringify(data, null, 2);
                    var d =  new Date(pulseMillis);
                    var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +d.getHours() + ":" + d.getMinutes()+ ":" + d.getSeconds();
-                   $('#DisplayPulseTitle').html(mnemosyconName);
+                   $('#DisplayPulseTitle').html(teleonomeName);
                    $('#DisplayPulseDate').html(datestring);
                    if ($(window).width() > 900) {
        	        		$('#CopyPulseData').show();                                  	

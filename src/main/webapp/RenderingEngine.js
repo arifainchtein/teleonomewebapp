@@ -450,68 +450,66 @@ function renderMnemosyconsRules(mnemosyconName, rulesDetails){
 		}
 		panelHTML += "</tbody></table>";
 	}else{
+		if(databaseRules!=undefined && databaseRules.length>0){
+			var panelHTML = "<h5>Database Rules</h5><table class=\"table table-responsive\">";
+			panelHTML += "<thead><tr><th class=\""+ rowStatus+"\">Source</th><th class=\""+ rowStatus+"\">Location</th><th class=\""+ rowStatus+"\">Field</th><th class=\""+ rowStatus+"\">Timeframe</th><th class=\""+ rowStatus+"\">Delete Older Than</th><th class=\""+ rowStatus+"\">Rows Deleted</th><th class=\""+ rowStatus+"\">Execution Millis</th></tr></thead><tbody>";
+			for( l=0;l<databaseRules.length;l++){ 
+				dataDene = databaseRules[l];  
+				dataDeneWords = dataDene.DeneWords;
 
-		var panelHTML = "<h5>Database Rules</h5><table class=\"table table-responsive\">";
-		panelHTML += "<thead><tr><th class=\""+ rowStatus+"\">Source</th><th class=\""+ rowStatus+"\">Location</th><th class=\""+ rowStatus+"\">Field</th><th class=\""+ rowStatus+"\">Timeframe</th><th class=\""+ rowStatus+"\">Delete Older Than</th><th class=\""+ rowStatus+"\">Rows Deleted</th><th class=\""+ rowStatus+"\">Execution Millis</th></tr></thead><tbody>";
-		for( l=0;l<databaseRules.length;l++){ 
-			dataDene = databaseRules[l];  
-			dataDeneWords = dataDene.DeneWords;
-
-			for(var m=0;m<dataDeneWords.length;m++){
-				deneWord = dataDeneWords[m];
-				databaseField=="";
-				if(deneWord["Name"]===MNEMOSYCON_RULE_EXECUTION_MILLIS){
-					mnemosyconRuleExecutionMillis=deneWord["Value"] ;
-				}else if(deneWord["Name"]=== MNEMOSYCON_RULE_TIME_UNIT){
-					mnemosyconRuleUntilTimeUnit=deneWord["Value"] ;
-				}else if(deneWord["Name"]=== MNEMOSYCON_RULE_TIME_UNIT_VALUE){
-					mnemosyconRuleUntilTimeValue=deneWord["Value"] ;
-				}else if(deneWord["Name"]=== MNEMOSYCON_RULE_SOURCE){
-					mnemosyconRuleSource=deneWord["Value"] ;
-				}else if(deneWord["Name"]=== MNEMOSYCON_RULE_LOCATION){
-					mnemosyconRuleLocation=deneWord["Value"];
-				}else if(deneWord["Name"]=== MNEMOSYCON_DELETE_OLDER_THAN){
-					deleteOlderThan=deneWord["Value"];
-				}else if(deneWord["Name"]=== MNEMOSYCON_ROWS_DELETED){
-					rowsDeleted=deneWord["Value"];
-				}else if(deneWord["Name"]=== DENEWORD_TYPE_MNEMOSYCON_DATABASE_FIELD ){
-					databaseField=deneWord["Value"];
+				for(var m=0;m<dataDeneWords.length;m++){
+					deneWord = dataDeneWords[m];
+					databaseField=="";
+					if(deneWord["Name"]===MNEMOSYCON_RULE_EXECUTION_MILLIS){
+						mnemosyconRuleExecutionMillis=deneWord["Value"] ;
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_TIME_UNIT){
+						mnemosyconRuleUntilTimeUnit=deneWord["Value"] ;
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_TIME_UNIT_VALUE){
+						mnemosyconRuleUntilTimeValue=deneWord["Value"] ;
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_SOURCE){
+						mnemosyconRuleSource=deneWord["Value"] ;
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_LOCATION){
+						mnemosyconRuleLocation=deneWord["Value"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_DELETE_OLDER_THAN){
+						deleteOlderThan=deneWord["Value"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_ROWS_DELETED){
+						rowsDeleted=deneWord["Value"];
+					}else if(deneWord["Name"]=== DENEWORD_TYPE_MNEMOSYCON_DATABASE_FIELD ){
+						databaseField=deneWord["Value"];
+					}
 				}
+				panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+mnemosyconRuleSource+"</td><td>"+mnemosyconRuleLocation+"</td><td>"+databaseField+"</td><td>"+ mnemosyconRuleUntilTimeValue  + mnemosyconRuleUntilTimeUnit+"</td><td>"+deleteOlderThan+"</td><td>" + rowsDeleted +"</td><td>" + mnemosyconRuleExecutionMillis +"</td></tr>";
+
 			}
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+mnemosyconRuleSource+"</td><td>"+mnemosyconRuleLocation+"</td><td>"+databaseField+"</td><td>"+ mnemosyconRuleUntilTimeValue  + mnemosyconRuleUntilTimeUnit+"</td><td>"+deleteOlderThan+"</td><td>" + rowsDeleted +"</td><td>" + mnemosyconRuleExecutionMillis +"</td></tr>";
-
+			panelHTML += "</tbody></table>";
 		}
-		panelHTML += "</tbody></table>";
-		panelHTML += "<h5>File Based Rules</h5><table class=\"table table-responsive\">";
-		panelHTML += "<thead><tr><th class=\""+ rowStatus+"\">Source</th><th class=\""+ rowStatus+"\">Location</th><th class=\""+ rowStatus+"\">Space Before</th><th class=\""+ rowStatus+"\">Space After</th><th class=\""+ rowStatus+"\">Files Deleted</th><th class=\""+ rowStatus+"\">Oldest File</th><th class=\""+ rowStatus+"\">Newest File</th></tr></thead><tbody>";
-
-		for( l=0;l<databaseRules.length;l++){ 
-			dataDene = databaseRules[l];  
-
-			for( m=0;m<dataDeneWords.length;m++){
-				deneWord = dataDeneWords[m];
-				if(deneWord["Name"]===DISK_SPACE_BEFORE_MNEMOSYCON_RULE){
-					freeSpaceBeforeRule=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
-				}else if(deneWord["Name"]=== DISK_SPACE_AFTER_MNEMOSYCON_RULE){
-					freeSpaceAfterRule=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
-				}else if(deneWord["Name"]=== MNEMOSYCON_RULE_FILES_DELETED){
-					deletedFileCounter=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
-				}else if(deneWord["Name"]=== MNEMOSYCON_RULE_SOURCE){
-					mnemosyconRuleSource=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
-				}else if(deneWord["Name"]=== MNEMOSYCON_RULE_LOCATION){
-					mnemosyconRuleLocation=deneWord["Value"];
-				}else if(deneWord["Name"]=== MNEMOSYCON_RULE_OLDEST_FILE_DELETED){
-					oldestFileNameDeleted=deneWord["Value"];
-				}else if(deneWord["Name"]=== MNEMOSYCON_RULE_NEWEST_FILE_DELETED){
-					newestFileNameDeleted=deneWord["Value"];
+		if(fileRules!=undefined && fileRules.length>0){
+			panelHTML += "<h5>File Based Rules</h5><table class=\"table table-responsive\">";
+			panelHTML += "<thead><tr><th class=\""+ rowStatus+"\">Source</th><th class=\""+ rowStatus+"\">Location</th><th class=\""+ rowStatus+"\">Space Before</th><th class=\""+ rowStatus+"\">Space After</th><th class=\""+ rowStatus+"\">Files Deleted</th><th class=\""+ rowStatus+"\">Oldest File</th><th class=\""+ rowStatus+"\">Newest File</th></tr></thead><tbody>";
+			for( l=0;l<fileRules.length;l++){ 
+				dataDene = fileRules[l];  
+				for( m=0;m<dataDeneWords.length;m++){
+					deneWord = dataDeneWords[m];
+					if(deneWord["Name"]===DISK_SPACE_BEFORE_MNEMOSYCON_RULE){
+						freeSpaceBeforeRule=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== DISK_SPACE_AFTER_MNEMOSYCON_RULE){
+						freeSpaceAfterRule=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_FILES_DELETED){
+						deletedFileCounter=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_SOURCE){
+						mnemosyconRuleSource=deneWord["Value"] + "&nbsp;"+ deneWord["Units"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_LOCATION){
+						mnemosyconRuleLocation=deneWord["Value"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_OLDEST_FILE_DELETED){
+						oldestFileNameDeleted=deneWord["Value"];
+					}else if(deneWord["Name"]=== MNEMOSYCON_RULE_NEWEST_FILE_DELETED){
+						newestFileNameDeleted=deneWord["Value"];
+					}
 				}
+				panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+mnemosyconRuleSource+"</td><td>"+mnemosyconRuleLocation+"</td><td>"+ freeSpaceBeforeRule+"</td><td>"+freeSpaceAfterRule+"</td><td>" + deletedFileCounter +"</td><td>" + oldestFileNameDeleted +"</td><td>" + newestFileNameDeleted +"</td></tr>";
 			}
-
-			panelHTML += "<tr class=\""+ rowStatus+"\"><td>"+mnemosyconRuleSource+"</td><td>"+mnemosyconRuleLocation+"</td><td>"+ freeSpaceBeforeRule+"</td><td>"+freeSpaceAfterRule+"</td><td>" + deletedFileCounter +"</td><td>" + oldestFileNameDeleted +"</td><td>" + newestFileNameDeleted +"</td></tr>";
-
-
+			panelHTML += "</tbody></table>";
 		}
-		panelHTML += "</tbody></table>";
 	}
 
 	return panelHTML;

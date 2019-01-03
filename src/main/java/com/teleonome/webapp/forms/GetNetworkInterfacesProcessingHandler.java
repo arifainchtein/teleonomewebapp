@@ -24,7 +24,7 @@ public class GetNetworkInterfacesProcessingHandler extends ProcessingFormHandler
 	@Override
 	public void process() throws ServletProcessingException, IOException {
 		// TODO Auto-generated method stub
-		JSONObject interfacesJSONObject = NetworkUtilities.getNetworkInterfaces();
+		JSONObject interfacesJSONObject = NetworkUtilities.getAvailableAdapters();
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.print(interfacesJSONObject.toString());

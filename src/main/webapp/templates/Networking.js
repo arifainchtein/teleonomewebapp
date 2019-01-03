@@ -61,7 +61,7 @@ class Networking{
                 
                 if( hasWlan1){
                     //
-                    // there are two wifi interfaces, and wlan0 is the external wifi so just display the info for wlan0
+                    // there are two wifi interfaces, and wlan0 is the external wifi allow the user to change SSID
                     // 
                     panelHTML += "<center>";
                     panelHTML += "<div class=\"row\">";
@@ -74,6 +74,76 @@ class Networking{
                     panelHTML += "<div class=\"col-xs-12\" style=\"height: 20px;\"></div>";
                     panelHTML += "</div>";
                     panelHTML += "</center>";
+                    
+                    
+                    panelHTML += "<div id=\"NetworkMode\">";
+                    panelHTML += "<center>";
+                    panelHTML += "<div class=\"row\">";
+                    panelHTML += "<label class=\"RadioLabel\">Enable Network Mode</label><br>";
+                    panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
+                    panelHTML += "</div>";
+                    panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 20px;\"></div></div>";
+        
+                    panelHTML += "<div class=\"row\">";
+                    panelHTML += "<div id=\"AvailableNetworkSection\">";
+                    panelHTML += "<label>Available Networks:</label><br>";
+                    panelHTML += "<select id=\"AvailableNetworks\" name=\"AvailableNetworks\"></select>";
+                    
+                    
+        
+                   
+                    panelHTML += "</select>";
+                    panelHTML += "</div>";
+                    panelHTML += "</div>";
+                    panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 30px;\"></div></div>";
+                    panelHTML += "<div class=\"row\">";
+                    panelHTML += "<div id=\"ssidPassword\">";
+                    
+                    panelHTML += "<label>Input Password:</label><br>";
+                    panelHTML += "<input type=\"password\" id=\"password\" name=\"password\"></select>";
+                    panelHTML += "</div>";
+                    panelHTML += "</div>";
+                    panelHTML += "<div class=\"row\">";
+                    panelHTML += "<div class=\"col-xs-12\" style=\"height: 30px;\"></div>";
+                    panelHTML += "</div>";
+                    panelHTML += "</center>";
+                    panelHTML += "</div>";
+        
+                    //
+                    // set up the available ssids
+                    //
+                    $('#WaitingText').html("Please Wait...");
+                    $('#WaitingWheel').show();
+                
+                    $.ajax({
+                        type: "GET",
+                        url: "/TeleonomeServlet",
+                        data: {formName:"GetSSIDs" },
+                        success: function (availableSSIDs) {
+                            //console.log("availableSSIDs=" + data);
+                           // var availableSSIDs = JSON.parse(data);
+                            $('#AvailableNetworks').append('<option value="">Select SSID</option>');
+                            for(var i = 0; i < availableSSIDs.length; i++) {
+                                var item = availableSSIDs[i];
+                                var security="";
+                                if(item["Authentication"]!=null && item["Authentication"].indexOf("PSK")>-1)security="Password";
+                                var key = item["SSID"]+ "-" + item["Signal"] + " " + security;
+                                var value=item["SSID"] ;
+                                //ssidOptions += "<option value=\""+ value+"\">"+ key +"</option>";
+                                $('#AvailableNetworks').append($('<option>', {value:value, text:key}));
+                            }	
+                            $('#ssidPassword').hide();
+                            $('#WaitingWheel').hide();
+                        },
+                        error: function(data){
+                            $('#WaitingWheel').hide();
+                            console.log("error getting log file:" + JSON.stringify(data));
+                            alert("Error getting log:" + JSON.stringify(data));
+                            return false;
+                        }
+                    });
+                    
+                 
                 }else{
                     
                     //
