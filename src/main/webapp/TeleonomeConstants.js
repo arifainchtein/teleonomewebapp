@@ -47,6 +47,7 @@ var TELEONOME_IDENTITY_LABEL = "Identity";
 
 var TELEONOME_IDENTITY_SELF = "Self";
 var TELEONOME_IDENTITY_ORGANISM = "Organism";
+
 //
 // the data type for the values coming from Arduino
 //

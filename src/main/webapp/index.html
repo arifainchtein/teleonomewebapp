@@ -1331,6 +1331,98 @@ body.modal-open .modal .modal-dialog {
 					$("#NetworkingInfoArea").append(panelHtml);
 				});
 
+				$(document).on('click', '#UpdateNetworkShutdownButton,#UpdateNetworkRestartButton',function(e){
+					e.preventDefault();
+
+					//
+					 // now check that you have a value for SSID 
+					 // and if needed a password
+					 if($("#AvailableNetworks :selected")==null || ("#AvailableNetworks :selected")==""){
+						 alert("Please select a SSID");
+							return false;
+					 }
+					 var selectedSSID = $("#AvailableNetworks :selected").val();
+					 if(selectedSSID!=""){
+						 var selectedValue = $("#AvailableNetworks :selected").text();
+						 var password =  $("#password").val().length>7;
+						 
+							if(selectedValue!=null && 
+							  selectedValue.indexOf("Password")>-1 &&
+							  !password
+							){
+								alert("Please input SSID password");
+								return false;
+							}
+					 }else{
+						 alert("Select an SSID");
+						 return false;
+					 }
+					 
+					 
+					
+					var commandCode = prompt("Please enter the code", "");
+					  if(isNaN(commandCode)){
+						alert("Password must be 6 numbers");
+						  return false;
+					  }
+					  if(commandCode.length!=6){
+						  alert("Password must be 6 numbers");
+						  return false;
+					  }
+					
+					  var action="";
+					  if(this.id='UpdateNetworkRestartButton'){
+						  action="Reboot";
+					  }else{
+						  action:"Shutdown";
+					  }
+					var enableNetworkMode="No";
+					var enableHostMode="No";
+					if( hasWlan1){
+						 //
+						 //if we are here the only
+						  enableNetworkMode="Yes";
+					}else{
+							
+						var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
+						var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
+								
+						if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
+							if($('#EnableNetworkMode').bootstrapSwitch('state')){
+								enableNetworkMode = "Yes";
+							}
+						}else{
+							if($('#EnableHostMode').bootstrapSwitch('state')){
+								enableHostMode = "Yes";
+							}	
+						}		
+					}
+					
+					
+						
+					  $("#MainPowerButton").attr("disabled", true);
+					  $("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
+					  $('#WaitingText').html("Please Wait");
+					  $('#WaitingWheel').show();
+					  powerButtonDisabled=true;
+					  $.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:"ReSignal", action:action, CommandCode : commandCode, AvailableNetworks:selectedSSID,password:password, EnableNetworkMode:enableNetworkMode, EnableHostMode:enableHostMode},
+						success: function (commandIddata) {
+							console.log("commandId=" + commandIddata);
+							//alert("Reboot Request Sent");
+							
+
+						},
+						error: function(data){
+							console.log("error restarting:" + JSON.stringify(data));
+							alert("error restarting:" + JSON.stringify(data));
+							return false;
+						}
+					});	
+				});
+				
 				$(document).on('click', '#RestartButton',function(e){
 					e.preventDefault();
 
@@ -1412,11 +1504,7 @@ body.modal-open .modal .modal-dialog {
 				});
 			
 
-			$(document).on('click', '#ShutdownButton',function(e){
-					e.preventDefault();
-					
-					
-				});
+		
 
 				//
 				// end of settings page functions
@@ -1575,13 +1663,13 @@ body.modal-open .modal .modal-dialog {
 	                var signallevelPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +SIGNAL_LEVEL;
 	                var signallevel = getDeneWordByIdentityPointer(signallevelPointer, DENEWORD_VALUE_ATTRIBUTE);
 	                
+	                var panelHTML = "<Form id=\"Resignal\" name=\"ReSignal\"  id=\"MainForm\" method=\"POST\" action=\"TeleonomeServlet\">";
+	                
 	                if( hasWlan1){
 	                    //
 	                    // there are two wifi interfaces, and wlan0 is the external wifi allow the user to change SSID
 	                    // wlan0 will not be associated to an existing network when the teleonome is first created
 	                    // first check that it is actually associated
-	                     panelHTML += "<center>";
-	                     
 	                     
 		                if(accessPoint!=NOT_ASSOCIATED){
 		                	 panelHTML += "<div class=\"row\">";
@@ -1600,10 +1688,11 @@ body.modal-open .modal .modal-dialog {
 	                    panelHTML += "<div id=\"NetworkMode\">";
 	                    panelHTML += "<center>";
 	                    panelHTML += "<div class=\"row\">";
-	                    panelHTML += "<label class=\"RadioLabel\">Enable Network Mode</label><br>";
-	                    panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
+	                    //panelHTML += "<label class=\"RadioLabel\">Enable Network Mode</label><br>";
+	                    //panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
+	                    panelHTML += "<input type=\"hidden\"  id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" value=\"Yes\">"; 
 	                    panelHTML += "</div>";
-	                    panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 20px;\"></div></div>";
+	                    panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 2px;\"></div></div>";
 	                    panelHTML += "<div class=\"row\">";
 	                    panelHTML += "<div id=\"AvailableNetworkSection\">";
 	                    panelHTML += "<label>Available Networks:</label><br>";
@@ -1664,7 +1753,7 @@ body.modal-open .modal .modal-dialog {
 	                    //
 	                    // there is only one wifi, so allow the user to change to host or organism
 	                    //
-	                    var panelHTML = "<Form id=\"Resignal\" name=\"ReSignal\"  id=\"MainForm\" method=\"POST\" action=\"TeleonomeServlet\">";
+	                   
 	                    if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
 	                        panelHTML += "<div id=\"NetworkMode\">";
 	                        panelHTML += "<center>";
@@ -1755,6 +1844,8 @@ body.modal-open .modal .modal-dialog {
 	                        panelHTML += "</center>";
 	                        panelHTML += "</div>";
 	                    }
+	                    
+	                    
 	                    if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
 	                        //
 	                        // layout the connected clients
@@ -1811,9 +1902,9 @@ body.modal-open .modal .modal-dialog {
 	                 // panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 100px;\"></div></div>";
 	                 panelHTML += "<div class=\"row\">";
 	                 panelHTML += "<div class=\"col-lg-3 col-xs-1\"></div>";
-	                 panelHTML += "<div class=\"col-lg-3 col-xs-4\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" name=\"action\" id=\"RebootButton\" value=\"Reboot\"></div>";
+	                 panelHTML += "<div class=\"col-lg-3 col-xs-4\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" name=\"action\" id=\"UpdateNetworkRestartButton\" value=\"Reboot\"></div>";
 	                 panelHTML += "<div class=\"col-lg-1  col-xs-1\"></div>";
-	                 panelHTML += "<div class=\"col-lg-3 col-xs-5\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\"  name=\"action\" id=\"ShutdownButton\" value=\"Shutdown\"></div>";
+	                 panelHTML += "<div class=\"col-lg-3 col-xs-5\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\"  name=\"action\" id=\"UpdateNetworkShutdownButton\" value=\"Shutdown\"></div>";
 	                 panelHTML += "<div class=\"col-lg-2  col-xs-1\"></div>";
 	                 panelHTML += "</div>";
 	                 panelHTML += "</form>";	

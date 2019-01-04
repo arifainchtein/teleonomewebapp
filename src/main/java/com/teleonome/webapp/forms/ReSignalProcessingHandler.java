@@ -26,19 +26,25 @@ public class ReSignalProcessingHandler extends ProcessingFormHandler {
 	public void process() throws ServletProcessingException, IOException {
 		// TODO Auto-generated method stub
 		String currentIdentityMode = (String) getServletContext().getAttribute("CurrentIdentityMode");
+		
+		
 		String action = request.getParameter("action");
-		String payLoad="";
 		String clientIp = request.getRemoteAddr();
 		String commandCode = request.getParameter(TeleonomeConstants.COMMAND_CODE);
-		String command=null;
-		
 		String enableNetworkMode = request.getParameter("EnableNetworkMode");
+		
+		
+		String command=null;
+		String payLoad="";
+		
 		logger.debug("enableNetworkMode=" + enableNetworkMode);
 		if(enableNetworkMode!=null && enableNetworkMode.equals("Yes")){
 			//command = TeleonomeConstants.COMMAND_REBOOT_ENABLE_NETWORK;
 
 			String ssid = request.getParameter("AvailableNetworks");
 			String password = request.getParameter("password");
+			
+			
 			logger.debug("ssid=" + ssid);
 			logger.debug("password=" + password);
 			JSONObject payLoadParentJSONObject = new JSONObject();
