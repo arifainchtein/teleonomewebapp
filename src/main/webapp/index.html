@@ -1545,32 +1545,54 @@ body.modal-open .modal .modal-dialog {
 			}
 			
 			
-			
+		
+		//
+		// because the pi always has a built in wifi, at a minimum wlan0 will always exist
+		// if there is a wlan1 then it means that the wlan1 would be using the host ip
+		// and wlan0 could or not have an ip given by some dhcp server in the network
+		// 
+		
 		function renderWlan0(){
 	                
 
 	                var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
 	                var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
-	                var ipAddressPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"Host IP Address";
+	               
+	                var ipAddressPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WLAN0 + ":" +DENEWORD_IP_ADDRESS;
 	                var ipAddress = getDeneWordByIdentityPointer(ipAddressPointer, DENEWORD_VALUE_ATTRIBUTE);
+	                
+	                var accessPointPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WLAN0 + ":" +DENEWORD_ACCESS_POINT;
+	                var accessPoint = getDeneWordByIdentityPointer(accessPointPointer, DENEWORD_VALUE_ATTRIBUTE);
+	               
+	                
 	                var essidPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"ESSID";
 	                var essid = getDeneWordByIdentityPointer(essidPointer, DENEWORD_VALUE_ATTRIBUTE);
-	                var linkQualityPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"Link Quality";
+	                if(essid == undefined)essid="";
+	                
+	                
+	                var linkQualityPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +LINK_QUALITY;
 	                var linkQuality = getDeneWordByIdentityPointer(linkQualityPointer, DENEWORD_VALUE_ATTRIBUTE);
-	                var signallevelPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"Signal level";
+	                var signallevelPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +SIGNAL_LEVEL;
 	                var signallevel = getDeneWordByIdentityPointer(signallevelPointer, DENEWORD_VALUE_ATTRIBUTE);
 	                
 	                if( hasWlan1){
 	                    //
 	                    // there are two wifi interfaces, and wlan0 is the external wifi allow the user to change SSID
-	                    // 
-	                    panelHTML += "<center>";
-	                    panelHTML += "<div class=\"row\">";
-	                    panelHTML += "<label id=\"CurrentESSID\">Current SSID:&nbsp;&nbsp;"+ essid +"</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-	                    panelHTML += "<label id=\"CurrentIPAddress\">Current IPAddress:&nbsp;&nbsp;"+ ipAddress +"</label><br>";
-	                    panelHTML += "<label id=\"LinkQuality\">Link Quality:&nbsp;&nbsp;"+ linkQuality +"</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-	                    panelHTML += "<label id=\"SignalLevel\">Signal Level:&nbsp;&nbsp;"+ signallevel +"</label>";
-	                    panelHTML += "</div>";
+	                    // wlan0 will not be associated to an existing network when the teleonome is first created
+	                    // first check that it is actually associated
+	                     panelHTML += "<center>";
+	                     
+	                     
+		                if(accessPoint!=NOT_ASSOCIATED){
+		                	 panelHTML += "<div class=\"row\">";
+			                    panelHTML += "<label id=\"CurrentESSID\">Access Point:&nbsp;&nbsp;"+ accessPoint +"</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			                    panelHTML += "<label id=\"CurrentIPAddress\">Current IPAddress:&nbsp;&nbsp;"+ ipAddress +"</label><br>";
+			                    panelHTML += "<label id=\"LinkQuality\">Link Quality:&nbsp;&nbsp;"+ linkQuality +"</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			                    panelHTML += "<label id=\"SignalLevel\">Signal Level:&nbsp;&nbsp;"+ signallevel +"</label>";
+			                    panelHTML += "</div>";
+		                }
+	                   
+	                   
 	                    panelHTML += "<div class=\"row\">";
 	                    panelHTML += "<div class=\"col-xs-12\" style=\"height: 20px;\"></div>";
 	                    panelHTML += "</div>";

@@ -777,8 +777,20 @@ var EXTERNAL_DATA_STATUS="ExternalDataStatus";
 var EXTERNAL_DATA_STATUS_OK="success";
 var DENE_SYSTEM_DATA="System Data";
 var DENE_WIFI_INFO="Wifi Info";
+var DENE_WLAN0="wlan0 Info";
+var DENE_WLAN1="wlan1 Info";
+var DENE_ETH0="eth0 Info";
+
+var DENEWORD_ACCESS_POINT="Access Point";
+var DENEWORD_IP_ADDRESS="IP Address";
+var NOT_ASSOCIATED="Not-Associated";
+var LINK_QUALITY="Link Quality";
+var SIGNAL_LEVEL="Signal level";
 
 
+var WLAN0="wlan0";
+var WLAN1="wlan1";
+var ETH0="eth0";
 //
 // the values to use for the status message in case the application calling 
 // the DenomeManager does not set one
