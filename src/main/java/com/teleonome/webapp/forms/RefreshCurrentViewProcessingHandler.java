@@ -43,9 +43,18 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 			String formName2 = dataElement.getString("formName");
 			String chartTitle = dataElement.getString("chartTitle");
 			String chartDivId = dataElement.getString("chartDivId");
-			boolean showMax = dataElement.getBoolean("showMax");
-			boolean showMin = dataElement.getBoolean("showMin");
-			boolean showAvg = dataElement.getBoolean("showAvg");
+			boolean showMax = false;
+			if(dataElement.has("showMax")) {
+				showMax = dataElement.getBoolean("showMax");
+			}
+			boolean showMin = false;
+			if(dataElement.has("showMin")) {
+				showMin = dataElement.getBoolean("showMin");
+			}
+			boolean showAvg = false;
+			if(dataElement.has("showMin")) {
+				showAvg = dataElement.getBoolean("showAvg");
+			}
 			logger.debug("showMax="  + showMax + " showMin=" + showMin + " showAvg=" + showAvg);
 			String localStoreageKey = dataElement.getString("localStoreageKey");
 			String visualizationStyle = dataElement.getString("visualizationStyle");
