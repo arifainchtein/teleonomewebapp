@@ -1056,12 +1056,12 @@ body.modal-open .modal .modal-dialog {
 				}
 		        if(fromDate=="" || fromTime==""){
 					var date = new Date();
-					var fromDate = (date.getDate()-1) + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
-					var fromTime = date.getHours() + ":" + date.getMinutes();
+					//var fromDate = (date.getDate()-1) + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+				//	var fromTime = date.getHours() + ":" + date.getMinutes();
 					
-		            var ts = Math.round(date.getTime() / 1000);
+		          //  var ts = Math.round(date.getTime() / 1000);
 					//fromMillis = ts - (24 * 3600);
-					fromMillis = ts - (liveUpdateMinutes * 60000);
+					fromMillis = date.getTime() - (liveUpdateMinutes * 60000);
 					
 		            //fromDate.setDate(fromDate.getDate()-1);
 		            //fromMillis = fromDate.getTime();
