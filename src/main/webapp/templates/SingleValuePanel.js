@@ -52,7 +52,7 @@ class SingleValuePanel{
             	externalDataStatus="";
             	if( panelDataSourcePointerIdentity.nucleusName== NUCLEI_PURPOSE && panelDataSourcePointerIdentity.deneChainName==DENECHAIN_EXTERNAL_DATA){
             		isExternalData=true;
-	            	var externalDataStatusPointer = "@" +teleonomeName + ":" + panelDataSourcePointer.nucleusName + ":" +panelDataSourcePointer.deneChainName + ":" + panelDataSourcePointer.deneName + ":" +EXTERNAL_DATA_STATUS;
+	            	var externalDataStatusPointer = "@" +teleonomeName + ":" + panelDataSourcePointerIdentity.nucleusName + ":" +panelDataSourcePointerIdentity.deneChainName + ":" + panelDataSourcePointerIdentity.deneName + ":" +EXTERNAL_DATA_STATUS;
 	        		//console.log("externalDataStatusPointer=" + externalDataStatusPointer);
 	        		 externalDataStatus = getDeneWordByIdentityPointer(externalDataStatusPointer, DENEWORD_VALUE_ATTRIBUTE);
 	        		//console.log("externalDataStatus=" + externalDataStatus);
