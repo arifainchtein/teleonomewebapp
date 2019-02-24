@@ -50,7 +50,7 @@ class SingleValuePanel{
             	statusMessage="";
             	isExternalData=false;
             	externalDataStatus="";
-            	if( panelDataSourcePointer.nucleusName== NUCLEI_PURPOSE && panelDataSourcePointer.deneChainName==DENECHAIN_EXTERNAL_DATA){
+            	if( panelDataSourcePointerIdentity.nucleusName== NUCLEI_PURPOSE && panelDataSourcePointerIdentity.deneChainName==DENECHAIN_EXTERNAL_DATA){
             		isExternalData=true;
 	            	var externalDataStatusPointer = "@" +teleonomeName + ":" + panelDataSourcePointer.nucleusName + ":" +panelDataSourcePointer.deneChainName + ":" + panelDataSourcePointer.deneName + ":" +EXTERNAL_DATA_STATUS;
 	        		//console.log("externalDataStatusPointer=" + externalDataStatusPointer);
