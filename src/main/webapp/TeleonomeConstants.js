@@ -808,7 +808,7 @@ var PATHOLOGY_DENEWORD_DENOME_NETWORK_IDENTITY = "Denome Network Identity";
 
 
 var EXTERNAL_SOURCE_TELEONOME_NAME="External Source Teleonome Name";
-var EXTERNAL_DATA_STATUS_STALE="muted";
+var EXTERNAL_DATA_STATUS_STALE="danger";
 var EXTERNAL_DATA_STATUS="ExternalDataStatus";
 var EXTERNAL_DATA_STATUS_OK="success";
 var DENE_SYSTEM_DATA="System Data";
