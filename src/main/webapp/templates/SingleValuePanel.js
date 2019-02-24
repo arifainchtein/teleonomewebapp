@@ -93,9 +93,7 @@ class SingleValuePanel{
                 	panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
                 }
                 
-                panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
-                
-                
+               
                 
                 var valueData = renderedDataSourceDeneWord["Value"];
                 panelHTML += "<div class=\"panel-body text-center\">";
