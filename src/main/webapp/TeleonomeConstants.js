@@ -160,7 +160,7 @@ var DENECHAIN_SENSORS = "Sensors";
 var DENECHAIN_DESCRIPTIVE = "Descriptive";
 var DENECHAIN_COMPONENTS = "Components";
 var DENECHAIN_ANALYTICONS = "Analyticons";
-var DENECHAIN_CONTROL_PARAMETERS = "Control Parameters";
+var DENE_CONTROL_PARAMETERS = "Control Parameters";
 
 
 var DENECHAIN_EXTERNAL_DATA = "External Data";
@@ -263,6 +263,7 @@ var CAMERA_TIMESTAMP_FILENAME_FORMAT="dd-MM-yyyy_HHmm";
 //
 // the mutation actions dene types
 //
+var DENE_TYPE_ACTION="Action";
 var MUTATION_COMMAND_SET_DENEWORD = "Set DeneWord";
 var MUTATION_TARGET = "Target";
 var MUTATION_VALUE_ATTRIBUTE="Value";
@@ -317,6 +318,7 @@ var METAMORPHOSIS_EVENT_MILLISECONDS =  "Metamorphosis Event Milliseconds";
 //
 // Deneword types
 //
+var DENEWORD_TYPE_MICROCONTROLLER_CONFIG_PARAM_LIST = "Microcontroller Config Parameter List";
 var DENEWORD_TYPE_ACTION="Action";
 var DENEWORD_TYPE_CURRENT_PULSE="Current Pulse";
 var DENEWORD_TYPE_CURRENT_PULSE_FREQUENCY="Current Pulse Frequency";
@@ -340,6 +342,7 @@ var DENEWORD_TYPE_FIRMWARE_COMMAND = "Firmware Command";
 var DENEWORD_TYPE_SENSOR_MICROCONTROLLER_POINTER = "Sensor Microcontroller Pointer";
 var DENEWORD_TYPE_ACTUATOR_MICROCONTROLLER_POINTER = "Actuator Microcontroller Pointer";
 var DENEWORD_TYPE_ACTUATOR_POINTER = "Actuator Pointer";
+var DENEWORD_TYPE_ACTION_SUCCESS_TASKS="Action Success Tasks";
 var DENEWORD_TYPE_ACTION_SUCCESS_TASK_TRUE_EXPRESSION="Action Success Tasks True Expression";
 var DENEWORD_TYPE_ACTION_SUCCESS_TASK_FALSE_EXPRESSION="Action Success Tasks False Expression";
 var DENEWORD_TYPE_MNEMOSYNE_OPERATION_FALSE_EXPRESSION="Mnemosyne Operations False Expression";
@@ -427,6 +430,7 @@ var DENEWORD_ACTION_PROCESSING_RESULT="Action Processing Result";
 var DENEWORD_CONDITION_PROCESSING_RESULT="Condition Processing Result";
 var DENEWORD_COMMAND_TO_EXECUTE = "Command To Execute";
 var DENEWORD_ACTION_EXPRESSION="Action Expression";
+var DENEWORD_EXPRESSION="Expression";
 var DENEWORD_CONDITION_EXPRESSION="Condition Expression";
 var CONDITION_NAME="Condition Name";
 var DENEWORD_PULSE_SIZE_KB="Pulse Size Kb";
@@ -851,7 +855,9 @@ var SPERM_HYPOTHALAMUS_HOMEOBOXES="Homeoboxes";
 var SPERM_HYPOTHALAMUS_ACTIONS="Actions";
 var SPERM_HYPOTHALAMUS_MUTATIONS="Mutations";
 
+var SPERM_DENE_TYPE_CREATE_MUTATION="Create Mutation";
 var SPERM_DENE_TYPE_CREATE_DENE_CHAIN="Create Dene ChainActions";
+
 var SPERM_ACTION_DENEWORD_EXECUTION_POSITION="Execution Position";
 var SPERM_ACTION_DENWORD_UPDATE_VALUE_LIST="DeneWords Update List";
 var SPERM_ACTION_DENEWORD_EXECUTION_POINT="Execution Point";
@@ -905,6 +911,8 @@ var DENEWORD_TYPE_HUMAN_INTERFACE_COMPONENT_TEMPLATE_URL="Human Interface Compon
 var DENEWORD_TYPE_HUMAN_INTERFACE_COMPONENT_STYLES="Human Interface Component Styles";
 var DENEWORD_TYPE_HUMAN_INTERFACE_COMPONENT_STYLES_URL="Human Interface Component Styles URL";
 
+var DENECHAIN_REFERENCE="Reference";
+var String DENE_STATUS="Status";
 //
 // everything related to the mnemotycons
 //
@@ -958,7 +966,7 @@ var DENEWORD_DISPLAY_TABLE_COLUMN_DEFINITION_POINTER="Display Table Column Defin
 var DENEWORD_TYPE_COLUMN_IN_TABLE_POSITION="Column In Table Position";
 var DENEWORD_TYPE_COLUMN_HEADER="Column Header";
 
-
+var BOOTSTRAP_CRISIS="crisis";
 var BOOTSTRAP_DANGER="danger";
 var BOOTSTRAP_WARNING="warning";
 var BOOTSTRAP_SUCCESS="success";

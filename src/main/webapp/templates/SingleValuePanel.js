@@ -26,6 +26,9 @@ class SingleValuePanel{
         var dataDene;
         var panelDataSourcePointer;
         var visible=false;
+        var statusMessage="";
+        boolean isExternalData=false;
+        var externalDataStatus="":
         for(var property in object) {
             //
             //after every three panels 
@@ -43,7 +46,26 @@ class SingleValuePanel{
                 visible=getDeneWordAttributeByDeneWordNameFromDene(dataDene, "Visible", DENEWORD_VALUE_ATTRIBUTE);
             }
             if(visible){
-
+            	statusMessage="";
+            	isExternalData=false;
+            	externalDataStatus="";
+            	if( panelDataSourcePointer.nucleusName== NUCLEI_PURPOSE && panelDataSourcePointer.deneChainName==DENECHAIN_EXTERNAL_DATA){
+            		isExternalData=true;
+	            	var externalDataStatusPointer = "@" +teleonomeName + ":" + panelDataSourcePointer.nucleusName + ":" +panelDataSourcePointer.deneChainName + ":" + panelDataSourcePointer.deneName + ":" +EXTERNAL_DATA_STATUS;
+	        		//console.log("externalDataStatusPointer=" + externalDataStatusPointer);
+	        		 externalDataStatus = getDeneWordByIdentityPointer(externalDataStatusPointer, DENEWORD_VALUE_ATTRIBUTE);
+	        		//console.log("externalDataStatus=" + externalDataStatus);
+	
+	        		//
+	        	    // 2)statusMessage - A string description of the status
+	        		var statusMessagePointer = "@" +teleonomeName + ":" + panelDataSourcePointer.nucleusName + ":" +panelDataSourcePointer.deneChainName + ":" + panelDataSourcePointer.deneName + ":" +DENEWORD_STATUS;
+	        	//	console.log("statusMessagePointer=" + statusMessagePointer);
+	        		 statusMessage = getDeneWordByIdentityPointer(statusMessagePointer, DENEWORD_VALUE_ATTRIBUTE);
+	        		
+	            }
+        		
+        		
+            	
                 nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE)
                 console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
                 renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
@@ -52,7 +74,28 @@ class SingleValuePanel{
 
                 panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
                 panelHTML += "<div class=\"panel panel-default\">";
+                if(isExternal){
+                	 panelHTML += " <div class=\"panel-heading row\">"; 
+                     panelHTML += "<div class=\"col-lg-9 col-md-9 col-sm-9 col-xs-9\">";
+                     panelHTML += "<h4>" + nameToDisplay + "</h4>"; 
+                     panelHTML +="</div>";// close col lg-4
+                     
+                     
+                     
+                     panelHTML += "<div class=\"col-lg-3 col-md-3 col-sm-3 col-xs-3\">";	
+                     panelHTML +="<h3   class=\"label label-lg label-"+ externalDataStatus +"\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>";
+                     panelHTML +="</div>";// close col lg-4
+                     panelHTML +="</div>";
+                     
+                     
+                }else{
+                	panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
+                }
+                
                 panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
+                
+                
+                
                 var valueData = renderedDataSourceDeneWord["Value"];
                 panelHTML += "<div class=\"panel-body text-center\">";
                 if(valueData.length>10){

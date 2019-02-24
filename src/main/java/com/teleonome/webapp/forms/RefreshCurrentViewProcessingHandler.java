@@ -52,7 +52,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 				showMin = dataElement.getBoolean("showMin");
 			}
 			boolean showAvg = false;
-			if(dataElement.has("showMin")) {
+			if(dataElement.has("showAvg")) {
 				showAvg = dataElement.getBoolean("showAvg");
 			}
 			logger.debug("showMax="  + showMax + " showMin=" + showMin + " showAvg=" + showAvg);
