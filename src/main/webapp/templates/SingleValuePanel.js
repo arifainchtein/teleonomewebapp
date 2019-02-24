@@ -28,7 +28,7 @@ class SingleValuePanel{
         var visible=false;
         var statusMessage="";
         var isExternalData=false;
-        var externalDataStatus="":
+        var externalDataStatus="";
         for(var property in object) {
             //
             //after every three panels 
