@@ -84,7 +84,7 @@ class SingleValuePanel{
                      
                      
                      panelHTML += "<div class=\"col-lg-3 col-md-3 col-sm-3 col-xs-3\">";	
-                     panelHTML +="<h3   class=\"label label-lg label-"+ externalDataStatus +"\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>";
+                     panelHTML +="<h1   class=\"label label-lg label-"+ externalDataStatus +"\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1>";
                      panelHTML +="</div>";// close col lg-4
                      panelHTML +="</div>";
                      
