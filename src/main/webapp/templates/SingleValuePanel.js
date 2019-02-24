@@ -78,7 +78,7 @@ class SingleValuePanel{
                 if(isExternalData){
                 	 panelHTML += " <div class=\"panel-heading row\">"; 
                      panelHTML += "<div class=\"col-lg-9 col-md-9 col-sm-9 col-xs-9\">";
-                     panelHTML += "<h4>" + nameToDisplay + "</h4>"; 
+                     panelHTML += "<h6>" + nameToDisplay + "</h6>"; 
                      panelHTML +="</div>";// close col lg-4
                      
                      
