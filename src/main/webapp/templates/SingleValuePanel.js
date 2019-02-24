@@ -76,18 +76,18 @@ class SingleValuePanel{
                 panelHTML += "<div class=\"col-lg-4 col-md-4 col-sm-4 col-xs-4\">";
                 panelHTML += "<div class=\"panel panel-default\">";
                 if(isExternalData){
-                	 panelHTML += " <div class=\"panel-heading row\">"; 
-                     panelHTML += "<div class=\"col-lg-9 col-md-9 col-sm-9 col-xs-9\">";
+                	 panelHTML += " <div class=\"panel-heading  panel-heading-"+ externalDataStatus +" row\">"; 
+                     panelHTML += "<div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12\">";
                      panelHTML += "<h6>" + nameToDisplay + "</h6>"; 
                      panelHTML +="</div>";// close col lg-4
                      
                      
                      
-                     panelHTML += "<div class=\"col-lg-3 col-md-3 col-sm-3 col-xs-3\">";	
-                     //panelHTML +="<h1   class=\"label label-lg label-"+ externalDataStatus +"\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1>";
-                     panelHTML +="<div  class=\"pull-right externalDataStatusBox external-data-"+ externalDataStatus +"\"></div>";
-                     panelHTML +="</div>";// close col lg-4
-                     panelHTML +="</div>";
+//                     panelHTML += "<div class=\"col-lg-3 col-md-3 col-sm-3 col-xs-3\">";	
+//                     //panelHTML +="<h1   class=\"label label-lg label-"+ externalDataStatus +"\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1>";
+//                     panelHTML +="<div  class=\"pull-right externalDataStatusBox external-data-"+ externalDataStatus +"\"></div>";
+//                     panelHTML +="</div>";// close col lg-4
+//                     panelHTML +="</div>";
                      
                      
                 }else{
