@@ -29,12 +29,13 @@ class SingleValuePanel{
         var statusMessage="";
         var isExternalData=false;
         var externalDataStatus="";
+        var panelDataSourcePointerIdentity;
         for(var property in object) {
             //
             //after every three panels 
             dataDene = object[property];   
             panelDataSourcePointer =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE)
-            
+            panelDataSourcePointerIdentity = identityFactory.createIdentityByPointer(panelDataSourcePointer);
             
             var hasVisible=deneHasDeneWordProperty(dataDene, "Visible");
             //
