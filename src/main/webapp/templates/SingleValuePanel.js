@@ -27,7 +27,7 @@ class SingleValuePanel{
         var panelDataSourcePointer;
         var visible=false;
         var statusMessage="";
-        boolean isExternalData=false;
+        var isExternalData=false;
         var externalDataStatus="":
         for(var property in object) {
             //

@@ -912,7 +912,7 @@ var DENEWORD_TYPE_HUMAN_INTERFACE_COMPONENT_STYLES="Human Interface Component St
 var DENEWORD_TYPE_HUMAN_INTERFACE_COMPONENT_STYLES_URL="Human Interface Component Styles URL";
 
 var DENECHAIN_REFERENCE="Reference";
-var String DENE_STATUS="Status";
+var DENE_STATUS="Status";
 //
 // everything related to the mnemotycons
 //
