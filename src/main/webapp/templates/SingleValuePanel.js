@@ -107,11 +107,12 @@ class SingleValuePanel{
                 panelHTML += "</div>";
                 panelHTML += "<div class=\"panel-footer\">";
                 if(isExternalData && externalDataStatus==EXTERNAL_DATA_STATUS_STALE){
+                	if(statusMessage ==undefined)statusMessage="N.A."
                 	panelHTML += "<h5>"+ statusMessage  +"</h5>";
                 }else{
                 	panelHTML += "<h5>"+ unitsText  +"</h5>";
                 }
-                panelHTML += "<h5>"+ unitsText  +"</h5>";
+               
                 panelHTML += "</div>";    
                 panelHTML += "</div>";// closing <div class="panel panel-default">
                 panelHTML += "</div>";    // closing col-lg-4 col-md-4 col-sm3 col-xs-4
