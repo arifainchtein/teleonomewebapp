@@ -1621,6 +1621,16 @@ the css for the little box on the top right f external data
 					
 				});
 				
+				$(document).on('click', '#Analysis',function(e){
+					var panelPointer  = $(this).data("panelpointer");
+					var n = new DenomeAnalysis();
+					var html = n.process();
+					$('#DiagnosticsWorkArea').html(html);
+					$('#DiagnosticsWorkArea').show();
+					
+					$("#DenomeAnalysisFrame").attr("src", "TeleonomeAnalysis.html");
+				});
+				
 				$(document).on('click', '#Mnemosycons',function(e){
 					var panelPointer  = $(this).data("panelpointer");
 					var n = new Mnemosycons();

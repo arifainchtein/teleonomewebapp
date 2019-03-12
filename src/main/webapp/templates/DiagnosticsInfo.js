@@ -44,6 +44,10 @@ class DiagnosticsInfo{
         panelHtml +='                       <div class="col-lg-6"> </div>';
         
         panelHtml +='                       <div class="col-lg-1 col-xs-3 DiagnosticsBar">';
+        panelHtml +='                           <span id="Analysis" data-panelpointer="Analysis Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-list-alt"></i><br>Analysis</span>';
+        panelHtml +='                       </div>';
+        
+        panelHtml +='                       <div class="col-lg-1 col-xs-3 DiagnosticsBar">';
         panelHtml +='                           <span id="Mnemosycons" data-panelpointer="Mnemosycons Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-erase"></i><br>Mnemosycons</span>';
         panelHtml +='                       </div>';
         
