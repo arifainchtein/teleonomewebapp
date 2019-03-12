@@ -1622,13 +1622,34 @@ the css for the little box on the top right f external data
 				});
 				
 				$(document).on('click', '#Analysis',function(e){
-					var panelPointer  = $(this).data("panelpointer");
-					var n = new DenomeAnalysis();
-					var html = n.process();
-					$('#DiagnosticsWorkArea').html(html);
-					$('#DiagnosticsWorkArea').show();
 					
-					$("#DenomeAnalysisFrame").attr("src", "TeleonomeAnalysis.html");
+					 $.ajax({
+							type: "GET",
+							url: "/TeleonomeServlet",
+							data: {formName:"GenerateDenomeAnalysis" },
+							success: function (data) {
+								if(data=="Ok"){
+									var n = new DenomeAnalysis();
+									var html = n.process();
+									$('#DiagnosticsWorkArea').html(html);
+									$('#DiagnosticsWorkArea').show();
+									
+									$("#DenomeAnalysisFrame").attr("src", "TeleonomeAnalysis.html");
+								}else{
+									console.log("error generating analysis:" + JSON.stringify(data));
+									alert("Error generating Analysis");
+									return false;
+								}
+								
+							},
+							error: function(data){
+								console.log("error generating analysis:" + JSON.stringify(data));
+								alert("Error generating Analysis");
+								return false;
+							}
+						});	
+					 
+					
 				});
 				
 				$(document).on('click', '#Mnemosycons',function(e){
