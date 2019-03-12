@@ -29,11 +29,12 @@ public class GetLogFileNamesProcessingHandler extends ProcessingFormHandler {
 		StringBuffer toReturn = new StringBuffer();
 		File logDir = new File(Utils.getLocalDirectory() + "tomcat/webapps/ROOT/logs/" + dirName);
 		File[] files = logDir.listFiles();
-		for(int i=0;i<files.length;i++) {
-			if(i>0)toReturn.append(",");
-			toReturn.append(FilenameUtils.getBaseName(files[i].getAbsolutePath()));
+		if(files!=null && files.length>0) {
+			for(int i=0;i<files.length;i++) {
+				if(i>0)toReturn.append(",");
+				toReturn.append(FilenameUtils.getBaseName(files[i].getAbsolutePath()));
+			}
 		}
-
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.print(toReturn.toString());
