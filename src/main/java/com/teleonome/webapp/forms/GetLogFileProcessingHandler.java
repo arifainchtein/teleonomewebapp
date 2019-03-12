@@ -24,7 +24,8 @@ public class GetLogFileProcessingHandler extends ProcessingFormHandler {
 	public void process() throws ServletProcessingException, IOException {
 		// TODO Auto-generated method stub
 		String logFileName = request.getParameter("logFileName");
-		String fileInString = FileUtils.readFileToString(new File(logFileName));
+		String fileInString = FileUtils.readFileToString(new File(logFileName)).replaceAll("(\r\n|\r|\n|\n\r)", "<br>");
+		
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.print(fileInString);
