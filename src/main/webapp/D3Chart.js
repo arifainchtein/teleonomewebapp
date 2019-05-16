@@ -272,6 +272,106 @@ function drawTimeSeriesLineChart(id, dataSource, graphTitle, timeScale){
 
 //	// // // console.log("finsished drawlineseries");
 }
+/*
+ * this function will draw multiple lines on the same chart
+ * the units must be the same
+ */
+function drawMultipleTimeSeriesLineChart(id, dataSources){
+	// Set the dimensions of the canvas / graph
+	var	margin = {top: 30, right: 20, bottom: 30, left: 50},
+		width = 340 - margin.left - margin.right,
+		height = 220 - margin.top - margin.bottom;
+
+	// Parse the date / time
+	var	parseDate = d3.time.format("%d-%b-%y").parse;
+
+	// Set the ranges
+	var	x = d3.time.scale().range([0, width]);
+	var	y = d3.scale.linear().range([height, 0]);
+
+	// Define the axes
+	var	xAxis = d3.svg.axis().scale(x)
+		.orient("bottom").ticks(5);
+
+	var	yAxis = d3.svg.axis().scale(y)
+		.orient("left").ticks(5);
+
+	// Define the line
+	var	valueline = d3.svg.line()
+		.x(function(d) { return x(d.date); })
+		.y(function(d) { return y(d.Value); });
+		
+		
+		var pie = d3.layout.pie()
+	      .value(function(d) {
+	        return d.count;
+	      })
+		  .sort(null);
+		  
+	// Adds the svg canvas
+	var	chart1 = d3.select("#"+id)
+		.append("svg")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	// Get the data
+
+
+
+	var maxY = 0;
+
+	var concatValues=[];
+
+	for(var i=0;i<dataSources.length;i++){
+		
+		dataSources[i].forEach(function(d) {
+			d.date = new Date(d["Timestamp in Millis"]);
+	       d.close = +d.Value;
+		});
+
+	}
+	for(var i=0;i<dataSources.length;i++){
+		
+
+		concatValues = concatValues.concat(dataSources[i].map(function (d) {
+			return d.date;
+		}));
+	}
+	var colorLines=["magentaline","cyanline","greenline","redline","violetline","orangeline","yellowline"];
+	for(var i=0;i<dataSources.length;i++){
+		if(maxY<d3.max(dataSources[i], function(d) { return d.close; }))maxY=d3.max(dataSources[i], function(d) { return d.close; });
+	}
+
+
+		x.domain(d3.extent(concatValues));
+		
+		
+		y.domain([0, maxY]);
+
+		// Add the valueline path.
+		for(var i=0;i<dataSources.length;i++){
+			chart1.append("path")
+		.attr("class", colorLines[i])
+			.attr("d", valueline(dataSources[i]));
+		}
+		
+
+
+		// Add the X Axis
+		chart1.append("g")
+			.attr("class", "x axis")
+			.attr("transform", "translate(0," + height + ")")
+			.call(xAxis);
+
+		// Add the Y Axis
+		chart1.append("g")
+			.attr("class", "y axis")
+			.call(yAxis);
+
+
+	}
 
 function drawStackedBarChart(id, dataSource, graphTitle, dateRange){
 	if (arguments.length == 2) {

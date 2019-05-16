@@ -190,6 +190,14 @@ function setDeneWordValueByIdentityPointer(identityPointer, value){
 	}
 }
 
+function getAllDeneWordsByIdentityPointer(identityPointerArray, whatToBring){
+	var toReturn = []; 
+	for( i4=0;i4<identityPointerArray.length;i4++){
+		toReturn.push(getDeneWordByIdentityPointer(identityPointerArray[i4], whatToBring);)
+	}
+	return toReturn;
+}
+
 function getDeneWordByIdentityPointer(identityPointer, whatToBring){
 	var identity = identityFactory.createIdentityByPointer(identityPointer);
 	var i4=0,j4=0,k4=0,l4=0;
@@ -244,6 +252,44 @@ function extractDeneWordValueByDeneWordTypeFromDeneChain(deneChainPanel, deneWor
 		}
 	}
 	return panelDataSourcePointer;
+}
+
+function extractAllDeneWordValueByDeneWordTypeFromDeneChain(deneChainPanel, deneWordType){
+	var denes = deneChainPanel["Denes"];
+	var panelInPanelPosition=-1;
+	var deneWord, deneWords, dene;
+	var j5=0,k5=0;
+	var toReturn = []; 
+	var panelPositionInPanelHashMap = new HashMap();
+	for(j5=0;j5<denes.length;j5++){
+		dene=denes[j5];
+		deneWords = dene["DeneWords"];
+		panelInPanelPosition=-1;
+		panelDataSourcePointer="";
+		for(k5=0;k5<deneWords.length;k5++){
+			deneWord = deneWords[k5];
+			//
+			// get the position and the type
+			 if(deneWord.hasOwnProperty("DeneWord Type") && deneWord["DeneWord Type"]===deneWordType){
+				toReturn.push(deneWord["Value"]);
+			}
+		}
+	}
+	return toReturn;
+}
+
+var deneWords = controlParameterDene["DeneWords"];
+var toReturn = []; 
+var l7=0;
+for( l7=0;l7<deneWords.length;l7++){
+	var deneWord = deneWords[l7];
+	if(deneWord["DeneWord Type"]===deneWordType){
+		if(whatToReturn===COMPLETE){
+			toReturn.push(deneWord);
+		}else if(whatToReturn===DENEWORD_VALUE_ATTRIBUTE){
+			toReturn.push(deneWord["Value"]);
+		}
+	}
 }
 
 function getFormPrettyNameOrdered(deneChainPanel){

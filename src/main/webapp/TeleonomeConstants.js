@@ -82,7 +82,7 @@ var TIME_SERIES_AVERAGE="Average";
 // the different types of Denes
 //
 var DENE_TYPE_SENSOR = "Sensor";
-
+var DENE_TYPE_TELEPATHON = "Telepathon";
 var DENE_TYPE_SENSOR_VALUE = "Sensor Value";
 var DENE_TYPE_SENSOR_VALUE_DEFINITION = "Sensor Value Definition";
 var SENSOR_VALUE_RANGE_MAXIMUM = "Range Maximum";
@@ -127,6 +127,11 @@ var DENEWORD_TYPE_COMPONENT_PROVIDER= "Component Provider";
 var DENEWORD_ACTUATOR_COMMAND_CODE_TRUE_EXPRESSION= "Actuator Command Code True Expression";
 var DENEWORD_ACTUATOR_COMMAND_CODE_FALSE_EXPRESSION= "Actuator Command Code False Expression";
 var DENE_TYPE_CONDITION_DENOMIC_OPERATION="Condition Denomic Operation";
+
+var DENEWORD_TYPE_EVENT_DATA_STRUCTURE="Event Data Structure";
+var DENEWORD_TYPE_EVENT_MNEMOSYNE_DESTINATION="Event Mnemosyne Destination"
+var EVENT_DATA_STRUCTURE_FLOWMETER="FlowMeter";
+
 //
 // the different types of Denomic Operatins
 var DENOMIC_ELEMENT_EXISTS="Denomic Element Exists";
@@ -156,7 +161,9 @@ var DENEWORD_MAIN_BATTERY_STATE_OF_CHARGE="InternalBatteryStateOfCharge";
 var DENECHAIN_OPERONS = "Operons";
 var DENECHAIN_MEDULA = "Medula";
 var DENECHAIN_ACTUATORS = "Actuators";
+var DENECHAIN_TELEPATHONS = "Telepathons";    
 var DENECHAIN_SENSORS = "Sensors";    
+
 var DENECHAIN_DESCRIPTIVE = "Descriptive";
 var DENECHAIN_COMPONENTS = "Components";
 var DENECHAIN_ANALYTICONS = "Analyticons";
@@ -340,6 +347,22 @@ var DENE_TYPE_UPDATE_DENE_NAME = "Update Dene Name";
 var DENEWORD_TYPE_FIRMWARE_COMMAND_POINTER = "Firmware Command Pointer";
 var DENEWORD_TYPE_FIRMWARE_COMMAND = "Firmware Command";
 var DENEWORD_TYPE_SENSOR_MICROCONTROLLER_POINTER = "Sensor Microcontroller Pointer";
+var DENEWORD_TYPE_TELEPATHON_MICROCONTROLLER_POINTER = "Telepathon Microcontroller Pointer";
+var DENEWORD_TYPE_TELEPATHON_EVENT_LIST_POINTER = "Event List Pointer";
+var DENEWORD_TYPE_EVENT_DATA_STRUCTURE_VALUE_LIST = "Event Data Structure Value List";
+var DENEWORD_TYPE_EVENT_VALUE_DEFINITION = "Event Value Definition";
+var DENEWORD_EVENT_STRING_QUEUE_POSITION = "Event String Queue Position";;
+var DENEWORD_NUMBER_OF_SAMPLES_IN_EVENT="Number Of Samples In Event";
+var DENEWORD_TYPE_TELEPATHON_TYPE = "Telepathon Type";
+var DENEWORD_TYPE_TELEPATHON_COMMUNCATION_PROFILE = "Communication Profile Pointer";
+
+
+var DENEWORD_TYPE_EVENT_DEFINITION = "Event Definition";
+var DENEWORD_TYPE_TELEPATHON_TYPE = "Telepathon Type";
+var TELEPATHON_TYPE_I2C = "I2C Telepathon";
+var TELEPATHON_TYPE_XBEE = "XBee Telepathon";
+var TELEPATHON_TYPE_RS485 = "RS485 Telepathon";
+var TELEPATHON_TYPE_SPI = "SPI Telepathon";
 var DENEWORD_TYPE_ACTUATOR_MICROCONTROLLER_POINTER = "Actuator Microcontroller Pointer";
 var DENEWORD_TYPE_ACTUATOR_POINTER = "Actuator Pointer";
 var DENEWORD_TYPE_ACTION_SUCCESS_TASKS="Action Success Tasks";

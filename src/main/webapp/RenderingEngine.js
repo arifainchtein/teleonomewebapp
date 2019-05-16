@@ -1208,6 +1208,44 @@ function renderPageByPointer(pagePointer, locationId){
 			inSearch=true;
 
 
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MULTI_LINE_CHART ){
+			//
+			// decide what type of chart
+			// and invoke the function
+
+			panelHTML += "<div class=\"col-lg-6\">";   
+			panelHTML += "<div class=\"bs-component\">";
+			panelHTML += "<div class=\"panel panel-default\">";
+			panelHTML += " <div class=\"panel-heading\"><h4>"+panelDeneChain["Name"]+"</h4></div>";
+			panelHTML += "<div class=\"panel-body text-center\">";
+			panelHTML += "<div class=\"row\">";
+			var id = "Chart" + panelCounter;
+			panelHTML += "<div id=\""+ id +"\" class=\"col-lg-12 col-md-12 col-sm12 col-xs-12\">";
+			panelHTML += "</div>";
+			panelHTML += "</div>";
+			
+			// t add multiline support, need to get all denewords not just one
+			// create an array of all the denewords
+			// and store it in line 1246 chartDataSourcePointerHashMap.put(id,renderedDataSourceDeneWord);
+			var allDataPointersArray = extractAllDeneWordValueByDeneWordTypeFromDeneChain(panelDeneChain, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER);
+			var renderedDataSourceDeneWordsArray = getAllDeneWordsByIdentityPointer(allDataPointersArray, COMPLETE);
+
+
+			var timeScale = extractDeneWordValueByDeneWordTypeFromDeneChain(panelDeneChain, DENEWORD_TYPE_CHART_TIME_SCALE_STRING);
+			if(timeScale==null || timeScale== undefined)timeScale="%H:%M";
+
+			var title = extractDeneWordValueByDeneWordTypeFromDeneChain(panelDeneChain, PANEL_TITLE);
+			if(title==null || title== undefined)title="";
+
+
+			// console.log("before rendering chart");
+			chartDataSourcePointerHashMap.put(id,getAllDeneWordsByIdentityPointer);
+			chartStyleHashMap.put(id,mainPanelVisualStyle);
+			chartTimeStringHashMap.put(id,timeScale);
+			chartTitleHashMap.put(id,title);
+
+
+
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART ||
 				mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART||
 				mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_PIE_CHART ||
@@ -1227,7 +1265,10 @@ function renderPageByPointer(pagePointer, locationId){
 			panelHTML += "<div id=\""+ id +"\" class=\"col-lg-12 col-md-12 col-sm12 col-xs-12\">";
 			panelHTML += "</div>";
 			panelHTML += "</div>";
-
+			
+			// t add multiline support, need to get all denewords not just one
+			// create an array of all the denewords
+			// and store it in line 1246 chartDataSourcePointerHashMap.put(id,renderedDataSourceDeneWord);
 			var panelDataSourcePointer = extractDeneWordValueByDeneWordTypeFromDeneChain(panelDeneChain, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER);
 			renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
 
@@ -1362,6 +1403,8 @@ function renderPageByPointer(pagePointer, locationId){
 
 		if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART){
 			drawTimeSeriesLineChart(pId, renderedDataSourceDeneWord, title, timeString);	
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MULTI_LINE_CHART){
+			drawTimeSeriesMultiLineChart(pId, renderedDataSourceDeneWord, title, timeString);	
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART){
 			var fileName = renderedDataSourceDeneWord.Value.replace('$Webserver_Root/','');
 			var units = renderedDataSourceDeneWord.Units;

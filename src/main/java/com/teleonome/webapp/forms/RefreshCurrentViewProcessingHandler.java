@@ -110,7 +110,12 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 				toReturnElement.put("liveUpdate", liveUpdate);
 				toReturnElement.put("liveUpdateMinutes", liveUpdateMinutes);
 				JSONObject deneWordsToRemember = (JSONObject) getServletContext().getAttribute("DeneWordsToRemember");
-				JSONObject deneWordToRemember = deneWordsToRemember.getJSONObject(identityPointer);
+				JSONObject deneWordToRemember = null;
+				if(deneWordsToRemember.has(identityPointer)) {
+					deneWordToRemember= deneWordsToRemember.getJSONObject(identityPointer);
+				}else {
+					logger.warn("line 117,not found deneword using identity pointer=" + identityPointer);
+				}
 				String units="N.A.";
 				if(wordToRememberSourceJSONObject!=null && wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
 					units = wordToRememberSourceJSONObject.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
