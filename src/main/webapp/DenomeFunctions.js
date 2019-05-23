@@ -19,6 +19,7 @@ function getDeneByIdentityPointer(identityPointer){
 	}
 }
 
+
 function getHumanInterfaceDeneChainsForVisualizer(){
 	nucleiJSONArray = denomeJSONObject.Nuclei;
 	//console.log("inside getHumanInterfaceDeneChains5=" + nucleiJSONArray.length);
@@ -193,7 +194,7 @@ function setDeneWordValueByIdentityPointer(identityPointer, value){
 function getAllDeneWordsByIdentityPointer(identityPointerArray, whatToBring){
 	var toReturn = []; 
 	for( i4=0;i4<identityPointerArray.length;i4++){
-		toReturn.push(getDeneWordByIdentityPointer(identityPointerArray[i4], whatToBring);)
+		toReturn.push(getDeneWordByIdentityPointer(identityPointerArray[i4], whatToBring));
 	}
 	return toReturn;
 }
