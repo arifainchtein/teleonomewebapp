@@ -1662,12 +1662,19 @@ the css for the little box on the top right f external data
 							data: {formName:"GenerateDenomeAnalysis" },
 							success: function (data) {
 								if(data=="Ok"){
-									var n = new DenomeAnalysis();
+									/* var n = new DenomeAnalysis();
 									var html = n.process();
 									$('#DiagnosticsWorkArea').html(html);
 									$('#DiagnosticsWorkArea').show();
-									
-									$("#DenomeAnalysisFrame").attr("src", "TeleonomeAnalysis.html");
+									$("#DenomeAnalysisFrame").attr("src", "TeleonomeAnalysis.html"); */
+									var win = window.open('TeleonomeAnalysis.html', '_blank');
+									if (win) {
+									    //Browser has allowed it to be opened
+									    win.focus();
+									} else {
+									    //Browser has blocked it
+									    alert('Please allow popups for this website');
+									}
 								}else{
 									console.log("error generating analysis:" + JSON.stringify(data));
 									alert("Error generating Analysis");
