@@ -35,7 +35,7 @@ var DENE_TYPE_PROCESSOR = "Processor";
 //
 var DENE_TYPE_DENEWORD_OPERATION_EXPRESSION_EVALUATION = "Expression Evaluation";
 var DENE_TYPE_DENEWORD_OPERATION_EXPRESSION_SWITCH = "Expression Switch";
-
+var DENE_TYPE_DENEWORD_OPERATION_DATA_TRANSFORMATION = "Data Transformation";
 //
 // the value of the teleonome Identity
 //
@@ -161,6 +161,7 @@ var DENEWORD_MAIN_BATTERY_STATE_OF_CHARGE="InternalBatteryStateOfCharge";
 var DENECHAIN_OPERONS = "Operons";
 var DENECHAIN_MEDULA = "Medula";
 var DENECHAIN_ACTUATORS = "Actuators";
+var DENECHAIN_ANALYSIS = "Analysis";
 var DENECHAIN_TELEPATHONS = "Telepathons";    
 var DENECHAIN_SENSORS = "Sensors";    
 
@@ -210,6 +211,7 @@ var VITAL_DENEWORD_PERSIST_DATA="Persist Data";
 //
 // the command embedded as values
 //
+var COMMANDS_CREATE_DAILY_PARTITIONS="$CreateDailyPartitions";
 var COMMANDS_ELAPSED_TIME_STRING = "$ElapsedTimeString";
 var COMMANDS_CURRENT_HOUR = "$Current_Hour";
 var COMMANDS_PUBLISH_TELEONOME_PULSE="$Teleonome_Pulse";
@@ -419,6 +421,7 @@ var DENEWORD_TYPE_ANALYTICON_PROFILE_POINTER="Analyticon Profile Pointer";
 var DENEWORD_TYPE_ON_START_ACTION_LIST= "On Start Action List";
 var DENEWORD_TYPE_OPERATION_VARIABLE= "DeneWord Operation Variable";
 var DENEWORD_TYPE_OPERATION_DESTINATION= "DeneWord Operation Destination";
+var DENEWORD_TYPE_TRANSFORMATION_FUNCTION= "Transformation Function";
 
 var DENEWORD_ACTION_EXECUTION_POINT= "Execution Point";
 var DENEWORD_ACTION_EXECUTION_POINT_IMMEDIATE= "Execution Point Immediate";
@@ -669,6 +672,20 @@ var REMEMBERED_DENEWORD_SOURCE_WPS="WPS";
 //
 // life cycle events
 //
+var EXTENDED_OPERON_EXECUTION_OPERON_TYPE="Extended Operon Execution Operon Type";
+var EXTENDED_OPERON_EXECUTION_OPERON_NAME="Extended Operon Execution Name";
+var EXTENDED_OPERON_EXECUTION_START_TIME="Extended Operon Execution Start Time";
+var EXTENDED_OPERON_EXECUTION_END_TIME="Extended Operon Execution End Time";
+var EXTENDED_OPERON_EXECUTION_PROGRESS_FILE_NAME = "Extended Operon Execution Progress File Name";
+var EXTENDED_OPERON_EXECUTION_PROGRESS="Extended Operon Execution Progress";
+var EXTENDED_OPERON_PROGRESS_TIME="Extended Operon Progress Time";
+var EXTENDED_OPERON_PROGRESS_CURRENT_STEP="Extended Operon Progress Current Step";
+var EXTENDED_OPERON_PROGRESS_TOTAL_STEPS="Extended Operon Progress Total Steps";
+
+var LIFE_CYCLE_EVENT_START_EXTENDED_OPERON_EXECUTION="Start Extended Operon Execution";
+var LIFE_CYCLE_EVENT_END_EXTENDED_OPERON_EXECUTION="End Extended Operon Execution";
+var LIFE_CYCLE_EVENT_UPDATE_EXTENDED_OPERON_EXECUTION="Update Extended Operon Execution";
+var EXTENDED_OPERON_EXECUTION_PROGRESS="ExtendedOperonExecutionProgress.json";
 var LIFE_CYCLE_EVENT_START_SYNCHRONOUS_CYCLE="Start Synchronous Cycle";
 var LIFE_CYCLE_EVENT_END_SYNCHRONOUS_CYCLE="End Synchronous Cycle";
 var LIFE_CYCLE_EVENT_START_ASYNCHRONOUS_CYCLE="Start Asynchronous Cycle";
@@ -728,8 +745,13 @@ var TIME_UNIT_DAY="Day";
 var TIME_UNIT_WEEK="Week";
 var TIME_UNIT_MONTH="Month";
 var TIME_UNIT_YEAR="Year";
-var PULSE_TABLE="Pulse";
-var ORGANISMPULSE_TABLE="OrganismPulse";
+var PULSE_TABLE="pulse";
+var ORGANISMPULSE_TABLE="organismpulse";
+var MOTHER_REMEMBERED_VALUES_TABLE="motherrememberedvalues";
+var REMEMBERED_DENEWORDS_TABLE="remembereddenewords";
+var MUTATION_EVENT_TABLE="MutationEvent";
+var COMMAND_REQUESTS_TABLE="CommandRequests";
+
 var MNEMOSYCON_RULE_TEAM_PARAMETER="Team Parameter";
 var MNEMOSYCON_TEAM_MEMBER="Mnemosycon Team Member";
 var DENE_MNEMOSYCON_TEAM_DEFINITION="Mnemosycon Team Definition";

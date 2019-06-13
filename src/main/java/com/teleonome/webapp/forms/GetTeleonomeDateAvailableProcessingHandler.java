@@ -29,8 +29,7 @@ public class GetTeleonomeDateAvailableProcessingHandler extends ProcessingFormHa
 		
 		JSONArray data = aDBManager.getTeleonomeDataAvailableInOrganism();
 		String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
-		JSONArray minMaxArray = aDBManager.getTeleonomeDataAvailableRanges();
-		JSONObject j2 = minMaxArray.getJSONObject(0);
+		JSONObject j2 = aDBManager.getTeleonomeDataAvailableRanges();
 		JSONObject j = new JSONObject();
 		j.put("Name", teleonomeName);
 		if(j2.has("TimeMin")){
