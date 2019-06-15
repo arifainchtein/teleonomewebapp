@@ -128,7 +128,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 					}
 				}else if(values.length()>0) {
 					JSONObject j = values.getJSONObject(0);
-					units=j.getString("Units");
+					if(j.has("Units"))units=j.getString("Units");
 				}
 				double minimum=-9999;
 				if(wordToRememberSourceJSONObject!=null && wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE)) {
