@@ -117,6 +117,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 					logger.warn("line 117,not found deneword using identity pointer=" + identityPointer);
 				}
 				String units="N.A.";
+				logger.warn("before units,wordToRememberSourceJSONObject=" + wordToRememberSourceJSONObject);
 				if(wordToRememberSourceJSONObject!=null && wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
 					units = wordToRememberSourceJSONObject.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
 				}

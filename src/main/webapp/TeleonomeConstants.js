@@ -749,8 +749,8 @@ var PULSE_TABLE="pulse";
 var ORGANISMPULSE_TABLE="organismpulse";
 var MOTHER_REMEMBERED_VALUES_TABLE="motherrememberedvalues";
 var REMEMBERED_DENEWORDS_TABLE="remembereddenewords";
-var MUTATION_EVENT_TABLE="MutationEvent";
-var COMMAND_REQUESTS_TABLE="CommandRequests";
+var MUTATION_EVENT_TABLE="mutationevent";
+var COMMAND_REQUESTS_TABLE="commandrequests";
 
 var MNEMOSYCON_RULE_TEAM_PARAMETER="Team Parameter";
 var MNEMOSYCON_TEAM_MEMBER="Mnemosycon Team Member";
