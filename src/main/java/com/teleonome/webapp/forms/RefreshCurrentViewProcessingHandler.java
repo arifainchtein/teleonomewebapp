@@ -76,6 +76,10 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 
 				logger.debug("identityPointer=" + identityPointer + " fromMillis=" + fromMillis+ " untilMillis=" + untilMillis  );
 				JSONObject currentPulse = (JSONObject)servletContext.getAttribute("CurrentPulse");
+				//
+				// the wordToRememberSourceJSONObject is only going to be non null if the remembered deneword comes from 
+				// the same teleonome
+				//
 				JSONObject wordToRememberSourceJSONObject=null;
 				try {
 					wordToRememberSourceJSONObject = (JSONObject) DenomeUtils.getDeneWordByIdentity(currentPulse, new Identity(identityPointer), TeleonomeConstants.COMPLETE);
@@ -118,8 +122,13 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 				}
 				String units="N.A.";
 				logger.warn("before units,wordToRememberSourceJSONObject=" + wordToRememberSourceJSONObject);
-				if(wordToRememberSourceJSONObject!=null && wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
-					units = wordToRememberSourceJSONObject.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+				if(wordToRememberSourceJSONObject!=null) {
+					if( wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
+						units = wordToRememberSourceJSONObject.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
+					}
+				}else if(values.length()>0) {
+					JSONObject j = values.getJSONObject(0);
+					units=j.getString("Units");
 				}
 				double minimum=-9999;
 				if(wordToRememberSourceJSONObject!=null && wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_MINIMUM_ATTRIBUTE)) {
