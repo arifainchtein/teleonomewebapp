@@ -927,7 +927,7 @@ function renderPageByPointer(pagePointer, locationId){
 				panelExternalTimestampDataSourcePointer = deneWord["Value"];
 			}else if(deneWord.Name===DENEWORD_VISIBLE){
 				panelVisible = deneWord["Value"];
-				panelVisibleHashMap.put(panelDeneChainPointer,panelVisible);
+				
 			}
 		}
 		//
@@ -947,6 +947,9 @@ function renderPageByPointer(pagePointer, locationId){
 
 		if(panelDataSourcePointer!="" &&  panelExternalTimestampDataSourcePointer!=""){
 			panelPointerExternalTimestampDataSourcePointerHashMap.put(panelDeneChainPointer,panelExternalTimestampDataSourcePointer);
+		}
+		if(panelDataSourcePointer!="" &&  panelDeneChainPointer!=""){
+			panelVisibleHashMap.put(panelDeneChainPointer,panelVisible);
 		}
 	}
 	//

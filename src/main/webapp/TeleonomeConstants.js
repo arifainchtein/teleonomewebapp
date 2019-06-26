@@ -56,10 +56,11 @@ var DATATYPE_INTEGER = "int";
 var DATATYPE_BOOLEAN = "boolean";
 var DATATYPE_STRING = "String";
 var DATATYPE_JSONARRAY = "JSONArray";
+var DATATYPE_JSONOBJECT="JSONObject";
 var DATATYPE_IMAGE_FILE = "Image File";
 var DATATYPE_AUDIO_FILE = "Audio File";
 var DATATYPE_VIDEO_FILE = "Video File";
-
+var ON_LACK_OF_DATA="On Lack of Data";
 var DATATYPE_DENE_POINTER = "Dene Pointer";
 var DATATYPE_TIMESTAMP = "Timestamp";
 var DATATYPE_TIMESTAMP_MILLISECONDS = "Timestamp Milliseconds";
@@ -948,6 +949,7 @@ var IN_PANEL_POSITION=  "In Panel Position";
 //
 // the denetypes to make the human interface
 //
+var PROCESSING_QUEUE_POSITION="Processing Queue Position";
 var DENE_TYPE_HUMAN_INTERFACE_PAGE="Human Interface Page";
 var DENE_TYPE_HUMAN_INTERFACE_COMPONENT="Human Interface Component";
 var DENEWORD_TYPE_HUMAN_INTERFACE_COMPONENT_PROPERTY="Human Interface Component Property";
