@@ -747,6 +747,12 @@ var TIME_UNIT_WEEK="Week";
 var TIME_UNIT_MONTH="Month";
 var TIME_UNIT_YEAR="Year";
 var PULSE_TABLE="pulse";
+var IP_ADDRESS="IP Address";
+var DEVICE_NAME="Device Name";
+var MAC_ADDRESS="Mac Address";
+
+var NETWORK_DEVICE_ACTIVITY_TABLE="networkdeviceactivity";
+var NETWORK_DEVICE_WHITELIST_TABLE="networkdevicewhitelist";
 var ORGANISMPULSE_TABLE="organismpulse";
 var MOTHER_REMEMBERED_VALUES_TABLE="motherrememberedvalues";
 var REMEMBERED_DENEWORDS_TABLE="remembereddenewords";
