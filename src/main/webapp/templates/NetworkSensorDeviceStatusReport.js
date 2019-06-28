@@ -60,6 +60,6 @@ class NetworkSensorDeviceStatusReport{
 		panelHTML += "	</div>";
 		panelHTML += "	</div>";
 		panelHTML += "	</div>";
-		return var panelHTML;
+		return  panelHTML;
 	}
 }
