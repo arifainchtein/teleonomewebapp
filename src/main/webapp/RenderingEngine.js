@@ -1203,6 +1203,13 @@ function renderPageByPointer(pagePointer, locationId){
 			var aCompleteDeneSingleValuePanelExternalData = new CompleteDeneSingleValuePanelExternalData();
 			panelHTML += aCompleteDeneSingleValuePanelExternalData.process(sourceDataPointer, title);
 
+			
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_NETWORK_SENSOR_DEVICE_STATUS_REPORT){
+
+			var aNetworkSensorDeviceStatusReportPanel = new NetworkSensorDeviceStatusReportPanel();
+			panelHTML += aNetworkSensorDeviceStatusReportPanel.process();
+			inSearch=true;
+
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_SEARCH_PANEL){
 

@@ -189,6 +189,7 @@ var DENECHAIN_SENSOR_DATA ="Sensor Data";
 
 var DENECHAIN_ORGANISM_CONFIGURATION="Organism Configuration";
 var DENECHAIN_ORGANISM_STATUS="Organism Status";
+var DENE_NETWORK_SENSOR_STATUS ="Network Status";
 
 //
 // the different types of Nuclei
@@ -750,6 +751,14 @@ var PULSE_TABLE="pulse";
 var IP_ADDRESS="IP Address";
 var DEVICE_NAME="Device Name";
 var MAC_ADDRESS="Mac Address";
+var WHITE_LIST_STATUS="White List Status";
+var IS_DEVICE_PRESENT="Is Present";
+var IS_DEVICE_MISSING = "Is Missing";
+var IS_DEVICE_NEW="Is New";
+var NETWORK_SCAN_MILLIS="SampleTimeMillis";
+var NETWORK_SCAN_TIME_STRING="SampleTimeString";
+var DEVICE_LIST="Device List";
+var DEVICE_LIST_CHANGES="Device List Changes";
 
 var NETWORK_DEVICE_ACTIVITY_TABLE="networkdeviceactivity";
 var NETWORK_DEVICE_WHITELIST_TABLE="networkdevicewhitelist";
@@ -1087,6 +1096,8 @@ var PANEL_VISUALIZATION_ORGANISM_VIEW="Organism View Panel";
 var PANEL_VISUALIZATION_COMPLETE_DENE_STYLE_SINGLE_VALUE_PANEL="Complete Dene Single Value Panel";
 var PANEL_VISUALIZATION_SEARCH_PANEL="Search Panel";
 var PANEL_VISUALIZATION_COMPLETE_DENE_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_DATA="Complete Dene Single Value Panel External Data";
+var PANEL_VISUALIZATION_STYLE_NETWORK_SENSOR_DEVICE_STATUS_REPORT="NetworkSensorDeviceStatusReport";
+var PANEL_VISUALIZATION_STYLE_NETWORK_SENSOR_DEVICE_LIST_CHANGES_REPORT="NetworkSensorDeviceListChangesReport";
 
 var PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_DATA="Single Value Panel External Data";
 var PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_COMPLETE_WIDTH_EXTERNAL_DATA="Single Value Panel Complete Width External Data";

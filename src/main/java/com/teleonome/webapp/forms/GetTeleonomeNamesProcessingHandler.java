@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.teleonome.framework.exception.ServletProcessingException;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
@@ -23,11 +24,7 @@ public class GetTeleonomeNamesProcessingHandler  extends ProcessingFormHandler {
 	public void process() throws ServletProcessingException, IOException {
 		// TODO Auto-generated method stub
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
-		JSONArray data = aDBManager.getTeleonomeNamesInOrganism();
-
-		String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
-		data.put(teleonomeName);
-
+		JSONObject data = aDBManager.getLastNetworkSensorDeviceActivity();
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.print(data.toString());
