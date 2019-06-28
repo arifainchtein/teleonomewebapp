@@ -1206,8 +1206,8 @@ function renderPageByPointer(pagePointer, locationId){
 			
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_NETWORK_SENSOR_DEVICE_STATUS_REPORT){
 
-			var aNetworkSensorDeviceStatusReportPanel = new NetworkSensorDeviceStatusReportPanel();
-			panelHTML += aNetworkSensorDeviceStatusReportPanel.process();
+			var aNetworkSensorDeviceStatusReport = new NetworkSensorDeviceStatusReport();
+			panelHTML += aNetworkSensorDeviceStatusReport.process();
 			inSearch=true;
 
 
