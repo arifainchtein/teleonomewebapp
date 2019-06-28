@@ -6,10 +6,6 @@ class NetworkSensorDeviceStatusReport{
 
 
 	process(){
-
-		var sourceDataPointerIdentity = identityFactory.createIdentityByPointer(sourceDataPointer);
-
-
 		var networkStatusSampleTimeStringPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_NETWORK_SENSOR_STATUS + ":" + NETWORK_SCAN_TIME_STRING;
 		console.log("networkStatusSampleTimeStringPointer=" + networkStatusSampleTimeStringPointer);
 		var scanTimeString = getDeneWordByIdentityPointer(externalDataStatusPointer, DENEWORD_VALUE_ATTRIBUTE);
