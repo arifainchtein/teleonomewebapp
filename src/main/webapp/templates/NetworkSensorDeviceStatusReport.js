@@ -15,7 +15,7 @@ class NetworkSensorDeviceStatusReport{
 		var deviceList = JSON.parse(getDeneWordByIdentityPointer(deviceListPointer, DENEWORD_VALUE_ATTRIBUTE));
 
 
-		var panelHTML = "div class=\"well\"><h4>Network Status as of <div id=\"NetworkStatusSampleTimeString\">"+ scanTimeString +"</div></h4></div> ";
+		var panelHTML = "<div class=\"well\"><h4>Network Status as of <div id=\"NetworkStatusSampleTimeString\">"+ scanTimeString +"</div></h4></div> ";
 		panelHTML += "<div class=\"col-lg-6\">";
 		panelHTML += "	<div class=\"bs-component\">";
 		panelHTML += "		<div class=\"panel panel-default\">";
