@@ -35,7 +35,7 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		        	<span class=\"glyphicon glyphicon-stats\"></span>&nbsp;";
 				panelHTML += "		        </button>";
 				panelHTML += "		    </td>";
-				panelHTML += "		   <td><h5 class=\"text-success\">"+ device.DEVICE_NAME+"</h5></td><td><h5 class=\"text-success\">"+ device.IP_ADDRESS+"</h5></td>";
+				panelHTML += "		   <td><h5 class=\"text-success\">"+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-success\">"+ device[IP_ADDRESS]+"</h5></td>";
 				panelHTML += "		 <td><a href=\"#\" class=\"btn btn-danger btn-sm\">";
 				panelHTML += "		      <span class=\"glyphicon glyphicon-minus-sign\"></span> Remove</a>&nbsp;&nbsp;";
 				panelHTML += "		    </td>";
@@ -44,7 +44,7 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		        	<span class=\"glyphicon glyphicon-stats\"></span>&nbsp;";
 				panelHTML += "		        </button>";
 				panelHTML += "		    </td>";
-				panelHTML += "		   <td><h5 class=\"text-danger\">"+ device.DEVICE_NAME+"</h5></td><td><h5 class=\"text-danger\">"+ device.IP_ADDRESS+"</h5></td>";
+				panelHTML += "		   <td><h5 class=\"text-danger\">"+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-danger\">"+ device[IP_ADDRESS]+"</h5></td>";
 				panelHTML += "		 <td><a href=\"#\" class=\"btn btn-success btn-sm\">";
 				panelHTML += "		      <span class=\"glyphicon glyphicon-minus-sign\"></span> Add</a>&nbsp;&nbsp;";
 				panelHTML += "		    </td>";
