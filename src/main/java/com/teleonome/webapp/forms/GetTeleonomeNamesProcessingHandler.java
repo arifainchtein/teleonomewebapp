@@ -24,7 +24,10 @@ public class GetTeleonomeNamesProcessingHandler  extends ProcessingFormHandler {
 	public void process() throws ServletProcessingException, IOException {
 		// TODO Auto-generated method stub
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
-		JSONObject data = aDBManager.getLastNetworkSensorDeviceActivity();
+		JSONArray data = aDBManager.getTeleonomeNamesInOrganism();
+
+		String teleonomeName = (String) getServletContext().getAttribute("TeleonomeName");
+		data.put(teleonomeName);
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.print(data.toString());
