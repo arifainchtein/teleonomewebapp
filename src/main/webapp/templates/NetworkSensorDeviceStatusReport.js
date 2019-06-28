@@ -30,7 +30,7 @@ class NetworkSensorDeviceStatusReport{
 		panelHTML += "		<tr> ";
 		for(var i = 0; i < deviceList.length; i++) {
 			var device = deviceList[i];
-			if(device.WHITE_LIST_STATUS){
+			if(device[WHITE_LIST_STATUS]){
 				panelHTML += "			<td><button type=\"button\" class=\"btn btn-primary btn-sm\">";
 				panelHTML += "		        	<span class=\"glyphicon glyphicon-stats\"></span>&nbsp;";
 				panelHTML += "		        </button>";
