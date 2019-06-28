@@ -12,7 +12,7 @@ class NetworkSensorDeviceStatusReport{
 
 		var deviceListPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_NETWORK_SENSOR_STATUS + ":" + DEVICE_LIST;
 		console.log("deviceListPointer=" + deviceListPointer);
-		var deviceList = getDeneWordByIdentityPointer(deviceListPointer, DENEWORD_VALUE_ATTRIBUTE);
+		var deviceList = JSON.parse(getDeneWordByIdentityPointer(deviceListPointer, DENEWORD_VALUE_ATTRIBUTE));
 
 
 		var panelHTML = "div class=\"well\"><h4>Network Status as of <div id=\"NetworkStatusSampleTimeString\">"+ scanTimeString +"</div></h4></div> ";
