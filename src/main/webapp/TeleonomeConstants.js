@@ -757,8 +757,8 @@ var IS_DEVICE_MISSING = "Is Missing";
 var IS_DEVICE_NEW="Is New";
 var NETWORK_SCAN_MILLIS="SampleTimeMillis";
 var NETWORK_SCAN_TIME_STRING="SampleTimeString";
-var DEVICE_LIST="Device List";
-var DEVICE_LIST_CHANGES="Device List Changes";
+var DEVICE_LIST="DeviceList";
+var DEVICE_LIST_CHANGES="DeviceListChanges";
 
 var NETWORK_DEVICE_ACTIVITY_TABLE="networkdeviceactivity";
 var NETWORK_DEVICE_WHITELIST_TABLE="networkdevicewhitelist";
