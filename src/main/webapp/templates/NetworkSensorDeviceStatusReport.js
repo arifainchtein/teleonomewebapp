@@ -8,11 +8,11 @@ class NetworkSensorDeviceStatusReport{
 	process(){
 		var networkStatusSampleTimeStringPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_NETWORK_SENSOR_STATUS + ":" + NETWORK_SCAN_TIME_STRING;
 		console.log("networkStatusSampleTimeStringPointer=" + networkStatusSampleTimeStringPointer);
-		var scanTimeString = getDeneWordByIdentityPointer(externalDataStatusPointer, DENEWORD_VALUE_ATTRIBUTE);
+		var scanTimeString = getDeneWordByIdentityPointer(networkStatusSampleTimeStringPointer, DENEWORD_VALUE_ATTRIBUTE);
 
 		var deviceListPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_SENSOR_DATA + ":" + DENE_NETWORK_SENSOR_STATUS + ":" + DEVICE_LIST;
 		console.log("deviceListPointer=" + deviceListPointer);
-		var deviceList = getDeneWordByIdentityPointer(externalDataStatusPointer, DENEWORD_VALUE_ATTRIBUTE);
+		var deviceList = getDeneWordByIdentityPointer(deviceListPointer, DENEWORD_VALUE_ATTRIBUTE);
 
 
 		var panelHTML = "div class=\"well\"><h4>Network Status as of <div id=\"NetworkStatusSampleTimeString\">"+ scanTimeString +"</div></h4></div> ";
