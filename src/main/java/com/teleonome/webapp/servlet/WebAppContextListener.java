@@ -100,7 +100,7 @@ public class WebAppContextListener implements ServletContextListener {
 	    }
 	    public void run(){
 	        while(true) {
-	        	logger.debug("Hello from WebServer ");
+	        	logger.info("Hello from WebServer, executing PingThread refreshing ");
 	        	try {
 	        		double webserverAvailableMemory = Runtime.getRuntime().freeMemory()/1024000;
 					double webserverMaxMemory = Runtime.getRuntime().maxMemory()/1024000;
@@ -300,7 +300,7 @@ public class WebAppContextListener implements ServletContextListener {
 			Identity rememberedDeneWordIdentity;
 			//ArrayList teleonomeRememeberedWordsArrayList;
 			JSONArray mnemosyconDenesJSONArray;
-			logger.debug("in denomemagager anMnemosyconsDeneChainJSONObject= " + anMnemosyconsDeneChainJSONObject);
+			//logger.debug("in denomemagager anMnemosyconsDeneChainJSONObject= " + anMnemosyconsDeneChainJSONObject);
 			if(anMnemosyconsDeneChainJSONObject!=null){
 				
 				JSONArray denes = anMnemosyconsDeneChainJSONObject.getJSONArray("Denes");
