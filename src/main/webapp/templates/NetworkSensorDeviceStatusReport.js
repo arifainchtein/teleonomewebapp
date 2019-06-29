@@ -14,7 +14,7 @@ class NetworkSensorDeviceStatusReport{
 		console.log("deviceListPointer=" + deviceListPointer);
 		var deviceList = JSON.parse(getDeneWordByIdentityPointer(deviceListPointer, DENEWORD_VALUE_ATTRIBUTE));
 
-		var panelHTML = "<div class=\"col-lg-12\"><div class=\"well\"><h4>Network Status as of <div id=\"NetworkStatusSampleTimeString\">"+ scanTimeString +"</div></h4></div> </div>";
+		var panelHTML = "<div class=\"col-lg-12\"><div class=\"well\"><h4>Network Status as of "+ scanTimeString +"</h4></div> </div>";
 		
 		 panelHTML += "<div class=\"col-lg-12\">";
 		
@@ -36,7 +36,7 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		        	<span class=\"glyphicon glyphicon-stats\"></span>&nbsp;";
 				panelHTML += "		        </button>";
 				panelHTML += "		    </td>";
-				panelHTML += "		   <td><h5 class=\"text-success\">"+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-success\">"+ device[IP_ADDRESS]+"</h5></td>";
+				panelHTML += "		   <td><h5 class=\"text-success\">"+i+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-success\">"+ device[IP_ADDRESS]+"</h5></td>";
 				panelHTML += "		 <td><a href=\"#\" class=\"btn btn-danger btn-sm\">";
 				panelHTML += "		      <span class=\"glyphicon glyphicon-minus-sign\"></span> Remove</a>&nbsp;&nbsp;";
 				panelHTML += "		    </td>";
@@ -45,9 +45,9 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		        	<span class=\"glyphicon glyphicon-stats\"></span>&nbsp;";
 				panelHTML += "		        </button>";
 				panelHTML += "		    </td>";
-				panelHTML += "		   <td><h5 class=\"text-danger\">"+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-danger\">"+ device[IP_ADDRESS]+"</h5></td>";
+				panelHTML += "		   <td><h5 class=\"text-danger\">"+i+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-danger\">"+ device[IP_ADDRESS]+"</h5></td>";
 				panelHTML += "		 <td><a href=\"#\" class=\"btn btn-success btn-sm\">";
-				panelHTML += "		      <span class=\"glyphicon glyphicon-minus-sign\"></span> Add</a>&nbsp;&nbsp;";
+				panelHTML += "		      <span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>&nbsp;&nbsp;";
 				panelHTML += "		    </td>";
 			}
 			panelHTML += "		</tr> ";
