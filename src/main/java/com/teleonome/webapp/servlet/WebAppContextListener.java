@@ -100,7 +100,7 @@ public class WebAppContextListener implements ServletContextListener {
 	    }
 	    public void run(){
 	        while(true) {
-	        	logger.info("Hello from WebServer, executing PingThread refreshing ");
+	        	logger.debug("Hello from WebServer, executing PingThread refreshing ");
 	        	try {
 	        		double webserverAvailableMemory = Runtime.getRuntime().freeMemory()/1024000;
 					double webserverMaxMemory = Runtime.getRuntime().maxMemory()/1024000;
@@ -151,7 +151,7 @@ public class WebAppContextListener implements ServletContextListener {
 				long now = System.currentTimeMillis();
 	        //	JSONObject autoCompleteValues =  getAutoCompleteValues();
 	        	
-	        	logger.warn("it took " + ((System.currentTimeMillis()-now)/1000)+ " seconds to generate the autocomplete values");
+	        	logger.debug("it took " + ((System.currentTimeMillis()-now)/1000)+ " seconds to generate the autocomplete values");
 	        	
 	        	//logger.debug("autoCompleteValues=" + autoCompleteValues.toString(4));
 //	        	try {
