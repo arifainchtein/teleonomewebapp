@@ -56,7 +56,7 @@ public class TeleonomeServlet extends HttpServlet {
 		process(req, res);
 	}
 
-	public void  process(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{		
+	public void  process(HttpServletRequest req, HttpServletResponse res) {		
 		String errorMessage="";
 		HttpSession session = req.getSession(true);
 		String formName = req.getParameter("formName");
@@ -67,6 +67,9 @@ public class TeleonomeServlet extends HttpServlet {
 			processingFormHandler = ProcessingFormHandlerFactory.createProcessingFormHandler(className,req,res, getServletContext());
 			processingFormHandler.process();
 		} catch (ServletProcessingException e) {
+			// TODO Auto-generated catch block
+			logger.warn(Utils.getStringException(e));
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			logger.warn(Utils.getStringException(e));
 		}
