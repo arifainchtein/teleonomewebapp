@@ -403,14 +403,16 @@ class SearchFunctions{
                            
 		                    $("#SearchGraphArea").append(panelHTML);
 		                    if(visualizationStyle=="LineGraph"){
+		                    	refreshCounter=30;
+		                        $("#RefreshCounter").html("");
+		                        $('#WaitingWheel').hide();
+		                        
 		                        drawTimeSeriesLineChart(chartDivId,data, "");
 		                       
 		                    }
 
 		                }
-                        refreshCounter=30;
-                        $("#RefreshCounter").html(refreshCounter);
-                        $('#WaitingWheel').hide();
+                        
 		               
 		               
 		            },
