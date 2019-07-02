@@ -404,7 +404,7 @@ class SearchFunctions{
 		                    $("#SearchGraphArea").append(panelHTML);
 		                    if(visualizationStyle=="LineGraph"){
 		                    	refreshCounter=30;
-		                        $("#RefreshCounter").html("");
+		                        $("#RefreshCounter").html(refreshCounter);
 		                        $('#WaitingWheel').hide();
 		                        
 		                        drawTimeSeriesLineChart(chartDivId,data, "");
