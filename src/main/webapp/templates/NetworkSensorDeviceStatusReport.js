@@ -32,21 +32,21 @@ class NetworkSensorDeviceStatusReport{
 		for(var i = 0; i < deviceList.length; i++) {
 			var device = deviceList[i];
 			if(device[WHITE_LIST_STATUS]){
-				panelHTML += "			<td><button type=\"submit\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-primary btn-sm\">";
+				panelHTML += "			<td><button type=\"submit\"  class=\"btn btn-primary btn-sm\">";
 				panelHTML += "		        	<span class=\"glyphicon glyphicon-stats\"></span>&nbsp;";
 				panelHTML += "		        </button>";
 				panelHTML += "		    </td>";
 				panelHTML += "		   <td><h5 class=\"text-success\">"+i+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-success\">"+ device[IP_ADDRESS]+"</h5></td>";
-				panelHTML += "		 <td><a href=\"#\" class=\"btn btn-danger btn-sm removeFromWhiteListBtn\">";
+				panelHTML += "		 <td><a href=\"#\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-danger btn-sm removeFromWhiteListBtn\">";
 				panelHTML += "		      <span class=\"glyphicon glyphicon-minus-sign\"></span> Remove</a>&nbsp;&nbsp;";
 				panelHTML += "		    </td>";
 			}else{
-				panelHTML += "			<td><button type=\"submit\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-primary btn-sm\">";
+				panelHTML += "			<td><button type=\"submit\"  class=\"btn btn-primary btn-sm\">";
 				panelHTML += "		        	<span class=\"glyphicon glyphicon-stats\"></span>&nbsp;";
 				panelHTML += "		        </button>";
 				panelHTML += "		    </td>";
 				panelHTML += "		   <td><h5 class=\"text-danger\">"+i+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-danger\">"+ device[IP_ADDRESS]+"</h5></td>";
-				panelHTML += "		 <td><a href=\"#\" class=\"btn btn-success btn-sm addTWhiteListBtn\">";
+				panelHTML += "		 <td><a href=\"#\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-success btn-sm addTWhiteListBtn\">";
 				panelHTML += "		      <span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>&nbsp;&nbsp;";
 				panelHTML += "		    </td>";
 			}
