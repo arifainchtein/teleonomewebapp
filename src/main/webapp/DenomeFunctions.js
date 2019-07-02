@@ -279,19 +279,19 @@ function extractAllDeneWordValueByDeneWordTypeFromDeneChain(deneChainPanel, dene
 	return toReturn;
 }
 
-var deneWords = controlParameterDene["DeneWords"];
-var toReturn = []; 
-var l7=0;
-for( l7=0;l7<deneWords.length;l7++){
-	var deneWord = deneWords[l7];
-	if(deneWord["DeneWord Type"]===deneWordType){
-		if(whatToReturn===COMPLETE){
-			toReturn.push(deneWord);
-		}else if(whatToReturn===DENEWORD_VALUE_ATTRIBUTE){
-			toReturn.push(deneWord["Value"]);
-		}
-	}
-}
+//var deneWords = controlParameterDene["DeneWords"];
+//var toReturn = []; 
+//var l7=0;
+//for( l7=0;l7<deneWords.length;l7++){
+//	var deneWord = deneWords[l7];
+//	if(deneWord["DeneWord Type"]===deneWordType){
+//		if(whatToReturn===COMPLETE){
+//			toReturn.push(deneWord);
+//		}else if(whatToReturn===DENEWORD_VALUE_ATTRIBUTE){
+//			toReturn.push(deneWord["Value"]);
+//		}
+//	}
+//}
 
 function getFormPrettyNameOrdered(deneChainPanel){
 	var denes = deneChainPanel["Denes"];
