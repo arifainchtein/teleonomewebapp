@@ -162,7 +162,7 @@ function drawTimeSeriesLineChart(id, dataSource, graphTitle, timeScale){
 
 	if(!d3.select("#"+id).hasOwnProperty("style")){
 		console.log("could not find div " + id);
-		return;
+		//return;
 	}
 	if (arguments.length == 2) {
 		graphTitle="";
