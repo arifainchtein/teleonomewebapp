@@ -1386,15 +1386,12 @@ the css for the little box on the top right f external data
 						type: "GET",
 						url: "/TeleonomeServlet",
 						data: {formName:"AddToWhiteList", DeviceName:deviceName, DeviceMacAddress:deviceMacAddress, CommandCode : passwd },
-						success: function (commandIddata) {
-							console.log("commandIddata=" +commandIddata);
-							refreshActive=true;
-							
+						success: function (result) {
+							console.log("Add To White List result=" +result);
 						},
 						error: function(data){
 							console.log("error adding to whitelist:" + JSON.stringify(data));
 							alert("error adding to whitelist:" + JSON.stringify(data));
-							refreshActive=true;
 							return false;
 						}
 					});	
