@@ -34,8 +34,8 @@ class SearchFunctions{
                 },
                 error: function(data){
                     $('#WaitingWheel').hide();
-                    // console.log("error getting log file:" + JSON.stringify(data));
-                    alert("Error getting log:" + JSON.stringify(data));
+                     console.log("line 38:" + JSON.stringify(data));
+                    alert("line 38 :" + JSON.stringify(data));
                     return false;
                 }
             });
@@ -70,8 +70,8 @@ class SearchFunctions{
                 },
                 error: function(data){
                     $('#WaitingWheel').hide();
-                    // console.log("error getting log file:" + JSON.stringify(data));
-                    alert("Error getting log:" + JSON.stringify(data));
+                     console.log("line 74:" + JSON.stringify(data));
+                    alert("line 74:" + JSON.stringify(data));
                     return false;
                 }
             });
@@ -416,8 +416,8 @@ class SearchFunctions{
 		            },
 		            error: function(data){
 		                $('#WaitingWheel').hide();
-		                // console.log("error getting log file:" + JSON.stringify(data));
-		                alert("Error getting log:" + JSON.stringify(data));
+		                console.log("line 419:" + JSON.stringify(data));
+		                alert("line 419:" + JSON.stringify(data));
 		                return false;
 		            }
 		        }); 
