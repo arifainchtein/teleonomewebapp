@@ -160,6 +160,10 @@ function drawPieChart(id, data, title){
 
 function drawTimeSeriesLineChart(id, dataSource, graphTitle, timeScale){
 
+	if(d3.select("#"+id)!= undefined){
+		console.log("could not find div " + id);
+		return;
+	}
 	if (arguments.length == 2) {
 		graphTitle="";
 		timeScale="%H:%M";

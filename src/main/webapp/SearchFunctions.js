@@ -403,12 +403,7 @@ class SearchFunctions{
                            
 		                    $("#SearchGraphArea").append(panelHTML);
 		                    if(visualizationStyle=="LineGraph"){
-		                    	console.log("chartdivid="+chartDivId);
-		                        if(chartDivId!= undefined){
-		                        	drawTimeSeriesLineChart(chartDivId,data, "");
-		                        }else{
-		                        	console.log(chartDivId + " does not exists");
-		                        }
+		                        drawTimeSeriesLineChart(chartDivId,data, "");
 		                       
 		                    }
 
