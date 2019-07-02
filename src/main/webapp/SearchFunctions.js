@@ -403,7 +403,11 @@ class SearchFunctions{
                            
 		                    $("#SearchGraphArea").append(panelHTML);
 		                    if(visualizationStyle=="LineGraph"){
-		                        drawTimeSeriesLineChart(chartDivId,data, "");
+		                        if(d3.select("#"+id)!= undefined){
+		                        	drawTimeSeriesLineChart(chartDivId,data, "");
+		                        }else{
+		                        	consle.log(chartDivId + " does not exists");
+		                        }
 		                       
 		                    }
 
