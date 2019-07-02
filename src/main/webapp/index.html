@@ -1369,7 +1369,7 @@ the css for the little box on the top right f external data
 					  $(source).prop('disabled', true);
 					  $(source).text('Pending');
 					  var data = $.parseJSON($(this).attr('data-form'));
-					  var deviceName = data.deviceName;
+					  var deviceName = data.DeviceName;
 					  var deviceMacAddress = data.MacAddress;
 					  //("#"+field + "Label").css('color', 'red');
 
@@ -1391,7 +1391,7 @@ the css for the little box on the top right f external data
 						},
 						error: function(data){
 							console.log("error adding to whitelist:" + JSON.stringify(data));
-							alert("error adding to whitelist:" + JSON.stringify(data));
+							alert("Error adding to whitelist:" + JSON.stringify(data));
 							return false;
 						}
 					});	
