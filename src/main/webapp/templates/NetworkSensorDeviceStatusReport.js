@@ -32,7 +32,7 @@ class NetworkSensorDeviceStatusReport{
 		for(var i = 0; i < deviceList.length; i++) {
 			var device = deviceList[i];
 			if(device[WHITE_LIST_STATUS]){
-				panelHTML += "			<td><button type=\"button\" class=\"btn btn-primary btn-sm\">";
+				panelHTML += "			<td><button type=\"submit\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-primary btn-sm removeFromWhiteListBtn\">";
 				panelHTML += "		        	<span class=\"glyphicon glyphicon-stats\"></span>&nbsp;";
 				panelHTML += "		        </button>";
 				panelHTML += "		    </td>";
@@ -41,7 +41,7 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		      <span class=\"glyphicon glyphicon-minus-sign\"></span> Remove</a>&nbsp;&nbsp;";
 				panelHTML += "		    </td>";
 			}else{
-				panelHTML += "			<td><button type=\"button\" class=\"btn btn-primary btn-sm\">";
+				panelHTML += "			<td><button type=\"submit\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-primary btn-sm addTWhiteListBtn\">";
 				panelHTML += "		        	<span class=\"glyphicon glyphicon-stats\"></span>&nbsp;";
 				panelHTML += "		        </button>";
 				panelHTML += "		    </td>";
@@ -60,3 +60,4 @@ class NetworkSensorDeviceStatusReport{
 		return  panelHTML;
 	}
 }
+
