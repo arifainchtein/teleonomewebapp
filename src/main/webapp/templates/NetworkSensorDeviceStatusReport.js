@@ -46,8 +46,15 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		        </button>";
 				panelHTML += "		    </td>";
 				panelHTML += "		   <td><h5 class=\"text-danger\">"+i+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-danger\">"+ device[IP_ADDRESS]+"</h5></td>";
-				panelHTML += "		 <td><a href=\"#\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-success btn-sm addTWhiteListBtn\">";
-				panelHTML += "		      <span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>&nbsp;&nbsp;";
+				if(device[IP_ADDRESS]!=""){
+					panelHTML += "		 <td><a href=\"#\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-success btn-sm addTWhiteListBtn\">";
+					panelHTML += "		      <span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>&nbsp;&nbsp;"
+				}else{
+					panelHTML += "		 <td><a href=\"#\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-default btn-disabled btn-sm addTWhiteListBtn\">";
+					panelHTML += "		      <span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>&nbsp;&nbsp;"
+
+				}
+				;
 				panelHTML += "		    </td>";
 			}
 			panelHTML += "		</tr> ";
