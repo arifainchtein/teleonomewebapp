@@ -35,11 +35,11 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 
 		JSONArray toReturn = new JSONArray();
 		String rawData = request.getParameter("data");
-		logger.debug("Refreshcurrent virew, received:" + rawData);
+		logger.debug("line 38 Refreshcurrent virew, received:" + rawData);
 		JSONArray data = new JSONArray(rawData);
 		for(int i =0;i<data.length();i++) {
 			JSONObject dataElement = data.getJSONObject(i);
-			logger.debug("Refreshcurrent virew, processing:" + dataElement.toString(4));
+			logger.debug("line 42 Refreshcurrent virew, processing:" + dataElement.toString(4));
 			String formName2 = dataElement.getString("formName");
 			String chartTitle = dataElement.getString("chartTitle");
 			String chartDivId = dataElement.getString("chartDivId");
@@ -55,7 +55,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 			if(dataElement.has("showAvg")) {
 				showAvg = dataElement.getBoolean("showAvg");
 			}
-			logger.debug("showMax="  + showMax + " showMin=" + showMin + " showAvg=" + showAvg);
+			logger.debug("line 58 showMax="  + showMax + " showMin=" + showMin + " showAvg=" + showAvg);
 			String localStoreageKey = dataElement.getString("localStoreageKey");
 			String visualizationStyle = dataElement.getString("visualizationStyle");
 			long fromMillis = dataElement.getLong("fromMillis");
@@ -74,7 +74,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 			if(formName2.equals("RememberDeneWord")) {
 
 
-				logger.debug("identityPointer=" + identityPointer + " fromMillis=" + fromMillis+ " untilMillis=" + untilMillis  );
+				logger.debug("line 77 identityPointer=" + identityPointer + " fromMillis=" + fromMillis+ " untilMillis=" + untilMillis  );
 				JSONObject currentPulse = (JSONObject)servletContext.getAttribute("CurrentPulse");
 				//
 				// the wordToRememberSourceJSONObject is only going to be non null if the remembered deneword comes from 
@@ -121,7 +121,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 					logger.warn("line 117,not found deneword using identity pointer=" + identityPointer);
 				}
 				String units="N.A.";
-				logger.warn("before units,wordToRememberSourceJSONObject=" + wordToRememberSourceJSONObject);
+				logger.warn("line 124 before units,wordToRememberSourceJSONObject=" + wordToRememberSourceJSONObject);
 				if(wordToRememberSourceJSONObject!=null) {
 					if( wordToRememberSourceJSONObject.has(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE)) {
 						units = wordToRememberSourceJSONObject.getString(TeleonomeConstants.DENEWORD_UNIT_ATTRIBUTE);
@@ -196,7 +196,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 			}
 		}
 
-
+		
 		PrintWriter out = response.getWriter();
 		out.print(toReturn.toString());
 		out.flush();
