@@ -22,6 +22,7 @@ import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.framework.utils.Utils;
 import com.teleonome.webapp.servlet.ProcessingFormHandler;
 
+
 public class AddToWhiteListProcessingHandler extends ProcessingFormHandler {
 
 	public AddToWhiteListProcessingHandler(HttpServletRequest req, HttpServletResponse res,
