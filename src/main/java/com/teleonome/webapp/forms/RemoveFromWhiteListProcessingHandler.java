@@ -40,13 +40,13 @@ public class RemoveFromWhiteListProcessingHandler extends ProcessingFormHandler 
 
 		JSONObject payLoadParentJSONObject = new JSONObject();
 		JSONObject payLoadJSONObject = new JSONObject();
-		payLoadParentJSONObject.put("Mutation Name","Remove From White List");
+		payLoadParentJSONObject.put("Mutation Name","Remove From WhiteList");
 		payLoadParentJSONObject.put("Payload", payLoadJSONObject);
 		JSONArray updatesArray = new JSONArray();
 		payLoadJSONObject.put("Updates"	, updatesArray);
 
 		JSONObject updateJSONObject =  new JSONObject();
-		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_UPDATE_TARGET,"@On Load:Update DeneWord:Update DeneWord");
+		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_UPDATE_TARGET,"@On Load:Update DeneWord:Set DeneWord");
 		String value = "RemoveDeviceFromWhiteList#"+deviceName;
 		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_VALUE,value);
 		updatesArray.put(updateJSONObject);
