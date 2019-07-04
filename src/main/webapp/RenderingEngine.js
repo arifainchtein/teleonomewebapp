@@ -601,7 +601,7 @@ function receivedCommandResponse(cr){
 		},
 		error: function(data){
 			var errorText = "error receiving updated Denome after command response, error was:" + JSON.stringify(data);
-			// console.log(errorText);
+			console.log(data);
 			alert(errorText);
 			return false;
 		}
