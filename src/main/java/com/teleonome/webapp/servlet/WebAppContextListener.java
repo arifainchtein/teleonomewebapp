@@ -261,10 +261,13 @@ public class WebAppContextListener implements ServletContextListener {
 	
 	public String getTeleonomeName() {
 		String teleonomeName="";
+		String teleonomeInString="";
 		try {
-			teleonomeName = new JSONObject(FileUtils.readFileToString(new File("Teleonome.denome"))).getJSONObject("Denome").getString("Name");
+			teleonomeInString = FileUtils.readFileToString(new File("Teleonome.denome"));
+			teleonomeName = new JSONObject(teleonomeInString).getJSONObject("Denome").getString("Name");
 		} catch (JSONException | IOException e) {
 			// TODO Auto-generated catch block
+			logger.warn("teleonomeInString=" + teleonomeInString);
 			logger.warn(Utils.getStringException(e));
 		}
 		return teleonomeName;
