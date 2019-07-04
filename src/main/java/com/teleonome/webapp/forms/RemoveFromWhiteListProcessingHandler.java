@@ -40,7 +40,7 @@ public class RemoveFromWhiteListProcessingHandler extends ProcessingFormHandler 
 
 		JSONObject payLoadParentJSONObject = new JSONObject();
 		JSONObject payLoadJSONObject = new JSONObject();
-		payLoadParentJSONObject.put("Mutation Name","Remove From WhiteList");
+		payLoadParentJSONObject.put("Mutation Name","Remove Device From WhiteList");
 		payLoadParentJSONObject.put("Payload", payLoadJSONObject);
 		JSONArray updatesArray = new JSONArray();
 		payLoadJSONObject.put("Updates"	, updatesArray);
