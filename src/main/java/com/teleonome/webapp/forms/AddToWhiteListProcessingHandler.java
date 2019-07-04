@@ -58,7 +58,7 @@ public class AddToWhiteListProcessingHandler extends ProcessingFormHandler {
 		
 
 
-		command="AddToWhiteList";
+		command="Add To White List";
 		boolean restartRequired=false;
 		String payLoad=payLoadParentJSONObject.toString();
 		String commandCodeType=TeleonomeConstants.TELEONOME_SECURITY_CODE;
