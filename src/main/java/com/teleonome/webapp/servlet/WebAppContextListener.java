@@ -267,7 +267,7 @@ public class WebAppContextListener implements ServletContextListener {
 			teleonomeName = new JSONObject(teleonomeInString).getJSONObject("Denome").getString("Name");
 		} catch (JSONException | IOException e) {
 			// TODO Auto-generated catch block
-			logger.warn("teleonomeInString=" + teleonomeInString);
+			logger.warn("line 270 teleonomeInString=" + teleonomeInString);
 			logger.warn(Utils.getStringException(e));
 		}
 		return teleonomeName;
