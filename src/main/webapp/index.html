@@ -1323,8 +1323,8 @@ the css for the little box on the top right f external data
 					  $(source).prop('disabled', true);
 					  $(source).text('Pending');
 					  var data = $.parseJSON($(this).attr('data-form'));
-					  var deviceName = data.deviceName;
-					  var deviceMacAddress = data.MacAddress;
+					  var deviceName = data.DeviceName;
+					  //var deviceMacAddress = data.MacAddress;
 					  //("#"+field + "Label").css('color', 'red');
 
 					 var selected=""; 
@@ -1340,14 +1340,14 @@ the css for the little box on the top right f external data
 						type: "GET",
 						url: "/TeleonomeServlet",
 						data: {formName:"RemoveFromWhiteList", DeviceName:deviceName, CommandCode : passwd },
-						success: function (commandIddata) {
-							console.log("commandIddata=" +commandIddata);
+						success: function (result) {
+							console.log("removeFrom whitelist result=" +result);
 							refreshActive=true;
 							
 						},
 						error: function(data){
-							console.log("error adding to whitelist:" + JSON.stringify(data));
-							alert("error adding to whitelist:" + JSON.stringify(data));
+							console.log("error removing from  whitelist:" + JSON.stringify(data));
+							alert("error removing to whitelist:" + JSON.stringify(data));
 							refreshActive=true;
 							return false;
 						}
