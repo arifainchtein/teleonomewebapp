@@ -18,6 +18,7 @@ import com.teleonome.framework.denome.Identity;
 import com.teleonome.framework.exception.InvalidDenomeException;
 import com.teleonome.framework.exception.ServletProcessingException;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
+import com.teleonome.framework.utils.Utils;
 import com.teleonome.webapp.servlet.ProcessingFormHandler;
 
 public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
@@ -28,7 +29,7 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 	}
 
 	@Override
-	public void process() throws ServletProcessingException, IOException {
+	public void process()  {
 		// TODO Auto-generated method stub
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 		
@@ -197,9 +198,16 @@ public class RefreshCurrentViewProcessingHandler extends ProcessingFormHandler {
 		}
 
 		
-		PrintWriter out = response.getWriter();
-		out.print(toReturn.toString());
-		out.flush();
-		out.close();
+		PrintWriter out;
+		try {
+			out = response.getWriter();
+			out.print(toReturn.toString());
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.warn(Utils.getStringException(e));
+		}
+		
 	}
 }
