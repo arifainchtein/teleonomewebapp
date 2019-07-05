@@ -262,14 +262,38 @@ public class WebAppContextListener implements ServletContextListener {
 	public String getTeleonomeName() {
 		String teleonomeName="";
 		String teleonomeInString="";
-		try {
-			teleonomeInString = FileUtils.readFileToString(new File("Teleonome.denome"));
-			teleonomeName = new JSONObject(teleonomeInString).getJSONObject("Denome").getString("Name");
-		} catch (JSONException | IOException e) {
-			// TODO Auto-generated catch block
-			logger.warn("line 270 teleonomeInString=" + teleonomeInString);
-			logger.warn(Utils.getStringException(e));
-		}
+		//
+		// there is always a posibility
+		// that this call is made at the time
+		// when the hypothalamus is writing the file to disk
+		// in this case, the file read is not the complete denome
+		// and an exception will be thrown, to mitigate this, allow for up tp
+		// three times to repeat the operation
+		boolean keepGoing=true;
+		int counter=0;
+		int max=3;
+		do {
+			try {
+				teleonomeInString = FileUtils.readFileToString(new File("Teleonome.denome"));
+				teleonomeName = new JSONObject(teleonomeInString).getJSONObject("Denome").getString("Name");
+				keepGoing=false;
+			} catch (JSONException | IOException e) {
+				// TODO Auto-generated catch block
+				
+				logger.warn("Error reading the denome, waiting one second");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				counter++;
+				if(counter>max) {
+					keepGoing=false;
+				}
+			}
+		}while(keepGoing);
+		
 		return teleonomeName;
 	}
 	/**
