@@ -280,7 +280,7 @@ public class WebAppContextListener implements ServletContextListener {
 			} catch (JSONException | IOException e) {
 				// TODO Auto-generated catch block
 				
-				logger.warn("Error reading the denome, waiting one second");
+				logger.warn("Error reading the denome, waiting one second, counter=" + counter);
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e1) {
