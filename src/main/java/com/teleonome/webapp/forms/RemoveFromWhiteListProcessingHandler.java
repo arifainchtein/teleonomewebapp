@@ -51,7 +51,7 @@ public class RemoveFromWhiteListProcessingHandler extends ProcessingFormHandler 
 		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_VALUE,value);
 		updatesArray.put(updateJSONObject);
 
-		command="RemoveFromWhiteList";
+		command="Remove Device From WhiteList";
 		boolean restartRequired=false;
 		String payLoad=payLoadParentJSONObject.toString();
 		String commandCodeType=TeleonomeConstants.TELEONOME_SECURITY_CODE;
