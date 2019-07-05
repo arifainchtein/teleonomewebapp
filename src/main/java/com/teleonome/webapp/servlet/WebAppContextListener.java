@@ -116,53 +116,43 @@ public class WebAppContextListener implements ServletContextListener {
 	    			// TODO Auto-generated catch block
 	    			e1.printStackTrace();
 	    		}
+	        	String teleonomeInString;
+	        	JSONObject denomeJSONObject=null;
+	        	boolean keepGoing=true;
+	        	int counter=0;
+	        	int max=3;
+	        	do {
+	    			try {
+	    				teleonomeInString = FileUtils.readFileToString(new File("Teleonome.denome"));
+	    				denomeJSONObject = new JSONObject(FileUtils.readFileToString(new File("Teleonome.denome")));
+	    				servletContext.setAttribute("CurrentPulse", denomeJSONObject);
+	    				Identity identity = new Identity(getTeleonomeName(), TeleonomeConstants.NUCLEI_PURPOSE, TeleonomeConstants.DENECHAIN_OPERATIONAL_DATA, TeleonomeConstants.DENE_VITAL,TeleonomeConstants.DENEWORD_TYPE_CURRENT_IDENTITY_MODE);
+						String currentIdentityMode = (String) DenomeUtils.getDeneWordByIdentity(denomeJSONObject, identity, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+						servletContext.setAttribute("CurrentIdentityMode", currentIdentityMode);
+	    				keepGoing=false;
+	    			} catch (JSONException | IOException  | InvalidDenomeException e) {
+	    				// TODO Auto-generated catch block
+	    				
+	    				logger.warn("line 133 Error reading the denome, waiting one second, counter=" + counter);
+	    				try {
+	    					Thread.sleep(1000);
+	    				} catch (InterruptedException e1) {
+	    					// TODO Auto-generated catch block
+	    					e1.printStackTrace();
+	    				}
+	    				counter++;
+	    				if(counter>max) {
+	    					keepGoing=false;
+	    				}
+	    			} 
+	    		}while(keepGoing);
 	        	
-	        	logger.debug("Refreshing, deneWordsToRemember");
-	        	JSONObject deneWordsToRemember =  getDeneWordsToRemember();
-				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
-				try {
-					JSONObject denomeJSONObject = new JSONObject(FileUtils.readFileToString(new File("Teleonome.denome")));
-					servletContext.setAttribute("CurrentPulse", denomeJSONObject);
-				} catch (JSONException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				
-				
-				try {
-					JSONObject pulse = new JSONObject(FileUtils.readFileToString(new File("Teleonome.denome")));
-					servletContext.setAttribute("LastPulse", pulse);
-					Identity identity = new Identity(getTeleonomeName(), TeleonomeConstants.NUCLEI_PURPOSE, TeleonomeConstants.DENECHAIN_OPERATIONAL_DATA, TeleonomeConstants.DENE_VITAL,TeleonomeConstants.DENEWORD_TYPE_CURRENT_IDENTITY_MODE);
-					String currentIdentityMode = (String) DenomeUtils.getDeneWordByIdentity(pulse, identity, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
-					servletContext.setAttribute("CurrentIdentityMode", currentIdentityMode);
-				} catch (JSONException | IOException e) {
-					// TODO Auto-generated catch block
-					logger.warn(Utils.getStringException(e));
-				} catch (InvalidDenomeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-				
-				
 				logger.debug("Refreshing, autocompleteValues");
 				long now = System.currentTimeMillis();
 	        //	JSONObject autoCompleteValues =  getAutoCompleteValues();
 	        	
 	        	logger.debug("it took " + ((System.currentTimeMillis()-now)/1000)+ " seconds to generate the autocomplete values");
 	        	
-	        	//logger.debug("autoCompleteValues=" + autoCompleteValues.toString(4));
-//	        	try {
-//					FileUtils.writeStringToFile(new File("denomictree.txt"), autoCompleteValues.toString(4));
-//				} catch (JSONException | IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-			//	servletContext.setAttribute("AutoCompleteValues", autoCompleteValues);
-				
-				
 		        try {
 					Thread.sleep(1000*10);
 				} catch (InterruptedException e) {
