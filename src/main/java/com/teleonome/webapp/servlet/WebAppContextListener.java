@@ -100,6 +100,9 @@ public class WebAppContextListener implements ServletContextListener {
 	    }
 	    public void run(){
 	        while(true) {
+	        	JSONObject deneWordsToRemember =  getDeneWordsToRemember();
+				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
+				
 	        	logger.debug("Hello from WebServer, executing PingThread refreshing ");
 	        	try {
 	        		double webserverAvailableMemory = Runtime.getRuntime().freeMemory()/1024000;
