@@ -26,7 +26,7 @@ class Networking{
 
         var panelHTML = "<div class=\"col-lg-12\">";
         panelHTML += "		<div class=\"bs-component\">";
-        panelHTML += "			<div class=\"panel with-nav-tabs panel-primary\">";
+        panelHTML += "			<div class=\"panel with-nav-tabs \">";
         panelHTML += "				<div class=\"panel-heading\"><h4>Networking Configuration</h4>";
         panelHTML += "					<ul class=\"nav nav-tabs\">";
         if(hasWlan0){

@@ -34,7 +34,7 @@ public class GetDeneChainNamesProcessingHandler extends ProcessingFormHandler {
 		logger.debug("GetDeneChainNames, anyTeleonomeName=" + anyTeleonomeName + " nucleus=" + nucleus);
 		JSONArray data=null;
 		if(teleonomeName.equals(anyTeleonomeName)) {
-			JSONObject pulse = (JSONObject) getServletContext().getAttribute("LastPulse");
+			JSONObject pulse = (JSONObject) getServletContext().getAttribute("CurrentPulse");
 			data = DenomeUtils.getAllDeneChainNamesForNucleus(pulse, nucleus);
 		}else {
 			data = aDBManager.getDeneChainNamesForTeleonomeInOrganism(anyTeleonomeName, nucleus);
