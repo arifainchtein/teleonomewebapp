@@ -15,7 +15,7 @@ class Networking{
         //
         // There are three cases
         //
-        // 1)The teleonome only has wlan0 - In this case wlan0 can be in on of two states, as a host or as part of a network
+        // 1)The teleonome only has wlan1 - In this case wlan1 can be in on of two states, as a host or as part of a network
         //
         // 2)The teleonome has wlan0 and wlan1 - In this case wlan0 is always the network interface bound to the outside network
         //   and wlan1 is the host for the 172.16.1.1 network. In this case you allow users to configure wlan0 as to select the
