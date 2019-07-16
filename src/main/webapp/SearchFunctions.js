@@ -130,7 +130,7 @@ class SearchFunctions{
 		        //
 		       //for(var i=allGraphs.length-1;i>-1;i--){
 		           var reqData=[];
-                $('#WaitingText').html("Please Wait...");
+                $('#WaitingText').html("Please Wait s5...");
                 $('#WaitingWheel').show();
 
 		        for(var i=0;i<allGraphs.length;i++){
@@ -431,7 +431,7 @@ class SearchFunctions{
     
 	
 	loadNewVisualizerData(){
-		$('#WaitingText').html("Please Wait...");
+		$('#WaitingText').html("Please Waits6...");
         $('#WaitingWheel').show();
         $("#SearchConfigurator").hide();
         $('#Teleonome').empty();
@@ -513,7 +513,7 @@ class SearchFunctions{
 	
 	
 	populateNuclei(){
-        $('#WaitingText').html("Please wait...");
+        $('#WaitingText').html("Please waits1...");
         $('#WaitingWheel').show();
     
             var selectedTeleonome = $('#Teleonome').find(":selected").val();
@@ -555,7 +555,7 @@ class SearchFunctions{
             $('#DeneChain').empty();
             $('#Dene').empty();
             $('#DeneWord').empty();
-        $('#WaitingText').html("Please wait...");
+        $('#WaitingText').html("Please waits2...");
         $('#WaitingWheel').show();
             var selectedTeleonome = $('#Teleonome').find(":selected").val();
             var selectedNucleus = $('#Nucleus').find(":selected").val();
@@ -587,7 +587,7 @@ class SearchFunctions{
         }
     
      populateDene(){
-        $('#WaitingText').html("Please wait...");
+        $('#WaitingText').html("Please waits3...");
         $('#WaitingWheel').show();
        
             $('#Dene').empty();
@@ -624,7 +624,7 @@ class SearchFunctions{
     
     
      populateDeneWord(){
-        $('#WaitingText').html("Please wait...");
+        $('#WaitingText').html("Please waits4...");
         $('#WaitingWheel').show();
     
             $('#DeneWord').empty();
