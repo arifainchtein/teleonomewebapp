@@ -59,12 +59,12 @@ public class ReSignalProcessingHandler extends ProcessingFormHandler {
 
 				JSONObject updateJSONObject =  new JSONObject();
 				updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_UPDATE_TARGET,"@On Load:Update SSID:Update SSID");
-				updateJSONObject.put("Value",ssid);
+				updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_VALUE,ssid);
 				updatesArray.put(updateJSONObject);
 
 				JSONObject updateJSONObject2 =  new JSONObject();
 				updateJSONObject2.put(TeleonomeConstants.MUTATION_PAYLOAD_UPDATE_TARGET,"@On Load:Update PSK:Update PSK");
-				updateJSONObject2.put("Value", password );
+				updateJSONObject2.put(TeleonomeConstants.MUTATION_PAYLOAD_VALUE, password );
 				updatesArray.put(updateJSONObject2);
 				payload=payLoadParentJSONObject.toString();
 				logger.debug("Setting newtork info, ssid=" + ssid + " ps=" + password);
