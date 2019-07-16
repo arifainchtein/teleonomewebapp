@@ -550,7 +550,7 @@ the css for the little box on the top right f external data
 		 
 			$(document).ready(function() {
 				
-				$('#WaitingText').html("Please Wait");
+				$('#WaitingText').html("Please Wait2");
 				$('#WaitingWheel').show();
 
 				localStorageManager = new LocalStorageManager();
@@ -1241,7 +1241,11 @@ the css for the little box on the top right f external data
 				
 				var formName = $('#formName').val();
 				var action = "Reboot";
-
+				if(hasWlan0 && hasWlan1){
+					
+				}else{
+					
+				}
 				if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
 					
 					var enableNetworkMode = "No";
@@ -1569,7 +1573,7 @@ the css for the little box on the top right f external data
 						
 					  $("#MainPowerButton").attr("disabled", true);
 					  $("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
-					  $('#WaitingText').html("Please Wait");
+					  $('#WaitingText').html("Please Wait3");
 					  $('#WaitingWheel').show();
 					  powerButtonDisabled=true;
 					  $.ajax({
@@ -1611,7 +1615,7 @@ the css for the little box on the top right f external data
 					
 					  $("#MainPowerButton").attr("disabled", true);
 					  $("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
-					  $('#WaitingText').html("Please Wait");
+					  $('#WaitingText').html("Please Wait4");
 					  $('#WaitingWheel').show();
 					  powerButtonDisabled=true;
 					  $.ajax({
@@ -1893,8 +1897,8 @@ the css for the little box on the top right f external data
 	                    panelHTML += "<div id=\"NetworkMode\">";
 	                    panelHTML += "<center>";
 	                    panelHTML += "<div class=\"row\">";
-	                    //panelHTML += "<label class=\"RadioLabel\">Enable Network Mode</label><br>";
-	                    //panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
+	                    panelHTML += "<label class=\"RadioLabel\">Enable Network Mode</label><br>";
+	                    panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
 	                    panelHTML += "<input type=\"hidden\"  id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" value=\"Yes\">"; 
 	                    panelHTML += "</div>";
 	                    panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 2px;\"></div></div>";
@@ -1921,7 +1925,7 @@ the css for the little box on the top right f external data
 	                    //
 	                    // set up the available ssids
 	                    //
-	                    $('#WaitingText').html("Please Wait...");
+	                    $('#WaitingText').html("Please Wait5...");
 	                    $('#WaitingWheel').show();
 	                
 	                    $.ajax({
@@ -1996,7 +2000,7 @@ the css for the little box on the top right f external data
 	                        //
 	                        // set up the available ssids
 	                        //
-	                        $('#WaitingText').html("Please Wait...");
+	                        $('#WaitingText').html("Please Wait1...");
 	                        $('#WaitingWheel').show();
 	                    
 	                        $.ajax({
