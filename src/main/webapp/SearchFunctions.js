@@ -412,6 +412,7 @@ class SearchFunctions{
 		                    }
 
 		                }
+		                $('#WaitingWheel').hide();
                         
 		               
 		               
