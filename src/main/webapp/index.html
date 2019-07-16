@@ -25,7 +25,6 @@
 	margin-top: 20px;
 }
 
-
 .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2,
 	.col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3,
 	.col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5,
@@ -40,26 +39,28 @@
 }
 
 .panel-heading.row {
-  margin: 0;
-  padding-left: 0;
-  padding-right: 0;
+	margin: 0;
+	padding-left: 0;
+	padding-right: 0;
 }
 
-@media(max-width:767px){
+@media ( max-width :767px) {
 	h5, .h5 {
-    	font-size: 16px;
+		font-size: 16px;
 	}
 }
 
-@media(min-width:768px){
+@media ( min-width :768px) {
 	.panel-heading h6 {
 		font-size: 1.5em;
 	}
 }
-@media(min-width:992px){}
-@media(min-width:1200px){}
 
+@media ( min-width :992px) {
+}
 
+@media ( min-width :1200px) {
+}
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -126,309 +127,323 @@ html, body {
 /*
 for chart
 */
-path { 
+path {
 	stroke: steelblue;
 	stroke-width: 2;
 	fill: none;
 }
 
-
-.magentaline { 
+.magentaline {
 	stroke: magenta;
 }
 
-.cyanline { 
+.cyanline {
 	stroke: cyan;
 }
-.greenline { 
+
+.greenline {
 	stroke: green;
 }
 
-.blueline { 
+.blueline {
 	stroke: blue;
 }
 
-.redline { 
+.redline {
 	stroke: red;
 }
 
-.violetline { 
+.violetline {
 	stroke: blueviolet;
 }
 
-.orangeline { 
+.orangeline {
 	stroke: orange;
 }
 
-.yellowline { 
+.yellowline {
 	stroke: yellow;
 }
 
-.axis path,
-.axis line {
+.axis path, .axis line {
 	fill: none;
 	stroke: grey;
 	stroke-width: 1;
 	shape-rendering: crispEdges;
 }
 
-
-
 input:invalid {
-  border: 1px solid red;
+	border: 1px solid red;
 }
 
 input:valid {
-  border: 1px solid green;
+	border: 1px solid green;
 }
 
 @media screen and (min-width: 768px) {
-  .modal-xl {
-    width: 90%;
-   
-  }
-
-  #WaitingWheel{
-    margin-left:350px;
-    margin-top:130px;
- }
-
+	.modal-xl {
+		width: 90%;
+	}
+	#WaitingWheel {
+		margin-left: 350px;
+		margin-top: 130px;
+	}
 }
 
-
-
-.glyphicon.glyphicon-signal,  .glyphicon.glyphicon-tasks, .glyphicon.glyphicon-info-sign,
-.glyphicon.glyphicon-dashboard,.glyphicon.glyphicon-flash, .glyphicon.glyphicon-time, .glyphicon.glyphicon-off{
-    font-size: 20px;
-    margin-top:-25px;
+.glyphicon.glyphicon-signal, .glyphicon.glyphicon-tasks, .glyphicon.glyphicon-info-sign,
+	.glyphicon.glyphicon-dashboard, .glyphicon.glyphicon-flash, .glyphicon.glyphicon-time,
+	.glyphicon.glyphicon-off {
+	font-size: 20px;
+	margin-top: -25px;
 }
 
-.label{
-	font-size:45%;
+.label {
+	font-size: 45%;
 }
 
-
-.SettingsSubMenu{
+.SettingsSubMenu {
 	cursor: pointer;
 }
 
-.SettingsMenu{
+.SettingsMenu {
 	cursor: pointer;
 }
-.SettingBar{
-    text-align: center;
+
+.SettingBar {
+	text-align: center;
 }
 
 .SettingBar:hover {
-    color:salmon;
+	color: salmon;
 }
 
-.DiagnosticsMenu{
+.DiagnosticsMenu {
 	cursor: pointer;
 }
-.DiagnosticsBar{
-    text-align: center;
+
+.DiagnosticsBar {
+	text-align: center;
 }
 
 .DiagnosticsBar:hover {
-    color:salmon;
+	color: salmon;
 }
 
+#WaitingText {
+	margin-left: 50px;
+	margin-top: -30px;
+	margin-bottom: 10px;
+	font-size: 22px;
+}
 
+#WaitingWheel {
+	display: none;
+	background-color: #B6B6B4;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 20px;
+	margin-left: 50px;
+	margin-top: 10px;
+	z-index: 10;
+	width: 300px;
+	height: 80px;
+}
 
- #WaitingText{
- 	margin-left:50px;
- 	margin-top:-30px;
- 	margin-bottom:10px;
- 	font-size: 22px;
- }
- 
- #WaitingWheel{
-        display: none;
-        background-color:#B6B6B4;
-        -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius:5px;
-    padding:20px;
-    margin-left:50px;
-    margin-top:10px;
-        z-index: 10;
-  width: 300px;
-    height: 80px;
- }
-
- body.modal-open .modal {
-    display: flex !important;
-    height: 100%;
-} 
+body.modal-open .modal {
+	display: flex !important;
+	height: 100%;
+}
 
 body.modal-open .modal .modal-dialog {
-    margin: auto;
+	margin: auto;
 }
 
 /*
  Internal Power css
 */
 .battery:after {
-    background-color: #fff;
-    border: 2px solid #000;
-    content: "";
-    display: block;
-    height: 16px;
-    position: absolute;
-    right: -6px;
-    top: 6px;
-    width: 6px;
-   
+	background-color: #fff;
+	border: 2px solid #000;
+	content: "";
+	display: block;
+	height: 16px;
+	position: absolute;
+	right: -6px;
+	top: 6px;
+	width: 6px;
 }
+
 .battery {
-    background-color: #fff;
-    border: 2px solid #000;
-    height: 32px;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-    width: 100px;
-    font-size:24px;
-    font-family:Courier; 
-    color:Black;
+	background-color: #fff;
+	border: 2px solid #000;
+	height: 32px;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	width: 100px;
+	font-size: 24px;
+	font-family: Courier;
+	color: Black;
 }
+
 .battery .battery-level {
-    background-color: #666;
-    height: 100%;
+	background-color: #666;
+	height: 100%;
 }
 
 .battery .battery-level.battery-high {
-    background-color: #66CD00;
+	background-color: #66CD00;
 }
+
 .battery .battery-level.battery-medium {
-    background-color: #FCD116;
+	background-color: #FCD116;
 }
+
 .battery .battery-level.battery-low {
-    background-color: #FF3333;
+	background-color: #FF3333;
 }
+
 .battery .battery-level {
-    text-align: center;
+	text-align: center;
 }
 
 /*
 the css for the little box on the top right f external data
 */
-.externalDataStatusBox{
-	width:30px;
-	height:30px;
+.externalDataStatusBox {
+	width: 30px;
+	height: 30px;
 }
 
-.external-data-danger{
-	background:rgb(255,0,0);
-}
-.external-data-success{
-	background:rgb(0,255,0);
-}
-.external-data-warning{
-	background:rgb(255,255,0);
-}
-.external-data-stale{
-	background:rgb(148, 0, 211);
+.external-data-danger {
+	background: rgb(255, 0, 0);
 }
 
-.panel-default > .panel-heading-danger {
-	background:rgb(255,0,0);
+.external-data-success {
+	background: rgb(0, 255, 0);
 }
 
-.panel-default > .panel-heading-warning {
-	background:rgb(255,255,0);
+.external-data-warning {
+	background: rgb(255, 255, 0);
 }
 
-.panel-default > .panel-heading-success {
-	background:rgb(0,255,0);
+.external-data-stale {
+	background: rgb(148, 0, 211);
 }
 
-.panel-default > .panel-heading-stale {
-	background:rgb(224, 176, 255);
+.panel-default>.panel-heading-danger {
+	background: rgb(255, 0, 0);
 }
 
+.panel-default>.panel-heading-warning {
+	background: rgb(255, 255, 0);
+}
+
+.panel-default>.panel-heading-success {
+	background: rgb(0, 255, 0);
+}
+
+.panel-default>.panel-heading-stale {
+	background: rgb(224, 176, 255);
+}
 </style>
 </head>
 
 <body>
 
-	
+
 	<div class="container">
 
-			<div class="container-fluid">
-				<div class="row">
-					<div id="status" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<h3>
-							<div class="text-center" style="padding-left: 5px;" id="teleonomeName">Connecting....</div>
-						</h3>
-					</div>
+		<div class="container-fluid">
+			<div class="row">
+				<div id="status" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<h3>
+						<div class="text-center" style="padding-left: 5px;"
+							id="teleonomeName">Connecting....</div>
+					</h3>
 				</div>
 			</div>
-		
-			<div class="row">	
-				<div id="WaitingWheel" class="col-xs-6 col-lg-2 col-*-offset-2">
-					<img src="130.gif"/ >
-					<div id="WaitingText">In Pulse...</div>
-				</div>
+		</div>
+
+		<div class="row">
+			<div id="WaitingWheel" class="col-xs-6 col-lg-2 col-*-offset-2">
+				<img src="130.gif"/ >
+				<div id="WaitingText">In Pulse...</div>
 			</div>
+		</div>
 
 
-		<div id="Pathology" class="col-lg-3 col-md-3 col-sm-2 col-xs-2 label label-lg label-danger text-white top-buffer"  style="display: none;">
-			<h5><span id="ErrorText" style="color:white;" ></span></h5>
+		<div id="Pathology"
+			class="col-lg-3 col-md-3 col-sm-2 col-xs-2 label label-lg label-danger text-white top-buffer"
+			style="display: none;">
+			<h5>
+				<span id="ErrorText" style="color: white;"></span>
+			</h5>
 		</div>
 
 		<div class="row collapse">
-			<div id="CommandRequestStatus" class="alert alert-info"></div>	
+			<div id="CommandRequestStatus" class="alert alert-info"></div>
 		</div>
 
 		<div id="PulseActivityPanel" class="row">
-			<div  class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-xs-offset-1">
-				
+			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-xs-offset-1">
+
 				<table>
 					<tr>
-						<td id="TeleonomeDataStatus" class=" label label-sm label-danger collapse" style="display: none;height:20px;margin-right:10px;" ></td>
+						<td id="TeleonomeDataStatus"
+							class=" label label-sm label-danger collapse"
+							style="display: none; height: 20px; margin-right: 10px;"></td>
 						<td>&nbsp;</td>
-						<td id="TeleonomeStatus" class=" label label-sm label-danger collapse" style="display: none;height:20px;" ></td>
+						<td id="TeleonomeStatus"
+							class=" label label-sm label-danger collapse"
+							style="display: none; height: 20px;"></td>
 					</tr>
 					<tr>
-						<td style="padding-right:10px;"><h6>&nbsp;Data&nbsp;</h6></td>
+						<td style="padding-right: 10px;"><h6>&nbsp;Data&nbsp;</h6></td>
 						<td>&nbsp;</td>
 						<td><h6>Status</h6></td>
 					</tr>
 					<!--
 					<tr><td colspan="3" id="PulseStatusInfo" ></td></tr>
 					-->
-					
+
 				</table>
-				<div id="PulseStatusInfo" ></div>
+				<div id="PulseStatusInfo"></div>
 			</div>
-			<div  class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-*-offset-1">
+			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-*-offset-1">
 				<table>
-					<tr><td><b>Last Pulse</b></td></tr>
-					<tr><td><b><span id="PulseTimestamp"></span></b></td></tr>
+					<tr>
+						<td><b>Last Pulse</b></td>
+					</tr>
+					<tr>
+						<td><b><span id="PulseTimestamp"></span></b></td>
+					</tr>
 					<!--
 						<tr><td>&nbsp;<b><span id="PulseCreationTime"></span></b></td></tr>
 						<tr><td>&nbsp;<b><span id="WPSInfo"></span></b></td></tr>
 						<tr><td><span id="PulseStatusInfo" ></span><br><span id="PulseStatusInfoSecundary" ></span></td></tr>
 					-->
-					
+
 				</table>
 			</div>
 
-			<div  class="col-lg-3 col-md-3 col-sm-3 col-xs-3 col-*-offset-1">
-					<strong><h5><span id="TimeSinceLastPulse" ></span><h5></strong>
-					
+			<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 col-*-offset-1">
+				<strong><h5>
+						<span id="TimeSinceLastPulse"></span>
+						<h5></strong>
+
 			</div>
 		</div>
 
 		<div class="row">
-			<div  style="display: none;" class="col-lg-12 col-md-12 col-sm-12 col-sm-12 col-xs-12 text-center">
+			<div style="display: none;"
+				class="col-lg-12 col-md-12 col-sm-12 col-sm-12 col-xs-12 text-center">
 				<div id="ErrorMessage" class="alert alert-danger"></div>
 			</div>
 		</div>
 
-<!--
+		<!--
 
 
 		<div class="modal fade" id="CodeInputModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -456,10 +471,10 @@ the css for the little box on the top right f external data
 			</div>
 			
 -->
-		<div id="OrganismModal" ></div>
+		<div id="OrganismModal"></div>
 		<div id="EntryPoint" class="container-fluid"></div>
-		<div id="Graph" ></div>
-		
+		<div id="Graph"></div>
+
 
 		<div id="footer">
 			<div class="col-xs-12 navbar-default navbar-fixed-bottom">
@@ -467,16 +482,16 @@ the css for the little box on the top right f external data
 			</div>
 		</div>
 
-		 <script type="text/javascript" src="jquery-2.2.0.min.js"></script>
+		<script type="text/javascript" src="jquery-2.2.0.min.js"></script>
 		<script type="text/javascript" src="bootstrap.min.js"></script>
-		 <!-- 
+		<!-- 
 		 <script src="//d3js.org/d3.v4.min.js"></script>
 		  -->
-		 <script type="text/javascript" src="d3.v3.min.js"></script>
-		  
-		<script type="text/javascript"src="mqttws31.min.js" ></script>
- 		
- 		
+		<script type="text/javascript" src="d3.v3.min.js"></script>
+
+		<script type="text/javascript" src="mqttws31.min.js"></script>
+
+
 		<script type="text/javascript" src="TeleonomeConstants.js"></script>
 		<script type="text/javascript" src="bs/js/bootstrap-switch.js"></script>
 
@@ -497,30 +512,40 @@ the css for the little box on the top right f external data
 		<script type="text/javascript" src="templates/SettingsInfo.js"></script>
 		<script type="text/javascript" src="templates/DiagnosticsInfo.js"></script>
 		<script type="text/javascript" src="templates/SystemDiagnostics.js"></script>
-		<script type="text/javascript" src="templates/AsynchronousDiagnostics.js"></script>
-		<script type="text/javascript" src="templates/SynchronousDiagnostics.js"></script>
+		<script type="text/javascript"
+			src="templates/AsynchronousDiagnostics.js"></script>
+		<script type="text/javascript"
+			src="templates/SynchronousDiagnostics.js"></script>
 		<script type="text/javascript" src="templates/DeneWordTable.js"></script>
 		<script type="text/javascript" src="templates/DeviceInfo.js"></script>
 		<script type="text/javascript" src="templates/Networking.js"></script>
 		<script type="text/javascript" src="templates/UpdateParams.js"></script>
 		<script type="text/javascript" src="templates/WellSingleValuePanel.js"></script>
 		<script type="text/javascript" src="templates/DailyWeatherForecast.js"></script>
-		<script type="text/javascript" src="templates/ShortTermWeatherForecast.js"></script>
-		<script type="text/javascript" src="templates/NewRememberedDeneWordWizard.js"></script>
+		<script type="text/javascript"
+			src="templates/ShortTermWeatherForecast.js"></script>
+		<script type="text/javascript"
+			src="templates/NewRememberedDeneWordWizard.js"></script>
 		<script type="text/javascript" src="templates/MnemosyneTable.js"></script>
-		<script type="text/javascript" src="templates/SingleValuePanelExternalData.js"></script>
+		<script type="text/javascript"
+			src="templates/SingleValuePanelExternalData.js"></script>
 		<script type="text/javascript" src="templates/SingleValuePanel.js"></script>
-		<script type="text/javascript" src="templates/SingleValuePanelExternalTimestamp.js"></script>
+		<script type="text/javascript"
+			src="templates/SingleValuePanelExternalTimestamp.js"></script>
 		<script type="text/javascript" src="templates/PathologyPanel.js"></script>
-		<script type="text/javascript" src="templates/CompleteDeneSingleValuePanel.js"></script>
-		<script type="text/javascript" src="templates/CompleteDeneSingleValuePanelExternalData.js"></script>
-		<script type="text/javascript" src="templates/ActionEvaluationReport.js"></script>
-		<script type="text/javascript" src="templates/NetworkSensorDeviceStatusReport.js"></script>
+		<script type="text/javascript"
+			src="templates/CompleteDeneSingleValuePanel.js"></script>
+		<script type="text/javascript"
+			src="templates/CompleteDeneSingleValuePanelExternalData.js"></script>
+		<script type="text/javascript"
+			src="templates/ActionEvaluationReport.js"></script>
+		<script type="text/javascript"
+			src="templates/NetworkSensorDeviceStatusReport.js"></script>
 		<script type="text/javascript" src="templates/OrganismView.js"></script>
 		<script type="text/javascript" src="templates/SearchPanel.js"></script>
 		<script type="text/javascript" src="templates/Mnemosycons.js"></script>
 		<script type="text/javascript" src="templates/DenomeAnalysis.js"></script>
-		
+
 		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
 		<script type="text/javascript" src="RenderingEngine.js"></script>
 		<!-- The Heart Communication is tbe the last one to be loaded -->
@@ -1508,10 +1533,7 @@ the css for the little box on the top right f external data
 						// in this case just display the info
 						//
 						$("#NetworkingInfoArea").empty();
-						var panelHtml = ();
-						
-						
-						$(".BSswitch").bootstrapSwitch();
+						var panelHtml = renderWlan1Info();
 						$("#NetworkingInfoArea").append(panelHtml);
 					}else{
 						//
@@ -1867,6 +1889,37 @@ the css for the little box on the top right f external data
 			
 			
 		
+			
+		function renderWlan1Info(){
+			 var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
+             var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
+            
+             var ipAddressPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WLAN0 + ":" +DENEWORD_IP_ADDRESS;
+             var ipAddress = getDeneWordByIdentityPointer(ipAddressPointer, DENEWORD_VALUE_ATTRIBUTE);
+             
+             var accessPointPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WLAN0 + ":" +DENEWORD_ACCESS_POINT;
+             var accessPoint = getDeneWordByIdentityPointer(accessPointPointer, DENEWORD_VALUE_ATTRIBUTE);
+            
+             
+             var essidPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"ESSID";
+             var essid = getDeneWordByIdentityPointer(essidPointer, DENEWORD_VALUE_ATTRIBUTE);
+             if(essid == undefined)essid="";
+             
+             
+             var linkQualityPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +LINK_QUALITY;
+             var linkQuality = getDeneWordByIdentityPointer(linkQualityPointer, DENEWORD_VALUE_ATTRIBUTE);
+             var signallevelPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +SIGNAL_LEVEL;
+             var signallevel = getDeneWordByIdentityPointer(signallevelPointer, DENEWORD_VALUE_ATTRIBUTE);
+             
+              var panelHTML = "<div class=\"row\">";
+              panelHTML += "<label id=\"CurrentESSID\">Access Point:&nbsp;&nbsp;"+ accessPoint +"</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+              panelHTML += "<label id=\"CurrentIPAddress\">Current IPAddress:&nbsp;&nbsp;"+ ipAddress +"</label><br>";
+              panelHTML += "<label id=\"LinkQuality\">Link Quality:&nbsp;&nbsp;"+ linkQuality +"</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+              panelHTML += "<label id=\"SignalLevel\">Signal Level:&nbsp;&nbsp;"+ signallevel +"</label>";
+              panelHTML += "</div>";
+              
+              return panelHTML;
+		}
 		//
 		// because the pi always has a built in wifi, at a minimum wlan1 will always exist
 		// if there is no wlan0 then wlan1 has to be able to switch between host and organism
