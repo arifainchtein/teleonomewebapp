@@ -35,7 +35,7 @@ public class ReSignalProcessingHandler extends ProcessingFormHandler {
 		boolean enableNetworkMode = enableNetworkModeS!=null && enableNetworkModeS.equals("Yes");
 		
 		String command=null;
-		String payLoad="";
+		String payload="";
 		
 		logger.debug("enableNetworkMode=" + enableNetworkMode);
 		if(enableNetworkMode){
@@ -66,9 +66,9 @@ public class ReSignalProcessingHandler extends ProcessingFormHandler {
 				updateJSONObject2.put("Target","@On Load:Update PSK:Update PSK");
 				updateJSONObject2.put("Value", password );
 				updatesArray.put(updateJSONObject2);
-				payLoad=payLoadParentJSONObject.toString();
+				payload=payLoadParentJSONObject.toString();
 				logger.debug("Setting newtork info, ssid=" + ssid + " ps=" + password);
-				logger.debug("payLoad=" + payLoad);
+				logger.debug("payLoad=" + payload);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -121,7 +121,7 @@ public class ReSignalProcessingHandler extends ProcessingFormHandler {
 		boolean restartRequired=false;
 		JSONObject commandsInfo  = sendCommand(command, commandCode,payload, clientIp, restartRequired);
 		
-		logger.debug("sent command=" + command  + " commandCode="+commandCode + " payLoad=" + payLoad + " clientIp=" + clientIp);	
+		logger.debug("sent command=" + command  + " commandCode="+commandCode + " payLoad=" + payload + " clientIp=" + clientIp);	
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.print(commandsInfo.toString());

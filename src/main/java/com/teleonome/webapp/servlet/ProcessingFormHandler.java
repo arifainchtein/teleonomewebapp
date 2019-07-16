@@ -30,7 +30,7 @@ public abstract class ProcessingFormHandler{
 	protected HttpServletResponse response;
 	protected HttpSession session;
 	protected Logger logger;
-	protected String command, payload;
+	protected String command, commandRequestPayload;
 	protected Class aClass=null;
 	
 	
@@ -70,20 +70,21 @@ public abstract class ProcessingFormHandler{
 		return servletContext;
 	}
 
-	public String getPayload(){
-		return payload;
+	public String getCommandRequestPayload(){
+		return commandRequestPayload;
 	}
 	public String getCommand(){
 		return command;
 	}
 	
-	public JSONObject sendCommand(String command,String commandCode, String payLoad, String clientIp, boolean restartRequired){
+	public JSONObject sendCommand(String command,String commandCode, String py, String clientIp, boolean restartRequired){
 		logger.debug("sending command to database =" + command + " commandCode=" + commandCode);
 		String toReturn="";
+		commandRequestPayload=py;
 		byte[] buffer = command.getBytes(StandardCharsets.UTF_8);
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 		String commandCodeType=TeleonomeConstants.TELEONOME_SECURITY_CODE;
-		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, commandCodeType,payLoad, clientIp, restartRequired);
+		JSONObject responseJSONObject = aDBManager.requestCommandToExecute(command,commandCode, commandCodeType,py, clientIp, restartRequired);
 		boolean includeHuman=true;
 		boolean includeInternal=false;
 		int offset=0;
