@@ -37,7 +37,7 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
 		//command = TeleonomeConstants.COMMAND_REBOOT_ENABLE_NETWORK;
 		JSONObject payLoadParentJSONObject = new JSONObject();
 		JSONObject payLoadJSONObject = new JSONObject();
-		payload="";
+		String payload="";
 		command="StartRemembering";
 		try {
 			payLoadParentJSONObject.put("Mutation Name","StartRemembering");
