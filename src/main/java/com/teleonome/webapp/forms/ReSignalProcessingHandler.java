@@ -31,14 +31,14 @@ public class ReSignalProcessingHandler extends ProcessingFormHandler {
 		String action = request.getParameter("action");
 		String clientIp = request.getRemoteAddr();
 		String commandCode = request.getParameter(TeleonomeConstants.COMMAND_CODE);
-		String enableNetworkMode = request.getParameter("EnableNetworkMode");
-		
+		String enableNetworkModeS = request.getParameter("EnableNetworkMode");
+		boolean enableNetworkMode = enableNetworkModeS!=null && enableNetworkModeS.equals("Yes");
 		
 		String command=null;
 		String payLoad="";
 		
 		logger.debug("enableNetworkMode=" + enableNetworkMode);
-		if(enableNetworkMode!=null && enableNetworkMode.equals("Yes")){
+		if(enableNetworkMode){
 			//command = TeleonomeConstants.COMMAND_REBOOT_ENABLE_NETWORK;
 
 			String ssid = request.getParameter("AvailableNetworks");
@@ -81,13 +81,9 @@ public class ReSignalProcessingHandler extends ProcessingFormHandler {
 
 		logger.debug("the action is " + action);
 		if(action.equals(TeleonomeConstants.COMMAND_REBOOT) || action.equals(TeleonomeConstants.COMMAND_REBOOT_TEXT)){
-			if(currentIdentityMode.equals(TeleonomeConstants.TELEONOME_IDENTITY_SELF)){
-				if(enableNetworkMode!=null && enableNetworkMode.equals("Yes")){
+			if(enableNetworkMode){
 					command = TeleonomeConstants.COMMAND_REBOOT_ENABLE_NETWORK;
-				}else{
-					command = action;
-				}
-
+					logger.debug("setting command to " + command);
 			}else{
 				String enableHostMode = request.getParameter("EnableHostMode");
 				logger.debug("the enableHostMode is " + enableHostMode);
@@ -101,7 +97,7 @@ public class ReSignalProcessingHandler extends ProcessingFormHandler {
 			if(currentIdentityMode.equals(TeleonomeConstants.TELEONOME_IDENTITY_SELF)){
 				logger.debug("the enableNetworkMode is " + enableNetworkMode);
 
-				if(enableNetworkMode!=null && enableNetworkMode.equals("Yes")){
+				if(enableNetworkMode){
 					command = TeleonomeConstants.COMMAND_SHUTDOWN_ENABLE_NETWORK;
 				}else{
 					command = action;
