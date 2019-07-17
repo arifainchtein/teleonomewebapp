@@ -1577,7 +1577,7 @@ the css for the little box on the top right f external data
 					  $.ajax({
 						type: "GET",
 						url: "/TeleonomeServlet",
-						data: {formName:"ReSignal", action:action, CommandCode : commandCode, AvailableNetworks:selectedSSID,password:password, EnableNetworkMode:enableNetworkMode, EnableHostMode:enableHostMode},
+						data: {formName:"ReSignal", action:action, CommandCode : commandCode,  EnableNetworkMode:enableNetworkMode, EnableHostMode:enableHostMode},
 						success: function (commandIddata) {
 							console.log("commandId=" + commandIddata);
 							//alert("Reboot Request Sent");
@@ -2233,7 +2233,7 @@ the css for the little box on the top right f external data
 	                 panelHTML += "<input type=\"Hidden\" id=\"formName\" name=\"formName\" value=\"ReSignal\">";
 	                 // panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 100px;\"></div></div>";
 	                 panelHTML += "<div class=\"row\">";
-	                 panelHTML += "<div class=\"col-lg-3 col-xs-1\"></div>";
+	                 panelHTML += "<div class=\"col-lg-3 co	l-xs-1\"></div>";
 	                 if(currentIdentityMode == TELEONOME_IDENTITY_ORGANISM){
 	                	 panelHTML += "<div class=\"col-lg-3 col-xs-4\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" name=\"action\" id=\"UpdateHostRestartButton\" value=\"Reboot\"></div>";
 		                 panelHTML += "<div class=\"col-lg-1  col-xs-1\"></div>";
