@@ -1548,6 +1548,50 @@ the css for the little box on the top right f external data
 					
 				});
 
+				$(document).on('click', '#UpdateHostShutdownButton,#UpdateHostRestartButton',function(e){
+					e.preventDefault();
+					var commandCode = prompt("Please enter the code", "");
+					  if(isNaN(commandCode)){
+						alert("Password must be 6 numbers");
+						  return false;
+					  }
+					  if(commandCode.length!=6){
+						  alert("Password must be 6 numbers");
+						  return false;
+					  }
+					
+					  var action="";
+					  if(this.id='UpdateHostRestartButton'){
+						  action="Reboot";
+					  }else{
+						  action:"Shutdown";
+					  }
+					var enableNetworkMode="No";
+					var enableHostMode="Yes";
+						
+					  $("#MainPowerButton").attr("disabled", true);
+					  $("#MainPowerButton").addClass('btn-warning').removeClass('btn-success');
+					  $('#WaitingText').html("Please Wait3");
+					  $('#WaitingWheel').show();
+					  powerButtonDisabled=true;
+					  $.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:"ReSignal", action:action, CommandCode : commandCode, AvailableNetworks:selectedSSID,password:password, EnableNetworkMode:enableNetworkMode, EnableHostMode:enableHostMode},
+						success: function (commandIddata) {
+							console.log("commandId=" + commandIddata);
+							//alert("Reboot Request Sent");
+							
+
+						},
+						error: function(data){
+							console.log("error restarting:" + JSON.stringify(data));
+							alert("error restarting:" + JSON.stringify(data));
+							return false;
+						}
+					});	
+				});
+				
 				$(document).on('click', '#UpdateNetworkShutdownButton,#UpdateNetworkRestartButton',function(e){
 					e.preventDefault();
 
@@ -2190,10 +2234,18 @@ the css for the little box on the top right f external data
 	                 // panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 100px;\"></div></div>";
 	                 panelHTML += "<div class=\"row\">";
 	                 panelHTML += "<div class=\"col-lg-3 col-xs-1\"></div>";
-	                 panelHTML += "<div class=\"col-lg-3 col-xs-4\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" name=\"action\" id=\"UpdateNetworkRestartButton\" value=\"Reboot\"></div>";
-	                 panelHTML += "<div class=\"col-lg-1  col-xs-1\"></div>";
-	                 panelHTML += "<div class=\"col-lg-3 col-xs-5\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\"  name=\"action\" id=\"UpdateNetworkShutdownButton\" value=\"Shutdown\"></div>";
-	                 panelHTML += "<div class=\"col-lg-2  col-xs-1\"></div>";
+	                 if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
+	                	 panelHTML += "<div class=\"col-lg-3 col-xs-4\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" name=\"action\" id=\"UpdateHostRestartButton\" value=\"Reboot\"></div>";
+		                 panelHTML += "<div class=\"col-lg-1  col-xs-1\"></div>";
+		                 panelHTML += "<div class=\"col-lg-3 col-xs-5\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\"  name=\"action\" id=\"UpdateHostkShutdownButton\" value=\"Shutdown\"></div>";
+		                 panelHTML += "<div class=\"col-lg-2  col-xs-1\"></div>"; 
+	                 }else{
+	                	 panelHTML += "<div class=\"col-lg-3 col-xs-4\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\" name=\"action\" id=\"UpdateNetworkRestartButton\" value=\"Reboot\"></div>";
+		                 panelHTML += "<div class=\"col-lg-1  col-xs-1\"></div>";
+		                 panelHTML += "<div class=\"col-lg-3 col-xs-5\"><input class=\"btn btn-primary  btn-lg\" type=\"Submit\"  name=\"action\" id=\"UpdateNetworkShutdownButton\" value=\"Shutdown\"></div>";
+		                 panelHTML += "<div class=\"col-lg-2  col-xs-1\"></div>";
+	                 }
+	               
 	                 panelHTML += "</div>";
 	                 panelHTML += "</form>";	
 	                return panelHTML;
