@@ -1579,12 +1579,15 @@ the css for the little box on the top right f external data
 						url: "/TeleonomeServlet",
 						data: {formName:"ReSignal", action:action, CommandCode : commandCode,  EnableNetworkMode:enableNetworkMode, EnableHostMode:enableHostMode},
 						success: function (commandIddata) {
+							 $('#WaitingWheel').hide();
 							console.log("commandId=" + commandIddata);
-							//alert("Reboot Request Sent");
+							alert("Reboot as Host Request Sent");
+							
 							
 
 						},
 						error: function(data){
+							 $('#WaitingWheel').hide();
 							console.log("error restarting:" + JSON.stringify(data));
 							alert("error restarting:" + JSON.stringify(data));
 							return false;
@@ -1603,17 +1606,22 @@ the css for the little box on the top right f external data
 							return false;
 					 }
 					 var selectedSSID = $("#AvailableNetworks :selected").val();
+					 var password="";
 					 if(selectedSSID!=""){
 						 var selectedValue = $("#AvailableNetworks :selected").text();
-						 var password =  $("#password").val().length>7;
+						 var passwordValid =  $("#password").val().length>7;
 						 
-							if(selectedValue!=null && 
-							  selectedValue.indexOf("Password")>-1 &&
-							  !password
-							){
-								alert("Please input SSID password");
-								return false;
+							if(selectedValue!=null && selectedValue.indexOf("Password")>-1 ){
+								if(passwordValid){
+									password=$("#password").val();
+								}
+								else{
+									alert("Please input SSID password");
+									return false;
+								}
+								
 							}
+							
 					 }else{
 						 alert("Select an SSID");
 						 return false;
@@ -1671,12 +1679,14 @@ the css for the little box on the top right f external data
 						url: "/TeleonomeServlet",
 						data: {formName:"ReSignal", action:action, CommandCode : commandCode, AvailableNetworks:selectedSSID,password:password, EnableNetworkMode:enableNetworkMode, EnableHostMode:enableHostMode},
 						success: function (commandIddata) {
+							 $('#WaitingWheel').hide();
 							console.log("commandId=" + commandIddata);
-							//alert("Reboot Request Sent");
-							
+							alert("Reboot Request Sent");
+							 
 
 						},
 						error: function(data){
+							 $('#WaitingWheel').hide();
 							console.log("error restarting:" + JSON.stringify(data));
 							alert("error restarting:" + JSON.stringify(data));
 							return false;
