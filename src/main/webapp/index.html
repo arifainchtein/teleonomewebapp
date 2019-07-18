@@ -1522,7 +1522,7 @@ the css for the little box on the top right f external data
 					// if we are here it means that there is a wlan0 
 					// now check if there is a wlan
 					$("#NetworkingInfoArea").empty();
-					var panelHtml = renderConfigurableWlan();
+					var panelHtml = renderConfigurableWlan(DENE_WLAN0);
 					$(".BSswitch").bootstrapSwitch();
 					$("#NetworkingInfoArea").append(panelHtml);
 				});
@@ -1541,7 +1541,7 @@ the css for the little box on the top right f external data
 						// and therefrewlan1 has to be able to switch
 						// between host and organism
 						$("#NetworkingInfoArea").empty();
-						var panelHtml = renderConfigurableWlan();
+						var panelHtml = renderConfigurableWlan(DENE_WLAN1);
 						$(".BSswitch").bootstrapSwitch();
 						$("#NetworkingInfoArea").append(panelHtml);
 					}
@@ -1982,27 +1982,27 @@ the css for the little box on the top right f external data
 		// and wlan0 could or not have an ip given by some dhcp server in the network
 		// 
 		
-		function renderConfigurableWlan(){
+		function renderConfigurableWlan(selectedWlanDene){
 	                
 
 	                var currentIdentityModePointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_TYPE_VITAL + ":" +DENEWORD_TYPE_CURRENT_IDENTITY_MODE;
 	                var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
 	               
-	                var ipAddressPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WLAN0 + ":" +DENEWORD_IP_ADDRESS;
+	                var ipAddressPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + selectedWlanDene + ":" +DENEWORD_IP_ADDRESS;
 	                var ipAddress = getDeneWordByIdentityPointer(ipAddressPointer, DENEWORD_VALUE_ATTRIBUTE);
 	                
-	                var accessPointPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WLAN0 + ":" +DENEWORD_ACCESS_POINT;
+	                var accessPointPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + selectedWlanDene + ":" +DENEWORD_ACCESS_POINT;
 	                var accessPoint = getDeneWordByIdentityPointer(accessPointPointer, DENEWORD_VALUE_ATTRIBUTE);
 	               
 	                
-	                var essidPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +"ESSID";
+	                var essidPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + selectedWlanDene + ":" +"ESSID";
 	                var essid = getDeneWordByIdentityPointer(essidPointer, DENEWORD_VALUE_ATTRIBUTE);
 	                if(essid == undefined)essid="";
 	                
 	                
-	                var linkQualityPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +LINK_QUALITY;
+	                var linkQualityPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + selectedWlanDene + ":" +LINK_QUALITY;
 	                var linkQuality = getDeneWordByIdentityPointer(linkQualityPointer, DENEWORD_VALUE_ATTRIBUTE);
-	                var signallevelPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + DENE_WIFI_INFO + ":" +SIGNAL_LEVEL;
+	                var signallevelPointer = "@" +teleonomeName + ":" + NUCLEI_PURPOSE + ":" +DENECHAIN_OPERATIONAL_DATA + ":" + selectedWlanDene + ":" +SIGNAL_LEVEL;
 	                var signallevel = getDeneWordByIdentityPointer(signallevelPointer, DENEWORD_VALUE_ATTRIBUTE);
 	                
 	                var panelHTML = "<Form id=\"Resignal\" name=\"ReSignal\"  id=\"MainForm\" method=\"POST\" action=\"TeleonomeServlet\">";
