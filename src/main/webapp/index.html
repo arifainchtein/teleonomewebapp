@@ -1645,7 +1645,7 @@ the css for the little box on the top right f external data
 					  }else{
 						  action:"Shutdown";
 					  }
-					var enableNetworkMode="No";
+					var enableNetworkMode="Yes";
 					var enableHostMode="No";
 					if( hasWlan1){
 						 //
@@ -1657,13 +1657,13 @@ the css for the little box on the top right f external data
 						var currentIdentityMode = getDeneWordByIdentityPointer(currentIdentityModePointer, DENEWORD_VALUE_ATTRIBUTE);
 								
 						if(currentIdentityMode == TELEONOME_IDENTITY_SELF){
-							if($('#EnableNetworkMode').bootstrapSwitch('state')){
+							//if($('#EnableNetworkMode').bootstrapSwitch('state')){
 								enableNetworkMode = "Yes";
-							}
+							//}
 						}else{
-							if($('#EnableHostMode').bootstrapSwitch('state')){
+							//if($('#EnableHostMode').bootstrapSwitch('state')){
 								enableHostMode = "Yes";
-							}	
+							//}	
 						}		
 					}
 					
@@ -2030,9 +2030,10 @@ the css for the little box on the top right f external data
 	                    panelHTML += "<div id=\"NetworkMode\">";
 	                    panelHTML += "<center>";
 	                    panelHTML += "<div class=\"row\">";
-	                    panelHTML += "<label class=\"RadioLabel\">Enable Network Mode</label><br>";
-	                    panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
-	                    panelHTML += "<input type=\"hidden\"  id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" value=\"Yes\">"; 
+	          
+	                    panelHTML += "<h4><label class=\"RadioLabel\">Enable Network Mode</label><h4><br>";
+	                   // panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
+	                   // panelHTML += "<input type=\"hidden\"  id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" value=\"Yes\">"; 
 	                    panelHTML += "</div>";
 	                    panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 2px;\"></div></div>";
 	                    panelHTML += "<div class=\"row\">";
@@ -2100,8 +2101,8 @@ the css for the little box on the top right f external data
 	                        panelHTML += "<div id=\"NetworkMode\">";
 	                        panelHTML += "<center>";
 	                        panelHTML += "<div class=\"row\">";
-	                        panelHTML += "<label class=\"RadioLabel\">Enable Network Mode</label><br>";
-	                        panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
+	                        panelHTML += "<h4><label class=\"RadioLabel\">Enable Network Mode</label></h4><br>";
+	                        //panelHTML += "<input class=\"BSswitch\" id=\"EnableNetworkMode\" name=\"EnableNetworkMode\" type=\"checkbox\" data-on-text=\"Yes\" \"Enable Host Mode\"  data-off-text=\"No\" value=\"Yes\">"; 
 	                        panelHTML += "</div>";
 	                        panelHTML += "<div class=\"row\"><div class=\"col-xs-12\" style=\"height: 20px;\"></div></div>";
 	            
