@@ -17,6 +17,8 @@ class SearchPanel{
 			panelHTML += "                    <div id=\"TopButtons\" class=\"pull-left TopButtons col-xs-8\">";
 			panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"NewChart\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-plus\"></em>New</button>";
 			panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"ClearCharts\" type=\"submit\" value=\"Submit\"   style=\" margin-right:50px;\"><em class=\"glyphicon glyphicon-remove\"></em>Clear</button>";
+			panelHTML += "                        <button class=\"btn btn-default\" type=\"button\" id=\"ExportViewData\" type=\"submit\" value=\"Submit\"   style=\" margin-right:50px;\"><em class=\"glyphicon glyphicon-export\"></em>Export View Data</button>";
+			
 	//		if(organismInfoJsonData != undefined){
 				panelHTML += "                        <button class=\"btn btn-default\"  data-toggle=\"modal\" data-target=\"#NewRememberedDeneWordWizard\" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" ><em class=\"glyphicon glyphicon-record\"></em>Remember</button>";
 		//	}else{
@@ -31,6 +33,8 @@ class SearchPanel{
 			panelHTML += "                    <div id=\"TopButtons\" class=\"pull-left TopButtons col-xs-8\">";
 			panelHTML += "                        <button class=\"btn btn-default btn-sm\" type=\"button\" id=\"NewChart\" type=\"submit\" value=\"Submit\"><em class=\"glyphicon glyphicon-plus\"></em></button>";
 			panelHTML += "                        <button class=\"btn btn-default btn-sm\" type=\"button\" id=\"ClearCharts\" type=\"submit\" value=\"Submit\"   style=\" margin-right:50px;\"><em class=\"glyphicon glyphicon-remove\"></em></button>";
+			panelHTML += "                        <button class=\"btn btn-default btn-sm\" type=\"button\" id=\"ExportViewData\" type=\"submit\" value=\"Submit\"   style=\" margin-right:50px;\"><em class=\"glyphicon glyphicon-export\"></em></button>";
+			
 			//if(organismInfoJsonData != undefined){
 				panelHTML += "                        <button class=\"btn btn-default btn-sm\"  data-toggle=\"modal\" data-target=\"#NewRememberedDeneWordWizard\" type=\"button\" id=\"NewRemember\" type=\"submit\" value=\"Submit\" ><em class=\"glyphicon glyphicon-record\"></em></button>";
 			//}else{

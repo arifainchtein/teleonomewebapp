@@ -44,7 +44,7 @@ var DENEWORD_TYPE_CURRENT_IDENTITY_MODE = "Current Identity Mode";
 var TELEONOME_IDENTITY_LABEL = "Identity";
 
 
-
+var USER_COMMAND="UserCommand";
 var TELEONOME_IDENTITY_SELF = "Self";
 var TELEONOME_IDENTITY_ORGANISM = "Organism";
 var TELEONOME_IDENTITY_DUAL = "Dual";

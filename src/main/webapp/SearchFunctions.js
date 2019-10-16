@@ -121,6 +121,56 @@ class SearchFunctions{
 	        }
 	    }
 	 
+	 
+	 exportAllGraphs(){
+		    var allGraphs = localStorageManager.getAllStorageForComponent(LOCAL_STORAGE_SEARCH_KEY);
+
+		    if(allGraphs.length>0){
+		        //
+		        // do it backwards to display the correct order
+		        //
+		       //for(var i=allGraphs.length-1;i>-1;i--){
+		           var reqData=[];
+             $('#WaitingText').html("Please Wait...");
+             $('#WaitingWheel').show();
+
+		        for(var i=0;i<allGraphs.length;i++){
+		            var graphData = JSON.parse(allGraphs[i]);
+		            var identityPointer = graphData.identityPointer;
+		            var fromMillis = graphData.fromMillis;
+		            var untilMillis = graphData.untilMillis;
+		            
+		            var serverRequest = {};
+		            serverRequest.identity=identityPointer;
+		            serverRequest.fromMillis=fromMillis;
+		            serverRequest.untilMillis=untilMillis;
+		            reqData[i]=serverRequest;
+		        }
+
+             var dataToSend = JSON.stringify(reqData);
+             
+
+		        $.ajax({
+		            type: "GET",
+		            url: "/TeleonomeServlet",
+		            data: {formName:"ExportCurrentViewAsData", data:dataToSend},
+		            success: function (dataString) {
+		            	$('#WaitingWheel').hide();
+		            	var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top="+(screen.height-400)+",left="+(screen.width-840));
+		            	win.document.body.innerHTML = dataString;
+		            },
+		            error: function(data){
+		                $('#WaitingWheel').hide();
+		                console.log("line 419:" + JSON.stringify(data));
+		                alert("line 419:" + JSON.stringify(data));
+		                return false;
+		            }
+		        }); 
+
+
+		    }
+		}
+	 
 	generateAllGraphs(){
 		    var allGraphs = localStorageManager.getAllStorageForComponent(LOCAL_STORAGE_SEARCH_KEY);
 
