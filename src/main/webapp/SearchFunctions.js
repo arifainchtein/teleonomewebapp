@@ -157,7 +157,11 @@ class SearchFunctions{
 		            success: function (dataString) {
 		            	$('#WaitingWheel').hide();
 		            	//var win = window.open("Data Export", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=500,top=200,left=200");
-		            	var win = window.open("", "Title", "status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=500,top=200,left=200");
+		            	var height = 500;
+		                var width = 800;
+		                var top = window.innerHeight-height;
+		                var left = window.innerHeight-width;
+		            	var win = window.open("", "Data Export", "status=no,menubar=no,scrollbars=yes,resizable=yes,width="+width+",height="+ height +" ,top="+top+",left=" + left);
 		            	win.document.body.innerHTML = dataString;
 		            },
 		            error: function(data){
