@@ -691,7 +691,18 @@ the css for the little box on the top right f external data
                     $("#SearchConfigurator").show();
                     
                 });
-             
+                $(document).on('click', "#ExportViewData",function(e) {
+                    e.preventDefault();
+                    $("#TopButtons").hide();
+                    refreshCounterStatus=false;
+                    $("#RefreshCounter").hide();
+					 $("#RefreshCounterMessage").hide();
+					 refreshActive=false;
+					searchFunctions.exportAllGraphs();
+                    
+                });
+                
+                
                 $(document).on('click', "#CancelSearch",function(e) {
                     e.preventDefault();
                     $("#SearchConfigurator").hide();
