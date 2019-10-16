@@ -139,7 +139,14 @@ class SearchFunctions{
 		            var identityPointer = graphData.identityPointer;
 		            var fromMillis = graphData.fromMillis;
 		            var untilMillis = graphData.untilMillis;
-		            
+		            var liveUpdate = graphData.liveUpdate;
+                    var liveUpdateMinutes = graphData.liveUpdateMinutes;
+                    
+                   if(liveUpdate){ 
+		               // if its live udpdate, ignore the times stored and set tthe to be the last 24 hour    
+		                 fromMillis = new Date().getTime()-liveUpdateMinutes*60000;
+		                 untilMillis = new Date().getTime();
+		            }
 		            var serverRequest = {};
 		            serverRequest.identity=identityPointer;
 		            serverRequest.fromMillis=fromMillis;

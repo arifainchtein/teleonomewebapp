@@ -45,6 +45,10 @@ public class ExportCurrentViewAsDataProcessingHandler extends ProcessingFormHand
 			long fromMillis = dataElement.getLong("fromMillis");
 			long untilMillis = dataElement.getLong("untilMillis");
 			String identityPointer =  dataElement.getString("identity");
+			boolean liveUpdate = dataElement.getBoolean("liveUpdate");
+			int liveUpdateMinutes = dataElement.getInt("liveUpdateMinutes");
+			
+			
 			String[] identities = {identityPointer};
 			logger.debug("line 77 identityPointer=" + identityPointer + " fromMillis=" + fromMillis+ " untilMillis=" + untilMillis);
 			String results = aDBManager.exportRemeberedDeneWordsByPeriodByIdentities(fromMillis, untilMillis, identities, ",");
