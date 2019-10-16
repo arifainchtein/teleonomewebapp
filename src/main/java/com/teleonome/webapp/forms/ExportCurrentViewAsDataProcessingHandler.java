@@ -37,7 +37,7 @@ public class ExportCurrentViewAsDataProcessingHandler extends ProcessingFormHand
 		logger.debug("line 38 Refreshcurrent virew, received:" + rawData);
 		JSONArray data = new JSONArray(rawData);
 		StringBuffer completeResults = new StringBuffer();
-		completeResults.append("Pulse Timestamp in Milliseconds#Identity String#Value#Units" + System.lineSeparator());
+		completeResults.append("Pulse Timestamp in Milliseconds,Identity String,Value,Units<br>");
 		
 		for(int i =0;i<data.length();i++) {
 			JSONObject dataElement = data.getJSONObject(i);

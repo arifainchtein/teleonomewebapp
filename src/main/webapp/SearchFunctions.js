@@ -156,7 +156,8 @@ class SearchFunctions{
 		            data: {formName:"ExportCurrentViewAsData", data:dataToSend},
 		            success: function (dataString) {
 		            	$('#WaitingWheel').hide();
-		            	var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top="+(screen.height-400)+",left="+(screen.width-840));
+		            	//var win = window.open("Data Export", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=500,top=200,left=200");
+		            	var win = window.open("Data Export", "Title", "status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=500,top=200,left=200");
 		            	win.document.body.innerHTML = dataString;
 		            },
 		            error: function(data){
