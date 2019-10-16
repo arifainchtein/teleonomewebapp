@@ -45,8 +45,6 @@ public class ExportCurrentViewAsDataProcessingHandler extends ProcessingFormHand
 			long fromMillis = dataElement.getLong("fromMillis");
 			long untilMillis = dataElement.getLong("untilMillis");
 			String identityPointer =  dataElement.getString("identity");
-			boolean liveUpdate = dataElement.getBoolean("liveUpdate");
-			int liveUpdateMinutes = dataElement.getInt("liveUpdateMinutes");
 			
 			
 			String[] identities = {identityPointer};
