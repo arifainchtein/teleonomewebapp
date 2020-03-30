@@ -71,17 +71,23 @@ public class GetMnemosyconRulesDetailsProcessingHandler extends ProcessingFormHa
 							
 							logger.debug(ruleProcessingDeneWordJSONObject.toString(4));
 							deneWordName = ruleProcessingDeneWordJSONObject.getString(TeleonomeConstants.DENEWORD_NAME_ATTRIBUTE);
-							deneWordValue = ruleProcessingDeneWordJSONObject.get(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+							if(ruleProcessingDeneWordJSONObject.has(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE)) {
+								deneWordValue = ruleProcessingDeneWordJSONObject.get(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
 
-							logger.debug("deneWordName=" + deneWordName + " deneWordValue=" + deneWordValue);
-							if(deneWordValue!=null && deneWordName.equals(TeleonomeConstants.CODON) &&
-									deneWordValue.equals(requestedMnemosyconName)
-									) {
-										//
-										// this rule processing belongs to the same 
-								unsortedRules.add(ruleProcessingJSONObject);
-								break found;
+								logger.debug("deneWordName=" + deneWordName + " deneWordValue=" + deneWordValue);
+								if(deneWordValue!=null && deneWordName.equals(TeleonomeConstants.CODON) &&
+										deneWordValue.equals(requestedMnemosyconName)
+										) {
+											//
+											// this rule processing belongs to the same 
+									unsortedRules.add(ruleProcessingJSONObject);
+									break found;
+								}
+							}else {
+								logger.debug("deneWordName=" + deneWordName + " has no deneWordValue=" );
+								
 							}
+							
 						}
 					}
 					//
