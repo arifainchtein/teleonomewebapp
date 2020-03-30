@@ -74,7 +74,7 @@ public class GetMnemosyconRulesDetailsProcessingHandler extends ProcessingFormHa
 							deneWordValue = ruleProcessingDeneWordJSONObject.get(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
 
 							logger.debug("deneWordName=" + deneWordName + " deneWordValue=" + deneWordValue);
-							if(deneWordName.equals(TeleonomeConstants.CODON) &&
+							if(deneWordValue!=null && deneWordName.equals(TeleonomeConstants.CODON) &&
 									deneWordValue.equals(requestedMnemosyconName)
 									) {
 										//
