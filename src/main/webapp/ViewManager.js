@@ -58,10 +58,12 @@ class ViewManager{
 
 	UpdateParams(){
 		var panelPointer  = $(this).data("panelpointer");
-		var n = new UpdateParams();
-		var html = n.process(panelPointer);
-		$('#SettingsWorkArea').html(html);
-		$('#SettingsWorkArea').show();
+		if(panelPointer != undefined){
+			var n = new UpdateParams();
+			var html = n.process(panelPointer);
+			$('#SettingsWorkArea').html(html);
+			$('#SettingsWorkArea').show();
+		}
 	}
 
 	WiFi(){
