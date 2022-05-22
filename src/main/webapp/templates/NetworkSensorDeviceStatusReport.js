@@ -17,11 +17,17 @@ class NetworkSensorDeviceStatusReport{
 		var panelHTML = "<div class=\"col-lg-12\"><div class=\"well\"><h4>Network Status as of "+ scanTimeString +"</h4></div> </div>";
 		
 		 panelHTML += "<div class=\"col-lg-12\">";
-		
+		for(var i = 0; i < deviceList.length; i++) {
+			var device = deviceList[i];
+			if(!device[WHITE_LIST_STATUS]){
+			     device[MAC_ADDRESS]
+			}
+		}
+			
 		panelHTML += "	<div class=\"bs-component\">";
 		panelHTML += "		<div class=\"panel panel-default\">";
 		panelHTML += "			<div class=\"panel-heading\"><h4>Device List";
-		panelHTML += "              <a href=\"#\" class=\"btn btn-success btn-sm pull-right\">";
+		panelHTML += "              <a href=\"#\" class=\"btn btn-success btn-sm pull-right\"    data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\">";
 		panelHTML += "              <span class=\"glyphicon glyphicon-plus-sign\"></span> Add All";
 		panelHTML += "                 </a>";
 		panelHTML += "</h4></div>";

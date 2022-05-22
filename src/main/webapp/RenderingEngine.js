@@ -680,7 +680,7 @@ function refreshOrganismView(){
 		for(var i in organismInfoJsonData){
 			if(i != teleonomeName){
 				panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
-				panelHTML += "<a href=\"http://"+i+".local\" class=\"btn btn-lg btn-"+ organismInfoJsonData[i] +"\">"+i+"</a>";
+				panelHTML += "<a href=\"http://"+i+".local\" target=\"_new\" class=\"btn btn-lg btn-"+ organismInfoJsonData[i] +"\">"+i+"</a>";
 				panelHTML += "</div>";	
 			}
 		}

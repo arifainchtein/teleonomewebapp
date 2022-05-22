@@ -160,6 +160,7 @@ var DENEWORD_MAIN_BATTERY_STATE_OF_CHARGE="InternalBatteryStateOfCharge";
 // the different types of DeneChain
 //
 var DENECHAIN_OPERONS = "Operons";
+var DENECHAIN_HEART = "Heart";
 var DENECHAIN_MEDULA = "Medula";
 var DENECHAIN_ACTUATORS = "Actuators";
 var DENECHAIN_ANALYSIS = "Analysis";
@@ -170,7 +171,7 @@ var DENECHAIN_DESCRIPTIVE = "Descriptive";
 var DENECHAIN_COMPONENTS = "Components";
 var DENECHAIN_ANALYTICONS = "Analyticons";
 var DENE_CONTROL_PARAMETERS = "Control Parameters";
-
+var DENECHAIN_TELEPATHONS = "Telepathons"; 
 
 var DENECHAIN_EXTERNAL_DATA = "External Data";
 var DENECHAIN_ACTUATOR_LOGIC_PROCESSING ="Actuator Logic Processing";
@@ -335,7 +336,7 @@ var DENEWORD_TYPE_CURRENT_PULSE="Current Pulse";
 var DENEWORD_TYPE_CURRENT_PULSE_FREQUENCY="Current Pulse Frequency";
 var DENEWORD_TYPE_CURRENT_PULSE_GENERATION_DURATION="Current Pulse Generation Duration";
 var DENEWORD_TYPE_CONFIGURATION_PARAMETER="Configuration Parameter";
-
+var DENEWORD_TYPE_HEART_TOPIC = "Heart Topic";
 var DENEWORD_TYPE_BASE_PULSE_FREQUENCY="Base Pulse Frequency";
 var DENEWORD_TYPE_NUMBER_PULSES_BEFORE_LATE="Number of Pulses Before Late";
 

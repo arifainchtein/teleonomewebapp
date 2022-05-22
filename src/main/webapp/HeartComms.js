@@ -32,7 +32,7 @@ function HeartConnect() {
 	mqtt.onConnect = onConnect;
 	mqtt.onMessageArrived = onMessageArrived;
 	mqtt.onConnectionLost = onConnectionLost;
-	mqtt.connect({onSuccess: onConnect, onFailure: onFailure});
+	mqtt.connect({onSuccess: onConnect, onFailure: onFailure, cleanSession:false});
 	console.log("Host="+ host + ", port=" + port );
 	console.log("connected...");
 }
