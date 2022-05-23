@@ -54,7 +54,7 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		    </td>";
 				
 				if(isTeleonome){
-					panelHTML += "		 <td><a href=\"\" target=\"_new\">"+teleonomeName+"</a></td>"; 
+					panelHTML += "		 <td><a href=\""+teleonomeName+".local\" target=\"_new\" style=\" font-size:14px;color:black;\">"+teleonomeName+"</a></td>"; 
 				}else{
 				panelHTML += "		    <td></td>";
 				}
