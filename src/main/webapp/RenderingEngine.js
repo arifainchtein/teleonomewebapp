@@ -1211,8 +1211,8 @@ function renderPageByPointer(pagePointer, locationId){
 			
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_NETWORK_SENSOR_DEVICE_STATUS_REPORT){
 
-			var aNetworkSensorDeviceStatusReport = new NetworkSensorDeviceStatusReport(organismIPInfoJsonData);
-			panelHTML += aNetworkSensorDeviceStatusReport.process();
+			var aNetworkSensorDeviceStatusReport = new NetworkSensorDeviceStatusReport();
+			panelHTML += aNetworkSensorDeviceStatusReport.process(organismIPInfoJsonData);
 			inSearch=true;
 
 
