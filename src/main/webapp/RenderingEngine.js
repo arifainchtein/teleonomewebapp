@@ -868,7 +868,7 @@ function renderPageToDisplay(){
 
 function renderPageByPointer(pagePointer, locationId){
 	var pageDeneChain = humanInterfaceDeneChainIndex.get(pagePointer);
-	//// console.log("renderPageByPointer pageDeneChain=" +pageDeneChain);
+	console.log("renderPageByPointer pagePointer=" + pagePointer + " pageDeneChain=" +pageDeneChain);
 	//
 	// get the denes, every dene is a panel in this page
 	//
