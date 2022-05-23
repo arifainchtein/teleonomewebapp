@@ -54,7 +54,7 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		    </td>";
 				
 				if(isTeleonome){
-					panelHTML += "		 <td><a href=\""+teleonomeName+".local\" target=\"_new\" style=\" font-size:20px;color:black;\">"+teleonomeName+"</a></td>"; 
+					panelHTML += "		 <td><a href=\"http://"+teleonomeName+".local\" target=\"_new\" style=\" font-size:20px;color:black;\">"+teleonomeName+"</a></td>"; 
 				}else{
 				panelHTML += "		    <td></td>";
 				}
@@ -69,7 +69,7 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		        </button>";
 				panelHTML += "		    </td>";
 				if(isTeleonome){
-					panelHTML += "		 <td><a href=\""+teleonomeName+".local\" target=\"_new\" style=\" font-size:20px;color:black;\">"+teleonomeName+"</a></td>"; 
+					panelHTML += "		 <td><a href=\"http://"+teleonomeName+".local\" target=\"_new\" style=\" font-size:20px;color:black;\">"+teleonomeName+"</a></td>"; 
 				}else{
 				panelHTML += "		    <td></td>";
 				}
