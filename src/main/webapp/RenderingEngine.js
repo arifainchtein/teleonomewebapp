@@ -29,6 +29,7 @@ var chartTimeStringHashMap = new HashMap();
 var chartTitleHashMap = new HashMap();
 
 var organismInfoJsonData;
+var organismIPInfoJsonData;
 var pulseCreationTime="";
 var currentPathologyDeneCount=0;
 var operationalMode="";
@@ -668,6 +669,10 @@ function setAvailableSSIDs(ssids){
 	availableSSIDSArray=ssids;
 }
 
+function updateOrganismIP(text){
+	organismIPInfoJsonData = JSON.parse(text);
+	refreshOrganismView();
+}
 
 function updateOrganismView(text){
 	organismInfoJsonData = JSON.parse(text);
@@ -1206,7 +1211,7 @@ function renderPageByPointer(pagePointer, locationId){
 			
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_NETWORK_SENSOR_DEVICE_STATUS_REPORT){
 
-			var aNetworkSensorDeviceStatusReport = new NetworkSensorDeviceStatusReport();
+			var aNetworkSensorDeviceStatusReport = new NetworkSensorDeviceStatusReport(organismIPInfoJsonData);
 			panelHTML += aNetworkSensorDeviceStatusReport.process();
 			inSearch=true;
 
