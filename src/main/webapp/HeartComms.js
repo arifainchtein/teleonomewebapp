@@ -48,6 +48,7 @@ function onConnect() {
 	mqtt.subscribe(HEART_TOPIC_PULSE_STATUS_INFO, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_PULSE_STATUS_INFO_SECUNDARY, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_ORGANISM_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
+	mqtt.subscribe(HEART_TOPIC_ORGANISM_IP, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_UPDATE_FORM_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_ASYNC_CYCLE_UPDATE, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
