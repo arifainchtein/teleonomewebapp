@@ -871,7 +871,7 @@ function renderPageByPointer(pagePointer, locationId){
 	console.log("renderPageByPointer pagePointer=" + pagePointer + " pageDeneChain=" +pageDeneChain);
 	//
 	// get the denes, every dene is a panel in this page
-	//
+	//   
 	var denePanelArray = pageDeneChain["Denes"];
 	//
 	// loop over every dene and get two denes
