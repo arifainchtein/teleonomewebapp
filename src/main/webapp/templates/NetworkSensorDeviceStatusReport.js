@@ -42,7 +42,7 @@ class NetworkSensorDeviceStatusReport{
 			isTeleonome=false;
 			teleonomeName="";
 			for(var j in organismIPInfoJsonData){
-				if(organismInfoJsonData[j] = device[IP_ADDRESS]){
+				if(organismInfoJsonData[j] == device[IP_ADDRESS]){
 					isTeleonome=true;
 					teleonomeName=j;
 				}
