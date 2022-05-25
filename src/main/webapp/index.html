@@ -1389,6 +1389,53 @@ the css for the little box on the top right f external data
 						}
 					});	
 				});
+				
+				
+				
+				$(document).on('click', '.addAll',function(e){
+					 // e.preventDefault();
+					  var source = event.target || event.srcElement;
+					  
+					  var passwd = prompt("Please enter the password", "");
+					  if(isNaN(passwd)){
+						alert("Password must be 6 numbers");
+						  return false;
+					  }
+					  if(passwd.length!=6){
+						  alert("Password must be 6 numbers");
+						  return false;
+					  }
+					  $(source).prop('disabled', true);
+					  $(source).text('Pending');
+					  var data = $.parseJSON($(this).attr('data-form'));
+					  var deviceName = data.DeviceName;
+					  var deviceMacAddress = data.MacAddress;
+					  //("#"+field + "Label").css('color', 'red');
+
+					 var selected=""; 
+					try{
+					 var selectedField = $('#' + field);
+					   selected = $('#' + field).val();
+					   $(selected).prop('disabled', true);
+					}catch(err){
+					    console.log("error=" + err);
+					}
+					
+					$.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:"AddAllToWhiteList", CommandCode : passwd },
+						success: function (result) {
+							console.log("Add To White List result=" +result);
+						},
+						error: function(data){
+							console.log("error adding to whitelist:" + JSON.stringify(data));
+							alert("Error adding to whitelist:" + JSON.stringify(data));
+							return false;
+						}
+					});	
+				});
+				
 				$(document).on('click', '.addTWhiteListBtn',function(e){
 					 // e.preventDefault();
 					  var source = event.target || event.srcElement;

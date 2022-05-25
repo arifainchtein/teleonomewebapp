@@ -27,7 +27,7 @@ class NetworkSensorDeviceStatusReport{
 		panelHTML += "	<div class=\"bs-component\">";
 		panelHTML += "		<div class=\"panel panel-default\">";
 		panelHTML += "			<div class=\"panel-heading\"><h4>Device List";
-		panelHTML += "              <a href=\"#\" class=\"btn btn-success btn-sm pull-right\"    data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\">";
+		panelHTML += "              <a href=\"#\" class=\"btn btn-success btn-sm pull-right addAll\"    data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\">";
 		panelHTML += "              <span class=\"glyphicon glyphicon-plus-sign\"></span> Add All";
 		panelHTML += "                 </a>";
 		panelHTML += "</h4></div>";
@@ -74,12 +74,13 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		    <td></td>";
 				}
 				panelHTML += "		   <td><h5 class=\"text-danger\">"+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-danger\">"+ device[IP_ADDRESS]+"</h5></td>";
-				if(device[IP_ADDRESS]!=""){
+				if(device[IP_ADDRESS]!="" && device[IS_DEVICE_PRESENT]){
 					panelHTML += "		 <td><a href=\"#\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-success btn-sm addTWhiteListBtn\">";
 					panelHTML += "		      <span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>&nbsp;&nbsp;"
 				}else{
-					panelHTML += "		 <td><a href=\"#\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" >";
-					panelHTML += "		      <span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>&nbsp;&nbsp;"
+					panelHTML += "		 <td>";
+					//panelHTML += "		 <td><a href=\"#\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" >";
+					//panelHTML += "		      <span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>&nbsp;&nbsp;"
 
 				}
 				;
