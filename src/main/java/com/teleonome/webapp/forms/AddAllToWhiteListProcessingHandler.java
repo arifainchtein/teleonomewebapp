@@ -43,7 +43,7 @@ public class AddAllToWhiteListProcessingHandler extends ProcessingFormHandler {
 		
 		JSONObject payLoadParentJSONObject = new JSONObject();
 		JSONObject payLoadJSONObject = new JSONObject();
-		payLoadParentJSONObject.put("Mutation Name","Add To WhiteList");
+		payLoadParentJSONObject.put("Mutation Name","Add All To WhiteList");
 		payLoadParentJSONObject.put("Payload", payLoadJSONObject);
 		JSONArray updatesArray = new JSONArray();
 		payLoadJSONObject.put("Updates"	, updatesArray);
