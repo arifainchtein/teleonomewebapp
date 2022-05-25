@@ -59,7 +59,7 @@ class NetworkSensorDeviceStatusReport{
 				panelHTML += "		    <td></td>";
 				}
 				
-				panelHTML += "		   <td><h5 class=\"text-success\">"+i+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-success\">"+ device[IP_ADDRESS]+"</h5></td>";
+				panelHTML += "		   <td><h5 class=\"text-success\">"+ device[DEVICE_NAME]+"</h5></td><td><h5 class=\"text-success\">"+ device[IP_ADDRESS]+"</h5></td>";
 				panelHTML += "		 <td><a href=\"#\" data-form=\" {&quot;DeviceName&quot;:&quot;"+device[DEVICE_NAME]+"&quot;,&quot;MacAddress&quot;:&quot;"+device[MAC_ADDRESS]+"&quot;}\" class=\"btn btn-danger btn-sm removeFromWhiteListBtn\">";
 				panelHTML += "		      <span class=\"glyphicon glyphicon-minus-sign\"></span> Remove</a>&nbsp;&nbsp;";
 				panelHTML += "		    </td>";
