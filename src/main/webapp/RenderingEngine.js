@@ -535,7 +535,7 @@ function renderAsyncCommands(includeClient,includeInternal, limit, offset ){
 		},
 		error: function(data){
 			 console.log("error getting commanda data:" + data.responseText);
-			alert("Error getting commanda data:" +  data.responseText);
+			//alert("Error getting commanda data:" +  data.responseText);
 			return false;
 		}
 	});
