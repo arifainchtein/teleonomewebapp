@@ -965,7 +965,7 @@ function renderPageByPointer(pagePointer, locationId){
 	// now start rendering each panel
 	// therefore at this point empty the interface
 	//
-	if(teleonomeName==undefined)teleonomeName=denomeJSONObject.Name;
+	if(teleonomeName==undefined || teleonomeName=="undefined")teleonomeName=denomeJSONObject.Name;
 	$("#" + locationId).empty();
 	$("#teleonomeName").html(teleonomeName);
 	$("#PulseTimestamp").html(pulseTimestamp);
