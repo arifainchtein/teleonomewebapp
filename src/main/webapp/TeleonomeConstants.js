@@ -681,7 +681,7 @@ var MNEMOSYCON_ANALYSIS_PERIOD_TIME_UNIT_VALUE= "Mnemosycon Analysis Period Time
 // the two different sources for a remembereddeneword, pulse or wps
 var REMEMBERED_DENEWORD_SOURCE_PULSE="Pulse";
 var REMEMBERED_DENEWORD_SOURCE_WPS="WPS";
-
+var REMEMBERED_DENEWORD_SOURCE_TELEPATHON="Telepathon";
 //
 // life cycle events
 //
