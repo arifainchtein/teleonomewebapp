@@ -1,4 +1,13 @@
 //
+// the Cajal Types
+//
+var CAJAL_FUN_1_FLOW=1;
+var CAJAL_FUN_2_FLOW=2;
+var CAJAL_FUN_1_FLOW_1_TANK=3;
+var CAJAL_FUN_1_TANK =4;
+var CAJAL_FUN_2_TANK =5;
+
+//
 // the ports for the exoZeroNetwork
 //
 var EXOZERO_PULSE_PORT=5563;
@@ -36,6 +45,7 @@ var DENE_TYPE_PROCESSOR = "Processor";
 var DENE_TYPE_DENEWORD_OPERATION_EXPRESSION_EVALUATION = "Expression Evaluation";
 var DENE_TYPE_DENEWORD_OPERATION_EXPRESSION_SWITCH = "Expression Switch";
 var DENE_TYPE_DENEWORD_OPERATION_DATA_TRANSFORMATION = "Data Transformation";
+var DENE_TYPE_DENEWORD_OPERATION_DENEWORD_CONCATENATION="Deneword Concatenation";
 //
 // the value of the teleonome Identity
 //
@@ -199,7 +209,7 @@ var NUCLEI_INTERNAL = "Internal";
 var NUCLEI_PURPOSE = "Purpose";
 var NUCLEI_MNEMOSYNE = "Mnemosyne";
 var NUCLEI_HUMAN_INTERFACE = "Human Interface";
-
+var NUCLEI_TELEPATHONS = "Telepathons";
 
 var VALUE_UNDEFINED = "Undefined";
 
@@ -507,12 +517,12 @@ var DENEWORD_ACTUATORS_ACTIVE = "Actuators Active";
 var DENEWORD_ANALYTICONS_ACTIVE = "Analyticons Active";
 var DENEWORD_MNEMOSYCONS_ACTIVE = "Mnemosycons Active";
 
-
+var DENEWORD_POSITION_ATTRIBUTE = "Position"
 var DENEWORD_DEFAULT_VALUE = "Default";
 var DENEWORD_VALUE_ATTRIBUTE = "Value";
 var DENEWORD_IDENTITY_ATTRIBUTE = "Identity";
 var DENEWORD_QUANTITY_ATTRIBUTE = "Quantity";
-
+var DENEWORD_TYPE_CONCATENATION_SEPARATOR="Concatenation Separator";
 var DENEWORD_TARGET_ATTRIBUTE = "Target";
 var DENEWORD_TIMESTRING_VALUE = "Time String";
 var DENEWORD_TIMESTRING_FORMAT_VALUE = "Time String Format";
