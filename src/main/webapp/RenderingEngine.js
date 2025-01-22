@@ -1372,9 +1372,9 @@ function renderPageByPointer(pagePointer, locationId){
 	if(locationId=="EntryPoint" && currentViewObjectU != null && currentViewObjectU != undefined){
 		var currentViewObject = JSON.parse(currentViewObjectU);
 		var secundaryView = currentViewObject["SecundaryView"];
+		teleonomeName=denomeJSONObject.Name;
 
-
-		if( secundaryView !=""){
+		if( secundaryView !="" && teleonomeName!= undefined && teleonomeName!=''){
 			if(currentViewObject.hasOwnProperty("Data")){
 				var data = currentViewObject.Data;
 				if(data.hasOwnProperty("ViewManagerParam")){
