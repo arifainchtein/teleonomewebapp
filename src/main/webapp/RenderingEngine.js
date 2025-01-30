@@ -29,6 +29,8 @@ var chartTimeStringHashMap = new HashMap();
 var chartTitleHashMap = new HashMap();
 
 var organismInfoJsonData;
+var telepathonsJsonData;
+
 var organismIPInfoJsonData;
 var pulseCreationTime="";
 var currentPathologyDeneCount=0;
@@ -678,6 +680,38 @@ function updateOrganismView(text){
 	organismInfoJsonData = JSON.parse(text);
 	refreshOrganismView();
 }
+
+function updateTelepathonsView(text){
+	telepathonsJsonData = JSON.parse(text);
+	refreshTelepathonsView();
+}
+
+function refreshTelepathonsView(){
+	var telepathonsNuclei=getTelepathonsDeneChains();
+	if(telepathonsNuclei != undefined){
+		var panelHTML="";
+		$('#TelepathonsView').empty();
+		var telepathonName;
+		var deneChains = telepathonsNuclei['DeneChains'];
+			for( j13=0;j13<deneChains.length;j13++){
+				telepathonName = deneChains[j13]["Name"];
+				if(i != telepathonName){
+					panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+					panelHTML += "<a href=\"http://"+i+".local\" target=\"_new\" class=\"btn btn-lg btn-"+ telepathonsJsonData[i] +"\">"+i+"</a>";
+					panelHTML += "</div>";	
+				}
+			}
+		}
+		//
+		//
+//		panelHTML += "<div id=\"OrganismDetail\" class=\"row hidden\">";
+//		panelHTML += "<div class=\"col-lg-12 col-md-12 col-sm-12 col-sm-12 col-xs-12 text-center top-buffer\">";
+//		panelHTML += "<div id=\"DetailText\"></div></div></div>";
+
+		$('#TelepathonsView').append(panelHTML);
+	}
+}
+
 function refreshOrganismView(){
 	if(organismInfoJsonData != undefined){
 		var panelHTML="";
@@ -1050,6 +1084,13 @@ function renderPageByPointer(pagePointer, locationId){
 			var organismView = new OrganismView();
 			panelHTML += organismView.process(title);
 			refreshOrganismView();
+
+
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_TELEPATHONS){
+			var title = panelDeneChain["Name"]; /// xxx
+			var telepathonPanel = new TelepathonPanel();
+			panelHTML += telepathonPanel.process(title);
+			refreshTelepathonsView();
 
 
 		}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_SETTINGS_INFO){

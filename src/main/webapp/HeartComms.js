@@ -106,6 +106,8 @@ console.log("message arrived");
 		updatePulseStatusInfoSecundary(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_ORGANISM_STATUS){
 		updateOrganismView(payload);
+	}else if(lastMessageTopic==HEART_TOPIC_TELEPATHON_STATUS){
+		updateTelepathonsView(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_ORGANISM_IP){
 		updateOrganismIP(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_AVAILABLE_SSIDS){

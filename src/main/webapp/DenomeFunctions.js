@@ -32,6 +32,16 @@ function getHumanInterfaceDeneChainsForVisualizer(){
 	}
 }
 
+function getTelepathonsDeneChains(){
+	var i13=0,j13=0,k13=0;
+	nucleiJSONArray = denomeJSONObject.Nuclei;
+	for( i13=0;i13<nucleiJSONArray.length;i13++){
+		if(nucleiJSONArray[i13]['Name']===NUCLEI_TELEPATHONS){
+			return nucleiJSONArray[i13];
+		}
+	}
+}
+
 
 
 
