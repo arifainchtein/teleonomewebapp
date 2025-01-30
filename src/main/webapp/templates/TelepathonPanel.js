@@ -13,7 +13,6 @@ class TelepathonPanel{
         panelHTML += '<div class="panel-body text-center">';
         panelHTML += '<div id="TelepathonsView" class="row">';
         panelHTML += refreshTelepathonsView();
-        panelHTML += '<div><div><div><div><div>';
         return panelHTML;
     }
 }

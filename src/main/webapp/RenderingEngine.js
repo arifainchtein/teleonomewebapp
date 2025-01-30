@@ -695,14 +695,87 @@ function refreshTelepathonsView(){
 		var panelHTML="";
 		$('#TelepathonsView').empty();
 		var telepathonName;
+		var currentFunctionValue;
+		var opModePointer;
+		var datapointer;
 		var deneChains = telepathonsNuclei['DeneChains'];
 			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
 				localDatePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
 				localDate=getDeneWordByIdentityPointer(localDatePointer, DENEWORD_VALUE_ATTRIBUTE);
+				opModePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
+				opMode=getDeneWordByIdentityPointer(opModePointer, DENEWORD_VALUE_ATTRIBUTE);
+
+				
+
 				panelHTML += '<div style="margin:10px; border-radius:5px;" class="col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer bg-info">';
 				panelHTML += "<h5>"+telepathonName+"</h5>";
 				panelHTML += "<h6>"+localDate+"</h6>";
+				if(currentFunctionValue==ANNABELL_FUN_1_FLOW) {
+					
+					
+				}else if(currentFunctionValue==ANNABELL_FUN_2_FLOW) {
+					
+					
+				}else if(currentFunctionValue==ANNABELL_FUN_1_FLOW_1_TANK) {
+					
+					
+				}else if(currentFunctionValue==ANNABELL_FUN_1_TANK) {
+					
+					
+				}else if(currentFunctionValue==ANNABELL_FUN_2_TANK) {
+				
+					
+				}else if(currentFunctionValue==ANNABELL_DAFFODIL_SCEPTIC_TANK) {
+				
+					panelHTML += '<table class="table table-condensed">';
+					panelHTML += '<tr>';
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sceptic Available";
+					panelHTML += '<td>Sceptic Available</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '</tr>';
+					panelHTML += '<tr>';
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Temperature";
+					panelHTML += '<td>Outdoor Temperature/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '</tr>';
+					panelHTML += '<tr>';
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Humidity";
+					panelHTML += '<td>Outdoor Humidity/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					
+
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Light Level";
+					var lux = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
+					
+
+					if(lux>-1){
+						panelHTML += '</tr>';
+						panelHTML += '<td>Light Sensor<td><td>'+lux+'</td>';
+						panelHTML += '</tr>';
+					}
+
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Led Brightness";
+					panelHTML += '<td>Led Brightness/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:snr";
+					panelHTML += '<td>SNR/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:rssi";
+					panelHTML += '<td>RSSI/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:RTC Battery Volt";
+					panelHTML += '<td>RTC Battery Volt/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Internal Temperature";
+					panelHTML += '<td>Internal Temperature/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+
+					panelHTML += '</table>';
+
+				}else if(currentFunctionValue==ANNABELL_DAFFODIL_WATER_TROUGH) {
+					
+		
+				}else if(currentFunctionValue==ANNABELL_TEMP_SOILMOISTURE) {
+				}else if(currentFunctionValue==ANNABELL_LIGHT_DETECTOR) {
+				}
+			
 				panelHTML += "</div>";	
 			}
 		}
