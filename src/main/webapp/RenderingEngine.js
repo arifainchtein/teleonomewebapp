@@ -697,25 +697,22 @@ function refreshTelepathonsView(){
 		var telepathonName;
 		var deneChains = telepathonsNuclei['DeneChains'];
 			for(var j13=0;j13<deneChains.length;j13++){
-					telepathonName = deneChains[j13]["Name"];
-					localDatePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
-					localDate=getDeneWordByIdentityPointer(localDatePointer, DENEWORD_VALUE_ATTRIBUTE);
-					panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
-					panelHTML += "<h5>"+telepathonName+"</h5>";
-					panelHTML += "<h5>"+localDate+"</h5>";
-					
-					
-					panelHTML += "</div>";	
-				
+				telepathonName = deneChains[j13]["Name"];
+				localDatePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
+				localDate=getDeneWordByIdentityPointer(localDatePointer, DENEWORD_VALUE_ATTRIBUTE);
+				panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
+				panelHTML += "<h5>"+telepathonName+"</h5>";
+				panelHTML += "<h6>"+localDate+"</h6>";
+				panelHTML += "</div>";	
 			}
 		}
 		//
 		//
-//		panelHTML += "<div id=\"OrganismDetail\" class=\"row hidden\">";
-//		panelHTML += "<div class=\"col-lg-12 col-md-12 col-sm-12 col-sm-12 col-xs-12 text-center top-buffer\">";
-//		panelHTML += "<div id=\"DetailText\"></div></div></div>";
+		// panelHTML += "<div id=\"OrganismDetail\" class=\"row hidden\">";
+		// panelHTML += "<div class=\"col-lg-12 col-md-12 col-sm-12 col-sm-12 col-xs-12 text-center top-buffer\">";
+		// panelHTML += "<div id=\"DetailText\"></div></div></div>";
 
-		$('#TelepathonsView').append(panelHTML);
+		return panelHTML;
 	}
 
 function refreshOrganismView(){
