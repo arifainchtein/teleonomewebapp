@@ -695,7 +695,7 @@ function refreshTelepathonsView(){
 		var panelHTML="";
 		$('#TelepathonsView').empty();
 		var telepathonName;
-		var currentFunctionValue;
+		var currentFunctionValue;	
 		var currentFunctionValuePointer;
 		var datapointer;
 		var deneChains = telepathonsNuclei['DeneChains'];
@@ -708,7 +708,7 @@ function refreshTelepathonsView(){
 				currentFunctionValue=getDeneWordByIdentityPointer(currentFunctionValuePointer, DENEWORD_VALUE_ATTRIBUTE);
 				
 
-				panelHTML += '<div style="margin:10px; border-radius:5px;" class="col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer bg-info">';
+				panelHTML += '<div style="margin:10px; border-radius:5px;" class="col-lg-3 col-md-3 col-sm-4 col-xs-12 text-center top-buffer bg-info">';
 				panelHTML += "<h5>"+telepathonName+"</h5>";
 				panelHTML += "<h6>"+localDate+"</h6>";
 				if(currentFunctionValue==ANNABELL_FUN_1_FLOW) {
@@ -735,11 +735,11 @@ function refreshTelepathonsView(){
 					panelHTML += '</tr>';
 					panelHTML += '<tr>';
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Temperature";
-					panelHTML += '<td>Outdoor Temperature/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '</tr>';
 					panelHTML += '<tr>';
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Humidity";
-					panelHTML += '<td>Outdoor Humidity/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>Outdoor Humidity</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Light Level";
@@ -748,24 +748,24 @@ function refreshTelepathonsView(){
 
 					if(lux>-1){
 						panelHTML += '</tr>';
-						panelHTML += '<td>Light Sensor<td><td>'+lux+'</td>';
+						panelHTML += '<td>Light Sensor</td><td>'+lux+'</td>';
 						panelHTML += '</tr>';
 					}
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Led Brightness";
-					panelHTML += '<td>Led Brightness/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>Led Brightness</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:snr";
 					panelHTML += '<td>SNR/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:rssi";
-					panelHTML += '<td>RSSI/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>RSSI</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:RTC Battery Volt";
-					panelHTML += '<td>RTC Battery Volt/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Internal Temperature";
-					panelHTML += '<td>Internal Temperature/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 
 					panelHTML += '</table>';
 
