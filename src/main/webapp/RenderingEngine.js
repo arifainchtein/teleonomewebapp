@@ -708,7 +708,7 @@ function refreshTelepathonsView(){
 				currentFunctionValue=getDeneWordByIdentityPointer(currentFunctionValuePointer, DENEWORD_VALUE_ATTRIBUTE);
 				
 
-				panelHTML += '<div style="margin:10px; border-radius:5px;" class="col-lg-3 col-md-3 col-sm-4 col-xs-12 text-center top-buffer bg-info">';
+				panelHTML += '<div style="margin:10px; border-radius:5px;" class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center top-buffer bg-info">';
 				panelHTML += "<h5>"+telepathonName+"</h5>";
 				panelHTML += "<h6>"+localDate+"</h6>";
 				if(currentFunctionValue==ANNABELL_FUN_1_FLOW) {
@@ -728,7 +728,7 @@ function refreshTelepathonsView(){
 					
 				}else if(currentFunctionValue==ANNABELL_DAFFODIL_SCEPTIC_TANK) {
 				
-					panelHTML += '<table class="table table-condensed">';
+					panelHTML += '<table class="table table-condensed table-striped">';
 					panelHTML += '<tr>';
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sceptic Available";
 					panelHTML += '<td>Sceptic Available</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
@@ -756,7 +756,7 @@ function refreshTelepathonsView(){
 					panelHTML += '<td>Led Brightness</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:snr";
-					panelHTML += '<td>SNR/td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>SNR</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:rssi";
 					panelHTML += '<td>RSSI</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
