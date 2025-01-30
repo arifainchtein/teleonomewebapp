@@ -11,7 +11,7 @@ class TelepathonPanel{
         panelHTML += "<div class=\"panel panel-default\">";
         panelHTML += " <div class=\"panel-heading\"><h4>"+title+"</h4></div>";
         panelHTML += "<div class=\"panel-body text-center\">";
-        panelHTML += "<div id=\"TelepathonView\" class=\"row\">";
+        panelHTML += "<div id=\"TelepathonsView\" class=\"row\">";
 
         return panelHTML;
     }
