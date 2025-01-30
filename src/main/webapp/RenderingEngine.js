@@ -740,33 +740,42 @@ function refreshTelepathonsView(){
 					panelHTML += '<tr>';
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Humidity";
 					panelHTML += '<td>Outdoor Humidity</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					
+					panelHTML += '</tr>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Light Level";
 					var lux = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
 					
 
 					if(lux>-1){
-						panelHTML += '</tr>';
+						panelHTML += '<tr>';
 						panelHTML += '<td>Light Sensor</td><td>'+lux+'</td>';
 						panelHTML += '</tr>';
 					}
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Led Brightness";
+					panelHTML += '<tr>';
 					panelHTML += '<td>Led Brightness</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '</tr>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:snr";
+					panelHTML += '<tr>';
 					panelHTML += '<td>SNR</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '</tr>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:rssi";
+					panelHTML += '<tr>';
 					panelHTML += '<td>RSSI</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '</tr>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:RTC Battery Volt";
+					panelHTML += '<tr>';
 					panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '</tr>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Internal Temperature";
+					panelHTML += '<tr>';
 					panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-
+					panelHTML += '</tr>';
 					panelHTML += '</table>';
 
 				}else if(currentFunctionValue==ANNABELL_DAFFODIL_WATER_TROUGH) {
