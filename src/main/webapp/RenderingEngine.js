@@ -694,12 +694,14 @@ function refreshTelepathonsView(){
 		var telepathonName;
 		var deneChains = telepathonsNuclei['DeneChains'];
 			for(var j13=0;j13<deneChains.length;j13++){
-				telepathonName = deneChains[j13]["Name"];
-				if(i != telepathonName){
+					telepathonName = deneChains[j13]["Name"];
 					panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
-					panelHTML += "<a href=\"http://"+i+".local\" target=\"_new\" class=\"btn btn-lg btn-"+ telepathonsJsonData[i] +"\">"+i+"</a>";
+					panelHTML += "<h5>"+telepathonName+"</h5>";
+					panelHTML += "<h5>"+deneChains[j13]["Purpose"]["Local Time"]+"</h5>";
+					
+					
 					panelHTML += "</div>";	
-				}
+				
 			}
 		}
 		//
