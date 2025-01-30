@@ -693,7 +693,7 @@ function refreshTelepathonsView(){
 		$('#TelepathonsView').empty();
 		var telepathonName;
 		var deneChains = telepathonsNuclei['DeneChains'];
-			for( j13=0;j13<deneChains.length;j13++){
+			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
 				if(i != telepathonName){
 					panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
