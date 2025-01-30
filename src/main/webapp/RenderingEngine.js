@@ -697,6 +697,7 @@ function refreshTelepathonsView(){
 		var telepathonName;
 		var currentFunctionValue;
 		var opModePointer;
+		var currentFunctionValuePointer;
 		var datapointer;
 		var deneChains = telepathonsNuclei['DeneChains'];
 			for(var j13=0;j13<deneChains.length;j13++){
@@ -706,6 +707,8 @@ function refreshTelepathonsView(){
 				opModePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
 				opMode=getDeneWordByIdentityPointer(opModePointer, DENEWORD_VALUE_ATTRIBUTE);
 
+				currentFunctionValuePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Configuration:Current Function";
+				currentFunctionValue=getDeneWordByIdentityPointer(currentFunctionValuePointer, DENEWORD_VALUE_ATTRIBUTE);
 				
 
 				panelHTML += '<div style="margin:10px; border-radius:5px;" class="col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer bg-info">';
