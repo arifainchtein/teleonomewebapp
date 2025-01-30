@@ -1085,7 +1085,7 @@ function renderPageByPointer(pagePointer, locationId){
 			refreshOrganismView();
 
 
-		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_TELEPATHONS){
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_TELEPHATON_VIEW){
 			var title = panelDeneChain["Name"]; /// xxx
 			var telepathonPanel = new TelepathonPanel();
 			panelHTML += telepathonPanel.process(title);
