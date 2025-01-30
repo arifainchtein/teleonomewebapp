@@ -688,6 +688,9 @@ function updateTelepathonsView(text){
 
 function refreshTelepathonsView(){
 	var telepathonsNuclei=getTelepathonsDeneChains();
+	var localDatePointer;
+	var localDate;
+
 	if(telepathonsNuclei != undefined){
 		var panelHTML="";
 		$('#TelepathonsView').empty();
@@ -695,9 +698,11 @@ function refreshTelepathonsView(){
 		var deneChains = telepathonsNuclei['DeneChains'];
 			for(var j13=0;j13<deneChains.length;j13++){
 					telepathonName = deneChains[j13]["Name"];
+					localDatePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
+					localDate=getDeneWordByIdentityPointer(localDatePointer, DENEWORD_VALUE_ATTRIBUTE);
 					panelHTML += "<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-6 text-center top-buffer\">";
 					panelHTML += "<h5>"+telepathonName+"</h5>";
-					panelHTML += "<h5>"+deneChains[j13]["Purpose"]["Local Time"]+"</h5>";
+					panelHTML += "<h5>"+localDate+"</h5>";
 					
 					
 					panelHTML += "</div>";	
