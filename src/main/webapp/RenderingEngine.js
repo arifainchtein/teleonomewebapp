@@ -710,7 +710,6 @@ function refreshTelepathonsView(){
 
 		$('#TelepathonsView').append(panelHTML);
 	}
-}
 
 function refreshOrganismView(){
 	if(organismInfoJsonData != undefined){
