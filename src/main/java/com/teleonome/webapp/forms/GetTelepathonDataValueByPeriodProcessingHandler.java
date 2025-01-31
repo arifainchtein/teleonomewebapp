@@ -42,7 +42,6 @@ public class GetTelepathonDataValueByPeriodProcessingHandler extends ProcessingF
 		String telepathonName = request.getParameter("telepathonName");
 		String deneName = request.getParameter("deneName");
 		String deneWordName = request.getParameter("deneWordName");
-		long timeSeconds = Long.parseLong(request.getParameter("timeSeconds"));
 		
 		long startTimeSeconds;
 		long  endTimeSeconds;
