@@ -748,7 +748,7 @@ function refreshTelepathonsView(){
 
 					if(lux>-1){
 						panelHTML += '<tr>';
-						panelHTML += '<td>Light Sensor</td><td>'+(lux*0.0079)	+'w/m2</td>';
+						panelHTML += '<td>Light Sensor</td><td>'+Math.floor(lux*0.0079)	+'w/m2</td>';
 						panelHTML += '</tr>';
 					}
 
