@@ -721,6 +721,43 @@ the css for the little box on the top right f external data
                     searchFunctions.refreshSearchPage();
 				});
 
+				//
+				// telepathon functions
+				//
+				$(document).on('click', ".telepathon-daily-value",function(e) {
+					e.preventDefault();
+					//$('#NewRememberedWordDeneWordView').empty();
+					var telepathonName = $(this).data("telepathonName");
+					var deneName = $(this).data("deneName");
+					var deneWordName = $(this).data("deneWordName");
+
+					//some code
+					$.ajax({
+						type: "POST",
+						url: "/TeleonomeServlet",
+						data: {formName:"GetTelepathonDataValueByPeriod", telepathonName:telepathonName, deneName:deneName, deneWordName:deneWordName},
+						success: function (res) {
+							$("#OrganismModal").modal('hide');
+						
+							var data = JSON.parse(res);
+							console.log(data);
+							
+						},
+						error: function(data){
+							$("#NewRememberedWordPanel").hide();
+							refreshActive=true;
+							RefreshInterface();
+							console.log("error getting denes :" + JSON.stringify(data));
+							alert("Error getting denes:" + JSON.stringify(data));
+							return false;
+						}
+					});
+				});
+				//
+				// end of telepathon functiopns
+				//
+
+
 
 				//
 				// functions for the new rememberedword functionality
