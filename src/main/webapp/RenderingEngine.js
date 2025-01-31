@@ -708,7 +708,7 @@ function refreshTelepathonsView(){
 				currentFunctionValue=getDeneWordByIdentityPointer(currentFunctionValuePointer, DENEWORD_VALUE_ATTRIBUTE);
 				
 
-				panelHTML += '<div style="margin:15px; border-radius:5px;" class="col-lg-4 col-md-4 col-sm-4 col-xs-11 text-center top-buffer bg-info">';
+				panelHTML += '<div style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
 				panelHTML += "<h5>"+telepathonName+"</h5>";
 				panelHTML += "<h6>"+localDate+"</h6>";
 				if(currentFunctionValue==ANNABELL_FUN_1_FLOW) {
@@ -735,7 +735,7 @@ function refreshTelepathonsView(){
 					panelHTML += '</tr>';
 					panelHTML += '<tr>';
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Temperature";
-					panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'&deg</td>';
+					panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
 					panelHTML += '</tr>';
 					panelHTML += '<tr>';
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Humidity";
@@ -748,7 +748,7 @@ function refreshTelepathonsView(){
 
 					if(lux>-1){
 						panelHTML += '<tr>';
-						panelHTML += '<td>Light Sensor</td><td>'+lux+'</td>';
+						panelHTML += '<td>Light Sensor</td><td>'+(lux*0.0079)	+'w/m2</td>';
 						panelHTML += '</tr>';
 					}
 
@@ -769,12 +769,12 @@ function refreshTelepathonsView(){
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:RTC Battery Volt";
 					panelHTML += '<tr>';
-					panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'V</td>';
 					panelHTML += '</tr>';
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Internal Temperature";
 					panelHTML += '<tr>';
-					panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
 					panelHTML += '</tr>';
 					panelHTML += '</table>';
 
