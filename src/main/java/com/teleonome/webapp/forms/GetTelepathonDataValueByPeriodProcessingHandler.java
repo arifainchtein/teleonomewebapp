@@ -3,6 +3,9 @@ package com.teleonome.webapp.forms;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
@@ -43,6 +46,15 @@ public class GetTelepathonDataValueByPeriodProcessingHandler extends ProcessingF
 		
 		long startTimeSeconds;
 		long  endTimeSeconds;
+		ZoneId zone = ZoneId.of("Australia/Melbourne");
+		LocalDate today = LocalDate.now(zone);
+
+		LocalDateTime startOfDay = today.atStartOfDay();
+		LocalDateTime endOfDay = today.atTime(23, 59, 59);
+
+		startTimeSeconds = startOfDay.atZone(zone).toEpochSecond();
+		endTimeSeconds = endOfDay.atZone(zone).toEpochSecond();
+		
 		JSONArray data= aDBManager.getTelepathonDeneWordStart(  telepathonName,  deneName,  deneWordName,   startTimeSeconds,   endTimeSeconds);
 
 
