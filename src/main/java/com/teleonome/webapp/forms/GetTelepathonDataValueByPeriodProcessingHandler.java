@@ -53,11 +53,9 @@ public class GetTelepathonDataValueByPeriodProcessingHandler extends ProcessingF
 
 		startTimeSeconds = startOfDay.atZone(zone).toEpochSecond();
 		endTimeSeconds = endOfDay.atZone(zone).toEpochSecond();
-		
+		System.out.print("line 56, telepathonName=" + telepathonName + " deneName=" + deneName + " deneWordName=" + deneWordName + " startTimeSeconds=" + startTimeSeconds + " endTimeSeconds=" + endTimeSeconds);
 		JSONArray data= aDBManager.getTelepathonDeneWordStart(  telepathonName,  deneName,  deneWordName,   startTimeSeconds,   endTimeSeconds);
-
-
-
+		
 		PrintWriter out = response.getWriter();
 		out.print(data.toString());
 
