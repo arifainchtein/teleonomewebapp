@@ -711,6 +711,9 @@ function refreshTelepathonsView(){
 				panelHTML += '<div style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
 				panelHTML += "<h5>"+telepathonName+"</h5>";
 				panelHTML += "<h6>"+localDate+"</h6>";
+				panelHTML += '<table class="table table-condensed table-striped">';
+				
+
 				if(currentFunctionValue==ANNABELL_FUN_1_FLOW) {
 					
 					
@@ -727,8 +730,6 @@ function refreshTelepathonsView(){
 				
 					
 				}else if(currentFunctionValue==ANNABELL_DAFFODIL_SCEPTIC_TANK) {
-				
-					panelHTML += '<table class="table table-condensed table-striped">';
 					panelHTML += '<tr>';
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sceptic Available";
 					panelHTML += '<td>Sceptic Available</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
@@ -756,44 +757,49 @@ function refreshTelepathonsView(){
 						panelHTML += '</tr>';
 					}
 
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Led Brightness";
-					panelHTML += '<tr>';
-					panelHTML += '<td>Led Brightness</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
-					panelHTML += '</tr>';
-
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:snr";
-					panelHTML += '<tr>';
-					panelHTML += '<td>SNR</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"-></td>';
-					panelHTML += '</tr>';
-
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:rssi";
-					panelHTML += '<tr>';
-					panelHTML += '<td>RSSI</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"-></td>';
-					panelHTML += '</tr>';
-
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:RTC Battery Volt";
-					panelHTML += '<tr>';
-					panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'V</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"-></td>';
-					panelHTML += '</tr>';
-
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Internal Temperature";
-					panelHTML += '<tr>';
-					panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"-></td>';
-					panelHTML += '</tr>';
-					panelHTML += '</table>';
-
 				}else if(currentFunctionValue==ANNABELL_DAFFODIL_WATER_TROUGH) {
 					
 		
 				}else if(currentFunctionValue==ANNABELL_TEMP_SOILMOISTURE) {
 				}else if(currentFunctionValue==ANNABELL_LIGHT_DETECTOR) {
 				}
-			
+
+				panelHTML += '<tr>';
+				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Voltage";
+				panelHTML += '<td>Capacitor Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
+				panelHTML += '</tr>';
+
+				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Led Brightness";
+				panelHTML += '<tr>';
+				panelHTML += '<td>Led Brightness</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
+				panelHTML += '</tr>';
+
+				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:snr";
+				panelHTML += '<tr>';
+				panelHTML += '<td>SNR</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"-></td>';
+				panelHTML += '</tr>';
+
+				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:rssi";
+				panelHTML += '<tr>';
+				panelHTML += '<td>RSSI</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"-></td>';
+				panelHTML += '</tr>';
+
+				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:RTC Battery Volt";
+				panelHTML += '<tr>';
+				panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'V</td>';
+				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"-></td>';
+				panelHTML += '</tr>';
+
+				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Internal Temperature";
+				panelHTML += '<tr>';
+				panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
+				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"-></td>';
+				panelHTML += '</tr>';
+				panelHTML += '</table>';
 				panelHTML += "</div>";	
 			}
 		}

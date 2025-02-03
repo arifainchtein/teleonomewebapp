@@ -737,8 +737,6 @@ the css for the little box on the top right f external data
 						url: "/TeleonomeServlet",
 						data: {formName:"GetTelepathonDataValueByPeriod", telepathonName:telepathonName, deneName:deneName, deneWordName:deneWordName},
 						success: function (res) {
-							$("#OrganismModal").modal('hide');
-						
 							var data = JSON.parse(res);
 							console.log(data);
 							
