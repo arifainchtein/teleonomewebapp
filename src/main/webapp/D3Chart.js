@@ -8,8 +8,8 @@ function showTelepathonGraph(data) {
 	// Parse time
 	const parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
 	data = data.map(d => ({
-	  time: parseTime(d.timestring),
-	  value: +d.value
+	  time: parseTime(d.timeString),
+	  value: +d.Value
 	}));
   
 	// Create SVG
