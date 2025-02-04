@@ -707,7 +707,7 @@ function refreshTelepathonsView(){
 				localDatePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
 				localDate=getDeneWordByIdentityPointer(localDatePointer, DENEWORD_VALUE_ATTRIBUTE);
 				secondsTimePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Seconds Time";
-				secondsTime=getDeneWordByIdentityPointer(localDatePointer, DENEWORD_VALUE_ATTRIBUTE);
+				secondsTime=getDeneWordByIdentityPointer(secondsTimePointer, DENEWORD_VALUE_ATTRIBUTE);
 				  
 				currentFunctionValuePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Configuration:Current Function";
 				currentFunctionValue=getDeneWordByIdentityPointer(currentFunctionValuePointer, DENEWORD_VALUE_ATTRIBUTE);
@@ -785,7 +785,7 @@ function refreshTelepathonsView(){
 				panelHTML += '<tr>';
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Voltage";
 				panelHTML += '<td>Capacitor Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
+				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
 				panelHTML += '</tr>';
 
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
