@@ -50,31 +50,36 @@ function showTelepathonGraph(data) {
 	svg.append("g")
 	  .call(d3.axisLeft(y));
   
-	// Add dots and tooltips
-	const tooltip = d3.select("body").append("div")
-	  .attr("class", "tooltip")
-	  .style("position", "absolute")
-	  .style("visibility", "hidden")
-	  .style("background-color", "white")
-	  .style("border", "1px solid #ddd")
-	  .style("padding", "10px");
-  
-	svg.selectAll("dot")
-	  .data(data)
-	  .enter().append("circle")
-	  .attr("r", 3)
-	  .attr("cx", d => x(d.time))
-	  .attr("cy", d => y(d.value))
-	  .attr("fill", "steelblue")
-	  .on("mouseover", function(event, d) {
-		tooltip.style("visibility", "visible")
-		  .html(`Time: ${d3.timeFormat("%H:%M")(d.time)}<br/>Value: ${d.value}`)
-		  .style("left", (event.pageX + 10) + "px")
-		  .style("top", (event.pageY - 10) + "px");
-	  })
-	  .on("mouseout", function() {
-		tooltip.style("visibility", "hidden");
-	  });
+	// Add dots with data display update
+    svg.selectAll("circle")
+        .data(data)
+        .enter().append("circle")
+        .attr("r", 3)
+        .attr("cx", d => x(d.time))
+        .attr("cy", d => y(d.value))
+        .attr("fill", "steelblue")
+        .on("mouseover", function(event, d) {
+            const timeFormat = d3.timeFormat("%H:%M:%S");
+            // Update the data display div
+            d3.select("#dataDisplay")
+                .html(`Time: ${timeFormat(d.time)} | Value: ${d.value}`);
+            
+            // Highlight the current point
+            d3.select(this)
+                .attr("r", 6)
+                .attr("fill", "red");
+        })
+        .on("mouseout", function() {
+            // Reset point size and color
+            d3.select(this)
+                .attr("r", 3)
+                .attr("fill", "steelblue");
+        });
+
+    // Add some basic styling to the data display
+    d3.select("#dataDisplay")
+        .style("font-family", "monospace")
+        .style("font-size", "14px");
   }
 
   
