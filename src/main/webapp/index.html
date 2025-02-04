@@ -443,6 +443,20 @@ the css for the little box on the top right f external data
 			</div>
 		</div>
 
+		<div class="modal fade" id="telepathon-graph-modal" tabindex="-1">
+			<div class="modal-dialog modal-lg">
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <h5 class="modal-title" id="">Data Visualization</h5>
+				  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+				  <div id="telepathon-graph"></div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+
 		<!--
 
 
@@ -739,7 +753,9 @@ the css for the little box on the top right f external data
 						success: function (res) {
 							var data = JSON.parse(res);
 							console.log(data);
-							
+							$('#telepathon-graph-modal').modal('show');
+							showTelepathonGraph(data);
+
 						},
 						error: function(data){
 							$("#NewRememberedWordPanel").hide();

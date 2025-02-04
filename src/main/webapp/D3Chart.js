@@ -1,3 +1,83 @@
+
+function showTelepathonGraph(data) {
+	// Set dimensions
+	const margin = {top: 20, right: 30, bottom: 50, left: 50};
+	const width = 800 - margin.left - margin.right;
+	const height = 400 - margin.top - margin.bottom;
+  
+	// Parse time
+	const parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
+	data = data.map(d => ({
+	  time: parseTime(d.timestring),
+	  value: +d.value
+	}));
+  
+	// Create SVG
+	const svg = d3.select("#telepathon-graph")
+	  .append("svg")
+	  .attr("width", width + margin.left + margin.right)
+	  .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	  .attr("transform", `translate(${margin.left},${margin.top})`);
+  
+	// Set scales
+	const x = d3.scaleTime()
+	  .domain(d3.extent(data, d => d.time))
+	  .range([0, width]);
+  
+	const y = d3.scaleLinear()
+	  .domain([0, d3.max(data, d => d.value)])
+	  .range([height, 0]);
+  
+	// Add line
+	const line = d3.line()
+	  .x(d => x(d.time))
+	  .y(d => y(d.value));
+  
+	svg.append("path")
+	  .datum(data)
+	  .attr("fill", "none")
+	  .attr("stroke", "steelblue")
+	  .attr("stroke-width", 1.5)
+	  .attr("d", line);
+  
+	// Add axes
+	svg.append("g")
+	  .attr("transform", `translate(0,${height})`)
+	  .call(d3.axisBottom(x)
+		.ticks(d3.timeHour.every(2)));
+  
+	svg.append("g")
+	  .call(d3.axisLeft(y));
+  
+	// Add dots and tooltips
+	const tooltip = d3.select("body").append("div")
+	  .attr("class", "tooltip")
+	  .style("position", "absolute")
+	  .style("visibility", "hidden")
+	  .style("background-color", "white")
+	  .style("border", "1px solid #ddd")
+	  .style("padding", "10px");
+  
+	svg.selectAll("dot")
+	  .data(data)
+	  .enter().append("circle")
+	  .attr("r", 3)
+	  .attr("cx", d => x(d.time))
+	  .attr("cy", d => y(d.value))
+	  .attr("fill", "steelblue")
+	  .on("mouseover", function(event, d) {
+		tooltip.style("visibility", "visible")
+		  .html(`Time: ${d3.timeFormat("%H:%M")(d.time)}<br/>Value: ${d.value}`)
+		  .style("left", (event.pageX + 10) + "px")
+		  .style("top", (event.pageY - 10) + "px");
+	  })
+	  .on("mouseout", function() {
+		tooltip.style("visibility", "hidden");
+	  });
+  }
+
+  
 function drawPieChart(id, data, title){
 
 //	var pie_data = [{

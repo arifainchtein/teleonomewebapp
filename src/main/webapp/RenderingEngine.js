@@ -698,12 +698,17 @@ function refreshTelepathonsView(){
 		var currentFunctionValue;	
 		var currentFunctionValuePointer;
 		var datapointer;
+		var sleepTimeMicros;
+		var operatingStatus;
+		var secondsTime, secondsTimePointer;
 		var deneChains = telepathonsNuclei['DeneChains'];
 			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
 				localDatePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
 				localDate=getDeneWordByIdentityPointer(localDatePointer, DENEWORD_VALUE_ATTRIBUTE);
-		
+				secondsTimePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Seconds Time";
+				secondsTime=getDeneWordByIdentityPointer(localDatePointer, DENEWORD_VALUE_ATTRIBUTE);
+				  
 				currentFunctionValuePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Configuration:Current Function";
 				currentFunctionValue=getDeneWordByIdentityPointer(currentFunctionValuePointer, DENEWORD_VALUE_ATTRIBUTE);
 				
@@ -711,6 +716,21 @@ function refreshTelepathonsView(){
 				panelHTML += '<div style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
 				panelHTML += "<h5>"+telepathonName+"</h5>";
 				panelHTML += "<h6>"+localDate+"</h6>";
+				
+
+				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Operating Status";
+				operatingStatus = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
+				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sleep Time";
+				sleepTimeMicros = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
+
+				if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL){
+					panelHTML += "<h6>Continous, Display Active</h6>";
+				}
+				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
+					panelHTML += "<h6>Pulse and Sleep, next pulse at " + calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) +" </h6>";
+					operatingStatusText=
+				}
+
 				panelHTML += '<table class="table table-condensed table-striped">';
 				
 
@@ -770,6 +790,17 @@ function refreshTelepathonsView(){
 				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
 				panelHTML += '</tr>';
 
+				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
+					panelHTML += '<tr>';
+					panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeMicros)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"-></td>';
+					panelHTML += '</tr>';
+				}
+				
+				
+				
+
+
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Led Brightness";
 				panelHTML += '<tr>';
 				panelHTML += '<td>Led Brightness</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
@@ -812,6 +843,41 @@ function refreshTelepathonsView(){
 		return panelHTML;
 	}
 
+	function calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) {
+		// Convert sleepTimeMicros to seconds and add to the epoch time
+		const microsToSeconds = sleepTimeMicros / 1000000;
+		const futureEpoch = secondsTime + microsToSeconds;
+		
+		// Create a Date object with the future time
+		const futureDate = new Date(futureEpoch * 1000);
+		
+		// Format the date and time
+		const year = futureDate.getFullYear();
+		const month = (futureDate.getMonth() + 1).toString().padStart(2, '0');
+		const day = futureDate.getDate().toString().padStart(2, '0');
+		const hours = futureDate.getHours().toString().padStart(2, '0');
+		const minutes = futureDate.getMinutes().toString().padStart(2, '0');
+		const seconds = futureDate.getSeconds().toString().padStart(2, '0');
+		
+		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+	}
+
+	function formatTime(sleepTimeMicros) {
+		// Convert microseconds to seconds (1 second = 1,000,000 microseconds)
+		const totalSeconds = Math.floor(sleepTimeMicros / 1000000);
+		
+		// Calculate minutes and remaining seconds
+		const minutes = Math.floor(totalSeconds / 60);
+		const seconds = totalSeconds % 60;
+		
+		// Format the output (adding leading zeros if needed)
+		return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+	}
+	
+	// Example usage:
+	const sleepTimeMicros = 125000000; // 125 million microseconds
+	console.log(formatTime(sleepTimeMicros)); // Output: "2:05" (2 minutes and 5 seconds)
+}
 function refreshOrganismView(){
 	if(organismInfoJsonData != undefined){
 		var panelHTML="";
