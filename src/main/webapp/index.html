@@ -452,7 +452,7 @@ the css for the little box on the top right f external data
 			<div class="modal-dialog modal-lg">
 			  <div class="modal-content">
 				<div class="modal-header">
-				  <h5 class="modal-title" id="">Data Visualization</h5>
+				  <h5 class="modal-title" id="telepathon-graph-title"></h5>
 				  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body">
@@ -763,6 +763,8 @@ the css for the little box on the top right f external data
 							var data = JSON.parse(res);
 							console.log(data);
 							$('#telepathon-graph-modal').modal('show');
+							$('#telepathon-graph-title').html(telepathonName + "-"+deneWordName);
+							$('#telepathon-graph').empty();
 							showTelepathonGraph(data);
 
 						},
