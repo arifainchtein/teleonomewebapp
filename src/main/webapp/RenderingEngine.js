@@ -717,7 +717,6 @@ function refreshTelepathonsView(){
 				panelHTML += "<h5>"+telepathonName+"</h5>";
 				panelHTML += "<h6>"+localDate+"</h6>";
 				
-
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Operating Status";
 				operatingStatus = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sleep Time";
@@ -728,7 +727,6 @@ function refreshTelepathonsView(){
 				}
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
 					panelHTML += "<h6>Pulse and Sleep, next pulse at " + calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) +" </h6>";
-					operatingStatusText=
 				}
 
 				panelHTML += '<table class="table table-condensed table-striped">';
@@ -874,10 +872,6 @@ function refreshTelepathonsView(){
 		return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 	}
 	
-	// Example usage:
-	const sleepTimeMicros = 125000000; // 125 million microseconds
-	console.log(formatTime(sleepTimeMicros)); // Output: "2:05" (2 minutes and 5 seconds)
-}
 function refreshOrganismView(){
 	if(organismInfoJsonData != undefined){
 		var panelHTML="";
