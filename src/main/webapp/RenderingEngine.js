@@ -724,7 +724,7 @@ function refreshTelepathonsView(){
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sleep Time";
 				sleepTimeMicros = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
 
-				if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL){
+				if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL_MODE){
 					panelHTML += "<h6>Continous, Display Active</h6>";
 				}
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_NO_LED){
