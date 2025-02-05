@@ -717,7 +717,7 @@ function refreshTelepathonsView(){
 				panelHTML +='<div class="row">';
 				panelHTML += '<div class="col-8 text-center" style="font-size:16px">'+telepathonName+'</div>';
 				panelHTML += '<div class="col-1 float-right" style="font-size:12px"><button class="delete-telepathon" data-telepathonname="'+ telepathonName +'" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button></div>';
-				panelHTML +='<div>';
+				panelHTML +='</div>';
 				
 				panelHTML += '<div style="font-size:13px">'+localDate+'</div>';
 				
