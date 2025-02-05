@@ -2,9 +2,13 @@
 function showTelepathonGraph(data) {
 	// Set dimensions 
 	d3.select("#telepathon-graph").html("");
-	const containerWidth = document.getElementById('telepathon-graph').clientWidth;
-	const margin = {top: 20, right: 20, bottom: 50, left: 50};
-    const width = containerWidth - margin.left - margin.right;
+	// Get container width - using getBoundingClientRect() for better compatibility
+    const graphContainer = document.getElementById('graph');
+    const containerWidth = graphContainer ? graphContainer.getBoundingClientRect().width : 300; // fallback width if element not found
+    
+    // Set dimensions with responsive values
+    const margin = {top: 20, right: 20, bottom: 50, left: 50};
+    const width = Math.max(containerWidth - margin.left - margin.right, 200); // ensure minimum width
     const height = Math.min(400, window.innerHeight * 0.5) - margin.top - margin.bottom;
   
 	// Parse time
@@ -22,6 +26,7 @@ function showTelepathonGraph(data) {
 	.attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
 	.append("g")
 	.attr("transform", `translate(${margin.left},${margin.top})`);
+
 	// Set scales
 	const x = d3.scaleTime()
 	  .domain(d3.extent(data, d => d.time))
@@ -43,14 +48,25 @@ function showTelepathonGraph(data) {
 	  .attr("stroke-width", 1.5)
 	  .attr("d", line);
   
-	// Add axes
-	svg.append("g")
-	  .attr("transform", `translate(0,${height})`)
-	  .call(d3.axisBottom(x)
-		.ticks(d3.timeHour.every(2)));
-  
-	svg.append("g")
-	  .call(d3.axisLeft(y));
+	 // Add axes with responsive formatting
+    const xAxis = svg.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x)
+            .ticks(width < 600 ? 5 : 10)
+            .tickFormat(d3.timeFormat("%H:%M")));
+
+    // Rotate x-axis labels for better readability on mobile
+    if (width < 600) {
+        xAxis.selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-45)");
+    }
+
+    svg.append("g")
+        .call(d3.axisLeft(y)
+            .ticks(height < 400 ? 5 : 10));
   
 	// Add dots with data display update
     svg.selectAll("circle")
