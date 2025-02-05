@@ -714,9 +714,11 @@ function refreshTelepathonsView(){
 				
 
 				panelHTML += '<div style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
-				panelHTML += "<h5>"+telepathonName+"</h5>";
-				panelHTML += '<button class="delete-telepathon" data-telepathonname="'+ telepathonName +'" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button>';
-
+				panelHTML +='<div class="row">';
+				panelHTML += '<div class="col-8 text-center"><h5>"+telepathonName+"</h5></div>';
+				panelHTML += '<div class="col-1 float-right"><button class="delete-telepathon" data-telepathonname="'+ telepathonName +'" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button></div>';
+				panelHTML +='<div>';
+				
 				panelHTML += "<h6>"+localDate+"</h6>";
 				
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Operating Status";
