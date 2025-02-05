@@ -715,6 +715,8 @@ function refreshTelepathonsView(){
 
 				panelHTML += '<div style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
 				panelHTML += "<h5>"+telepathonName+"</h5>";
+				panelHTML += '<button class="delete-telepathon" data-telepathonname="'+ telepathonName +'" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button>';
+
 				panelHTML += "<h6>"+localDate+"</h6>";
 				
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Operating Status";
@@ -724,6 +726,9 @@ function refreshTelepathonsView(){
 
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL){
 					panelHTML += "<h6>Continous, Display Active</h6>";
+				}
+				if(operatingStatus==TELEPATHON_OPERATING_STATUS_NO_LED){
+					panelHTML += "<h6>Continous, No Display </h6>";
 				}
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
 					panelHTML += "<h6>Pulse and Sleep, next pulse at " + calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) +" </h6>";

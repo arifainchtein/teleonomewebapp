@@ -747,6 +747,43 @@ the css for the little box on the top right f external data
 				//
 				// telepathon functions
 				//
+				
+				$(document).on('click', ".delete-telepathon",function(e) {
+					e.preventDefault();
+					var passwd = prompt("Please enter the password", "");
+					  if(isNaN(passwd)){
+						alert("Password must be 6 numbers");
+						  return false;
+					  }
+					  if(passwd.length!=6){
+						  alert("Password must be 6 numbers");
+						  return false;
+					  }
+					//$('#NewRememberedWordDeneWordView').empty();
+					var telepathonName = $(this).data("telepathonname");
+					//some code
+					$.ajax({
+						type: "POST",
+						url: "/TeleonomeServlet",
+						data: {formName:"DeleteTelepathon", telepathonName:telepathonName, CommandCode:passwd},
+						success: function (res) {
+							refreshActive=true;
+							RefreshInterface();
+
+						},
+						error: function(data){
+							$("#NewRememberedWordPanel").hide();
+							refreshActive=true;
+							RefreshInterface();
+							console.log("error getting denes :" + JSON.stringify(data));
+							alert("Error getting denes:" + JSON.stringify(data));
+							return false;
+						}
+					});
+				});
+
+
+
 				$(document).on('click', ".telepathon-daily-value",function(e) {
 					e.preventDefault();
 					//$('#NewRememberedWordDeneWordView').empty();
