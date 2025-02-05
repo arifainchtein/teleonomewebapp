@@ -715,11 +715,11 @@ function refreshTelepathonsView(){
 
 				panelHTML += '<div style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
 				panelHTML +='<div class="row">';
-				panelHTML += '<div class="col-8 text-center"><h5>"+telepathonName+"</h5></div>';
-				panelHTML += '<div class="col-1 float-right"><button class="delete-telepathon" data-telepathonname="'+ telepathonName +'" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button></div>';
+				panelHTML += '<div class="col-8 text-center" style="font-size:16px">'+telepathonName+'</div>';
+				panelHTML += '<div class="col-1 float-right" style="font-size:12px"><button class="delete-telepathon" data-telepathonname="'+ telepathonName +'" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button></div>';
 				panelHTML +='<div>';
 				
-				panelHTML += "<h6>"+localDate+"</h6>";
+				panelHTML += '<div style="font-size:13px">'+localDate+'</div>';
 				
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Operating Status";
 				operatingStatus = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
@@ -727,13 +727,14 @@ function refreshTelepathonsView(){
 				sleepTimeMicros = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
 
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL_MODE){
-					panelHTML += "<h6>Continous, Display Active</h6>";
+					panelHTML += '<div style="font-size:13px">Continous, Display Active</div>';
 				}
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_NO_LED){
 					panelHTML += "<h6>Continous, No Display </h6>";
+					panelHTML += '<div style="font-size:13px">Continous, No Display</div>';
 				}
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
-					panelHTML += "<h6>Pulse and Sleep, next pulse at " + calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) +" </h6>";
+					panelHTML += '<div style="font-size:13px">Pulse and Sleep, next pulse at ' + calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) +' </div>';
 				}
 
 				panelHTML += '<table class="table table-condensed table-striped">';
