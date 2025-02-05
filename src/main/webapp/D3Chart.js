@@ -1,7 +1,7 @@
 
 function showTelepathonGraph(data) {
 	// Set dimensions 
-	d3.select("#telepathon-graph").html("");
+	//d3.select("#telepathon-graph").html("");
 	// Get container width - using getBoundingClientRect() for better compatibility
     const graphContainer = document.getElementById('graph');
     const containerWidth = graphContainer ? graphContainer.getBoundingClientRect().width : 300; // fallback width if element not found
