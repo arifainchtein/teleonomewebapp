@@ -19,6 +19,26 @@ function getDeneByIdentityPointer(identityPointer){
 	}
 }
 
+function getDeneWordFromTelepathon(denechain,deneName, deneWordName,whatToBring){
+	var k4=0,l4=0;
+	var denes = denechain["Denes"];
+	for( k4=0;k4<denes.length;k4++){
+		var dene = denes[k4];
+		if(dene["Name"]===deneName){
+			var deneWords = dene['DeneWords'];
+			for( l4=0;l4<deneWords.length;l4++){
+				var deneWord = deneWords[l4];
+				if(deneWord['Name']===deneWordName){
+					if(whatToBring===COMPLETE){
+						return deneWord;
+					}else {
+						return  deneWord[whatToBring];
+					}
+				}
+			}
+		}
+	}
+}
 
 function getHumanInterfaceDeneChainsForVisualizer(){
 	nucleiJSONArray = denomeJSONObject.Nuclei;

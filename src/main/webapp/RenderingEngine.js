@@ -682,8 +682,133 @@ function updateOrganismView(text){
 }
 
 function updateTelepathonsView(text){
-	telepathonsJsonData = JSON.parse(text);
-	refreshTelepathonsView();
+	telepathon = JSON.parse(text);
+	telepathonName = telepathon["Name"];
+	var telepathonName;
+	var currentFunctionValue;	
+	var sleepTimeMicros;
+	var operatingStatus;
+	var secondsTime ;
+		
+	telepathonName = telepathon["Name"];
+	localDate=getDeneWordFromTelepathon(telepathon,'Purpose', 'Local Time',DENEWORD_VALUE_ATTRIBUTE)
+	secondsTime=getDeneWordFromTelepathon(telepathon,'Purpose', 'Seconds Time',DENEWORD_VALUE_ATTRIBUTE);
+	currentFunctionValue=getDeneWordFromTelepathon(telepathon,'Configuration', 'Current Function',DENEWORD_VALUE_ATTRIBUTE);
+	
+
+	panelHTML += '<div id="'+telepathonName+'" style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
+	panelHTML +='<div class="row">';
+	panelHTML += '<div class="col-8 text-center" style="font-size:16px">'+telepathonName+'</div>';
+	panelHTML += '<div class="col-1 float-right" style="font-size:12px"><button class="delete-telepathon" data-telepathonname="'+ telepathonName +'" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button></div>';
+	panelHTML +='</div>';
+	
+	panelHTML += '<div style="font-size:13px">'+localDate+'</div>';
+	
+	operatingStatus = getDeneWordFromTelepathon(telepathon,'Purpose', 'Operating Status',DENEWORD_VALUE_ATTRIBUTE);
+	sleepTimeMicros = getDeneWordFromTelepathon(telepathon,'Purpose', 'Sleep Time',DENEWORD_VALUE_ATTRIBUTE);
+
+	if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL_MODE){
+		panelHTML += '<div style="font-size:13px">Continous, Display Active</div>';
+	}
+	if(operatingStatus==TELEPATHON_OPERATING_STATUS_NO_LED){
+		panelHTML += "<h6>Continous, No Display </h6>";
+		panelHTML += '<div style="font-size:13px">Continous, No Display</div>';
+	}
+	if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
+		panelHTML += '<div style="font-size:13px">Pulse and Sleep, next pulse at ' + calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) +' </div>';
+	}
+
+	panelHTML += '<table class="table table-condensed table-striped">';
+	
+
+	if(currentFunctionValue==ANNABELL_FUN_1_FLOW) {
+		
+		
+	}else if(currentFunctionValue==ANNABELL_FUN_2_FLOW) {
+		
+		
+	}else if(currentFunctionValue==ANNABELL_FUN_1_FLOW_1_TANK) {
+		
+		
+	}else if(currentFunctionValue==ANNABELL_FUN_1_TANK) {
+		
+		
+	}else if(currentFunctionValue==ANNABELL_FUN_2_TANK) {
+	
+		
+	}else if(currentFunctionValue==ANNABELL_DAFFODIL_SCEPTIC_TANK) {
+		panelHTML += '<tr>';
+		panelHTML += '<td>Sceptic Available</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Sceptic Available',DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"-></td>';
+		panelHTML += '</tr>';
+		panelHTML += '<tr>';
+		panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Outdoor Temperature',DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"-></td>';
+		panelHTML += '</tr>';
+		panelHTML += '<tr>';
+		panelHTML += '<td>Outdoor Humidity</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Outdoor Humidity',DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"-></td>';
+		panelHTML += '</tr>';
+
+		var lux = getDeneWordFromTelepathon(telepathon,'Purpose', 'Light Level',DENEWORD_VALUE_ATTRIBUTE)
+		if(lux>-1){
+			panelHTML += '<tr>';
+			panelHTML += '<td>Light Sensor</td><td>'+Math.floor(lux*0.0079)	+'w/m2</td>';
+			panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"-></td>';
+			panelHTML += '</tr>';
+		}
+
+	}else if(currentFunctionValue==ANNABELL_DAFFODIL_WATER_TROUGH) {
+		
+
+	}else if(currentFunctionValue==ANNABELL_TEMP_SOILMOISTURE) {
+	}else if(currentFunctionValue==ANNABELL_LIGHT_DETECTOR) {
+	}
+
+	panelHTML += '<tr>';
+	panelHTML += '<td>Capacitor Voltage</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Capacitor Voltage',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+	panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
+	panelHTML += '</tr>';
+
+	if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
+		panelHTML += '<tr>';
+		panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeMicros)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"-></td>';
+		panelHTML += '</tr>';
+	}
+	
+
+
+	panelHTML += '<tr>';
+	panelHTML += '<td>Led Brightness</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Led Brightness',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+	panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
+	panelHTML += '</tr>';
+
+	panelHTML += '<tr>';
+	panelHTML += '<td>SNR</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'snr',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+	panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"-></td>';
+	panelHTML += '</tr>';
+
+	panelHTML += '<tr>';
+	panelHTML += '<td>RSSI</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'rssi',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+	panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"-></td>';
+	panelHTML += '</tr>';
+
+	panelHTML += '<tr>';
+	panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'RTC Batter Volt',DENEWORD_VALUE_ATTRIBUTE)+'V</td>';
+	panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"-></td>';
+	panelHTML += '</tr>';
+
+	panelHTML += '<tr>';
+	panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Imternal Temperature',DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
+	panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"-></td>';
+	panelHTML += '</tr>';
+	panelHTML += '</table>';
+	panelHTML += "</div>";	
+
+	$('#' + telepathonName).empty();
+	$('#' + telepathonName).append(panelHTML);
+
 }
 
 function refreshTelepathonsView(){
@@ -713,7 +838,7 @@ function refreshTelepathonsView(){
 				currentFunctionValue=getDeneWordByIdentityPointer(currentFunctionValuePointer, DENEWORD_VALUE_ATTRIBUTE);
 				
 
-				panelHTML += '<div style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
+				panelHTML += '<div id="'+telepathonName+'" style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
 				panelHTML +='<div class="row">';
 				panelHTML += '<div class="col-8 text-center" style="font-size:16px">'+telepathonName+'</div>';
 				panelHTML += '<div class="col-1 float-right" style="font-size:12px"><button class="delete-telepathon" data-telepathonname="'+ telepathonName +'" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button></div>';
