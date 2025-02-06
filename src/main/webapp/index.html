@@ -857,9 +857,9 @@ the css for the little box on the top right f external data
 							var analisis = analyzeTimeSeriesData(data)
 
 							var statsPanel='';
-							statsPanel +='Average Interval:' +analisis.averageIntervalSeconds;
+							statsPanel +='<div style="margin:10px">Average Interval Between transmissions:' +Math.trunc(analisis.averageIntervalSeconds) + " seconds<div>";
 							statsPanel +='<table class="table table-striped">';
-								statsPanel +='<tr>Hour<th></th><th>Data</th></tr>';
+							statsPanel +='<tr><th>Hour<th></th><th>Average Time(Seconds)</th><th>Number of Samples</th></tr>';
 							console.log("Average Interval:");
 							console.log(`Seconds: ${analisis.averageIntervalSeconds}`);
 							console.log(`Minutes: ${analisis.averageIntervalMinutes}`);
@@ -869,7 +869,7 @@ the css for the little box on the top right f external data
 								.filter(([_, data]) => data.count > 0)
 								.forEach(([hour, data]) => {
 									console.log(`Hour ${hour}: ${data.average.toFixed(2)} (${data.count} samples)`);
-									statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +' ' + data.count+' samples</td></tr>';
+									statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +'</td><td>' + data.count+'</td></tr>';
 								});
 
 							statsPanel +='<table>';
