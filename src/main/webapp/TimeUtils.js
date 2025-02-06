@@ -1,13 +1,13 @@
 function analyzeTimeSeriesData(data) {
-    // Sort data by timeString
-    const sortedData = data.sort((a, b) => parseInt(a.timeString) - parseInt(b.timeString));
+    // Sort data by timeSeconds
+    const sortedData = data.sort((a, b) => parseInt(a.timeSeconds) - parseInt(b.timeSeconds));
     
     // Calculate average interval
     let totalInterval = 0;
     let intervalCount = 0;
     
     for (let i = 1; i < sortedData.length; i++) {
-        const interval = parseInt(sortedData[i].timeString) - parseInt(sortedData[i-1].timeString);
+        const interval = parseInt(sortedData[i].timeSeconds) - parseInt(sortedData[i-1].timeSeconds);
         totalInterval += interval;
         intervalCount++;
     }
@@ -27,7 +27,7 @@ function analyzeTimeSeriesData(data) {
     
     // Group data by hour
     sortedData.forEach(item => {
-        const date = new Date(parseInt(item.timeString) * 1000);
+        const date = new Date(parseInt(item.timeSeconds) * 1000);
         const hour = date.getHours();
         hourlyData[hour].sum += parseFloat(item.value);
         hourlyData[hour].count++;
