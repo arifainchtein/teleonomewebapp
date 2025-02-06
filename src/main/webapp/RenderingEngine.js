@@ -682,7 +682,7 @@ function updateOrganismView(text){
 }
 
 function updateTelepathonsView(text){
-	telepathon = JSON.parse(text);
+	var telepathon = JSON.parse(text);
 	telepathonName = telepathon["Name"];
 	var telepathonName;
 	var currentFunctionValue;	
