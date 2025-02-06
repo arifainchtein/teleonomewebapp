@@ -489,7 +489,7 @@ the css for the little box on the top right f external data
 									<div id="dataDisplay" class="bg-light mt-3 p-2 border rounded">Hover over points to see values</div>
 								</div>
 								<div id="telepathon-stats-panel" class="tab-pane" role="tabpanel">
-									<div id="telepathon-stats"></div>
+									<div id="telepathon-stats" style="width:90%;margin:40px"></div>
 								</div>
 							</div>
 						</div>
@@ -857,9 +857,9 @@ the css for the little box on the top right f external data
 							var analisis = analyzeTimeSeriesData(data)
 
 							var statsPanel='';
-							statsPanel +='<div style="margin:10px">Average Interval Between transmissions:' +Math.trunc(analisis.averageIntervalSeconds) + " seconds<div>";
+							statsPanel +='<div style="margin:20px;font-size:16px">Average Interval Between transmissions:' +Math.trunc(analisis.averageIntervalSeconds) + " seconds<div>";
 							statsPanel +='<table class="table table-striped">';
-							statsPanel +='<tr><th>Hour<th></th><th>Average Time(Seconds)</th><th>Number of Samples</th></tr>';
+							statsPanel +='<tr><th>Hour</th><th>Average Time(Seconds)</th><th>Number of Samples</th></tr>';
 							console.log("Average Interval:");
 							console.log(`Seconds: ${analisis.averageIntervalSeconds}`);
 							console.log(`Minutes: ${analisis.averageIntervalMinutes}`);
