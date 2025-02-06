@@ -689,14 +689,12 @@ function updateTelepathonsView(text){
 	var sleepTimeMicros;
 	var operatingStatus;
 	var secondsTime ;
-		
-	telepathonName = telepathon["Name"];
 	var localDate=getDeneWordFromTelepathon(telepathon,'Purpose', 'Local Time',DENEWORD_VALUE_ATTRIBUTE)
 	var secondsTime=getDeneWordFromTelepathon(telepathon,'Purpose', 'Seconds Time',DENEWORD_VALUE_ATTRIBUTE);
 	currentFunctionValue=getDeneWordFromTelepathon(telepathon,'Configuration', 'Current Function',DENEWORD_VALUE_ATTRIBUTE);
 	
 
-	panelHTML += '<div id="'+telepathonName+'" style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
+	var panelHTML = '<div id="'+telepathonName+'" style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
 	panelHTML +='<div class="row">';
 	panelHTML += '<div class="col-8 text-center" style="font-size:16px">'+telepathonName+'</div>';
 	panelHTML += '<div class="col-1 float-right" style="font-size:12px"><button class="delete-telepathon" data-telepathonname="'+ telepathonName +'" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button></div>';
