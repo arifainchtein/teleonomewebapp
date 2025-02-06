@@ -592,6 +592,7 @@ the css for the little box on the top right f external data
 		<script type="text/javascript" src="templates/SearchPanel.js"></script>
 		<script type="text/javascript" src="templates/Mnemosycons.js"></script>
 		<script type="text/javascript" src="templates/DenomeAnalysis.js"></script>
+		<script type="text/javascript" src="TimeUtils.js"></script>
 
 		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
 		<script type="text/javascript" src="RenderingEngine.js"></script>
@@ -806,7 +807,7 @@ the css for the little box on the top right f external data
 				});
 
 
-
+ 
 				$(document).on('click', ".telepathon-daily-value",function(e) {
 					e.preventDefault();
 					//$('#NewRememberedWordDeneWordView').empty();
@@ -821,7 +822,21 @@ the css for the little box on the top right f external data
 						data: {formName:"GetTelepathonDataValueByPeriod", telepathonName:telepathonName, deneName:deneName, deneWordName:deneWordName},
 						success: function (res) {
 							var data = JSON.parse(res);
-							console.log(data);
+							//console.log(data);
+
+							var analisis = analyzeTimeSeriesData(data)
+							console.log("Average Interval:");
+							console.log(`Seconds: ${analisis.averageIntervalSeconds}`);
+							console.log(`Minutes: ${analisis.averageIntervalMinutes}`);
+							console.log(`Hours: ${analisis.averageIntervalHours}`);
+							console.log("\nHourly Averages:");
+							Object.entries(analisis.hourlyAverages)
+								.filter(([_, data]) => data.count > 0)
+								.forEach(([hour, data]) => {
+									console.log(`Hour ${hour}: ${data.average.toFixed(2)} (${data.count} samples)`);
+								});
+
+
 							$('#telepathon-graph-modal').modal('show');
 							$('#telepathon-graph-title').html(telepathonName + "-"+deneWordName);
 							$('#telepathon-graph').empty();
