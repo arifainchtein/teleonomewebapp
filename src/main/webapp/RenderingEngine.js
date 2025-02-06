@@ -691,8 +691,8 @@ function updateTelepathonsView(text){
 	var secondsTime ;
 		
 	telepathonName = telepathon["Name"];
-	localDate=getDeneWordFromTelepathon(telepathon,'Purpose', 'Local Time',DENEWORD_VALUE_ATTRIBUTE)
-	secondsTime=getDeneWordFromTelepathon(telepathon,'Purpose', 'Seconds Time',DENEWORD_VALUE_ATTRIBUTE);
+	var localDate=getDeneWordFromTelepathon(telepathon,'Purpose', 'Local Time',DENEWORD_VALUE_ATTRIBUTE)
+	var secondsTime=getDeneWordFromTelepathon(telepathon,'Purpose', 'Seconds Time',DENEWORD_VALUE_ATTRIBUTE);
 	currentFunctionValue=getDeneWordFromTelepathon(telepathon,'Configuration', 'Current Function',DENEWORD_VALUE_ATTRIBUTE);
 	
 
