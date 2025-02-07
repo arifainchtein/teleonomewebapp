@@ -33,7 +33,7 @@ function analyzeTimeSeriesData(data) {
     sortedData.forEach(item => {
         const date = new Date(parseInt(item.timeSeconds) * 1000);
         const hour = date.getHours();
-        const value = parseFloat(item.value);
+        const value = parseFloat(item.Value);
         
         hourlyData[hour].values.push(value);
         hourlyData[hour].sum += value;
