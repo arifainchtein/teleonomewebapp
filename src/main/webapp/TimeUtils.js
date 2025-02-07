@@ -31,7 +31,7 @@ function analyzeTimeSeriesData(data) {
     
     // Group data by hour
     sortedData.forEach(item => {
-        const date = new Date(parseInt(item.timeString) * 1000);
+        const date = new Date(parseInt(item.timeSeconds) * 1000);
         const hour = date.getHours();
         const value = parseFloat(item.value);
         
