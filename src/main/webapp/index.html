@@ -475,7 +475,7 @@ the css for the little box on the top right f external data
 			<div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 id="telepathon-graph-title" class="modal-title">Modal Title</h5><button class="close" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+						<h5 id="telepathon-graph-title" class="modal-title">Modal Title</h5>
 					</div>
 					<div class="modal-body">
 						<div>
@@ -859,7 +859,7 @@ the css for the little box on the top right f external data
 							var statsPanel='';
 							statsPanel +='<div style="margin:20px;font-size:16px">Average Interval Between transmissions:' +Math.trunc(analisis.averageIntervalSeconds) + " seconds</div>";
 							statsPanel +='<table class="table table-striped text-center">';
-							statsPanel +='<tr><th>Hour</th><th>Average Time(Seconds)</th><th>Number of Samples</th></tr>';
+							statsPanel +='<tr><th>Hour</th><th>Average Time(Seconds)</th><th># of Samples</th><th>Std Dev</th><th>Min</th><th>Max</th></tr>';
 							console.log("Average Interval:");
 							console.log(`Seconds: ${analisis.averageIntervalSeconds}`);
 							console.log(`Minutes: ${analisis.averageIntervalMinutes}`);
@@ -869,7 +869,7 @@ the css for the little box on the top right f external data
 								.filter(([_, data]) => data.count > 0)
 								.forEach(([hour, data]) => {
 									console.log(`Hour ${hour}: ${data.average.toFixed(2)} (${data.count} samples)`);
-									statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +'</td><td>' + data.count+'</td></tr>';
+									statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +'</td><td>' + data.count+'</td><td>' + data.stdDev+'</td><td>' + data.min+'</td><td>' + data.max+'</td></tr>';
 								});
 
 							statsPanel +='<table>';

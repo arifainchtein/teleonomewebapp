@@ -798,7 +798,7 @@ function updateTelepathonsView(text){
 	panelHTML += '</tr>';
 
 	panelHTML += '<tr>';
-	panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Imternal Temperature',DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
+	panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Internal Temperature',DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
 	panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"-></td>';
 	panelHTML += '</tr>';
 	panelHTML += '</table>';
