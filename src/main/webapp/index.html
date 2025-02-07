@@ -869,7 +869,7 @@ the css for the little box on the top right f external data
 								.filter(([_, data]) => data.count > 0)
 								.forEach(([hour, data]) => {
 									console.log(`Hour ${hour}: ${data.average.toFixed(2)} (${data.count} samples)`);
-									statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +'</td><td>' + data.count+'</td><td>' + data.stdDev+'</td><td>' + data.min+'</td><td>' + data.max+'</td></tr>';
+									statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +'</td><td>' + data.count+'</td><td>' + data.stdDev.toFixed(2)+'</td><td>' + data.min+'</td><td>' + data.max+'</td></tr>';
 								});
 
 							statsPanel +='<table>';
