@@ -164,4 +164,53 @@ class SolarInfo {
             pressure: 1013.25
         };
     }
+
+    generateHTMLTable(year, month, date) {
+        const schedules = this.calculateDailySolarPowerSchedule(year, month, date);
+        
+        let tableHTML = `
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Time</th>
+                        <th>Efficiency (%)</th>
+                        <th>Power (W)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        schedules.forEach(schedule => {
+            const time = new Date(schedule.time * 1000);
+            const efficiency = schedule.efficiency * 100; // Convert to percentage
+            
+            // Determine row class based on efficiency
+            let rowClass = '';
+            let status = 'Insufficient';
+            if (efficiency >= this.minEfficiencyWifi) {
+                rowClass = 'table-success';
+                status = 'WiFi & LED Available';
+            } else if (efficiency >= this.minEfficiencyLed) {
+                rowClass = 'table-warning';
+                status = 'LED Only';
+            }
+
+            tableHTML += `
+                <tr class="${rowClass}">
+                    <td>${time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+                    <td>${efficiency.toFixed(2)}%</td>
+                    <td>${schedule.power.toFixed(2)}</td>
+                    <td>${status}</td>
+                </tr>
+            `;
+        });
+
+        tableHTML += `
+                </tbody>
+            </table>
+        `;
+
+        return tableHTML;
+    }
 }

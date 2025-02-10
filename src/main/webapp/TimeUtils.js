@@ -1,3 +1,67 @@
+function analyzeTransmissionIntervals(data) {
+    // Sort data by timeString
+    const sortedData = data.sort((a, b) => parseInt(a.timeString) - parseInt(b.timeString));
+    
+    // Initialize hourly data structure
+    const hourlyIntervals = {};
+    for (let i = 0; i < 24; i++) {
+        hourlyIntervals[i] = {
+            intervals: [], // Store all intervals for this hour
+            count: 0,
+            average: 0,
+            stdDev: 0,
+            min: Infinity,
+            max: -Infinity
+        };
+    }
+    
+    // Calculate intervals and group by hour
+    for (let i = 1; i < sortedData.length; i++) {
+        const currentTime = parseInt(sortedData[i].timeString);
+        const previousTime = parseInt(sortedData[i-1].timeString);
+        const interval = currentTime - previousTime;
+        
+        // Use the hour of the current transmission
+        const hour = new Date(currentTime * 1000).getHours();
+        
+        hourlyIntervals[hour].intervals.push(interval);
+        hourlyIntervals[hour].count++;
+        hourlyIntervals[hour].min = Math.min(hourlyIntervals[hour].min, interval);
+        hourlyIntervals[hour].max = Math.max(hourlyIntervals[hour].max, interval);
+    }
+    
+    // Calculate statistics for each hour
+    for (let hour = 0; hour < 24; hour++) {
+        if (hourlyIntervals[hour].count > 0) {
+            // Calculate average
+            const sum = hourlyIntervals[hour].intervals.reduce((a, b) => a + b, 0);
+            hourlyIntervals[hour].average = sum / hourlyIntervals[hour].count;
+            
+            // Calculate standard deviation
+            if (hourlyIntervals[hour].count > 1) {
+                const mean = hourlyIntervals[hour].average;
+                const squareDiffs = hourlyIntervals[hour].intervals.map(interval => {
+                    const diff = interval - mean;
+                    return diff * diff;
+                });
+                const avgSquareDiff = squareDiffs.reduce((sum, diff) => sum + diff, 0) / 
+                                    (hourlyIntervals[hour].count - 1);
+                hourlyIntervals[hour].stdDev = Math.sqrt(avgSquareDiff);
+            }
+        }
+    }
+    
+    return hourlyIntervals;
+}
+
+// Helper function to format time in seconds to minutes:seconds
+function formatTimeInterval(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+
 function analyzeTimeSeriesData(data) {
     // Sort data by timeSeconds
     const sortedData = data.sort((a, b) => parseInt(a.timeSeconds) - parseInt(b.timeSeconds));
