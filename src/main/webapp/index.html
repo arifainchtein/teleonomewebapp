@@ -854,7 +854,7 @@ the css for the little box on the top right f external data
 							var data = JSON.parse(res);
 							//console.log(data);
 
-							var analisis = analyzeTransmissionIntervals(data)
+							var results = analyzeTransmissionIntervals(data);
 
 							var statsPanel='';
 							statsPanel +='<div style="margin:20px;font-size:16px">Average Interval Between transmissions:' +Math.trunc(analisis.averageIntervalSeconds) + " seconds</div>";
