@@ -23,7 +23,7 @@ function HeartConnect() {
 	// });	
 	
 	
-	
+	localStorage.clear();
 	
 	console.log('invoking mqttconnect');
 	host="Egg.local";
