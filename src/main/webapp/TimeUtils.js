@@ -1,6 +1,6 @@
 function analyzeTransmissionIntervals(data) {
-    // Sort data by timeString
-    const sortedData = data.sort((a, b) => parseInt(a.timeString) - parseInt(b.timeString));
+    // Sort data by timeSeconds
+    const sortedData = data.sort((a, b) => parseInt(a.timeSeconds) - parseInt(b.timeSeconds));
     
     // Initialize hourly data structure
     const hourlyIntervals = {};
@@ -17,8 +17,8 @@ function analyzeTransmissionIntervals(data) {
     
     // Calculate intervals and group by hour
     for (let i = 1; i < sortedData.length; i++) {
-        const currentTime = parseInt(sortedData[i].timeString);
-        const previousTime = parseInt(sortedData[i-1].timeString);
+        const currentTime = parseInt(sortedData[i].timeSeconds);
+        const previousTime = parseInt(sortedData[i-1].timeSeconds);
         const interval = currentTime - previousTime;
         
         // Use the hour of the current transmission
