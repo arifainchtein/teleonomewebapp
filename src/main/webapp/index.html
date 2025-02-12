@@ -481,12 +481,16 @@ the css for the little box on the top right f external data
 						<div>
 							<ul class="nav nav-tabs" role="tablist">
 								<li class="nav-item" role="presentation"><a id="graph-link" class="nav-link active" role="tab" data-toggle="tab" href="#telepathon-graph-panel">Graph</a></li>
-								<li class="nav-item" role="presentation"><a id="telepathon-stats-link" class="nav-link" role="tab" data-toggle="tab" href="#telepathon-stats-panel">Stats</a></li>
+								<li class="nav-item" role="presentation"><a id="graph-link" class="nav-link" role="tab" data-toggle="tab" href="#telepathon-data-panel">Graph</a></li>
+								<li class="nav-item" role="presentation"><a id="telepathon-stats-link" class="nav-link" role="tab" data-toggle="tab" href="#telepathon-stats-panel">Comm Stats</a></li>
 							</ul>
 							<div class="tab-content">
 								<div id="telepathon-graph-panel" class="tab-pane active" role="tabpanel">
 									<div id="telepathon-graph" class="graph-container"></div>
 									<div id="dataDisplay" class="bg-light mt-3 p-2 border rounded">Hover over points to see values</div>
+								</div>
+								<div id="telepathon-data-panel" class="tab-pane" role="tabpanel">
+									<div id="telepathon-data" style="width:90%;margin:40px"></div>
 								</div>
 								<div id="telepathon-stats-panel" class="tab-pane" role="tabpanel">
 									<div id="telepathon-stats" style="width:90%;margin:40px"></div>
@@ -893,12 +897,26 @@ the css for the little box on the top right f external data
 									}
 								});
 							statsPanel +='<table>';
+
+							var dataPanel='';
+							dataPanel +='<div style="margin:20px;font-size:16px">There are ' + data.length +' samples</div>';
+							dataPanel +='<table class="table table-striped text-center">';
+							dataPanel +='<tr><th>Time</th><th>Value</th></tr>';
+							data.forEach(function(obj) { 
+								console.log(obj.id); 
+								dataPanel +='<tr><td>'+obj.timeString+'</td><td>'+obj.Value +'</td></tr>';
+							});
+							
+							dataPanel +='<table>';
 							$('#telepathon-graph-modal').modal('show');
 							$('#telepathon-graph-title').html(telepathonName + "-"+deneWordName);
 							$('#telepathon-graph').empty();
 							showTelepathonGraph(data);
 							$('#telepathon-stats').empty();
 							$('#telepathon-stats').append(statsPanel);
+						
+							$('#telepathon-data').empty();
+							$('#telepathon-data').append(dataPanel);
 
 						},
 						error: function(data){
