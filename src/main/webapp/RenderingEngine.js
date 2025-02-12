@@ -825,6 +825,7 @@ function refreshTelepathonsView(){
 		var operatingStatus;
 		var secondsTime, secondsTimePointer;
 		var deneChains = telepathonsNuclei['DeneChains'];
+		var currentFunctionTitle;
 			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
 				localDatePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
@@ -835,6 +836,31 @@ function refreshTelepathonsView(){
 				currentFunctionValuePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Configuration:Current Function";
 				currentFunctionValue=getDeneWordByIdentityPointer(currentFunctionValuePointer, DENEWORD_VALUE_ATTRIBUTE);
 				
+
+
+				if(currentFunctionValue==ANNABELL_FUN_1_FLOW) {
+					currentFunctionTitle="1 Flow Meter";
+					
+				}else if(currentFunctionValue==ANNABELL_FUN_2_FLOW) {
+					
+					currentFunctionTitle="12 Flow Meters";
+				}else if(currentFunctionValue==ANNABELL_FUN_1_FLOW_1_TANK) {
+					
+					currentFunctionTitle="1 Flow Meter 1 Tank Level";
+				}else if(currentFunctionValue==ANNABELL_FUN_1_TANK) {
+					currentFunctionTitle=" 1 Tank Level";
+				}else if(currentFunctionValue==ANNABELL_FUN_2_TANK) {
+				
+					currentFunctionTitle="2 Tank Levels";
+				}else if(currentFunctionValue==ANNABELL_DAFFODIL_SCEPTIC_TANK) {
+					currentFunctionTitle="Sceptic";
+				}else if(currentFunctionValue==ANNABELL_DAFFODIL_WATER_TROUGH) {
+					currentFunctionTitle="Trough ";
+				}else if(currentFunctionValue==ANNABELL_TEMP_SOILMOISTURE) {
+					currentFunctionTitle="Soil Moisture";
+				}else if(currentFunctionValue==ANNABELL_LIGHT_DETECTOR) {
+					currentFunctionTitle="Light Detector";
+				}
 
 				panelHTML += '<div id="'+telepathonName+'" style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
 				panelHTML +='<div class="row">';
@@ -848,17 +874,19 @@ function refreshTelepathonsView(){
 				operatingStatus = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sleep Time";
 				sleepTimeMicros = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
-
+				panelHTML += '<div style="font-size:13px">';
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL_MODE){
-					panelHTML += '<div style="font-size:13px">Continous, Display Active</div>';
+					panelHTML+='Continous, Display Active';
 				}
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_NO_LED){
-					panelHTML += "<h6>Continous, No Display </h6>";
-					panelHTML += '<div style="font-size:13px">Continous, No Display</div>';
+					panelHTML += 'Continous, No Display';
 				}
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
-					panelHTML += '<div style="font-size:13px">Pulse and Sleep, next pulse at ' + calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) +' </div>';
+					panelHTML += 'Pulse and Sleep, next pulse at ' + calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) ;
 				}
+				panelHTML +='  Mode:'+currentFunctionTitle;
+				panelHTML += '</div>';
+				
 
 				panelHTML += '<table class="table table-condensed table-striped">';
 				
