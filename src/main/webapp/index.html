@@ -870,7 +870,7 @@ the css for the little box on the top right f external data
 
 							statsPanel +='<tr><th>Hour</th><th>Count</th><th>Avg(m:ss)</th><th>Std Dev</th><th>Min(m:ss)</th><th>Max(m:ss)</th></tr>';
 							
-							Object.entries(results)
+							Object.entries(results.hours)
 								.filter(([_, data]) => data.count > 0)
 								.forEach(([hour, data]) => {
 									if (data.min !== Infinity) {
