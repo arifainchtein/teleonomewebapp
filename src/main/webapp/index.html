@@ -849,18 +849,18 @@ the css for the little box on the top right f external data
 							statsPanel +='<div style="margin:20px;font-size:16px">Average Interval Between transmissions:' +Math.trunc(results.averageIntervalSeconds) + " seconds</div>";
 							statsPanel +='<table class="table table-striped text-center">';
 							
-							statsPanel +='<tr><th>Hour</th><th>Average Time(Seconds)</th><th># of Samples</th><th>Std Dev</th><th>Min</th><th>Max</th></tr>';
-							// console.log("Average Interval:");
-							// console.log(`Seconds: ${analisis.averageIntervalSeconds}`);
-							// console.log(`Minutes: ${analisis.averageIntervalMinutes}`);
-							// console.log(`Hours: ${analisis.averageIntervalHours}`);
-							// console.log("\nHourly Averages:");
-							Object.entries(analisis.hourlyAverages)
-								.filter(([_, data]) => data.count > 0)
-								.forEach(([hour, data]) => {
-									console.log(`Hour ${hour}: ${data.average.toFixed(2)} (${data.count} samples)`);
-									statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +'</td><td>' + data.count+'</td><td>' + data.stdDev.toFixed(2)+'</td><td>' + data.min+'</td><td>' + data.max+'</td></tr>';
-								});
+							// statsPanel +='<tr><th>Hour</th><th>Average Time(Seconds)</th><th># of Samples</th><th>Std Dev</th><th>Min</th><th>Max</th></tr>';
+							// // console.log("Average Interval:");
+							// // console.log(`Seconds: ${analisis.averageIntervalSeconds}`);
+							// // console.log(`Minutes: ${analisis.averageIntervalMinutes}`);
+							// // console.log(`Hours: ${analisis.averageIntervalHours}`);
+							// // console.log("\nHourly Averages:");
+							// Object.entries(analisis.hourlyAverages)
+							// 	.filter(([_, data]) => data.count > 0)
+							// 	.forEach(([hour, data]) => {
+							// 		console.log(`Hour ${hour}: ${data.average.toFixed(2)} (${data.count} samples)`);
+							// 		statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +'</td><td>' + data.count+'</td><td>' + data.stdDev.toFixed(2)+'</td><td>' + data.min+'</td><td>' + data.max+'</td></tr>';
+							// 	});
 							
 
 							statsPanel +='<tr><th>Hour</th><th>Count</th><th>Avg(m:ss)</th><th>Std Dev</th><th>Min(m:ss)</th><th>Max(m:ss)</th></tr>';
