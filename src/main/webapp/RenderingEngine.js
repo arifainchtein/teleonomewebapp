@@ -686,7 +686,7 @@ function updateTelepathonsView(text){
 	telepathonName = telepathon["Name"];
 	var telepathonName;
 	var currentFunctionValue;	
-	var sleepTimeMicros;
+	var sleepTimeSeconds;
 	var operatingStatus;
 	var secondsTime ;
 	var localDate=getDeneWordFromTelepathon(telepathon,'Purpose', 'Local Time',DENEWORD_VALUE_ATTRIBUTE)
@@ -703,7 +703,7 @@ function updateTelepathonsView(text){
 	panelHTML += '<div style="font-size:13px">'+localDate+'</div>';
 	
 	operatingStatus = getDeneWordFromTelepathon(telepathon,'Purpose', 'Operating Status',DENEWORD_VALUE_ATTRIBUTE);
-	sleepTimeMicros = getDeneWordFromTelepathon(telepathon,'Purpose', 'Sleep Time',DENEWORD_VALUE_ATTRIBUTE);
+	sleepTimeSeconds = getDeneWordFromTelepathon(telepathon,'Purpose', 'Sleep Time',DENEWORD_VALUE_ATTRIBUTE);
 
 	if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL_MODE){
 		panelHTML += '<div style="font-size:13px">Continous, Display Active</div>';
@@ -713,7 +713,7 @@ function updateTelepathonsView(text){
 		panelHTML += '<div style="font-size:13px">Continous, No Display</div>';
 	}
 	if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
-		panelHTML += '<div style="font-size:13px">Pulse and Sleep, next pulse at ' + calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) +' </div>';
+		panelHTML += '<div style="font-size:13px">Pulse and Sleep, next pulse at ' + calculateFutureTimeWithDate(secondsTime, sleepTimeSeconds) +' </div>';
 	}
 
 	panelHTML += '<table class="table table-condensed table-striped">';
@@ -770,7 +770,7 @@ function updateTelepathonsView(text){
 
 	if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
 		panelHTML += '<tr>';
-		panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeMicros)+'</td>';
+		panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeSeconds)+'</td>';
 		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"-></td>';
 		panelHTML += '</tr>';
 	}
@@ -821,7 +821,7 @@ function refreshTelepathonsView(){
 		var currentFunctionValue;	
 		var currentFunctionValuePointer;
 		var datapointer;
-		var sleepTimeMicros;
+		var sleepTimeSeconds;
 		var operatingStatus;
 		var secondsTime, secondsTimePointer;
 		var deneChains = telepathonsNuclei['DeneChains'];
@@ -873,7 +873,7 @@ function refreshTelepathonsView(){
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Operating Status";
 				operatingStatus = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sleep Time";
-				sleepTimeMicros = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
+				sleepTimeSeconds = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
 				panelHTML += '<div style="font-size:13px">';
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL_MODE){
 					panelHTML+='Continous, Display Active';
@@ -882,7 +882,7 @@ function refreshTelepathonsView(){
 					panelHTML += 'Continous, No Display';
 				}
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
-					panelHTML += 'Pulse and Sleep, next pulse at ' + calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) ;
+					panelHTML += 'Pulse and Sleep, next pulse at ' + calculateFutureTimeWithDate(secondsTime, sleepTimeSeconds) ;
 				}
 				panelHTML +='  Mode:'+currentFunctionTitle;
 				panelHTML += '</div>';
@@ -949,7 +949,7 @@ function refreshTelepathonsView(){
 
 				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
 					panelHTML += '<tr>';
-					panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeMicros)+'</td>';
+					panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeSeconds)+'</td>';
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"-></td>';
 					panelHTML += '</tr>';
 				}
@@ -1000,10 +1000,10 @@ function refreshTelepathonsView(){
 		return panelHTML;
 	}
 
-	function calculateFutureTimeWithDate(secondsTime, sleepTimeMicros) {
+	function calculateFutureTimeWithDate(secondsTime, sleepTimeSeconds) {
 		// Convert sleepTimeMicros to seconds and add to the epoch time
-		const microsToSeconds = sleepTimeMicros / 1000000;
-		const futureEpoch = secondsTime + microsToSeconds;
+	//	const microsToSeconds = sleepTimeMicros / 1000000;
+		const futureEpoch = secondsTime + sleepTimeSeconds;
 		
 		// Create a Date object with the future time
 		const futureDate = new Date(futureEpoch * 1000);
@@ -1019,9 +1019,9 @@ function refreshTelepathonsView(){
 		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 	}
 
-	function formatTime(sleepTimeMicros) {
+	function formatTime(totalSeconds) {
 		// Convert microseconds to seconds (1 second = 1,000,000 microseconds)
-		const totalSeconds = Math.floor(sleepTimeMicros / 1000000);
+		//const totalSeconds = Math.floor(sleepTimeMicros / 1000000);
 		
 		// Calculate minutes and remaining seconds
 		const minutes = Math.floor(totalSeconds / 60);
