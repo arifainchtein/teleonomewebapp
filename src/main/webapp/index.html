@@ -839,7 +839,7 @@ the css for the little box on the top right f external data
 							var data = JSON.parse(res);
 							//console.log(data);
 
-							var results = analyzeTransmissionIntervals(data);
+							var results = {};//analyzeTransmissionIntervals(data);
 
 							var statsPanel='';
 							statsPanel +='<div style="margin:20px;font-size:16px">Average Interval Between transmissions:' +Math.trunc(results.averageIntervalSeconds) + " seconds</div>";
@@ -894,15 +894,16 @@ the css for the little box on the top right f external data
 							// 	$(this).tab('show')
 							// })
 							// $('#telepathon-graph-modal').find('.nav-tabs .nav-link:first').tab('show')
-							$('#telepathon-graph-modal').modal('show');
+							
 							$('#telepathon-graph-title').html(telepathonName + "-"+deneWordName);
-							$('#telepathon-graph').empty();
-							showTelepathonGraph(data);
-							$('#telepathon-stats').empty();
-							$('#telepathon-stats').append(statsPanel);
+						//	$('#telepathon-graph').empty();
+						//	showTelepathonGraph(data);
+						//$('#telepathon-stats').empty();
+						//	$('#telepathon-stats').append(statsPanel);
 						
-							$('#telepathon-data').empty();
-							$('#telepathon-data').append(dataPanel);
+						//	$('#telepathon-data').empty();
+						//	$('#telepathon-data').append(dataPanel);
+							$('#telepathon-graph-modal').modal('show');
 
 						},
 						error: function(data){
