@@ -24,7 +24,7 @@ function showTelepathonGraph(data) {
 	.attr("width", "100%")
 	.attr("height", height + margin.top + margin.bottom)
 	.attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
-	.attr("preserveAspectRatio", "xMidYMid meet")
+	//.attr("preserveAspectRatio", "xMidYMid meet")
 	.append("g")
 	.attr("transform", `translate(${margin.left},${margin.top})`);
 
