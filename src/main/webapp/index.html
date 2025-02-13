@@ -495,7 +495,7 @@ the css for the little box on the top right f external data
 			</div>
 		</div>
 
-		
+
 		<div id="telepathon-graph-modal" class="modal fade" tabindex="-1">
 			<div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down" role="document">
 				<div class="modal-content">
@@ -843,12 +843,12 @@ the css for the little box on the top right f external data
 							var data = JSON.parse(res);
 							//console.log(data);
 
-							var results = {};//analyzeTransmissionIntervals(data);
+							var results = analyzeTransmissionIntervals(data);
 
 							var statsPanel='';
 							statsPanel +='<div style="margin:20px;font-size:16px">Average Interval Between transmissions:' +Math.trunc(results.averageIntervalSeconds) + " seconds</div>";
 							statsPanel +='<table class="table table-striped text-center">';
-							/*
+							
 							statsPanel +='<tr><th>Hour</th><th>Average Time(Seconds)</th><th># of Samples</th><th>Std Dev</th><th>Min</th><th>Max</th></tr>';
 							console.log("Average Interval:");
 							console.log(`Seconds: ${analisis.averageIntervalSeconds}`);
@@ -861,7 +861,7 @@ the css for the little box on the top right f external data
 									console.log(`Hour ${hour}: ${data.average.toFixed(2)} (${data.count} samples)`);
 									statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +'</td><td>' + data.count+'</td><td>' + data.stdDev.toFixed(2)+'</td><td>' + data.min+'</td><td>' + data.max+'</td></tr>';
 								});
-							*/
+							
 
 							statsPanel +='<tr><th>Hour</th><th>Count</th><th>Avg(m:ss)</th><th>Std Dev</th><th>Min(m:ss)</th><th>Max(m:ss)</th></tr>';
 							
@@ -893,20 +893,20 @@ the css for the little box on the top right f external data
 							});
 							
 							dataPanel +='<table>';
-							// $('#telepathon-graph-modal .nav-link').on('click', function (e) {
-							// 	e.preventDefault()
-							// 	$(this).tab('show')
-							// })
-							// $('#telepathon-graph-modal').find('.nav-tabs .nav-link:first').tab('show')
+							$('#telepathon-graph-modal .nav-link').on('click', function (e) {
+								e.preventDefault()
+								$(this).tab('show')
+							})
+							$('#telepathon-graph-modal').find('.nav-tabs .nav-link:first').tab('show')
 							
 							$('#telepathon-graph-title').html(telepathonName + "-"+deneWordName);
-						//	$('#telepathon-graph').empty();
-						//	showTelepathonGraph(data);
-						//$('#telepathon-stats').empty();
-						//	$('#telepathon-stats').append(statsPanel);
+							$('#telepathon-graph').empty();
+							showTelepathonGraph(data);
+						$('#telepathon-stats').empty();
+							$('#telepathon-stats').append(statsPanel);
 						
-						//	$('#telepathon-data').empty();
-						//	$('#telepathon-data').append(dataPanel);
+							$('#telepathon-data').empty();
+							$('#telepathon-data').append(dataPanel);
 							$('#telepathon-graph-modal').modal('show');
 
 						},
