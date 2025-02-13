@@ -471,7 +471,32 @@ the css for the little box on the top right f external data
 			</div>
 		</div>
 
-		<div id="telepathon-graph-modal" class="modal fade" tabindex="-1" style="">
+		<div class="modal fade" id="CodeInputModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header text-center">
+						<h4 id="CodeInputModalTitle" class="modal-title w-100 font-weight-bold"></h4>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h5 id="CodeInputModalDescription" class="modal-title w-100 font-weight-bold"></h5>
+					</div>
+					<div class="modal-body mx-3">
+						<div class="md-form mb-5">
+							<i class="fa fa-envelope prefix grey-text"></i>
+							<input type="text" id="code" class="form-control validate">
+							<label data-error="wrong" data-success="right" for="defaultForm-email">Code</label>
+						</div>
+					</div>
+					<div class="modal-footer d-flex justify-content-center">
+						<button id="ModalButonText" class="btn btn-default"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		
+		<div id="telepathon-graph-modal" class="modal fade" tabindex="-1">
 			<div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -506,30 +531,9 @@ the css for the little box on the top right f external data
 	
 
 
-		<!-- <div class="modal fade" id="CodeInputModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header text-center">
-							<h4 id="CodeInputModalTitle" class="modal-title w-100 font-weight-bold"></h4>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-							<h5 id="CodeInputModalDescription" class="modal-title w-100 font-weight-bold"></h5>
-						</div>
-						<div class="modal-body mx-3">
-							<div class="md-form mb-5">
-								<i class="fa fa-envelope prefix grey-text"></i>
-								<input type="text" id="code" class="form-control validate">
-								<label data-error="wrong" data-success="right" for="defaultForm-email">Code</label>
-							</div>
-						</div>
-						<div class="modal-footer d-flex justify-content-center">
-							<button id="ModalButonText" class="btn btn-default"></button>
-						</div>
-					</div>
-				</div>
-			</div>
-			 -->
+		 
+		
+			
 
 		<div id="OrganismModal"></div>
 		<div id="EntryPoint" class="container-fluid"></div>
