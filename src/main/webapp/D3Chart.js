@@ -7,7 +7,7 @@ function showTelepathonGraph(data) {
     const containerWidth = graphContainer ? graphContainer.getBoundingClientRect().width : 300; // fallback width if element not found
     
     // Set dimensions with responsive values
-    const margin = {top: 20, right: 10, bottom: 50, left: 40};
+    const margin = {top: 20, right: 10, bottom: 50, left: 10};
     const width = Math.max(containerWidth - margin.left - margin.right, 200); // ensure minimum width
     const height = Math.min(400, window.innerHeight * 0.5) - margin.top - margin.bottom;
   
