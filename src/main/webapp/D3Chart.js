@@ -7,7 +7,7 @@ function showTelepathonGraph(data) {
     const containerWidth = graphContainer ? graphContainer.getBoundingClientRect().width : 300; // fallback width if element not found
     
     // Set dimensions with responsive values
-    const margin = {top: 20, right: 20, bottom: 50, left: 50};
+    const margin = {top: 20, right: 10, bottom: 50, left: 40};
     const width = Math.max(containerWidth - margin.left - margin.right, 200); // ensure minimum width
     const height = Math.min(400, window.innerHeight * 0.5) - margin.top - margin.bottom;
   
@@ -24,6 +24,7 @@ function showTelepathonGraph(data) {
 	.attr("width", "100%")
 	.attr("height", height + margin.top + margin.bottom)
 	.attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+	.attr("preserveAspectRatio", "xMidYMid meet")
 	.append("g")
 	.attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -32,9 +33,11 @@ function showTelepathonGraph(data) {
 	  .domain(d3.extent(data, d => d.time))
 	  .range([0, width]);
   
-	const y = d3.scaleLinear()
-	  .domain([0, d3.max(data, d => d.value)])
-	  .range([height, 0]);
+	  const maxValue = d3.max(data, d => d.value);
+	  const y = d3.scaleLinear()
+		  .domain([0, maxValue * 1.2]) // Add 20% to the maximum value
+		  .range([height, 0]);
+	
   
 	// Add line
 	const line = d3.line()
@@ -49,56 +52,51 @@ function showTelepathonGraph(data) {
 	  .attr("d", line);
   
 	 // Add axes with responsive formatting
-    const xAxis = svg.append("g")
-        .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x)
-            .ticks(width < 600 ? 5 : 10)
-            .tickFormat(d3.timeFormat("%H:%M")));
+	 const xAxis = svg.append("g")
+	 .attr("transform", `translate(0,${height})`)
+	 .call(d3.axisBottom(x)
+		 .ticks(width < 600 ? 4 : 8) // Reduced number of ticks
+		 .tickFormat(d3.timeFormat("%H:%M")));
 
-    // Rotate x-axis labels for better readability on mobile
-    if (width < 600) {
-        xAxis.selectAll("text")
-            .style("text-anchor", "end")
-            .attr("dx", "-.8em")
-            .attr("dy", ".15em")
-            .attr("transform", "rotate(-45)");
-    }
+ // Adjust x-axis labels for better mobile display
+ xAxis.selectAll("text")
+	 .style("text-anchor", "end")
+	 .attr("dx", "-.8em")
+	 .attr("dy", ".15em")
+	 .attr("transform", "rotate(-45)");
 
-    svg.append("g")
-        .call(d3.axisLeft(y)
-            .ticks(height < 400 ? 5 : 10));
-  
-	// Add dots with data display update
-    svg.selectAll("circle")
-        .data(data)
-        .enter().append("circle")
-        .attr("r", 3)
-        .attr("cx", d => x(d.time))
-        .attr("cy", d => y(d.value))
-        .attr("fill", "steelblue")
-        .on("mouseover", function(event, d) {
-            const timeFormat = d3.timeFormat("%H:%M:%S");
-            // Update the data display div
-            d3.select("#dataDisplay")
-                .html(`Time: ${timeFormat(d.time)} | Value: ${d.value}`);
-            
-            // Highlight the current point
-            d3.select(this)
-                .attr("r", 6)
-                .attr("fill", "red");
-        })
-        .on("mouseout", function() {
-            // Reset point size and color
-            d3.select(this)
-                .attr("r", 3)
-                .attr("fill", "steelblue");
-        });
+ svg.append("g")
+	 .call(d3.axisLeft(y)
+		 .ticks(height < 400 ? 5 : 8));
 
-    // Add some basic styling to the data display
-    d3.select("#dataDisplay")
-        .style("font-family", "monospace")
-        .style("font-size", "14px");
-  }
+ // Add dots with data display update
+ svg.selectAll("circle")
+	 .data(data)
+	 .enter().append("circle")
+	 .attr("r", 3)
+	 .attr("cx", d => x(d.time))
+	 .attr("cy", d => y(d.value))
+	 .attr("fill", "steelblue")
+	 .on("mouseover", function(event, d) {
+		 const timeFormat = d3.timeFormat("%H:%M:%S");
+		 d3.select("#dataDisplay")
+			 .html(`Time: ${timeFormat(d.time)} | Value: ${d.value}`);
+		 
+		 d3.select(this)
+			 .attr("r", 6)
+			 .attr("fill", "red");
+	 })
+	 .on("mouseout", function() {
+		 d3.select(this)
+			 .attr("r", 3)
+			 .attr("fill", "steelblue");
+	 });
+
+ // Style data display
+ d3.select("#dataDisplay")
+	 .style("font-family", "monospace")
+	 .style("font-size", "14px");
+}
 
   
 function drawPieChart(id, data, title){

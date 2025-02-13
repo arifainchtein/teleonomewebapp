@@ -503,26 +503,7 @@ the css for the little box on the top right f external data
 			</div>
 		</div>
 
-		<!--
-		
-		<div class="modal fade" id="telepathon-graph-modal" tabindex="-1">
-			<div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-				<div class="modal-content">
-				  <div class="modal-header">
-					<h5 class="modal-title" id="telepathon-graph-title">Data Visualization</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				  </div>
-				  <div class="modal-body">
-					<div id="telepathon-graph" class="graph-container"></div>
-					<div id="dataDisplay" class="mt-3 p-2 border rounded bg-light">
-					  Hover over points to see values
-					</div>
-				  </div>
-				</div>
-			</div>
-		</div>
-			-->
-		<!--
+	
 
 
 		<div class="modal fade" id="CodeInputModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -906,7 +887,7 @@ the css for the little box on the top right f external data
 								console.log(obj.id); 
 								dataPanel +='<tr><td>'+obj.timeString+'</td><td>'+obj.Value +'</td></tr>';
 							});
-							
+							$('#telepathon-graph-modal').find('.nav-tabs .nav-link:first').tab('show')
 							dataPanel +='<table>';
 							$('#telepathon-graph-modal').modal('show');
 							$('#telepathon-graph-title').html(telepathonName + "-"+deneWordName);
