@@ -3,6 +3,76 @@ function analyzeTransmissionIntervals(data) {
     const sortedData = data.sort((a, b) => parseInt(a.timeSeconds) - parseInt(b.timeSeconds));
     
     // Initialize hourly data structure
+    const hourlyIntervals = {
+      hours: {},
+      totalAverage: 0,
+      totalCount: 0
+    };
+  
+    // Initialize hours
+    for (let i = 0; i < 24; i++) {
+        hourlyIntervals.hours[i] = {
+            intervals: [], // Store all intervals for this hour
+            count: 0,
+            average: 0,
+            stdDev: 0,
+            min: Infinity,
+            max: -Infinity
+        };
+    }
+    
+    // Calculate intervals and group by hour
+    let totalSum = 0;
+    for (let i = 1; i < sortedData.length; i++) {
+        const currentTime = parseInt(sortedData[i].timeSeconds);
+        const previousTime = parseInt(sortedData[i-1].timeSeconds);
+        const interval = currentTime - previousTime;
+        
+        // Use the hour of the current transmission
+        const hour = new Date(currentTime * 1000).getHours();
+        
+        hourlyIntervals.hours[hour].intervals.push(interval);
+        hourlyIntervals.hours[hour].count++;
+        hourlyIntervals.hours[hour].min = Math.min(hourlyIntervals.hours[hour].min, interval);
+        hourlyIntervals.hours[hour].max = Math.max(hourlyIntervals.hours[hour].max, interval);
+  
+        // Add to totals
+        totalSum += interval;
+        hourlyIntervals.totalCount++;
+    }
+    
+    // Calculate statistics for each hour
+    for (let hour = 0; hour < 24; hour++) {
+        if (hourlyIntervals.hours[hour].count > 0) {
+            // Calculate average
+            const sum = hourlyIntervals.hours[hour].intervals.reduce((a, b) => a + b, 0);
+            hourlyIntervals.hours[hour].average = sum / hourlyIntervals.hours[hour].count;
+            
+            // Calculate standard deviation
+            if (hourlyIntervals.hours[hour].count > 1) {
+                const mean = hourlyIntervals.hours[hour].average;
+                const squareDiffs = hourlyIntervals.hours[hour].intervals.map(interval => {
+                    const diff = interval - mean;
+                    return diff * diff;
+                });
+                const avgSquareDiff = squareDiffs.reduce((sum, diff) => sum + diff, 0) / 
+                                    (hourlyIntervals.hours[hour].count - 1);
+                hourlyIntervals.hours[hour].stdDev = Math.sqrt(avgSquareDiff);
+            }
+        }
+    }
+  
+    // Calculate total average
+    hourlyIntervals.totalAverage = totalSum / hourlyIntervals.totalCount;
+    
+    return hourlyIntervals;
+  }
+/*
+function analyzeTransmissionIntervals(data) {
+    // Sort data by timeSeconds
+    const sortedData = data.sort((a, b) => parseInt(a.timeSeconds) - parseInt(b.timeSeconds));
+    
+    // Initialize hourly data structure
     const hourlyIntervals = {};
     for (let i = 0; i < 24; i++) {
         hourlyIntervals[i] = {
@@ -53,7 +123,7 @@ function analyzeTransmissionIntervals(data) {
     
     return hourlyIntervals;
 }
-
+*/
 // Helper function to format time in seconds to minutes:seconds
 function formatTimeInterval(seconds) {
     const minutes = Math.floor(seconds / 60);
