@@ -887,8 +887,13 @@ the css for the little box on the top right f external data
 								console.log(obj.id); 
 								dataPanel +='<tr><td>'+obj.timeString+'</td><td>'+obj.Value +'</td></tr>';
 							});
-							//$('#telepathon-graph-modal').find('.nav-tabs .nav-link:first').tab('show')
+							
 							dataPanel +='<table>';
+							$('#telepathon-graph-modal .nav-link').on('click', function (e) {
+								e.preventDefault()
+								$(this).tab('show')
+							})
+							$('#telepathon-graph-modal').find('.nav-tabs .nav-link:first').tab('show')
 							$('#telepathon-graph-modal').modal('show');
 							$('#telepathon-graph-title').html(telepathonName + "-"+deneWordName);
 							$('#telepathon-graph').empty();
