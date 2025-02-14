@@ -947,12 +947,18 @@ function refreshTelepathonsView(){
 				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
 				panelHTML += '</tr>';
 
-				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
+			//	if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
 					panelHTML += '<tr>';
 					panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeSeconds)+'</td>';
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"-></td>';
 					panelHTML += '</tr>';
-				}
+
+					panelHTML += '<tr>';
+					panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeSeconds)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"-></td>';
+					panelHTML += '</tr>';
+
+			//	}
 				
 				
 				
