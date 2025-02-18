@@ -37,6 +37,9 @@ class NetworkSensorDeviceStatusReport{
 		panelHTML += "		<tr> ";
 		var isTeleonome=false;
 		var teleonomeName="";
+		if(deviceList.length==0){
+			return  panelHTML;
+		}
 		for(var i = 0; i < deviceList.length; i++) {
 			var device = deviceList[i];
 			isTeleonome=false;
