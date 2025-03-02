@@ -17,6 +17,14 @@ class NetworkSensorDeviceStatusReport{
 		var panelHTML = "<div class=\"col-lg-12\"><div class=\"well\"><h4>Network Status as of "+ scanTimeString +"</h4></div> </div>";
 		
 		 panelHTML += "<div class=\"col-lg-12\">";
+		 if(deviceList.length==0){
+			panelHTML += "	<div class=\"bs-component\">";
+			panelHTML += "		<div class=\"panel panel-default\">";
+			panelHTML += "			<div class=\"panel-heading\"><h4>Device List</h4></div>";
+			panelHTML += "		<div class=\"panel-body\"></div>";
+			panelHTML += "	</div>";
+			return  panelHTML;
+		}
 		for(var i = 0; i < deviceList.length; i++) {
 			var device = deviceList[i];
 			if(!device[WHITE_LIST_STATUS]){
@@ -37,9 +45,7 @@ class NetworkSensorDeviceStatusReport{
 		panelHTML += "		<tr> ";
 		var isTeleonome=false;
 		var teleonomeName="";
-		if(deviceList.length==0){
-			return  panelHTML;
-		}
+		
 		for(var i = 0; i < deviceList.length; i++) {
 			var device = deviceList[i];
 			isTeleonome=false;
