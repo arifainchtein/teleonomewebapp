@@ -683,8 +683,8 @@ function updateOrganismView(text){
 
 function updateTelepathonsView(text){
 	var telepathon = JSON.parse(text);
-	telepathonName = telepathon["Name"];
-	var telepathonName;
+	
+	var telepathonName = telepathon["Name"];
 	var currentFunctionValue;	
 	var sleepTimeSeconds;
 	var operatingStatus;
@@ -701,7 +701,9 @@ function updateTelepathonsView(text){
 	panelHTML +='</div>';
 	
 	panelHTML += '<div style="font-size:13px">'+localDate+'</div>';
-	
+	serialnumber = telepathon["Serial Number"];
+	panelHTML += '<div style="font-size:13px">'+serialnumber+'</div>';
+
 	operatingStatus = getDeneWordFromTelepathon(telepathon,'Purpose', 'Operating Status',DENEWORD_VALUE_ATTRIBUTE);
 	sleepTimeSeconds = getDeneWordFromTelepathon(telepathon,'Purpose', 'Sleep Time',DENEWORD_VALUE_ATTRIBUTE);
 
