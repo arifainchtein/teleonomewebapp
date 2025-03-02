@@ -837,6 +837,7 @@ function refreshTelepathonsView(){
 		var currentFunctionTitle;
 			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
+				 serialnumber = deneChains[j13]["Serial Number"];
 				localDatePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
 				localDate=getDeneWordByIdentityPointer(localDatePointer, DENEWORD_VALUE_ATTRIBUTE);
 				secondsTimePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Seconds Time";
@@ -879,7 +880,7 @@ function refreshTelepathonsView(){
 				
 				panelHTML += '<div style="font-size:13px">'+localDate+'</div>';
 				
-				var serialnumber = telepathon["Serial Number"];
+				
 				panelHTML += '<div style="font-size:13px">'+serialnumber+'</div>';
 
 
