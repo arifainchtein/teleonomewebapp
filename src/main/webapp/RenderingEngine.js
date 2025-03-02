@@ -701,7 +701,7 @@ function updateTelepathonsView(text){
 	panelHTML +='</div>';
 	
 	panelHTML += '<div style="font-size:13px">'+localDate+'</div>';
-	serialnumber = telepathon["Serial Number"];
+	var serialnumber = telepathon["Serial Number"];
 	panelHTML += '<div style="font-size:13px">'+serialnumber+'</div>';
 
 	operatingStatus = getDeneWordFromTelepathon(telepathon,'Purpose', 'Operating Status',DENEWORD_VALUE_ATTRIBUTE);
@@ -831,7 +831,7 @@ function refreshTelepathonsView(){
 		var currentFunctionValuePointer;
 		var datapointer;
 		var sleepTimeSeconds;
-		var operatingStatus;
+		var operatingStatus, serialnumber;
 		var secondsTime, secondsTimePointer;
 		var deneChains = telepathonsNuclei['DeneChains'];
 		var currentFunctionTitle;
@@ -879,6 +879,10 @@ function refreshTelepathonsView(){
 				
 				panelHTML += '<div style="font-size:13px">'+localDate+'</div>';
 				
+				var serialnumber = telepathon["Serial Number"];
+				panelHTML += '<div style="font-size:13px">'+serialnumber+'</div>';
+
+
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Operating Status";
 				operatingStatus = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sleep Time";
