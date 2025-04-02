@@ -703,7 +703,7 @@ function updateTelepathonsView(text){
 
 	panelHTML +='<div class="d-inline-flex">';
 	panelHTML += '<div class="" style="font-size:16px">'+telepathonName+'</div>';
-	panelHTML += '<div class="	" style="font-size:12px"><button class="btn btn-sm btn-danger delete-telepathon" data-telepathonname="'+ telepathonName +'" ><i class="fa fa-close"></i></button></div>';
+	//panelHTML += '<div class="	" style="font-size:12px"><button class="btn btn-sm btn-danger delete-telepathon" data-telepathonname="'+ telepathonName +'" ><i class="fa fa-close"></i></button></div>';
 	panelHTML +='</div>';
 	
 
@@ -882,7 +882,7 @@ function refreshTelepathonsView(){
 				panelHTML += '<div id="'+telepathonName+'" style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
 				panelHTML +='<div class="d-inline-flex">';
 				panelHTML += '<div class="" style="font-size:16px">'+telepathonName+'</div>';
-				panelHTML += '<div class="	" style="font-size:12px"><button class="btn btn-sm btn-danger delete-telepathon" data-telepathonname="'+ telepathonName +'" ><i class="fa fa-close"></i></button></div>';
+				//panelHTML += '<div class="	" style="font-size:12px"><button class="btn btn-sm btn-danger delete-telepathon" data-telepathonname="'+ telepathonName +'" ><i class="fa fa-close"></i></button></div>';
 				panelHTML +='</div>';
 				
 				panelHTML += '<div style="font-size:13px">'+localDate+'</div>';
