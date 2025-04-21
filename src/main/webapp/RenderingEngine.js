@@ -774,6 +774,7 @@ function updateTelepathonsView(text){
 
 	panelHTML += '<tr>';
 	panelHTML += '<td>Capacitor Voltage</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Capacitor Voltage',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+	panelHTML += '<td>Capacitor Current</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Capacitor Current',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 	panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
 	panelHTML += '</tr>';
 
