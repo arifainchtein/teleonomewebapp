@@ -779,7 +779,7 @@ function updateTelepathonsView(text){
 
 	panelHTML += '<tr>';
 	panelHTML += '<td>Capacitor Current</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Capacitor Current',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-	panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
+	panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"-></td>';
 	panelHTML += '</tr>';
 
 	//if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
@@ -977,7 +977,7 @@ function refreshTelepathonsView(){
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Current";
 				panelHTML += '<td>Capacitor Current</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 				
-				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
+				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"-></td>';
 				panelHTML += '</tr>';
 
 			//	if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
