@@ -974,11 +974,13 @@ function refreshTelepathonsView(){
 				}else if(currentFunctionValue==ANNABELLE_TEMP_SOILMOISTURE) {
 				}else if(currentFunctionValue==ANNABELLE_LIGHT_DETECTOR) {
 				}else if(currentFunctionValue==ANNABELLE_VOLTAGE_MONITOR) {
+			
 					panelHTML += '<tr>';
-					panelHTML += '<td>Remote Voltage</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Remote Voltage',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Remote Voltage";
+					panelHTML += '<td>Remote Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"-></td>';
 					panelHTML += '</tr>';
-			
+
 				}
 
 				panelHTML += '<tr>';
