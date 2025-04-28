@@ -888,6 +888,8 @@ function refreshTelepathonsView(){
 					currentFunctionTitle="Soil Moisture";
 				}else if(currentFunctionValue==ANNABELLE_LIGHT_DETECTOR) {
 					currentFunctionTitle="Light Detector";
+				}else if(currentFunctionValue==ANNABELLE_VOLTAGE_MONITOR) {
+					currentFunctionTitle='Remote Voltage Monitor'
 				}
 
 				panelHTML += '<div id="'+telepathonName+'" style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
@@ -971,6 +973,12 @@ function refreshTelepathonsView(){
 		
 				}else if(currentFunctionValue==ANNABELLE_TEMP_SOILMOISTURE) {
 				}else if(currentFunctionValue==ANNABELLE_LIGHT_DETECTOR) {
+				}else if(currentFunctionValue==ANNABELLE_VOLTAGE_MONITOR) {
+					panelHTML += '<tr>';
+					panelHTML += '<td>Remote Voltage</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Remote Voltage',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"-></td>';
+					panelHTML += '</tr>';
+			
 				}
 
 				panelHTML += '<tr>';
