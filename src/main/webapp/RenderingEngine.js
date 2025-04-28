@@ -728,22 +728,22 @@ function updateTelepathonsView(text){
 	panelHTML += '<table class="table table-condensed table-striped">';
 	
 
-	if(currentFunctionValue==ANNABELL_FUN_1_FLOW) {
+	if(currentFunctionValue==ANNABELLE_FUN_1_FLOW) {
 		
 		
-	}else if(currentFunctionValue==ANNABELL_FUN_2_FLOW) {
+	}else if(currentFunctionValue==ANNABELLE_FUN_2_FLOW) {
 		
 		
-	}else if(currentFunctionValue==ANNABELL_FUN_1_FLOW_1_TANK) {
+	}else if(currentFunctionValue==ANNABELLE_FUN_1_FLOW_1_TANK) {
 		
 		
-	}else if(currentFunctionValue==ANNABELL_FUN_1_TANK) {
+	}else if(currentFunctionValue==ANNABELLE_FUN_1_TANK) {
 		
 		
-	}else if(currentFunctionValue==ANNABELL_FUN_2_TANK) {
+	}else if(currentFunctionValue==ANNABELLE_FUN_2_TANK) {
 	
 		
-	}else if(currentFunctionValue==ANNABELL_DAFFODIL_SCEPTIC_TANK) {
+	}else if(currentFunctionValue==ANNABELLE_DAFFODIL_SCEPTIC_TANK) {
 		panelHTML += '<tr>';
 		panelHTML += '<td>Sceptic Available</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Sceptic Available',DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
 		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"-></td>';
@@ -765,11 +765,17 @@ function updateTelepathonsView(text){
 			panelHTML += '</tr>';
 		}
 
-	}else if(currentFunctionValue==ANNABELL_DAFFODIL_WATER_TROUGH) {
+	}else if(currentFunctionValue==ANNABELLE_DAFFODIL_WATER_TROUGH) {
 		
 
-	}else if(currentFunctionValue==ANNABELL_TEMP_SOILMOISTURE) {
-	}else if(currentFunctionValue==ANNABELL_LIGHT_DETECTOR) {
+	}else if(currentFunctionValue==ANNABELLE_TEMP_SOILMOISTURE) {
+	}else if(currentFunctionValue==ANNABELLE_VOLTAGE_MONITOR) {
+		panelHTML += '<tr>';
+		panelHTML += '<td>Remote Voltage</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Remote Voltage',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"-></td>';
+		panelHTML += '</tr>';
+
+	}else if(currentFunctionValue==ANNABELLE_LIGHT_DETECTOR) {
 	}
 
 	panelHTML += '<tr>';
@@ -860,27 +866,27 @@ function refreshTelepathonsView(){
 				
 
 
-				if(currentFunctionValue==ANNABELL_FUN_1_FLOW) {
+				if(currentFunctionValue==ANNABELLE_FUN_1_FLOW) {
 					currentFunctionTitle="1 Flow Meter";
 					
-				}else if(currentFunctionValue==ANNABELL_FUN_2_FLOW) {
+				}else if(currentFunctionValue==ANNABELLE_FUN_2_FLOW) {
 					
 					currentFunctionTitle="12 Flow Meters";
-				}else if(currentFunctionValue==ANNABELL_FUN_1_FLOW_1_TANK) {
+				}else if(currentFunctionValue==ANNABELLE_FUN_1_FLOW_1_TANK) {
 					
 					currentFunctionTitle="1 Flow Meter 1 Tank Level";
-				}else if(currentFunctionValue==ANNABELL_FUN_1_TANK) {
+				}else if(currentFunctionValue==ANNABELLE_FUN_1_TANK) {
 					currentFunctionTitle=" 1 Tank Level";
-				}else if(currentFunctionValue==ANNABELL_FUN_2_TANK) {
+				}else if(currentFunctionValue==ANNABELLE_FUN_2_TANK) {
 				
 					currentFunctionTitle="2 Tank Levels";
-				}else if(currentFunctionValue==ANNABELL_DAFFODIL_SCEPTIC_TANK) {
+				}else if(currentFunctionValue==ANNABELLE_DAFFODIL_SCEPTIC_TANK) {
 					currentFunctionTitle="Sceptic";
-				}else if(currentFunctionValue==ANNABELL_DAFFODIL_WATER_TROUGH) {
+				}else if(currentFunctionValue==ANNABELLE_DAFFODIL_WATER_TROUGH) {
 					currentFunctionTitle="Trough ";
-				}else if(currentFunctionValue==ANNABELL_TEMP_SOILMOISTURE) {
+				}else if(currentFunctionValue==ANNABELLE_TEMP_SOILMOISTURE) {
 					currentFunctionTitle="Soil Moisture";
-				}else if(currentFunctionValue==ANNABELL_LIGHT_DETECTOR) {
+				}else if(currentFunctionValue==ANNABELLE_LIGHT_DETECTOR) {
 					currentFunctionTitle="Light Detector";
 				}
 
@@ -917,22 +923,22 @@ function refreshTelepathonsView(){
 				panelHTML += '<table class="table table-condensed table-striped">';
 				
 
-				if(currentFunctionValue==ANNABELL_FUN_1_FLOW) {
+				if(currentFunctionValue==ANNABELLE_FUN_1_FLOW) {
 					
 					
-				}else if(currentFunctionValue==ANNABELL_FUN_2_FLOW) {
+				}else if(currentFunctionValue==ANNABELLE_FUN_2_FLOW) {
 					
 					
-				}else if(currentFunctionValue==ANNABELL_FUN_1_FLOW_1_TANK) {
+				}else if(currentFunctionValue==ANNABELLE_FUN_1_FLOW_1_TANK) {
 					
 					
-				}else if(currentFunctionValue==ANNABELL_FUN_1_TANK) {
+				}else if(currentFunctionValue==ANNABELLE_FUN_1_TANK) {
 					
 					
-				}else if(currentFunctionValue==ANNABELL_FUN_2_TANK) {
+				}else if(currentFunctionValue==ANNABELLE_FUN_2_TANK) {
 				
 					
-				}else if(currentFunctionValue==ANNABELL_DAFFODIL_SCEPTIC_TANK) {
+				}else if(currentFunctionValue==ANNABELLE_DAFFODIL_SCEPTIC_TANK) {
 					panelHTML += '<tr>';
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sceptic Available";
 					panelHTML += '<td>Sceptic Available</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
@@ -960,11 +966,11 @@ function refreshTelepathonsView(){
 						panelHTML += '</tr>';
 					}
 
-				}else if(currentFunctionValue==ANNABELL_DAFFODIL_WATER_TROUGH) {
+				}else if(currentFunctionValue==ANNABELLE_DAFFODIL_WATER_TROUGH) {
 					
 		
-				}else if(currentFunctionValue==ANNABELL_TEMP_SOILMOISTURE) {
-				}else if(currentFunctionValue==ANNABELL_LIGHT_DETECTOR) {
+				}else if(currentFunctionValue==ANNABELLE_TEMP_SOILMOISTURE) {
+				}else if(currentFunctionValue==ANNABELLE_LIGHT_DETECTOR) {
 				}
 
 				panelHTML += '<tr>';
