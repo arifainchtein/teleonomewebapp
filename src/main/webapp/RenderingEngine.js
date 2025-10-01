@@ -700,7 +700,7 @@ function updateTelepathonsView(text){
 	// panelHTML += '<div class="col-1 float-right" style="font-size:12px"><button class="delete-telepathon" data-telepathonname="'+ telepathonName +'" type="button" aria-label="Close" data-dismiss="modal"><span aria-hidden="true">×</span></button></div>';
 	// panelHTML +='</div>';
 	
-
+	
 	panelHTML +='<div class="d-inline-flex">';
 	panelHTML += '<div class="" style="font-size:16px">'+telepathonName+'</div>';
 	//panelHTML += '<div class="	" style="font-size:12px"><button class="btn btn-sm btn-danger delete-telepathon" data-telepathonname="'+ telepathonName +'" ><i class="fa fa-close"></i></button></div>';
@@ -882,6 +882,7 @@ function refreshTelepathonsView(){
 		var operatingStatus, serialnumber;
 		var secondsTime, secondsTimePointer;
 		var deneChains = telepathonsNuclei['DeneChains'];
+		var deviceType, deviceTypePointer;
 		var currentFunctionTitle;
 			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
@@ -894,7 +895,9 @@ function refreshTelepathonsView(){
 				currentFunctionValuePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Configuration:Current Function";
 				currentFunctionValue=getDeneWordByIdentityPointer(currentFunctionValuePointer, DENEWORD_VALUE_ATTRIBUTE);
 				
-
+				deviceTypePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Configuration:Device Type Id";
+				deviceType=getDeneWordByIdentityPointer(deviceTypePointer,DENEWORD_VALUE_ATTRIBUTE)
+				
 
 				if(currentFunctionValue==ANNABELLE_FUN_1_FLOW) {
 					currentFunctionTitle="1 Flow Meter";
@@ -933,121 +936,142 @@ function refreshTelepathonsView(){
 				
 				panelHTML += '<div style="font-size:13px">'+serialnumber+'</div>';
 
-
-				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Operating Status";
-				operatingStatus = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
-				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sleep Time";
-				sleepTimeSeconds = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
-				panelHTML += '<div style="font-size:13px">';
-				if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL_MODE){
-					panelHTML+='Continous, Display Active';
-				}
-				if(operatingStatus==TELEPATHON_OPERATING_STATUS_NO_LED){
-					panelHTML += 'Continous, No Display';
-				}
-				if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
-					panelHTML += 'Pulse and Sleep, next pulse at ' + calculateFutureTimeWithDate(secondsTime, sleepTimeSeconds) ;
-				}
-				panelHTML +='  Mode:'+currentFunctionTitle;
-				panelHTML += '</div>';
-				
-
-				panelHTML += '<table class="table table-condensed table-striped">';
-				
-
-				if(currentFunctionValue==ANNABELLE_FUN_1_FLOW) {
-					
-					
-				}else if(currentFunctionValue==ANNABELLE_FUN_2_FLOW) {
-					
-					
-				}else if(currentFunctionValue==ANNABELLE_FUN_1_FLOW_1_TANK) {
-					
-					
-				}else if(currentFunctionValue==ANNABELLE_FUN_1_TANK) {
-					
-					
-				}else if(currentFunctionValue==ANNABELLE_FUN_2_TANK) {
-				
-					
-				}else if(currentFunctionValue==ANNABELLE_DAFFODIL_SCEPTIC_TANK) {
-					panelHTML += '<tr>';
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sceptic Available";
-					panelHTML += '<td>Sceptic Available</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"-></td>';
-					panelHTML += '</tr>';
-					panelHTML += '<tr>';
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Temperature";
-					panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"-></td>';
-					panelHTML += '</tr>';
-					panelHTML += '<tr>';
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Humidity";
-					panelHTML += '<td>Outdoor Humidity</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"-></td>';
-					panelHTML += '</tr>';
-
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Light Level";
-					var lux = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
+				if(deviceType==TELEPATHON_DEVICE_TYPE_DAFFODIL){
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Operating Status";
+					operatingStatus = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sleep Time";
+					sleepTimeSeconds = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
+					panelHTML += '<div style="font-size:13px">';
+					if(operatingStatus==TELEPATHON_OPERATING_STATUS_FULL_MODE){
+						panelHTML+='Continous, Display Active';
+					}
+					if(operatingStatus==TELEPATHON_OPERATING_STATUS_NO_LED){
+						panelHTML += 'Continous, No Display';
+					}
+					if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
+						panelHTML += 'Pulse and Sleep, next pulse at ' + calculateFutureTimeWithDate(secondsTime, sleepTimeSeconds) ;
+					}
+					panelHTML +='  Mode:'+currentFunctionTitle;
+					panelHTML += '</div>';
 					
 
-					if(lux>-1){
+					panelHTML += '<table class="table table-condensed table-striped">';
+					
+
+					if(currentFunctionValue==ANNABELLE_FUN_1_FLOW) {
+						
+						
+					}else if(currentFunctionValue==ANNABELLE_FUN_2_FLOW) {
+						
+						
+					}else if(currentFunctionValue==ANNABELLE_FUN_1_FLOW_1_TANK) {
+						
+						
+					}else if(currentFunctionValue==ANNABELLE_FUN_1_TANK) {
+						
+						
+					}else if(currentFunctionValue==ANNABELLE_FUN_2_TANK) {
+					
+						
+					}else if(currentFunctionValue==ANNABELLE_DAFFODIL_SCEPTIC_TANK) {
 						panelHTML += '<tr>';
-						panelHTML += '<td>Light Sensor</td><td>'+Math.floor(lux*0.0079)	+'w/m2</td>';
-						panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"-></td>';
+						datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sceptic Available";
+						panelHTML += '<td>Sceptic Available</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
+						panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"-></td>';
 						panelHTML += '</tr>';
+						panelHTML += '<tr>';
+						datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Temperature";
+						panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
+						panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"-></td>';
+						panelHTML += '</tr>';
+						panelHTML += '<tr>';
+						datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Humidity";
+						panelHTML += '<td>Outdoor Humidity</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
+						panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"-></td>';
+						panelHTML += '</tr>';
+
+						datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Light Level";
+						var lux = getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
+						
+
+						if(lux>-1){
+							panelHTML += '<tr>';
+							panelHTML += '<td>Light Sensor</td><td>'+Math.floor(lux*0.0079)	+'w/m2</td>';
+							panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"-></td>';
+							panelHTML += '</tr>';
+						}
+
+					}else if(currentFunctionValue==ANNABELLE_DAFFODIL_WATER_TROUGH) {
+						
+			
+					}else if(currentFunctionValue==ANNABELLE_TEMP_SOILMOISTURE) {
+					}else if(currentFunctionValue==ANNABELLE_LIGHT_DETECTOR) {
+					}else if(currentFunctionValue==ANNABELLE_VOLTAGE_MONITOR) {
+				
+						panelHTML += '<tr>';
+						datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Remote Voltage";
+						panelHTML += '<td>Remote Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+						panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"-></td>';
+						panelHTML += '</tr>';
+
 					}
 
-				}else if(currentFunctionValue==ANNABELLE_DAFFODIL_WATER_TROUGH) {
-					
-		
-				}else if(currentFunctionValue==ANNABELLE_TEMP_SOILMOISTURE) {
-				}else if(currentFunctionValue==ANNABELLE_LIGHT_DETECTOR) {
-				}else if(currentFunctionValue==ANNABELLE_VOLTAGE_MONITOR) {
-			
 					panelHTML += '<tr>';
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Remote Voltage";
-					panelHTML += '<td>Remote Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"-></td>';
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Voltage";
+					panelHTML += '<td>Capacitor Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
 					panelHTML += '</tr>';
 
+					panelHTML += '<tr>';
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Current";
+					panelHTML += '<td>Capacitor Current</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"-></td>';
+					panelHTML += '</tr>';
+
+				//	if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
+						panelHTML += '<tr>';
+						panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeSeconds)+'</td>';
+						panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"-></td>';
+						panelHTML += '</tr>';
+
+						panelHTML += '<tr>';
+						panelHTML += '<td>Operating Status </td><td>'+operatingStatus+'</td>';
+						panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"-></td>';
+						panelHTML += '</tr>';
+
+				//	}
+				
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Led Brightness";
+					panelHTML += '<tr>';
+					panelHTML += '<td>Led Brightness</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
+					panelHTML += '</tr>';
+				}else if(deviceType==TELEPATHON_DEVICE_TYPE_SEEDLING_MONITOR){
+					panelHTML += '<tr>';
+					panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Outdoor Temperature',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"-></td>';
+					panelHTML += '</tr>';
+
+
+					panelHTML += '<tr>';
+					panelHTML += '<td>Seedling Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Seedling Temperature',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Temperature"-></td>';
+					panelHTML += '</tr>';
+
+					panelHTML += '<tr>';
+					panelHTML += '<td>Seedling Humidity</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Seedling Humidity',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Humidity"-></td>';
+					panelHTML += '</tr>';
+
+					panelHTML += '<tr>';
+					panelHTML += '<td>Humidifier Status</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Humidifier Status',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"-></td>';
+					panelHTML += '</tr>';
+				}else if(deviceType==TELEPATHON_DEVICE_TYPE_CHINAMPA){
 				}
 
-				panelHTML += '<tr>';
-				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Voltage";
-				panelHTML += '<td>Capacitor Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
-				panelHTML += '</tr>';
-
-				panelHTML += '<tr>';
-				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Current";
-				panelHTML += '<td>Capacitor Current</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 				
-				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"-></td>';
-				panelHTML += '</tr>';
-
-			//	if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
-					panelHTML += '<tr>';
-					panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeSeconds)+'</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"-></td>';
-					panelHTML += '</tr>';
-
-					panelHTML += '<tr>';
-					panelHTML += '<td>Operating Status </td><td>'+operatingStatus+'</td>';
-					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"-></td>';
-					panelHTML += '</tr>';
-
-			//	}
-				
-				
-				
-
-
-				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Led Brightness";
-				panelHTML += '<tr>';
-				panelHTML += '<td>Led Brightness</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-				panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
-				panelHTML += '</tr>';
 
 				datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:snr";
 				panelHTML += '<tr>';
