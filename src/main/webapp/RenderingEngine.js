@@ -1068,7 +1068,7 @@ function refreshTelepathonsView(){
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Humidifier Status";
 					panelHTML += '<tr>';
-					panelHTML += '<td>Humidifier Status</td><td>'+getDeneWordFromTelepathon(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>Humidifier Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"-></td>';
 					panelHTML += '</tr>';
 				}else if(deviceType==TELEPATHON_DEVICE_TYPE_CHINAMPA){
