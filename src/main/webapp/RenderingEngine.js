@@ -1048,6 +1048,8 @@ function refreshTelepathonsView(){
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
 					panelHTML += '</tr>';
 				}else if(deviceType==TELEPATHON_DEVICE_TYPE_SEEDLING_MONITOR){
+					panelHTML += '<table class="table table-condensed table-striped">';
+
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Temperature";
 					panelHTML += '<tr>';
 					panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
