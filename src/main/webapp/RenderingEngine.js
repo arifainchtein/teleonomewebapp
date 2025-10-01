@@ -1048,24 +1048,27 @@ function refreshTelepathonsView(){
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
 					panelHTML += '</tr>';
 				}else if(deviceType==TELEPATHON_DEVICE_TYPE_SEEDLING_MONITOR){
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Temperature";
 					panelHTML += '<tr>';
-					panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Outdoor Temperature',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"-></td>';
 					panelHTML += '</tr>';
 
-
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Seedling Temperature";
 					panelHTML += '<tr>';
-					panelHTML += '<td>Seedling Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Seedling Temperature',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>Seedling Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Temperature"-></td>';
 					panelHTML += '</tr>';
 
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Seedling Humidity";
 					panelHTML += '<tr>';
-					panelHTML += '<td>Seedling Humidity</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Seedling Humidity',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>Seedling Humidity</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Humidity"-></td>';
 					panelHTML += '</tr>';
 
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Humidifier Status";
 					panelHTML += '<tr>';
-					panelHTML += '<td>Humidifier Status</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Humidifier Status',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>Humidifier Status</td><td>'+getDeneWordFromTelepathon(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"-></td>';
 					panelHTML += '</tr>';
 				}else if(deviceType==TELEPATHON_DEVICE_TYPE_CHINAMPA){
