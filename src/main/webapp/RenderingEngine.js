@@ -692,7 +692,7 @@ function updateTelepathonsView(text){
 	var localDate=getDeneWordFromTelepathon(telepathon,'Purpose', 'Local Time',DENEWORD_VALUE_ATTRIBUTE)
 	var secondsTime=getDeneWordFromTelepathon(telepathon,'Purpose', 'Seconds Time',DENEWORD_VALUE_ATTRIBUTE);
 	currentFunctionValue=getDeneWordFromTelepathon(telepathon,'Configuration', 'Current Function',DENEWORD_VALUE_ATTRIBUTE);
-	var deviceType=getDeneWordFromTelepathon(telepathon,'Device Type Id', 'Local Time',DENEWORD_VALUE_ATTRIBUTE)
+	var deviceType=getDeneWordFromTelepathon(telepathon,'Configuration', 'Device Type Id',DENEWORD_VALUE_ATTRIBUTE)
 
 	var panelHTML = '';//<div id="'+telepathonName+'" style="margin:15px; border-radius:5px;background:lightblue" class="col-lg-4 col-md-4 col-sm-5 col-xs-11 text-center top-buffer">';
 	// panelHTML +='<div class="row">';
