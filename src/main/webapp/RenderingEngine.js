@@ -835,7 +835,129 @@ function updateTelepathonsView(text){
 		panelHTML += '</tr>';
 
 	}else if(deviceType==TELEPATHON_DEVICE_TYPE_CHINAMPA){
+		panelHTML += '<table class="table table-condensed table-striped">';
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Outflow Flow Rate";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Fish Tank Outflow Flow Rate</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Flow Rate"-></td>';
+		panelHTML += '</tr>';
 
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Alert Status";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Alert Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Status"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Pump Relay Status";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Pump Relay Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Outflow Solenoid Relay Status";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Fish Tank Outflow Solenoid Relay Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Alert Code";
+		panelHTML += '<tr>';
+		var alertcode=getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE);
+		var alerttext='';
+		// 1 Fish Tank Data Stale
+		// 2 Sump Trough Stale
+		// 3 Fish Tank and Sump Trough Data Stale
+		// 4 Fish Solenoid is open and flow is less than 2
+		// 5 Sump too low
+		// 10 u Temp too high
+		if(alerttext==1)alerttext='Fish Tank Data Stale';
+		else if(alerttext==2)alerttext='Sump Trough Stale';
+		else if(alerttext==3)alerttext='Fish Tank and Sump Trough Data Stale';
+		else if(alerttext==4)alerttext='Fish Solenoid is open and flow is less than 2';
+		else if(alerttext==5)alerttext='Sump too low';
+		else if(alerttext==10)alerttext='Miucro Temperature Too High';
+		panelHTML += '<td>Alert Message</td><td>'+alerttext+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Measured Height";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Fish Tank Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Measured Height"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sump Trough Measured Height";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Sump Trough Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:PCB Temperature";
+		panelHTML += '<tr>';
+		panelHTML += '<td>PCB Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="PCB Temperature"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:RTC Battery Volt";
+		panelHTML += '<tr>';
+		panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Sump Trough Stale Data Seconds";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Sump Trough Stale Data Seconds</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Sump Trough Stale Data Seconds"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Fish Tank Stale Data Seconds";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Fish Tank Stale Data Seconds</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Fish Tank Stale Data Seconds"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Fish Tank Flow Sensor Q Factor";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Fish Tank Flow Sensor Q Factor</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Fish Tank Flow Sensor Q Factor"-></td>';
+		panelHTML += '</tr>';
+
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Minimum Fish Tank Level";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Minimum Fish Tank Level</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Minimum Fish Tank Level"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Maximum Fish Tank Level";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Maximum Fish Tank Level</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Maximum Fish Tank Level"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Fish Tank Height";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Fish Tank Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Fish Tank Height"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Minimum Sump Trough Level";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Minimum Sump Trough Level</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Minimum Sump Trough Level"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Maximum Sump Trough Level";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Maximum Sump Trough Level</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Maximum Sump Trough Level"-></td>';
+		panelHTML += '</tr>';
+
+		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Sump TroughHeight";
+		panelHTML += '<tr>';
+		panelHTML += '<td>Sump Trough Height"</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Sump TroughHeight""-></td>';
+		panelHTML += '</tr>';
 	}
 	
 
