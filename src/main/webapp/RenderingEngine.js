@@ -1013,6 +1013,10 @@ function refreshTelepathonsView(){
 		var currentFunctionTitle;
 			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
+				var telepathonName = telepathon["Name"];
+				if(telepathonName!="FISHTANK" &&  telepathonName!="SumpTrough" &&  telepathonName!="SumpTrough" &&  telepathonName!="SumpTrough"){
+					continue ;
+				} 
 				 serialnumber = deneChains[j13]["Serial Number"];
 				localDatePointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Local Time";
 				localDate=getDeneWordByIdentityPointer(localDatePointer, DENEWORD_VALUE_ATTRIBUTE);
