@@ -1013,7 +1013,6 @@ function refreshTelepathonsView(){
 		var currentFunctionTitle;
 			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
-				var telepathonName = telepathon["Name"];
 				if(telepathonName!="FISHTANK" &&  telepathonName!="SumpTrough" &&  telepathonName!="SumpTrough" &&  telepathonName!="SumpTrough"){
 					continue ;
 				} 
