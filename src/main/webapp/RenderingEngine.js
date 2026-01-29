@@ -1013,7 +1013,7 @@ function refreshTelepathonsView(){
 		var currentFunctionTitle;
 			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
-				if(telepathonName!="FISHTANK" &&  telepathonName!="SumpTrough" &&  telepathonName!="SumpTrough" &&  telepathonName!="SumpTrough"){
+				if(telepathonName!="FISHTANK" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" &&  telepathonName!="SumpTrough"){
 					continue ;
 				} 
 				 serialnumber = deneChains[j13]["Serial Number"];
