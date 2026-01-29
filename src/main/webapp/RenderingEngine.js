@@ -685,6 +685,9 @@ function updateTelepathonsView(text){
 	var telepathon = JSON.parse(text);
 	
 	var telepathonName = telepathon["Name"];
+	if(telepathonName!="FISHTANK" &&  telepathonName!="SumpTrough" &&  telepathonName!="SumpTrough" &&  telepathonName!="SumpTrough"){
+		return ;
+	} 
 	var currentFunctionValue;	
 	var sleepTimeSeconds;
 	var operatingStatus;
@@ -713,6 +716,8 @@ function updateTelepathonsView(text){
 
 
 	if(deviceType==TELEPATHON_DEVICE_TYPE_DAFFODIL){
+		
+		
 		operatingStatus = getDeneWordFromTelepathon(telepathon,'Purpose', 'Operating Status',DENEWORD_VALUE_ATTRIBUTE);
 		sleepTimeSeconds = getDeneWordFromTelepathon(telepathon,'Purpose', 'Sleep Time',DENEWORD_VALUE_ATTRIBUTE);
 
@@ -836,7 +841,7 @@ function updateTelepathonsView(text){
 
 	}else if(deviceType==TELEPATHON_DEVICE_TYPE_CHINAMPA){
 		panelHTML += '<table class="table table-condensed table-striped">';
-		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Outflow Flow Rate";
+		var datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Outflow Flow Rate";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Fish Tank Outflow Flow Rate</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Flow Rate"-></td>';
