@@ -1013,7 +1013,7 @@ function refreshTelepathonsView(){
 		var currentFunctionTitle;
 			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
-				if(telepathonName!="FISHTANK" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" &&  telepathonName!="SumpTrough"){
+				if(telepathonName!="FISHTANK" &&  telepathonName!="Big Cap" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" &&  telepathonName!="SumpTrough"){
 					continue ;
 				} 
 				 serialnumber = deneChains[j13]["Serial Number"];
@@ -1260,6 +1260,25 @@ function refreshTelepathonsView(){
 					panelHTML += '<td>Sump Trough Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"-></td>';
 					panelHTML += '</tr>';
+
+
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Previous Fish Tank Measured Height";
+					panelHTML += '<tr>';
+					panelHTML += '<td>Previous Fish Tank Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"-></td>';
+					panelHTML += '</tr>';
+
+
+
+
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Previous Sump Trough Measured Height";
+					panelHTML += '<tr>';
+					panelHTML += '<td>Previous Sump Trough Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"-></td>';
+					panelHTML += '</tr>';
+
+
+
 
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:PCB Temperature";
 					panelHTML += '<tr>';
