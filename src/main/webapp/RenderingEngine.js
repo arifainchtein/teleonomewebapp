@@ -880,6 +880,7 @@ function updateTelepathonsView(text){
 		else if(alerttext==3)alerttext='Fish Tank and Sump Trough Data Stale';
 		else if(alerttext==4)alerttext='Fish Solenoid is open and flow is less than 2';
 		else if(alerttext==5)alerttext='Sump too low';
+		else if(alerttext==6)alerttext='System Needs Water';
 		else if(alerttext==10)alerttext='Miucro Temperature Too High';
 		panelHTML += '<td>Alert Message</td><td>'+alerttext+'</td>';
 		panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"-></td>';
@@ -1244,6 +1245,7 @@ function refreshTelepathonsView(){
 					else if(alerttext==3)alerttext='Fish Tank and Sump Trough Data Stale';
 					else if(alerttext==4)alerttext='Fish Solenoid is open and flow is less than 2';
 					else if(alerttext==5)alerttext='Sump too low';
+					else if(alerttext==6)alerttext='System Needs Water';
 					else if(alerttext==10)alerttext='Miucro Temperature Too High';
 					panelHTML += '<td>Alert Message</td><td>'+alerttext+'</td>';
 					panelHTML += '<td><img style="width:30px;height=30px" src="images/dailydataicon.png" class="telepathon-daily-value" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"-></td>';
