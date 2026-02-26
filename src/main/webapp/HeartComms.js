@@ -82,7 +82,17 @@ console.log("message arrived");
 	lastMessageTopic = message.destinationName;
 	var payload = message.payloadString;
 	console.log("message arrive, topic=" + lastMessageTopic);
-	if(lastMessageTopic=='Status'){
+	if (lastMessageTopic == "Hippocampus_Response") {
+        var response = JSON.parse(payload);
+        console.log("Received history for: " + response.Identity);
+        
+        // This is where you would call your graphing function or update a table
+        renderHistoryChart(response.Data);
+        
+        // Reset the button opacity if you changed it earlier
+        $('.telepathon-daily-value').css("opacity", "1.0");
+
+    }else 	if(lastMessageTopic=='Status'){
 		//
 		// the payload is a pulse so refresh the interface
 		// in the current page

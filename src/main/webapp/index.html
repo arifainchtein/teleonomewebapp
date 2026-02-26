@@ -831,8 +831,38 @@ the css for the little box on the top right f external data
 				});
 
 
+				$(document).on('click', '.telepathon-daily-value', function() {
+				        // 1. Extract data from the clicked image attributes
+				        var telepathon = $(this).data('telepathonname');
+				        var denename = $(this).data('denename');
+				        var denewordname = $(this).data('denewordname');
+				
+				        // 2. Construct the Identity Pointer
+				        // Note: You may need to adjust the Chain and Dene names 
+				        // if they aren't always 'Sensor Data' and 'Network Status'
+				        var identity = "@" + telepathon + ":" + denename + ":" + denewordname;
+				
+				        // 3. Create the Request Payload
+				        var requestPayload = {
+				            "Identity": identity,
+				            "Range": "24h" // You could also pull this from a data-range attribute
+				        };
+				
+				        // 4. Wrap in a Paho MQTT Message
+				        var message = new Paho.MQTT.Message(JSON.stringify(requestPayload));
+				        message.destinationName = "Hippocampus_Request";
+				        message.qos = 1;
+				
+				        // 5. Publish to the Heart
+				        console.log("Requesting 24h memory for: " + identity);
+				        mqtt.send(message);
+				        
+				        // Optional: Provide visual feedback that the request was sent
+				        $(this).css("opacity", "0.5");
+				    });
+				});
  
-				$(document).on('click', ".telepathon-daily-value",function(e) {
+				$(document).on('click', ".telepathon-daily-valuePOSTGREQL",function(e) {
 					e.preventDefault();
 					//$('#NewRememberedWordDeneWordView').empty();
 					var telepathonName = $(this).data("telepathonname");
