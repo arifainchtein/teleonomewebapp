@@ -54,6 +54,7 @@ function onConnect() {
 	mqtt.subscribe(HEART_TOPIC_ASYNC_CYCLE_UPDATE, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_UPDATE_FORM_RESPONSE, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_TELEPATHON_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
+	mqtt.subscribe(HEART_TOPIC_HIPPOCAMPUS_RESPONSE, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	
 	
 }
@@ -126,5 +127,7 @@ console.log("message arrived");
 		asyncUpdate(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_UPDATE_FORM_RESPONSE  && (pageToDisplay==1 || pageToDisplay==5)) {
 		receivedCommandResponse(payload);
-	}       
+	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_RESPONSE){
+		displayHippocampusResponse(payload);
+	}      
 };
