@@ -840,7 +840,8 @@ the css for the little box on the top right f external data
 				        // 2. Construct the Identity Pointer
 				        // Note: You may need to adjust the Chain and Dene names 
 				        // if they aren't always 'Sensor Data' and 'Network Status'
-				        var identity = "@" + telepathon + ":" + denename + ":" + denewordname;
+						var parentMnemosyconProcessingAddressPointer =  "@" +teleonomeName + ":" + nucleusName + ":" +deneChainName;
+				        var identity = "@" + teleonomeName + ":" + NUCLEI_TELEPATHONS + ":"+ telepathon + ":" + denename + ":" + denewordname;
 				
 				        // 3. Create the Request Payload
 				        var requestPayload = {
