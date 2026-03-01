@@ -32,7 +32,7 @@ function HeartConnect() {
 	mqtt.onConnect = onConnect;
 	mqtt.onMessageArrived = onMessageArrived;
 	mqtt.onConnectionLost = onConnectionLost;
-	mqtt.connect({onSuccess: onConnect, onFailure: onFailure, cleanSession:false});
+	mqtt.connect({onSuccess: onConnect, onFailure: onFailure, cleanSession:true});
 	console.log("Host="+ host + ", port=" + port );
 	console.log("connected...");
 }
@@ -43,7 +43,7 @@ function onConnect() {
 	console.log('in onconnect');
 	// $('#pulse').html('Connected to ' + host + ':' + port + path);
 	// Connection succeeded; subscribe to our topic
-	mqtt.subscribe("Hello", {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:2});
+	mqtt.subscribe("Hello", {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	console.log('after firstsub');
 	mqtt.subscribe(HEART_TOPIC_PULSE_STATUS_INFO, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_PULSE_STATUS_INFO_SECUNDARY, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
