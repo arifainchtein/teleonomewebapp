@@ -830,6 +830,7 @@ the css for the little box on the top right f external data
 					});
 				});
 
+				const browserId = Math.random().toString(36).substring(2, 10);
 
 				$(document).on('click', '.telepathon-daily-value', function() {
 				        // 1. Extract data from the clicked image attributes
@@ -846,9 +847,13 @@ the css for the little box on the top right f external data
 				        // 3. Create the Request Payload
 				        var requestPayload = {
 				            "Identity": identity,
-				            "Range": "24h" // You could also pull this from a data-range attribute
+				            "Range": "24h" ,
+							"RequestId": browserId 
 				        };
 				
+						var responseTopic = "Hippocampus_Response/" + browserId;
+    					mqtt.subscribe(responseTopic, {qos: 1});
+
 				        // 4. Wrap in a Paho MQTT Message
 				        var message = new Paho.MQTT.Message(JSON.stringify(requestPayload));
 				        message.destinationName = "Hippocampus_Request";
@@ -858,8 +863,8 @@ the css for the little box on the top right f external data
 				        console.log("Requesting 24h memory for: " + identity);
 				        mqtt.send(message);
 				        
-				        // Optional: Provide visual feedback that the request was sent
-				        $(this).css("opacity", "0.5");
+				        // // Optional: Provide visual feedback that the request was sent
+				        // $(this).css("opacity", "0.5");
 				});	 
  				 
 				$(document).on('click', ".telepathon-daily-valuePOSTGREQL",function(e) {
