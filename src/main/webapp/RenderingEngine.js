@@ -829,22 +829,22 @@ function updateTelepathonsView(text){
 		}else if(currentFunctionValue==ANNABELLE_DAFFODIL_SCEPTIC_TANK) {
 			panelHTML += '<tr>';
 			panelHTML += '<td>Sceptic Available</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Sceptic Available',DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
-			panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"-></td>';
+			panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"-></td>';
 			panelHTML += '</tr>';
 			panelHTML += '<tr>';
 			panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Outdoor Temperature',DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
-			panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"-></td>';
+			panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"-></td>';
 			panelHTML += '</tr>';
 			panelHTML += '<tr>';
 			panelHTML += '<td>Outdoor Humidity</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Outdoor Humidity',DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
-			panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"-></td>';
+			panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"-></td>';
 			panelHTML += '</tr>';
 
 			var lux = getDeneWordFromTelepathon(telepathon,'Purpose', 'Light Level',DENEWORD_VALUE_ATTRIBUTE)
 			if(lux>-1){
 				panelHTML += '<tr>';
 				panelHTML += '<td>Light Sensor</td><td>'+Math.floor(lux*0.0079)	+'w/m2</td>';
-				panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"-></td>';
+				panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"-></td>';
 				panelHTML += '</tr>';
 			}
 
@@ -855,7 +855,7 @@ function updateTelepathonsView(text){
 		}else if(currentFunctionValue==ANNABELLE_VOLTAGE_MONITOR) {
 			panelHTML += '<tr>';
 			panelHTML += '<td>Remote Voltage</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Remote Voltage',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-			panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"-></td>';
+			panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"-></td>';
 			panelHTML += '</tr>';
 
 		}else if(currentFunctionValue==ANNABELLE_LIGHT_DETECTOR) {
@@ -863,24 +863,24 @@ function updateTelepathonsView(text){
 
 		panelHTML += '<tr>';
 		panelHTML += '<td>Capacitor Voltage</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Capacitor Voltage',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
 		panelHTML += '</tr>';
 
 		panelHTML += '<tr>';
 		panelHTML += '<td>Capacitor Current</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Capacitor Current',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"-></td>';
 		panelHTML += '</tr>';
 
 		//if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
 		panelHTML += '<tr>';
 		panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeSeconds)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"-></td>';
 		panelHTML += '</tr>';
 
 
 		panelHTML += '<tr>';
 		panelHTML += '<td>Operating Status </td><td>'+operatingStatus+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"-></td>';
 		panelHTML += '</tr>';
 			
 		//}
@@ -889,30 +889,30 @@ function updateTelepathonsView(text){
 
 		panelHTML += '<tr>';
 		panelHTML += '<td>Led Brightness</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Led Brightness',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"-></td>';
 		panelHTML += '</tr>';
 	}else if(deviceType==TELEPATHON_DEVICE_TYPE_SEEDLING_MONITOR){
 
 
 		panelHTML += '<tr>';
 		panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Outdoor Temperature',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"-></td>';
 		panelHTML += '</tr>';
 
 
 		panelHTML += '<tr>';
 		panelHTML += '<td>Seedling Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Seedling Temperature',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Temperature"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Temperature"-></td>';
 		panelHTML += '</tr>';
 
 		panelHTML += '<tr>';
 		panelHTML += '<td>Seedling Humidity</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Seedling Humidity',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Humidity"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Humidity"-></td>';
 		panelHTML += '</tr>';
 
 		panelHTML += '<tr>';
 		panelHTML += '<td>Humidifier Status</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Humidifier Status',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"-></td>';
 		panelHTML += '</tr>';
 
 	}else if(deviceType==TELEPATHON_DEVICE_TYPE_CHINAMPA){
@@ -920,25 +920,25 @@ function updateTelepathonsView(text){
 		var datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Outflow Flow Rate";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Fish Tank Outflow Flow Rate</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Flow Rate"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Flow Rate"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Alert Status";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Alert Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Status"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Status"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Pump Relay Status";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Pump Relay Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Outflow Solenoid Relay Status";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Fish Tank Outflow Solenoid Relay Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Alert Code";
@@ -959,108 +959,108 @@ function updateTelepathonsView(text){
 		else if(alertcode==6)alerttext='System Needs Water';
 		else if(alertcode==10)alerttext='Miucro Temperature Too High';
 		panelHTML += '<td>Alert Message</td><td>'+alerttext+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Measured Height";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Fish Tank Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Measured Height"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Measured Height"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sump Trough Measured Height";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Sump Trough Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:PCB Temperature";
 		panelHTML += '<tr>';
 		panelHTML += '<td>PCB Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="PCB Temperature"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="PCB Temperature"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:RTC Battery Volt";
 		panelHTML += '<tr>';
 		panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Sump Trough Stale Data Seconds";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Sump Trough Stale Data Seconds</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Sump Trough Stale Data Seconds"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Sump Trough Stale Data Seconds"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Fish Tank Stale Data Seconds";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Fish Tank Stale Data Seconds</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Fish Tank Stale Data Seconds"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Fish Tank Stale Data Seconds"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Fish Tank Flow Sensor Q Factor";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Fish Tank Flow Sensor Q Factor</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Fish Tank Flow Sensor Q Factor"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Fish Tank Flow Sensor Q Factor"-></td>';
 		panelHTML += '</tr>';
 
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Minimum Fish Tank Level";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Minimum Fish Tank Level</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Minimum Fish Tank Level"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Minimum Fish Tank Level"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Maximum Fish Tank Level";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Maximum Fish Tank Level</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Maximum Fish Tank Level"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Maximum Fish Tank Level"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Fish Tank Height";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Fish Tank Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Fish Tank Height"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Fish Tank Height"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Minimum Sump Trough Level";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Minimum Sump Trough Level</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Minimum Sump Trough Level"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Minimum Sump Trough Level"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Maximum Sump Trough Level";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Maximum Sump Trough Level</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Maximum Sump Trough Level"-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Maximum Sump Trough Level"-></td>';
 		panelHTML += '</tr>';
 
 		datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Sump TroughHeight";
 		panelHTML += '<tr>';
 		panelHTML += '<td>Sump Trough Height"</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Sump TroughHeight""-></td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Sensors" data-deneWordName="Sump TroughHeight""-></td>';
 		panelHTML += '</tr>';
 	}
 	
 
 	panelHTML += '<tr>';
 	panelHTML += '<td>SNR</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'snr',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-	panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"-></td>';
+	panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"-></td>';
 	panelHTML += '</tr>';
 
 	panelHTML += '<tr>';
 	panelHTML += '<td>RSSI</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'rssi',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-	panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"-></td>';
+	panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"-></td>';
 	panelHTML += '</tr>';
 
 	panelHTML += '<tr>';
 	panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'RTC Batter Volt',DENEWORD_VALUE_ATTRIBUTE)+'V</td>';
-	panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"-></td>';
+	panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"-></td>';
 	panelHTML += '</tr>';
 
 	panelHTML += '<tr>';
 	panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Internal Temperature',DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
-	panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"-></td>';
+	panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"-></td>';
 	panelHTML += '</tr>';
 	panelHTML += '</table>';
 	//panelHTML += "</div>";	
@@ -1185,27 +1185,27 @@ function refreshTelepathonsView(){
 						datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sceptic Available";
 						panelHTML += '<td>Sceptic Available</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
 						panelHTML += '<td>';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sceptic Available"->';
 						panelHTML += '</td>';
 						panelHTML += '</tr>';
 						panelHTML += '<tr>';
 						datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Temperature";
 						panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
 						panelHTML += '<td>';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
 						panelHTML += '</td>';
 						panelHTML += '</tr>';
 						panelHTML += '<tr>';
 						datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Outdoor Humidity";
 						panelHTML += '<td>Outdoor Humidity</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'%</td>';
 						panelHTML += '<td>';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Humidity"->';
 						panelHTML += '</td>';
 						
 						panelHTML += '</tr>';
@@ -1218,9 +1218,9 @@ function refreshTelepathonsView(){
 							panelHTML += '<tr>';
 							panelHTML += '<td>Light Sensor</td><td>'+Math.floor(lux*0.0079)	+'w/m2</td>';
 							panelHTML += '<td>';
-							panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"->';
-							panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"->';
-							panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"->';
+							panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"->';
+							panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"->';
+							panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Light Level"->';
 							panelHTML += '</td>';
 
 							panelHTML += '</tr>';
@@ -1237,9 +1237,9 @@ function refreshTelepathonsView(){
 						datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Remote Voltage";
 						panelHTML += '<td>Remote Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 						panelHTML += '<td>';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Remote Voltage"->';
 						panelHTML += '</td>';
 
 						panelHTML += '</tr>';
@@ -1250,9 +1250,9 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Voltage";
 					panelHTML += '<td>Capacitor Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1261,9 +1261,9 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Current";
 					panelHTML += '<td>Capacitor Current</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"->';
 					panelHTML += '</td>';
 					panelHTML += '</tr>';
 
@@ -1271,18 +1271,18 @@ function refreshTelepathonsView(){
 						panelHTML += '<tr>';
 						panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeSeconds)+'</td>';
 						panelHTML += '<td>';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sleep Time"->';
 						panelHTML += '</td>';
 						panelHTML += '</tr>';
 
 						panelHTML += '<tr>';
 						panelHTML += '<td>Operating Status </td><td>'+operatingStatus+'</td>';
 						panelHTML += '<td>';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"->';
-						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Operating Status"->';
 						panelHTML += '</td>';
 						
 						panelHTML += '</tr>';
@@ -1293,9 +1293,9 @@ function refreshTelepathonsView(){
 					panelHTML += '<tr>';
 					panelHTML += '<td>Led Brightness</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Led Brightness"->';
 					panelHTML += '</td>';
 					
 					panelHTML += '</tr>';
@@ -1306,9 +1306,9 @@ function refreshTelepathonsView(){
 					panelHTML += '<tr>';
 					panelHTML += '<td>Outdoor Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Outdoor Temperature"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1317,9 +1317,9 @@ function refreshTelepathonsView(){
 					panelHTML += '<tr>';
 					panelHTML += '<td>Seedling Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Temperature"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Temperature"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Temperature"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Temperature"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Temperature"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Temperature"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1328,9 +1328,9 @@ function refreshTelepathonsView(){
 					panelHTML += '<tr>';
 					panelHTML += '<td>Seedling Humidity</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Humidity"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Humidity"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Humidity"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Humidity"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Humidity"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Seedling Humidity"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1339,9 +1339,9 @@ function refreshTelepathonsView(){
 					panelHTML += '<tr>';
 					panelHTML += '<td>Humidifier Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Humidifier Status"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1350,10 +1350,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Outflow Flow Rate";
 					panelHTML += '<tr>';
 					panelHTML += '<td>Fish Tank Outflow Flow Rate</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Flow Rate"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Flow Rate"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Flow Rate"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Flow Rate"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Flow Rate"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Flow Rate"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1362,10 +1362,10 @@ function refreshTelepathonsView(){
 					panelHTML += '<tr>';
 					panelHTML += '<td>Alert Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Status"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Status"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Status"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Status"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1373,10 +1373,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Pump Relay Status";
 					panelHTML += '<tr>';
 					panelHTML += '<td>Pump Relay Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1384,10 +1384,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Outflow Solenoid Relay Status";
 					panelHTML += '<tr>';
 					panelHTML += '<td>Fish Tank Outflow Solenoid Relay Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1411,10 +1411,10 @@ function refreshTelepathonsView(){
 					else if(alertcode==10)alerttext='Miucro Temperature Too High';
 					panelHTML += '<td>Alert Message</td><td>'+alerttext+'</td>';
 
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1422,10 +1422,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Fish Tank Measured Height";
 					panelHTML += '<tr>';
 					panelHTML += '<td>Fish Tank Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Measured Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Measured Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Measured Height"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Measured Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Measured Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Measured Height"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1433,10 +1433,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Sump Trough Measured Height";
 					panelHTML += '<tr>';
 					panelHTML += '<td>Sump Trough Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Measured Height"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1445,10 +1445,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Previous Fish Tank Measured Height";
 					panelHTML += '<tr>';
 					panelHTML += '<td>Previous Fish Tank Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Fish Tank Measured Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Fish Tank Measured Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Fish Tank Measured Height"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Fish Tank Measured Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Fish Tank Measured Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Fish Tank Measured Height"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1459,10 +1459,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Previous Sump Trough Measured Height";
 					panelHTML += '<tr>';
 					panelHTML += '<td>Previous Sump Trough Measured Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Sump Trough Measured Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Sump Trough Measured Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Sump Trough Measured Height"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Sump Trough Measured Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Sump Trough Measured Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Previous Sump Trough Measured Height"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1473,10 +1473,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:PCB Temperature";
 					panelHTML += '<tr>';
 					panelHTML += '<td>PCB Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="PCB Temperature"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="PCB Temperature"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="PCB Temperature"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="PCB Temperature"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="PCB Temperature"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="PCB Temperature"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1484,10 +1484,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:RTC Battery Volt";
 					panelHTML += '<tr>';
 					panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1527,10 +1527,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Fish Tank Height";
 					panelHTML += '<tr>';
 					panelHTML += '<td>Fish Tank Height</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Height"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Height"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1551,10 +1551,10 @@ function refreshTelepathonsView(){
 					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Sensors:Sump TroughHeight";
 					panelHTML += '<tr>';
 					panelHTML += '<td>Sump Trough Height"</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Height"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Height"->';
+					panelHTML += '<td style="width:30%">';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Height"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Sump Trough Height"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1566,9 +1566,9 @@ function refreshTelepathonsView(){
 				panelHTML += '<tr>';
 				panelHTML += '<td>SNR</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 				panelHTML += '<td>';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"->';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"->';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="snr"->';
 				panelHTML += '</td>';
 
 				panelHTML += '</tr>';
@@ -1577,9 +1577,9 @@ function refreshTelepathonsView(){
 				panelHTML += '<tr>';
 				panelHTML += '<td>RSSI</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 				panelHTML += '<td>';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"->';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"->';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="rssi"->';
 				panelHTML += '</td>';
 
 				panelHTML += '</tr>';
@@ -1588,9 +1588,9 @@ function refreshTelepathonsView(){
 				panelHTML += '<tr>';
 				panelHTML += '<td>RTC Battery Volt</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'V</td>';
 				panelHTML += '<td>';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="RTC Battery Volt"->';
 				panelHTML += '</td>';
 
 				panelHTML += '</tr>';
@@ -1599,9 +1599,9 @@ function refreshTelepathonsView(){
 				panelHTML += '<tr>';
 				panelHTML += '<td>Internal Temperature</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'&degC</td>';
 				panelHTML += '<td>';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"->';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"->';
-				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168h" data-range="24h" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"->';
+				panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Internal Temperature"->';
 				panelHTML += '</td>';
 
 				panelHTML += '</tr>';
