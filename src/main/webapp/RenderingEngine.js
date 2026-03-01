@@ -659,7 +659,11 @@ function asyncUpdate(text){
 }
 
 function displayHippocampusResponse(payload){
-	var data = JSON.parse(payload);
+
+	var response = JSON.parse(payload);
+	var data=response.Data;
+	var telepathonName = response.telepathonName;
+	var deneWordName= response.deneWordName;
 	//console.log(data);
 
 	var results = analyzeTransmissionIntervals(data);
