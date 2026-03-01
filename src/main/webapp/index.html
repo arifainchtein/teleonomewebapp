@@ -832,22 +832,19 @@ the css for the little box on the top right f external data
 
 				
 
-				$(document).on('click', '.telepathon-daily-value', function() {
+				$(document).on('click', '.telepathon-history-value', function() {
 				        // 1. Extract data from the clicked image attributes
 				        var telepathon = $(this).data('telepathonname');
 				        var denename = $(this).data('denename');
 				        var denewordname = $(this).data('denewordname');
-				
-				        // 2. Construct the Identity Pointer
-				        // Note: You may need to adjust the Chain and Dene names 
-				        // if they aren't always 'Sensor Data' and 'Network Status'
+						var range = $(this).data('range');
 						 
 				        var identity = "@" + teleonomeName + ":" + NUCLEI_TELEPATHONS + ":"+ telepathon + ":" + denename + ":" + denewordname;
 				
 				        // 3. Create the Request Payload
 				        var requestPayload = {
 				            "Identity": identity,
-				            "Range": "24h" ,
+				            "Range": range ,
 							"RequestId": browserId 
 				        };
 				
