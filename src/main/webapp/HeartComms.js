@@ -2,6 +2,7 @@ var mqtt;
 var reconnectTimeout = 2000;
 var visualizer="";
 var lastMessageTopic;
+var hippocampusReady=false;
 function HeartConnect() {
 	//
 	// before we actually connect ask the server for the visualizer
@@ -56,6 +57,8 @@ function onConnect() {
 	mqtt.subscribe(HEART_TOPIC_ASYNC_CYCLE_UPDATE, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_UPDATE_FORM_RESPONSE, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_TELEPATHON_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
+	
+	mqtt.subscribe(HEART_TOPIC_HIPPOCAMPUS_RESPONSE, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	
 	mqtt.subscribe(responseChanel, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	
@@ -122,5 +125,7 @@ console.log("message arrived");
 		receivedCommandResponse(payload);
 	}else if(lastMessageTopic==responseChanel){
 		displayHippocampusResponse(payload);
+	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_RESPONSE){
+		hippocampusReady=true;
 	}      
 };
