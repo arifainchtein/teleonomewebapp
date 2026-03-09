@@ -1385,12 +1385,13 @@ function refreshTelepathonsView(){
 					panelHTML += '<td style="width:30%">';
 					
 					if(hippocampusReady){
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
+
 					}else{
 						panelHTML += 'Hippocampus Not Ready';
 					}
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Pump Relay Status"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1400,12 +1401,12 @@ function refreshTelepathonsView(){
 					panelHTML += '<td>Fish Tank Outflow Solenoid Relay Status</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td style="width:30%">';
 					if(hippocampusReady){
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
 					}else{
 						panelHTML += 'Hippocampus Not Ready';
 					}
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Fish Tank Outflow Solenoid Relay Status"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
@@ -1431,12 +1432,12 @@ function refreshTelepathonsView(){
 
 					panelHTML += '<td style="width:30%">';
 					if(hippocampusReady){
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
+						panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
 					}else{
 						panelHTML += 'Hippocampus Not Ready';
 					}
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Alert Code"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
