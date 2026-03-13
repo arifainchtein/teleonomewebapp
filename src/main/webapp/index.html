@@ -664,10 +664,10 @@ the css for the little box on the top right f external data
 					type: "GET",
 					url: "/TeleonomeServlet",
 					data: {formName:"GetInitialData" },
-					success: function (res) {
+					success: function (data) {
 
 						
-						 var data = JSON.parse(res);
+						
 						  var interfaces = data.interfaces;
 						  var pulse = data.pulse;
 						  
