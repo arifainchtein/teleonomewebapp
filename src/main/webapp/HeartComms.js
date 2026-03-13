@@ -3,6 +3,7 @@ var reconnectTimeout = 2000;
 var visualizer="";
 var lastMessageTopic;
 var hippocampusReady=false;
+var lastPulse;
 function HeartConnect() {
 	//
 	// before we actually connect ask the server for the visualizer
@@ -128,6 +129,9 @@ console.log("message arrived");
 	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_RESPONSE){
 		hippocampusReady=true;
 	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_STATUS){
-		hippocampusReady=true;
+		if(!hippocampusReady){
+			hippocampusReady=true;
+		}
+		
 	}   
 };

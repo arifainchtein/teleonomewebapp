@@ -654,16 +654,27 @@ the css for the little box on the top right f external data
 				searchFunctions = new SearchFunctions();
 				viewManager = new ViewManager();
 				HeartConnect();
-				
+				//
+				// now load the last pulse so that the screen is redrawn
+				// immediateley
+
+
+
 				$.ajax({
 					type: "GET",
 					url: "/TeleonomeServlet",
-					data: {formName:"GetNetworkInterfaces" },
-					success: function (interfaces) {
-					// var interfaces = JSON.parse(data);
+					data: {formName:"GetInitialData" },
+					success: function (res) {
+
+						
+						 var data = JSON.parse(res);
+						  var interfaces = data.interfaces;
+						  var pulse = data.pulse;
+						  
 						 hasWlan0=interfaces.hasOwnProperty("wlan0");
 						 hasWlan1=interfaces.hasOwnProperty("wlan1");
 						 hasEth0=interfaces.hasOwnProperty("eth0");
+						 loadDenomeRefreshInterface(payload);
 					},
 					error: function(data){
 						$('#WaitingWheel').hide();
