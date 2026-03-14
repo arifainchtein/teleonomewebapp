@@ -37,7 +37,7 @@ import com.teleonome.framework.utils.Utils;
 public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
 	ServletContext servletContext=null;
-	public final static String BUILD_NUMBER="14/03/2026 13:36";
+	public final static String BUILD_NUMBER="14/03/2026 13:41";
 	private PostgresqlPersistenceManager aDBManager=null;
 	
 	public void contextInitialized(ServletContextEvent sce) {
@@ -145,6 +145,33 @@ public class WebAppContextListener implements ServletContextListener {
 	    				// TODO Auto-generated catch block
 	    				
 	    				logger.warn("line 133 Error reading the denome, waiting one second, counter=" + counter);
+	    				try {
+	    					Thread.sleep(1000);
+	    				} catch (InterruptedException e1) {
+	    					// TODO Auto-generated catch block
+	    					e1.printStackTrace();
+	    				}
+	    				counter++;
+	    				if(counter>max) {
+	    					keepGoing=false;
+	    				}
+	    			} 
+	    		}while(keepGoing);
+	        	counter=0;
+	        	keepGoing=true;
+	        	do {
+	    			try {
+	    				hippocampusStatusJSONObject = new JSONObject(FileUtils.readFileToString(new File("HippocampusStatus.json")));
+	    				servletContext.setAttribute("hippocampusStatusJSONObject", hippocampusStatusJSONObject);
+	    				long now =  System.currentTimeMillis();
+	    				long hippoTime = hippocampusStatusJSONObject.getLong(TeleonomeConstants.DATATYPE_TIMESTAMP_MILLISECONDS);
+	    				boolean hipocampusActive = false;
+	    				if(now>(hippoTime + 60*1000))hipocampusActive = true;
+	    				servletContext.setAttribute("hipocampusActive", hipocampusActive);
+	    				keepGoing=false;
+	    			} catch (JSONException | IOException e) {
+	    				// TODO Auto-generated catch block
+	    				logger.warn("line 173 Error reading the hipocamus status, waiting one second, counter=" + counter);
 	    				try {
 	    					Thread.sleep(1000);
 	    				} catch (InterruptedException e1) {
