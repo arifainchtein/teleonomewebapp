@@ -37,7 +37,7 @@ import com.teleonome.framework.utils.Utils;
 public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
 	ServletContext servletContext=null;
-	public final static String BUILD_NUMBER="14/03/2026 13:41";
+	public final static String BUILD_NUMBER="14/03/2026 13:48";
 	private PostgresqlPersistenceManager aDBManager=null;
 	
 	public void contextInitialized(ServletContextEvent sce) {
@@ -166,7 +166,7 @@ public class WebAppContextListener implements ServletContextListener {
 	    				long now =  System.currentTimeMillis();
 	    				long hippoTime = hippocampusStatusJSONObject.getLong(TeleonomeConstants.DATATYPE_TIMESTAMP_MILLISECONDS);
 	    				boolean hipocampusActive = false;
-	    				if(now>(hippoTime + 60*1000))hipocampusActive = true;
+	    				if(now<(hippoTime + 60*1000))hipocampusActive = true;
 	    				servletContext.setAttribute("hipocampusActive", hipocampusActive);
 	    				keepGoing=false;
 	    			} catch (JSONException | IOException e) {
