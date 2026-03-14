@@ -27,8 +27,10 @@ public class GetInitialDataProcessingHandler extends ProcessingFormHandler {
 		JSONObject interfacesJSONObject = NetworkUtilities.getAvailableAdapters();
 		JSONObject data = new JSONObject();
 		JSONObject denomeJSONObject = (JSONObject) servletContext.getAttribute("CurrentPulse");
+		boolean hipocampusActive = (boolean) servletContext.getAttribute("hipocampusActive");
 		data.put("interfaces", interfacesJSONObject);
 		data.put("pulse", denomeJSONObject);
+		data.put("hipocampusActive", hipocampusActive);
 		logger.debug(interfacesJSONObject.toString(4));
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();

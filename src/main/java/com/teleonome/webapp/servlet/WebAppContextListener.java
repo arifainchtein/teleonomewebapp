@@ -37,7 +37,7 @@ import com.teleonome.framework.utils.Utils;
 public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
 	ServletContext servletContext=null;
-	public final static String BUILD_NUMBER="14/03/2026 08:14";
+	public final static String BUILD_NUMBER="14/03/2026 13:36";
 	private PostgresqlPersistenceManager aDBManager=null;
 	
 	public void contextInitialized(ServletContextEvent sce) {
@@ -120,7 +120,7 @@ public class WebAppContextListener implements ServletContextListener {
 	    			e1.printStackTrace();
 	    		}
 	        	String teleonomeInString;
-	        	JSONObject denomeJSONObject=null;
+	        	JSONObject denomeJSONObject=null,hippocampusStatusJSONObject=null;
 	        	boolean keepGoing=true;
 	        	int counter=0;
 	        	int max=3;
@@ -129,9 +129,17 @@ public class WebAppContextListener implements ServletContextListener {
 	    				teleonomeInString = FileUtils.readFileToString(new File("Teleonome.denome"));
 	    				denomeJSONObject = new JSONObject(FileUtils.readFileToString(new File("Teleonome.denome")));
 	    				servletContext.setAttribute("CurrentPulse", denomeJSONObject);
+	    				
+	    				hippocampusStatusJSONObject = new JSONObject(FileUtils.readFileToString(new File("HippocampusStatus.json")));
+	    				servletContext.setAttribute("hippocampusStatusJSONObject", hippocampusStatusJSONObject);
+	    				long now =  System.currentTimeMillis();
+	    				long hippoTime = hippocampusStatusJSONObject.getLong(TeleonomeConstants.DATATYPE_TIMESTAMP_MILLISECONDS);
+	    				boolean hipocampusActive = false;
+	    				if(now>(hippoTime + 60*1000))hipocampusActive = true;
 	    				Identity identity = new Identity(getTeleonomeName(), TeleonomeConstants.NUCLEI_PURPOSE, TeleonomeConstants.DENECHAIN_OPERATIONAL_DATA, TeleonomeConstants.DENE_VITAL,TeleonomeConstants.DENEWORD_TYPE_CURRENT_IDENTITY_MODE);
 						String currentIdentityMode = (String) DenomeUtils.getDeneWordByIdentity(denomeJSONObject, identity, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
 						servletContext.setAttribute("CurrentIdentityMode", currentIdentityMode);
+						servletContext.setAttribute("hipocampusActive", hipocampusActive);
 	    				keepGoing=false;
 	    			} catch (JSONException | IOException  | InvalidDenomeException e) {
 	    				// TODO Auto-generated catch block
