@@ -39,7 +39,103 @@ public class FileWatcherThread extends Thread{
 
 	}
 	
-	public void run(){
+	public void run() {
+	    final Path path = FileSystems.getDefault().getPath(Utils.getLocalDirectory());
+	    
+	    try (final WatchService watchService = FileSystems.getDefault().newWatchService()) {
+	        path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+	        boolean keepRunning = true;
+	        
+	        while (keepRunning) {
+	            final WatchKey wk = watchService.take();
+	            for (WatchEvent<?> event : wk.pollEvents()) {
+	                final Path changed = (Path) event.context();
+	                // Resolve the actual file path relative to the watched directory
+	                File selectedFile = path.resolve(changed).toFile();
+
+	                String extension = FilenameUtils.getExtension(selectedFile.getAbsolutePath());
+	                logger.debug("File changed: " + changed + " extension: " + extension);
+
+	                if ("denome".equals(extension)) {
+	                    logger.debug("Streaming denome from " + selectedFile.getName());
+
+	                    // Use try-with-resources to ensure the stream is closed immediately
+	                    try (java.io.FileInputStream fis = new java.io.FileInputStream(selectedFile)) {
+	                        
+	                        // JSONTokener reads the stream character by character
+	                        // skipping the need for a giant byte[] or String
+	                        org.json.JSONTokener tokener = new org.json.JSONTokener(fis);
+	                        JSONObject denomeJSONObject = new JSONObject(tokener);
+
+	                        if (denomeJSONObject != null && denomeJSONObject.has("Pulse Timestamp")) {
+	                            String pulseTimestamp = denomeJSONObject.getString("Pulse Timestamp");
+	                            long pulseTimestampInMilliseconds = denomeJSONObject.getLong("Pulse Timestamp in Milliseconds");
+	                            long pulseDuration = denomeJSONObject.getLong("Pulse Creation Duration Millis");
+
+	                            JSONObject internalVitalDene = null;
+	                            JSONObject internalDescriptiveDeneChain = null;
+	                            JSONObject operationalDataDeneChain = null;
+	                            JSONObject sensorDataDeneChain = null;
+	                            
+	                            String timeZoneId = "UTC";
+	                            int basePulseFrequency = 60;
+	                            String currentIdentityMode = "";
+
+	                            try {
+	                                internalDescriptiveDeneChain = DenomeUtils.getDeneChainByName(denomeJSONObject, TeleonomeConstants.NUCLEI_INTERNAL, TeleonomeConstants.DENECHAIN_DESCRIPTIVE);
+	                                internalVitalDene = DenomeUtils.getDeneByName(internalDescriptiveDeneChain, "Vital");
+	                                
+	                                Object tzAttr = DenomeUtils.getDeneWordAttributeByDeneWordNameFromDene(internalVitalDene, "Timezone", TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+	                                timeZoneId = (tzAttr != null) ? (String) tzAttr : "UTC";
+
+	                                Object bpfAttr = DenomeUtils.getDeneWordAttributeByDeneWordNameFromDene(internalVitalDene, "Base Pulse Frequency", TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+	                                basePulseFrequency = (bpfAttr != null) ? ((int) bpfAttr) / 1000 : 60;
+
+	                                operationalDataDeneChain = DenomeUtils.getDeneChainByName(denomeJSONObject, TeleonomeConstants.NUCLEI_PURPOSE, TeleonomeConstants.DENECHAIN_OPERATIONAL_DATA);
+	                                sensorDataDeneChain = DenomeUtils.getDeneChainByName(denomeJSONObject, TeleonomeConstants.NUCLEI_PURPOSE, TeleonomeConstants.DENECHAIN_SENSOR_DATA);
+
+	                                java.util.TimeZone currentTimeZone = (timeZoneId != null && !timeZoneId.isEmpty()) ? 
+	                                        java.util.TimeZone.getTimeZone(timeZoneId) : java.util.TimeZone.getDefault();
+
+	                                JSONObject vitalDene = DenomeUtils.getDeneByName(operationalDataDeneChain, "Vital");
+	                                currentIdentityMode = (String) DenomeUtils.getDeneWordAttributeByDeneWordNameFromDene(vitalDene, TeleonomeConstants.DENEWORD_TYPE_CURRENT_IDENTITY_MODE, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+	                                
+	                                Object cpfAttr = DenomeUtils.getDeneWordAttributeByDeneWordNameFromDene(vitalDene, TeleonomeConstants.DENEWORD_TYPE_CURRENT_PULSE_FREQUENCY, TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE);
+	                                int currentPulseFrequency = (cpfAttr != null) ? ((Integer) cpfAttr) / 1000 : 60;
+
+	                                servletContext.setAttribute("CurrentPulse", denomeJSONObject);
+	                                servletContext.setAttribute("CurrentTimeZone", currentTimeZone);
+	                                servletContext.setAttribute("CurrentIdentityMode", currentIdentityMode);
+	                                servletContext.setAttribute("CurrentPulseFrequency", currentPulseFrequency);
+	                                
+	                                logger.debug("Successfully updated Pulse Data. Mode: " + currentIdentityMode);
+
+	                            } catch (InvalidDenomeException e1) {
+	                                logger.error("Invalid Denome Structure: " + e1.getMessage());
+	                            }
+	                        }
+	                    } catch (JSONException e) {
+	                        logger.error("JSON Parsing failed: " + e.getMessage());
+	                        // On the Raspberry Pi, sometimes a file is read while still being written.
+	                        // We don't necessarily want to kill the thread, just skip this event.
+	                    } catch (java.io.FileNotFoundException e) {
+	                        logger.error("File disappeared before it could be read: " + selectedFile.getAbsolutePath());
+	                    }
+	                }
+	            }
+	            if (!wk.reset()) {
+	                logger.warn("WatchKey has been unregistered");
+	                keepRunning = false;
+	            }
+	        }
+	    } catch (IOException | InterruptedException e) {
+	        logger.error("FileWatcherThread critical error: " + e.getMessage());
+	    } catch (Exception e) {
+	        logger.error("Unexpected error in FileWatcher: " + e.getMessage());
+	    }
+	}
+	
+	public void runOld(){
 
 		final Path path = FileSystems.getDefault().getPath(Utils.getLocalDirectory());
 		//	// System.out.println(path);
