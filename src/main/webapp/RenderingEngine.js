@@ -761,7 +761,7 @@ function updateTelepathonsView(text){
 	var telepathon = JSON.parse(text);
 	
 	var telepathonName = telepathon["Name"];
-	if(telepathonName!="FISHTANK" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" &&  telepathonName!="SumpTrough"){
+	if(telepathonName!="Top Tank" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" ){
 		return ;
 	} 
 	var currentFunctionValue;	
