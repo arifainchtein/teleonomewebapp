@@ -761,7 +761,7 @@ function updateTelepathonsView(text){
 	var telepathon = JSON.parse(text);
 	
 	var telepathonName = telepathon["Name"];
-	if(telepathonName!="Top Tank" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" ){
+	if(telepathonName!="TopTank" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" ){
 		return ;
 	} 
 	var currentFunctionValue;	
@@ -1090,7 +1090,7 @@ function refreshTelepathonsView(){
 		var currentFunctionTitle;
 			for(var j13=0;j13<deneChains.length;j13++){
 				telepathonName = deneChains[j13]["Name"];
-				if(telepathonName!="Top Tank" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" ){
+				if(telepathonName!="TopTank" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" ){
 					continue ;
 				} 
 				 serialnumber = deneChains[j13]["Serial Number"];
