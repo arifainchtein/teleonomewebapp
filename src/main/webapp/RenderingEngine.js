@@ -862,13 +862,18 @@ function updateTelepathonsView(text){
 		}
 
 		panelHTML += '<tr>';
-		panelHTML += '<td>Capacitor Voltage</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Capacitor Voltage',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"-></td>';
+		panelHTML += '<td>Battery Voltage</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Battery Voltage',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Battery Voltage"-></td>';
 		panelHTML += '</tr>';
 
 		panelHTML += '<tr>';
-		panelHTML += '<td>Capacitor Current</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Capacitor Current',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
-		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"-></td>';
+		panelHTML += '<td>Battery Current</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Battery Current',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Battery Current"-></td>';
+		panelHTML += '</tr>';
+
+		panelHTML += '<tr>';
+		panelHTML += '<td>Estimated Runtime</td><td>'+getDeneWordFromTelepathon(telepathon,'Purpose', 'Estimated Runtime',DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+		panelHTML += '<td><img style="width:30px;height=30px;margin:15px;" src="images/dailydataicon.png" class="telepathon-history-value" data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Battery Current"-></td>';
 		panelHTML += '</tr>';
 
 		//if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
@@ -1247,26 +1252,36 @@ function refreshTelepathonsView(){
 					}
 
 					panelHTML += '<tr>';
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Voltage";
-					panelHTML += '<td>Capacitor Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Battery Voltage";
+					panelHTML += '<td>Battery Voltage</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Voltage"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Battery Voltage"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Battery Voltage"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Battery Voltage"->';
 					panelHTML += '</td>';
 
 					panelHTML += '</tr>';
 
 					panelHTML += '<tr>';
-					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Capacitor Current";
-					panelHTML += '<td>Capacitor Current</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Battery Current";
+					panelHTML += '<td>Battery Current</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
 					panelHTML += '<td>';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"->';
-					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Capacitor Current"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Battery Current"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Battery Current"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Battery Current"->';
 					panelHTML += '</td>';
 					panelHTML += '</tr>';
 
+					panelHTML += '<tr>';
+					datapointer = "@" +teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + telepathonName + ":Purpose:Estimated Runtime";
+					panelHTML += '<td>Estimated Runtime</td><td>'+getDeneWordByIdentityPointer(datapointer, DENEWORD_VALUE_ATTRIBUTE)+'</td>';
+					panelHTML += '<td>';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/lasthourdataicon.png" class="telepathon-history-value" data-range="1"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Estimated Runtime"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/dailydataicon.png" class="telepathon-history-value"  data-range="24" data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Estimated Runtime"->';
+					panelHTML += '<img style="width:30px;height=30px;margin-right:10px;" src="images/weeklydataicon.png" class="telepathon-history-value" data-range="168"  data-telepathonName="'+telepathonName+'" data-deneName="Purpose" data-deneWordName="Estimated Runtime"->';
+					panelHTML += '</td>';
+					panelHTML += '</tr>';
+					
 				//	if(operatingStatus==TELEPATHON_OPERATING_STATUS_PULSE_SLEEP){
 						panelHTML += '<tr>';
 						panelHTML += '<td>Sleep Time </td><td>'+formatTime(sleepTimeSeconds)+'</td>';
