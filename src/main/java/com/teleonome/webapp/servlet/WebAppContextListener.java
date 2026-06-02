@@ -37,7 +37,7 @@ import com.teleonome.framework.utils.Utils;
 public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
 	ServletContext servletContext=null;
-	public final static String BUILD_NUMBER="29/05/2026 12:43";
+	public final static String BUILD_NUMBER="01/06/2026 14:32";
 	private PostgresqlPersistenceManager aDBManager=null;
 
 	public void contextInitialized(ServletContextEvent sce) {
@@ -62,12 +62,15 @@ public class WebAppContextListener implements ServletContextListener {
 		TimeZone timeZone=null;
 		aDBManager = PostgresqlPersistenceManager.instance();
 		servletContext.setAttribute("DBManager", aDBManager);
+		servletContext.setAttribute("hipocampusActive", false);
 		try {
 			timeZone = getTimeZone();
 			servletContext.setAttribute("TimeZone", timeZone);
 			JSONObject deneWordsToRemember =  getDeneWordsToRemember();
 			servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 			servletContext.setAttribute("TeleonomeName", getTeleonomeName());
+			JSONObject initialPulse = new JSONObject(FileUtils.readFileToString(new File("Teleonome.denome")));
+			servletContext.setAttribute("CurrentPulse", initialPulse);
 			logger.warn("Refreshing, autocompleteValues");
 			long now = System.currentTimeMillis();
 			//JSONObject autoCompleteValues =  getAutoCompleteValues();

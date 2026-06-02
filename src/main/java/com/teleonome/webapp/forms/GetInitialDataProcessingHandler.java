@@ -27,7 +27,8 @@ public class GetInitialDataProcessingHandler extends ProcessingFormHandler {
 		JSONObject interfacesJSONObject = NetworkUtilities.getAvailableAdapters();
 		JSONObject data = new JSONObject();
 		JSONObject denomeJSONObject = (JSONObject) servletContext.getAttribute("CurrentPulse");
-		boolean hipocampusActive = (boolean) servletContext.getAttribute("hipocampusActive");
+		Boolean hipocampusActiveAttr = (Boolean) servletContext.getAttribute("hipocampusActive");
+		boolean hipocampusActive = hipocampusActiveAttr != null && hipocampusActiveAttr;
 		data.put("interfaces", interfacesJSONObject);
 		data.put("pulse", denomeJSONObject);
 		data.put("hipocampusActive", hipocampusActive);
