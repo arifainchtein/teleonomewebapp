@@ -653,24 +653,19 @@ the css for the little box on the top right f external data
 				localStorageManager = new LocalStorageManager();
 				searchFunctions = new SearchFunctions();
 				viewManager = new ViewManager();
-				HeartConnect();
 				//
-				// now load the last pulse so that the screen is redrawn
-				// immediateley
-
-
-
+				// load the last pulse so that the screen is redrawn immediately
 				$.ajax({
 					type: "GET",
 					url: "/TeleonomeServlet",
 					data: {formName:"GetInitialData" },
 					success: function (data) {
 
-						
-						
+
+
 						  var interfaces = data.interfaces;
 						  pulseJSONObject= data.pulse;
-						  
+
 						 hasWlan0=interfaces.hasOwnProperty("wlan0");
 						 hasWlan1=interfaces.hasOwnProperty("wlan1");
 						 hasEth0=interfaces.hasOwnProperty("eth0");
@@ -684,6 +679,7 @@ the css for the little box on the top right f external data
 						return false;
 					}
 				});
+				HeartConnect();
 		
 
 				//
