@@ -1,5 +1,5 @@
 var TELEPATHON_DEVICE_TYPE_SEEDLING_MONITOR="SeedlingMonitor";
-var TELEPATHON_DEVICE_TYPE_DAFFODIL="daffodilTF";
+var TELEPATHON_DEVICE_TYPE_DAFFODIL="Daffodil";
 var TELEPATHON_DEVICE_TYPE_CHINAMPA="Chinampa";
 
 
@@ -213,6 +213,36 @@ var DENE_HIPPOCAMPUS_PRE_LOAD_DURATION="Pre Load Duration";
 var DENE_HIPPOCAMPUS_RECOMMENDED_XMX="Recommended XMX";
 var DENE_HIPPOCAMPUS_RECOMMENDED_PRELOAD__RECOMMENDED_LIMIT="Recommended Global Limit";
 
+// ── Cerebellum ────────────────────────────────────────────────────────────────
+var DENECHAIN_PURPOSE_CEREBELLUM  = "Cerebellum";
+var DENECHAIN_INTERNAL_CEREBELLUM = "Cerebellum";
+var DENE_TYPE_CEREBELLUM_TASK                        = "Cerebellum Task";
+var DENEWORD_TYPE_CEREBELLUM_TELEPATHON_TYPE         = "Cerebellum Telepathon Type";
+var DENEWORD_TYPE_CEREBELLUM_TASK_CONDITION_POINTER  = "Task Condition Pointer";
+var DENEWORD_CEREBELLUM_ACTIVE                       = "Active";
+var DENEWORD_CEREBELLUM_EVALUATION_POSITION          = "Evaluation Position";
+var DENEWORD_CEREBELLUM_EXPRESSION                   = "Expression";
+var DENEWORD_CEREBELLUM_TASK_TRUE_EXPRESSION         = "Task True Expression";
+var DENEWORD_CEREBELLUM_TELEPATHON_TYPE              = "Telepathon Type";
+var DENEWORD_CEREBELLUM_EXECUTION_TIME                       = "Execution Time";
+var DENEWORD_CEREBELLUM_EXECUTION_TIME_SUNSET                = "Sunset";
+var DENEWORD_CEREBELLUM_EXECUTION_TIME_SUNRISE               = "Sunrise";
+var DENEWORD_CEREBELLUM_EXECUTION_FREQUENCY                  = "Execution Frequency";
+var DENEWORD_CEREBELLUM_EXECUTION_FREQUENCY_DAILY            = "Daily";
+var DENEWORD_CEREBELLUM_EXECUTION_FREQUENCY_HOURS_IN_A_DAY   = "Hours In A Day";
+var DENEWORD_CEREBELLUM_PATHOLOGY_MNEMOSYNE_LOCATION = "Cerebellum Pathology Mnemosyne Location";
+
+// ── Cerebellum → Annabelle action activation (generic) ───────────────────
+var COMMAND_SEND_GRAVEYARD_SHIFT                 = "SendGraveyardShift";
+var DENE_SEND_GRAVEYARD_SHIFT_ACTION             = "Send Graveyard Shift Action";
+var DENEWORD_CEREBELLUM_ANNABELLE_ACTION_POINTER = "Annabelle Action Pointer";
+var DENEWORD_ANNABELLE_COMMAND                   = "Annabelle Command";
+var DENEWORD_SELF_DEACTIVATE                     = "Self Deactivate";
+var HEART_TOPIC_CEREBELLUM_REQUEST  = "Cerebellum_Request";
+var HEART_TOPIC_CEREBELLUM_RESPONSE = "Cerebellum_Response";
+var HEART_TOPIC_CEREBELLUM_STATUS   = "Cerebellum_Status";
+var PATHOLOGY_CEREBELLUM_DIED       = "Cerebellum died";
+var PATHOLOGY_CEREBELLUM_LATE       = "Cerebellum Late";
 
 var DENECHAIN_DESCRIPTIVE = "Descriptive";
 var DENECHAIN_COMPONENTS = "Components";
