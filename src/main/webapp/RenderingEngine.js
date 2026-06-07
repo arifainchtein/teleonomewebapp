@@ -841,7 +841,6 @@ function renderHippocampusStatusPanel() {
 			html += '</table>';
 		}
 	}
-	html += '</div></div></div></div>';
 	return html;
 }
 
@@ -878,7 +877,6 @@ function renderCerebellumStatusPanel() {
 			}
 		}
 	}
-	html += '</div></div></div></div>';
 	return html;
 }
 
