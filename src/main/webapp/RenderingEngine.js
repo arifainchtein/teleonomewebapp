@@ -1661,7 +1661,12 @@ function renderPageByPointer(pagePointer, locationId){
 		// console.log("line 197 deneChainPointer=" + deneChainPointer +" mainPanelVisualStyle=" + mainPanelVisualStyle);
 
 		panelDeneChain = humanInterfaceDeneChainIndex["_map"][deneChainPointer];
-		denes = panelDeneChain["Denes"];		
+		if (!panelDeneChain) {
+			console.warn("renderPageByPointer: target denechain not found for pointer: " + deneChainPointer);
+			denes = [];
+		} else {
+			denes = panelDeneChain["Denes"];
+		}
 		//
 		// the next step is to take the denes and in each one
 		// get the the position of this panel inside of the main panel
