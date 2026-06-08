@@ -1083,8 +1083,11 @@ function renderOrgansPanel() {
 	var cerebSkipFields = ["Annabelle Action Pointer", "Annabelle Command", "Task True Expression",
 		"Telepathon Type", "Mnemosyne Today", "Mnemosyne Current Week", "UsingSolarPower",
 		"Evaluation Position"];
-	if (cerebInternalDC && cerebInternalDC["Denes"] && cerebInternalDC["Denes"].length > 0) {
-		var cerebTasks = cerebInternalDC["Denes"];
+	var cerebAllDenes = cerebInternalDC ? (cerebInternalDC["Denes"] || []) : [];
+	var cerebTasks = cerebAllDenes.filter(function(d) {
+		return d["DeneType"] === DENE_TYPE_CEREBELLUM_TASK;
+	});
+	if (cerebTasks.length > 0) {
 		cerebModalContent += '<ul class="nav nav-pills" style="margin-bottom:14px;flex-wrap:wrap;">';
 		for (var cpi = 0; cpi < cerebTasks.length; cpi++) {
 			var cTaskLabel = cerebTasks[cpi]["Name"].replace(" GraveyardShift", " Shift");
