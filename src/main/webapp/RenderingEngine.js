@@ -757,6 +757,88 @@ function updateOrganismView(text){
 	refreshOrganismView();
 }
 
+function buildTelepathonDetailContent(telepathon) {
+	var denes = telepathon["Denes"] || [];
+	var html = '';
+	for (var i = 0; i < denes.length; i++) {
+		var dene = denes[i];
+		html += '<h5 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:4px;margin-bottom:8px;">' + dene["Name"] + '</h5>';
+		html += '<table class="table table-condensed table-striped">';
+		var dws = dene["DeneWords"] || [];
+		for (var j = 0; j < dws.length; j++) {
+			html += '<tr><td>' + dws[j]["Name"] + '</td><td><strong>' + dws[j]["Value"] + '</strong>' +
+				(dws[j]["Units"] ? ' ' + dws[j]["Units"] : '') + '</td></tr>';
+		}
+		html += '</table>';
+	}
+	return html;
+}
+
+function buildTelepathonCardView(telepathon) {
+	var name = telepathon["Name"];
+	var safeId = name.replace(/[^a-zA-Z0-9]/g, '_');
+	var modalId = 'tpModal_' + safeId;
+
+	var deviceType = '';
+	var localTime = '';
+	var denes = telepathon["Denes"] || [];
+	for (var di = 0; di < denes.length; di++) {
+		if (denes[di]["Name"] === "Configuration") {
+			var cws = denes[di]["DeneWords"] || [];
+			for (var ci = 0; ci < cws.length; ci++) {
+				if (cws[ci]["Name"] === "Device Type Id") deviceType = cws[ci]["Value"];
+			}
+		}
+		if (denes[di]["Name"] === "Purpose") {
+			var pws = denes[di]["DeneWords"] || [];
+			for (var pi = 0; pi < pws.length; pi++) {
+				if (pws[pi]["Name"] === "Local Time") localTime = pws[pi]["Value"];
+			}
+		}
+	}
+
+	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
+	var statusColor = ageSeconds < 60 ? '#27ae60' : (ageSeconds < 120 ? '#f39c12' : '#e74c3c');
+	var statusLabel = ageSeconds < 60 ? 'Live' : (ageSeconds < 120 ? 'Delayed' : 'Offline');
+
+	var detailHtml = name === "Chinampa" ? buildChinampaContent(telepathon) : buildTelepathonDetailContent(telepathon);
+
+	if (!$('#' + modalId).length) {
+		$('body').append(
+			'<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog">' +
+			'<div class="modal-dialog modal-lg"><div class="modal-content">' +
+			'<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>' +
+			'<h4 class="modal-title">' + name + '</h4></div>' +
+			'<div class="modal-body" id="' + modalId + 'Body"></div>' +
+			'<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>' +
+			'</div></div></div>'
+		);
+	}
+	$('#' + modalId + 'Body').html(detailHtml);
+
+	var imgSrc = 'images/' + deviceType + '.svg';
+
+	var html = '<div class="col-xs-12 col-sm-6 col-md-4" id="tpCardCol_' + safeId + '" style="margin-bottom:16px;padding:6px;">';
+	html += '<div style="border-radius:12px;border:1px solid #ddd;overflow:hidden;cursor:pointer;' +
+		'box-shadow:0 2px 8px rgba(0,0,0,0.08);background:white;" data-toggle="modal" data-target="#' + modalId + '">';
+	html += '<div style="background:white;padding:24px 20px;text-align:center;border-bottom:1px solid #eee;">';
+	html += '<img src="' + imgSrc + '" style="height:100px;width:100px;object-fit:contain;" ' +
+		'onerror="this.style.display=\'none\'">';
+	html += '<div style="font-size:42px;color:#bbb;display:none;" class="tp-no-logo">&#9673;</div>';
+	html += '</div>';
+	html += '<div style="padding:14px;background:#fafafa;">';
+	html += '<div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + name + '</div>';
+	if (localTime) html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTime + '</div>';
+	html += '<div style="margin-top:10px;display:flex;align-items:center;">';
+	html += '<span style="width:10px;height:10px;border-radius:50%;background:' + statusColor + ';display:inline-block;margin-right:6px;"></span>';
+	html += '<span style="font-size:12px;color:' + statusColor + ';font-weight:bold;">' + statusLabel + '</span>';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	html += '</div>';
+	return html;
+}
+
 function buildTelepathonPillsContent(telepathon) {
 	var telepathonName = telepathon["Name"];
 	var safeId = telepathonName.replace(/[^a-zA-Z0-9]/g, '_');
@@ -805,18 +887,20 @@ function updateTelepathonsView(text){
 	var telepathon = JSON.parse(text);
 	var telepathonName = telepathon["Name"];
 	if(telepathonName!="TopTank" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" ){
-		return ;
+		return;
 	}
-	var newCard = buildTelepathonPillsContent(telepathon);
-	if ($('#' + telepathonName).length) {
-		$('#' + telepathonName).replaceWith(newCard);
+	var safeId = telepathonName.replace(/[^a-zA-Z0-9]/g, '_');
+	var newCard = buildTelepathonCardView(telepathon);
+	if ($('#tpCardCol_' + safeId).length) {
+		$('#tpCardCol_' + safeId).replaceWith(newCard);
 	}
 }
 
-function renderHippocampusStatusPanel() {
+function renderOrgansPanel() {
 	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
-	var statusColor = ageSeconds < 60 ? '#27ae60' : (ageSeconds < 120 ? '#f39c12' : '#e74c3c');
+	var statusClass = ageSeconds < 60 ? 'btn-success' : (ageSeconds < 120 ? 'btn-warning' : 'btn-danger');
 
+	// Hippocampus modal
 	if (!$('#hippocampusModal').length) {
 		$('body').append(
 			'<div class="modal fade" id="hippocampusModal" tabindex="-1" role="dialog">' +
@@ -828,47 +912,29 @@ function renderHippocampusStatusPanel() {
 			'</div></div></div>'
 		);
 	}
-
-	var pointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_HIPPOCAMPUS;
-	var hippoDeneChain = getDeneChainByIdentityPointer(pointer);
-	var modalContent = '';
+	var hippoContent = '';
+	var hippoPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_HIPPOCAMPUS;
+	var hippoDeneChain = getDeneChainByIdentityPointer(hippoPointer);
 	if (hippoDeneChain) {
-		var denes = hippoDeneChain["Denes"];
-		for (var ih = 0; ih < denes.length; ih++) {
-			if (denes[ih]["Name"] === DENE_HIPPOCAMPUS_MEMORY_STATUS_DENE) {
-				var dene = denes[ih];
-				var ts = dene["Timestamp"] || "";
-				if (ts) modalContent += '<p class="text-muted small">Last update: ' + ts + '</p>';
-				modalContent += '<table class="table table-condensed table-striped">';
-				var dws = dene["DeneWords"];
-				for (var jh = 0; jh < dws.length; jh++) {
-					modalContent += '<tr><td>' + dws[jh]["Name"] + '</td><td><strong>' + dws[jh]["Value"] + '</strong></td></tr>';
+		var hippoDenes = hippoDeneChain["Denes"];
+		for (var ih = 0; ih < hippoDenes.length; ih++) {
+			if (hippoDenes[ih]["Name"] === DENE_HIPPOCAMPUS_MEMORY_STATUS_DENE) {
+				var hippoDene = hippoDenes[ih];
+				var hippoTs = hippoDene["Timestamp"] || "";
+				if (hippoTs) hippoContent += '<p class="text-muted small">Last update: ' + hippoTs + '</p>';
+				hippoContent += '<table class="table table-condensed table-striped">';
+				var hippoDws = hippoDene["DeneWords"];
+				for (var jh = 0; jh < hippoDws.length; jh++) {
+					hippoContent += '<tr><td>' + hippoDws[jh]["Name"] + '</td><td><strong>' + hippoDws[jh]["Value"] + '</strong></td></tr>';
 				}
-				modalContent += '</table>';
+				hippoContent += '</table>';
 				break;
 			}
 		}
 	}
-	$('#hippocampusModalBody').html(modalContent);
+	$('#hippocampusModalBody').html(hippoContent);
 
-	var html = '<div class="col-lg-6">';
-	html += '<div class="bs-component"><div class="panel panel-default">';
-	html += '<div class="panel-heading"><h4>Hippocampus</h4></div>';
-	html += '<div class="panel-body">';
-	html += '<div>';
-	html += '<div style="text-align:center;padding:15px;cursor:pointer;" data-toggle="modal" data-target="#hippocampusModal">';
-	html += '<div style="width:70px;height:70px;border-radius:50%;background:' + statusColor + ';margin:0 auto;line-height:70px;text-align:center;">';
-	html += '<span style="color:white;font-size:24px;font-weight:bold;">H</span>';
-	html += '</div>';
-	html += '<p style="color:#777;font-size:13px;margin-top:10px;">Click for details</p>';
-	html += '</div>';
-	return html;
-}
-
-function renderCerebellumStatusPanel() {
-	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
-	var statusColor = ageSeconds < 60 ? '#27ae60' : (ageSeconds < 120 ? '#f39c12' : '#e74c3c');
-
+	// Cerebellum modal
 	if (!$('#cerebellumModal').length) {
 		$('body').append(
 			'<div class="modal fade" id="cerebellumModal" tabindex="-1" role="dialog">' +
@@ -880,41 +946,39 @@ function renderCerebellumStatusPanel() {
 			'</div></div></div>'
 		);
 	}
-
-	var pointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM;
-	var cerebellumDeneChain = getDeneChainByIdentityPointer(pointer);
-	var modalContent = '';
-	var pillsHtml = '';
+	var cerebContent = '';
+	var cerebPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM;
+	var cerebellumDeneChain = getDeneChainByIdentityPointer(cerebPointer);
 	if (cerebellumDeneChain) {
-		var denes = cerebellumDeneChain["Denes"];
-		if (denes && denes.length > 0) {
-			for (var ic = 0; ic < denes.length; ic++) {
-				pillsHtml += '<span class="label label-default" style="margin:2px;font-size:11px;">' + denes[ic]["Name"] + '</span> ';
-				var dws2 = denes[ic]["DeneWords"];
-				if (denes.length > 1) modalContent += '<h5>' + denes[ic]["Name"] + '</h5>';
-				modalContent += '<table class="table table-condensed table-striped">';
-				for (var jc = 0; jc < dws2.length; jc++) {
-					var dwName = dws2[jc]["Name"];
-					if (dwName === "Annabelle Command" || dwName === "Annabelle Action Pointer") continue;
-					modalContent += '<tr><td>' + dwName + '</td><td><strong>' + dws2[jc]["Value"] + '</strong></td></tr>';
+		var cerebDenes = cerebellumDeneChain["Denes"];
+		if (cerebDenes && cerebDenes.length > 0) {
+			for (var ic = 0; ic < cerebDenes.length; ic++) {
+				var cerebDws = cerebDenes[ic]["DeneWords"];
+				if (cerebDenes.length > 1) cerebContent += '<h5>' + cerebDenes[ic]["Name"] + '</h5>';
+				cerebContent += '<table class="table table-condensed table-striped">';
+				for (var jc = 0; jc < cerebDws.length; jc++) {
+					var cerebDwName = cerebDws[jc]["Name"];
+					if (cerebDwName === "Annabelle Command" || cerebDwName === "Annabelle Action Pointer") continue;
+					cerebContent += '<tr><td>' + cerebDwName + '</td><td><strong>' + cerebDws[jc]["Value"] + '</strong></td></tr>';
 				}
-				modalContent += '</table>';
+				cerebContent += '</table>';
 			}
 		}
 	}
-	$('#cerebellumModalBody').html(modalContent);
+	$('#cerebellumModalBody').html(cerebContent);
 
-	var html = '<div class="col-lg-6">';
+	var html = '<div class="col-lg-12">';
 	html += '<div class="bs-component"><div class="panel panel-default">';
-	html += '<div class="panel-heading"><h4>Cerebellum</h4></div>';
+	html += '<div class="panel-heading"><h4>Organs</h4></div>';
 	html += '<div class="panel-body">';
 	html += '<div>';
-	html += '<div style="text-align:center;padding:15px;cursor:pointer;" data-toggle="modal" data-target="#cerebellumModal">';
-	html += '<div style="width:70px;height:70px;border-radius:50%;background:' + statusColor + ';margin:0 auto;line-height:70px;text-align:center;">';
-	html += '<span style="color:white;font-size:24px;font-weight:bold;">C</span>';
+	html += '<div class="row" style="margin:8px 0;">';
+	html += '<div class="col-xs-6 text-center">';
+	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#hippocampusModal">Hippocampus</button>';
 	html += '</div>';
-	if (pillsHtml) html += '<div style="margin-top:8px;">' + pillsHtml + '</div>';
-	html += '<p style="color:#777;font-size:13px;margin-top:8px;">Click for details</p>';
+	html += '<div class="col-xs-6 text-center">';
+	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#cerebellumModal">Cerebellum</button>';
+	html += '</div>';
 	html += '</div>';
 	return html;
 }
@@ -989,10 +1053,10 @@ function buildChinampaContent(telepathon) {
 		"Outdoor Temperature","Outdoor Humidity","PCB Temperature","rssi","snr",
 		"Seconds Since Last Fish Tank Data","Seconds Since Last Sump Trough Data"];
 
-	var html = '<div style="margin:10px;border-radius:8px;background:white;border:1px solid #ddd;overflow:hidden;" class="col-lg-12">';
-	html += '<div style="background:#2c3e50;color:white;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;">';
-	html += '<span style="font-size:16px;font-weight:bold;">Chinampa</span>';
-	html += '<span style="font-size:12px;color:#aaa;">' + (localTime ? localTime["Value"] : "") + '</span>';
+	var html = '<div style="border-radius:8px;background:white;overflow:hidden;">';
+	html += '<div style="background:white;color:#2c3e50;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #3498db;">';
+	html += '<span style="font-size:16px;font-weight:bold;color:#2c3e50;">Chinampa</span>';
+	html += '<span style="font-size:12px;color:#888;">' + (localTime ? localTime["Value"] : "") + '</span>';
 	html += '</div>';
 
 	if (alertStatus) {
@@ -1067,11 +1131,7 @@ function refreshTelepathonsView(){
 		if(telepathonName!="TopTank" && telepathonName!="Chinampa" && telepathonName!="SeedlingMonitor"){
 			continue;
 		}
-		if (telepathonName === "Chinampa") {
-			panelHTML += buildChinampaContent(deneChains[j13]);
-		} else {
-			panelHTML += buildTelepathonPillsContent(deneChains[j13]);
-		}
+		panelHTML += buildTelepathonCardView(deneChains[j13]);
 	}
 	$('#TelepathonsView').append(panelHTML);
 	return panelHTML;
@@ -1488,11 +1548,14 @@ function renderPageByPointer(pagePointer, locationId){
 			panelHTML += telepathonPanel.process(title);
 			refreshTelepathonsView();
 
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_ORGANS){
+			panelHTML += renderOrgansPanel();
+
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_HIPPOCAMPUS_STATUS){
-			panelHTML += renderHippocampusStatusPanel();
+			panelHTML += renderOrgansPanel();
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CEREBELLUM_STATUS){
-			panelHTML += renderCerebellumStatusPanel();
+			panelHTML += renderOrgansPanel();
 
 		}else if( mainPanelVisualStyle === PANEL_VISUALIZATION_STYLE_SETTINGS_INFO){
 			//
