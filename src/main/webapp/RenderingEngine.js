@@ -1107,6 +1107,7 @@ function renderOrgansPanel() {
 				'<a href="#">' + cTaskLabel + '</a></li>';
 		}
 		cerebModalContent += '</ul><div class="tab-content">';
+		var cerebPurposeDenes = cerebPurposeDC ? (cerebPurposeDC["Denes"] || []) : [];
 		for (var cti = 0; cti < cerebTasks.length; cti++) {
 			var cTask = cerebTasks[cti];
 			var cTaskName = cTask["Name"];
@@ -1114,15 +1115,15 @@ function renderOrgansPanel() {
 			var isGraveyardShift = cTaskName.toLowerCase().indexOf("graveyardshift") !== -1 ||
 				cTaskName.toLowerCase().indexOf("graveyard") !== -1;
 			cerebModalContent += '<div class="tab-pane' + (cti === 0 ? ' active' : '') + '" id="' + cpid2 + '">';
+			// Find matching dene in Purpose:Cerebellum by task name
+			var cPurposeDene = null;
+			for (var cpd = 0; cpd < cerebPurposeDenes.length; cpd++) {
+				if (cerebPurposeDenes[cpd]["Name"] === cTaskName) { cPurposeDene = cerebPurposeDenes[cpd]; break; }
+			}
+			// For Graveyard Shift: show schedule section as plain text header
 			if (isGraveyardShift) {
-				var gsNextId = "cereb-gs-next-" + cti;
-				var gsLastId = "cereb-gs-last-" + cti;
-				cerebModalContent += '<ul class="nav nav-pills nav-sm" style="margin-bottom:10px;">';
-				cerebModalContent += '<li class="active" onclick="return teleonomeShowTab(\'' + gsNextId + '\', this)"><a href="#">Next Calculation</a></li>';
-				cerebModalContent += '<li onclick="return teleonomeShowTab(\'' + gsLastId + '\', this)"><a href="#">Last Calculated</a></li>';
-				cerebModalContent += '</ul><div class="tab-content">';
-				cerebModalContent += '<div class="tab-pane active" id="' + gsNextId + '">';
-				cerebModalContent += '<table class="table table-condensed table-striped">';
+				cerebModalContent += '<h5 style="margin-top:0;margin-bottom:6px;color:#337ab7;border-bottom:1px solid #ddd;padding-bottom:4px;">Schedule</h5>';
+				cerebModalContent += '<table class="table table-condensed table-striped" style="margin-bottom:14px;">';
 				var gsSchedFields = ["Active", "Expression", "Execution Time", "Execution Frequency"];
 				var gsDws = cTask["DeneWords"] || [];
 				for (var sf = 0; sf < gsSchedFields.length; sf++) {
@@ -1134,34 +1135,22 @@ function renderOrgansPanel() {
 						}
 					}
 				}
-				cerebModalContent += '</table></div>';
-				cerebModalContent += '<div class="tab-pane" id="' + gsLastId + '">';
-				var cerebPurposeDenes = cerebPurposeDC ? (cerebPurposeDC["Denes"] || []) : [];
-				var cerebResultDene = cerebPurposeDenes.length > 0 ? cerebPurposeDenes[0] : null;
-				if (cerebResultDene) {
-					var cerebResultDws = cerebResultDene["DeneWords"] || [];
-					cerebModalContent += '<table class="table table-condensed table-striped">';
-					for (var rdw = 0; rdw < cerebResultDws.length; rdw++) {
-						var rdwName = cerebResultDws[rdw]["Name"];
-						if (cerebSkipFields.indexOf(rdwName) !== -1) continue;
-						cerebModalContent += '<tr><td style="width:55%;">' + rdwName + '</td>' +
-							'<td><strong>' + cerebResultDws[rdw]["Value"] + '</strong></td></tr>';
-					}
-					cerebModalContent += '</table>';
-				} else {
-					cerebModalContent += '<p class="text-muted text-center" style="padding:16px;">No calculated data yet.</p>';
-				}
-				cerebModalContent += '</div></div>';
-			} else {
-				var cTaskDws = cTask["DeneWords"] || [];
+				cerebModalContent += '</table>';
+				cerebModalContent += '<h5 style="margin-top:0;margin-bottom:6px;color:#337ab7;border-bottom:1px solid #ddd;padding-bottom:4px;">Last Calculated</h5>';
+			}
+			// Show Purpose:Cerebellum data for this task
+			if (cPurposeDene) {
+				var cPurposeDws = cPurposeDene["DeneWords"] || [];
 				cerebModalContent += '<table class="table table-condensed table-striped">';
-				for (var ctdw = 0; ctdw < cTaskDws.length; ctdw++) {
-					var ctdwName = cTaskDws[ctdw]["Name"];
-					if (cerebSkipFields.indexOf(ctdwName) !== -1) continue;
-					cerebModalContent += '<tr><td style="width:50%;">' + ctdwName + '</td>' +
-						'<td><strong>' + cTaskDws[ctdw]["Value"] + '</strong></td></tr>';
+				for (var cpdw = 0; cpdw < cPurposeDws.length; cpdw++) {
+					var cpdwName = cPurposeDws[cpdw]["Name"];
+					if (cerebSkipFields.indexOf(cpdwName) !== -1) continue;
+					cerebModalContent += '<tr><td style="width:55%;">' + cpdwName + '</td>' +
+						'<td><strong>' + cPurposeDws[cpdw]["Value"] + '</strong></td></tr>';
 				}
 				cerebModalContent += '</table>';
+			} else {
+				cerebModalContent += '<p class="text-muted text-center" style="padding:16px;">No data available.</p>';
 			}
 			cerebModalContent += '</div>';
 		}
