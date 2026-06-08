@@ -944,7 +944,37 @@ function updateTelepathonsView(text){
 	}
 }
 
+var mnemoPeriodsData = [];
+var mnemoNavIdx = {};
+
+function mnemoNav(pi, delta) {
+	var denes = mnemoPeriodsData[pi] || [];
+	var sorted = denes.slice().sort(function(a, b) {
+		return (parseInt(b["Position"]) || 0) - (parseInt(a["Position"]) || 0);
+	});
+	var total = sorted.length;
+	if (total === 0) return;
+	if (mnemoNavIdx[pi] === undefined) mnemoNavIdx[pi] = 0;
+	mnemoNavIdx[pi] = Math.max(0, Math.min(total - 1, mnemoNavIdx[pi] + delta));
+	var cur = mnemoNavIdx[pi];
+	var dene = sorted[cur];
+	var pos = parseInt(dene["Position"]) || (total - cur);
+	var dws = dene["DeneWords"] || [];
+	var contentHtml = '<table class="table table-condensed table-striped" style="font-size:13px;">';
+	for (var i = 0; i < dws.length; i++) {
+		contentHtml += '<tr><td style="width:50%;">' + dws[i]["Name"] + '</td><td><strong>' + dws[i]["Value"] + '</strong></td></tr>';
+	}
+	contentHtml += '</table>';
+	$('#mnemo-content-' + pi).html(contentHtml);
+	$('#mnemo-indicator-' + pi).text('Entry ' + pos + ' of ' + total);
+	$('#mnemo-prev-' + pi).prop('disabled', cur >= total - 1);
+	$('#mnemo-next-' + pi).prop('disabled', cur <= 0);
+}
+
 function renderMnemosyneViewPanel() {
+	mnemoPeriodsData = [];
+	mnemoNavIdx = {};
+
 	// Get Mnemosyne nucleus denechains
 	var mnemoDCs = [];
 	for (var ni = 0; ni < nucleiJSONArray.length; ni++) {
@@ -998,21 +1028,62 @@ function renderMnemosyneViewPanel() {
 		var activeClass2 = ti === 0 ? ' active' : '';
 		html += '<div class="tab-pane' + activeClass2 + '" id="' + pid2 + '">';
 		var denes2 = periods[ti]["Denes"] || [];
-		var hasContent = false;
-		for (var dei = 0; dei < denes2.length; dei++) {
-			var dene = denes2[dei];
-			var dws = dene["DeneWords"] || [];
-			if (dws.length === 0) continue;
-			hasContent = true;
-			if (denes2.length > 1) html += '<h5 style="margin-top:10px;color:#555;">' + dene["Name"] + '</h5>';
-			html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
-			for (var dwi = 0; dwi < dws.length; dwi++) {
-				html += '<tr><td style="width:50%;">' + dws[dwi]["Name"] + '</td>';
-				html += '<td><strong>' + dws[dwi]["Value"] + '</strong></td></tr>';
+		mnemoPeriodsData[ti] = denes2;
+
+		// Check if denes have Position (HyperCard mode)
+		var hasPosition = false;
+		for (var hpi = 0; hpi < denes2.length; hpi++) {
+			if (denes2[hpi]["Position"] !== undefined && denes2[hpi]["Position"] !== null && denes2[hpi]["Position"] !== '') {
+				hasPosition = true; break;
 			}
-			html += '</table>';
 		}
-		if (!hasContent) html += '<p class="text-muted text-center" style="padding:16px;">No data available for this period.</p>';
+
+		if (hasPosition) {
+			var sortedDenes = denes2.slice().sort(function(a, b) {
+				return (parseInt(b["Position"]) || 0) - (parseInt(a["Position"]) || 0);
+			});
+			mnemoNavIdx[ti] = 0;
+			var total = sortedDenes.length;
+			var newest = sortedDenes[0];
+			var newestPos = parseInt(newest["Position"]) || total;
+			// Navigation bar
+			html += '<div style="display:flex;align-items:center;margin-bottom:10px;">';
+			html += '<button id="mnemo-prev-' + ti + '" class="btn btn-sm btn-default" onclick="mnemoNav(' + ti + ',-1)">&#8592; Previous</button>';
+			html += '<span id="mnemo-indicator-' + ti + '" style="margin:0 14px;font-size:13px;color:#555;">Entry ' + newestPos + ' of ' + total + '</span>';
+			html += '<button id="mnemo-next-' + ti + '" class="btn btn-sm btn-default" disabled onclick="mnemoNav(' + ti + ',1)">Next &#8594;</button>';
+			html += '</div>';
+			// Content area — starts showing newest entry
+			html += '<div id="mnemo-content-' + ti + '">';
+			var initDws = newest["DeneWords"] || [];
+			if (initDws.length > 0) {
+				html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
+				for (var idwi = 0; idwi < initDws.length; idwi++) {
+					html += '<tr><td style="width:50%;">' + initDws[idwi]["Name"] + '</td>';
+					html += '<td><strong>' + initDws[idwi]["Value"] + '</strong></td></tr>';
+				}
+				html += '</table>';
+			} else {
+				html += '<p class="text-muted text-center" style="padding:16px;">No data available for this period.</p>';
+			}
+			html += '</div>';
+		} else {
+			// Flat display for periods without Position
+			var hasContent = false;
+			for (var dei = 0; dei < denes2.length; dei++) {
+				var dene = denes2[dei];
+				var dws = dene["DeneWords"] || [];
+				if (dws.length === 0) continue;
+				hasContent = true;
+				if (denes2.length > 1) html += '<h5 style="margin-top:10px;color:#555;">' + dene["Name"] + '</h5>';
+				html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
+				for (var dwi = 0; dwi < dws.length; dwi++) {
+					html += '<tr><td style="width:50%;">' + dws[dwi]["Name"] + '</td>';
+					html += '<td><strong>' + dws[dwi]["Value"] + '</strong></td></tr>';
+				}
+				html += '</table>';
+			}
+			if (!hasContent) html += '<p class="text-muted text-center" style="padding:16px;">No data available for this period.</p>';
+		}
 		html += '</div>';
 	}
 	html += '</div>';
