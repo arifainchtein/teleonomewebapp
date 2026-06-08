@@ -820,6 +820,7 @@ function renderHippocampusStatusPanel() {
 	html += '<div class="bs-component"><div class="panel panel-default">';
 	html += '<div class="panel-heading"><h4>Hippocampus</h4></div>';
 	html += '<div class="panel-body">';
+	html += '<div>';
 	if (!hippoDeneChain) {
 		html += '<p>No hippocampus data</p>';
 	} else {
@@ -851,6 +852,7 @@ function renderCerebellumStatusPanel() {
 	html += '<div class="bs-component"><div class="panel panel-default">';
 	html += '<div class="panel-heading"><h4>Cerebellum</h4></div>';
 	html += '<div class="panel-body">';
+	html += '<div>';
 	if (!cerebellumDeneChain) {
 		html += '<p>No cerebellum data</p>';
 	} else {
