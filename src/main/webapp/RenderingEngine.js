@@ -29,6 +29,12 @@ var chartTimeStringHashMap = new HashMap();
 var chartTitleHashMap = new HashMap();
 var organsRenderedThisCycle = false;
 
+function teleonomeShowTab(paneId, clickedLi) {
+	$(clickedLi).addClass('active').siblings('li').removeClass('active');
+	$('#' + paneId).addClass('active').siblings('.tab-pane').removeClass('active');
+	return false;
+}
+
 var organismInfoJsonData;
 var telepathonsJsonData;
 
@@ -809,12 +815,12 @@ function buildTelepathonCardView(telepathon) {
 			'<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog modal-lg"><div class="modal-content">' +
 			'<div class="modal-header">' +
-			'<button type="button" class="close" onclick="$(this).closest(\'.modal\').modal(\'hide\')">&times;</button>' +
+			'<button type="button" class="close" onclick="$(\'#' + modalId + '\').modal(\'hide\')">&times;</button>' +
 			'<h4 class="modal-title">' + name + '</h4></div>' +
 			'<div class="modal-body" id="' + modalId + 'Body"></div>' +
 			'<div class="modal-footer">' +
-			'<button type="button" class="btn btn-default" onclick="$(this).closest(\'.modal\').modal(\'hide\')">Close</button>' +
-			'</div></div></div></div>'
+			'<button type="button" class="btn btn-default" onclick="$(\'#' + modalId + '\').modal(\'hide\')">Close</button>' +
+			'</div></div></div>'
 		);
 	}
 	$('#' + modalId + 'Body').html(detailHtml);
@@ -907,17 +913,17 @@ function renderOrgansPanel() {
 
 	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
 	var statusClass = ageSeconds < 60 ? 'btn-success' : (ageSeconds < 120 ? 'btn-warning' : 'btn-danger');
-	var dismissBtn = '<button type="button" class="close" onclick="$(this).closest(\'.modal\').modal(\'hide\')">&times;</button>';
-	var closeFooterBtn = '<button type="button" class="btn btn-default" onclick="$(this).closest(\'.modal\').modal(\'hide\')">Close</button>';
+	var mkClose = function(id) { return '<button type="button" class="close" onclick="$(\'#' + id + '\').modal(\'hide\')">&times;</button>'; };
+	var mkFooter = function(id) { return '<button type="button" class="btn btn-default" onclick="$(\'#' + id + '\').modal(\'hide\')">Close</button>'; };
 
 	// Hippocampus modal
 	if (!$('#hippocampusModal').length) {
 		$('body').append(
 			'<div class="modal fade" id="hippocampusModal" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog"><div class="modal-content">' +
-			'<div class="modal-header">' + dismissBtn + '<h4 class="modal-title">Hippocampus</h4></div>' +
+			'<div class="modal-header">' + mkClose('hippocampusModal') + '<h4 class="modal-title">Hippocampus</h4></div>' +
 			'<div class="modal-body" id="hippocampusModalBody"></div>' +
-			'<div class="modal-footer">' + closeFooterBtn + '</div>' +
+			'<div class="modal-footer">' + mkFooter('hippocampusModal') + '</div>' +
 			'</div></div></div>'
 		);
 	}
@@ -948,13 +954,14 @@ function renderOrgansPanel() {
 		$('body').append(
 			'<div class="modal fade" id="cerebellumModal" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog"><div class="modal-content">' +
-			'<div class="modal-header">' + dismissBtn + '<h4 class="modal-title">Cerebellum</h4></div>' +
+			'<div class="modal-header">' + mkClose('cerebellumModal') + '<h4 class="modal-title">Cerebellum</h4></div>' +
 			'<div class="modal-body" id="cerebellumModalBody"></div>' +
-			'<div class="modal-footer">' + closeFooterBtn + '</div>' +
+			'<div class="modal-footer">' + mkFooter('cerebellumModal') + '</div>' +
 			'</div></div></div>'
 		);
 	}
-	var cerebContent = '';
+	var cerebDataContent = '';
+	var cerebSchedContent = '';
 	var cerebPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM;
 	var cerebellumDeneChain = getDeneChainByIdentityPointer(cerebPointer);
 	if (cerebellumDeneChain) {
@@ -962,27 +969,37 @@ function renderOrgansPanel() {
 		if (cerebDenes && cerebDenes.length > 0) {
 			for (var ic = 0; ic < cerebDenes.length; ic++) {
 				var cerebDws = cerebDenes[ic]["DeneWords"];
-				if (cerebDenes.length > 1) cerebContent += '<h5>' + cerebDenes[ic]["Name"] + '</h5>';
-				cerebContent += '<table class="table table-condensed table-striped">';
+				var isSchedule = cerebDenes[ic]["Name"].toLowerCase().indexOf("schedule") >= 0;
+				var tableHtml = '';
+				if (cerebDenes.length > 1) tableHtml += '<h5>' + cerebDenes[ic]["Name"] + '</h5>';
+				tableHtml += '<table class="table table-condensed table-striped">';
 				for (var jc = 0; jc < cerebDws.length; jc++) {
 					var cerebDwName = cerebDws[jc]["Name"];
 					if (cerebDwName === "Annabelle Command" || cerebDwName === "Annabelle Action Pointer") continue;
-					cerebContent += '<tr><td>' + cerebDwName + '</td><td><strong>' + cerebDws[jc]["Value"] + '</strong></td></tr>';
+					tableHtml += '<tr><td>' + cerebDwName + '</td><td><strong>' + cerebDws[jc]["Value"] + '</strong></td></tr>';
 				}
-				cerebContent += '</table>';
+				tableHtml += '</table>';
+				if (isSchedule) cerebSchedContent += tableHtml;
+				else cerebDataContent += tableHtml;
 			}
 		}
 	}
-	$('#cerebellumModalBody').html(cerebContent);
+	var cerebModalContent = '<ul class="nav nav-pills" style="margin-bottom:10px;">';
+	cerebModalContent += '<li class="active" onclick="return teleonomeShowTab(\'cerebellum-data\', this)"><a href="#">Data</a></li>';
+	cerebModalContent += '<li onclick="return teleonomeShowTab(\'cerebellum-schedule\', this)"><a href="#">Schedule</a></li>';
+	cerebModalContent += '</ul>';
+	cerebModalContent += '<div class="tab-pane active" id="cerebellum-data">' + (cerebDataContent || '<p class="text-muted">No data available.</p>') + '</div>';
+	cerebModalContent += '<div class="tab-pane" id="cerebellum-schedule">' + (cerebSchedContent || '<p class="text-muted">No schedule available yet.</p>') + '</div>';
+	$('#cerebellumModalBody').html(cerebModalContent);
 
 	// Heart modal
 	if (!$('#heartModal').length) {
 		$('body').append(
 			'<div class="modal fade" id="heartModal" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog"><div class="modal-content">' +
-			'<div class="modal-header">' + dismissBtn + '<h4 class="modal-title">Heart</h4></div>' +
+			'<div class="modal-header">' + mkClose('heartModal') + '<h4 class="modal-title">Heart</h4></div>' +
 			'<div class="modal-body" id="heartModalBody"></div>' +
-			'<div class="modal-footer">' + closeFooterBtn + '</div>' +
+			'<div class="modal-footer">' + mkFooter('heartModal') + '</div>' +
 			'</div></div></div>'
 		);
 	}
@@ -1109,9 +1126,9 @@ function buildChinampaContent(telepathon) {
 
 	// Pill tabs
 	html += '<ul class="nav nav-pills" style="padding:10px 15px 0;margin:0;">';
-	html += '<li class="active"><a data-toggle="tab" href="#chinampa-purpose">Purpose</a></li>';
-	html += '<li><a data-toggle="tab" href="#chinampa-sensors">Sensors</a></li>';
-	html += '<li><a data-toggle="tab" href="#chinampa-config">Configuration</a></li>';
+	html += '<li class="active" onclick="return teleonomeShowTab(\'chinampa-purpose\', this)"><a href="#">Purpose</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'chinampa-sensors\', this)"><a href="#">Sensors</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'chinampa-config\', this)"><a href="#">Configuration</a></li>';
 	html += '</ul>';
 
 	html += '<div class="tab-content" style="padding:12px 15px;">';
