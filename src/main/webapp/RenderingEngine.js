@@ -35,6 +35,14 @@ function teleonomeShowTab(paneId, clickedLi) {
 	return false;
 }
 
+function openModal(id) {
+	$('#' + id).modal('show');
+}
+
+function closeModal(id) {
+	$('#' + id).modal('hide');
+}
+
 var organismInfoJsonData;
 var telepathonsJsonData;
 
@@ -843,11 +851,11 @@ function buildTelepathonCardView(telepathon) {
 			'<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog modal-lg"><div class="modal-content">' +
 			'<div class="modal-header">' +
-			'<button type="button" class="close" onclick="$(\'#' + modalId + '\').modal(\'hide\')">&times;</button>' +
+			'<button type="button" class="close" onclick="closeModal(\'' + modalId + '\')">&times;</button>' +
 			'<h4 class="modal-title">' + name + '</h4></div>' +
 			'<div class="modal-body" id="' + modalId + 'Body"></div>' +
 			'<div class="modal-footer">' +
-			'<button type="button" class="btn btn-default" onclick="$(\'#' + modalId + '\').modal(\'hide\')">Close</button>' +
+			'<button type="button" class="btn btn-default" onclick="closeModal(\'' + modalId + '\')">Close</button>' +
 			'</div></div></div>'
 		);
 	}
@@ -858,7 +866,7 @@ function buildTelepathonCardView(telepathon) {
 	var html = '<div class="col-xs-12 col-sm-6 col-md-4" id="tpCardCol_' + safeId + '" style="margin-bottom:16px;padding:6px;">';
 	html += '<div style="border-radius:12px;border:1px solid #ddd;overflow:hidden;cursor:pointer;' +
 		'box-shadow:0 2px 8px rgba(0,0,0,0.08);background:white;display:flex;align-items:stretch;" ' +
-		'onclick="$(\'#' + modalId + '\').modal(\'show\')">';
+		'onclick="openModal(\'' + modalId + '\')">';
 	html += '<div style="flex:0 0 110px;background:white;padding:10px;display:flex;align-items:center;' +
 		'justify-content:center;border-right:1px solid #eee;">';
 	html += '<img src="' + imgSrc + '" style="width:90px;height:90px;object-fit:contain;" onerror="this.style.display=\'none\'">';
@@ -870,8 +878,7 @@ function buildTelepathonCardView(telepathon) {
 		html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTime +
 			'&nbsp;<span style="color:' + statusColor + ';font-weight:bold;">(' + cardAgeSec + 's ago)</span></div>';
 	}
-	html += '<div style="margin-top:6px;display:flex;align-items:center;">';
-	html += '<span style="width:10px;height:10px;border-radius:50%;background:' + statusColor + ';display:inline-block;flex-shrink:0;"></span>';
+	html += '<div style="margin-top:6px;text-align:center;">';
 	html += statusExtra;
 	html += '</div>';
 	html += '</div>';
@@ -945,8 +952,8 @@ function renderOrgansPanel() {
 
 	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
 	var statusClass = ageSeconds < 60 ? 'btn-success' : (ageSeconds < 120 ? 'btn-warning' : 'btn-danger');
-	var mkClose = function(id) { return '<button type="button" class="close" onclick="$(\'#' + id + '\').modal(\'hide\')">&times;</button>'; };
-	var mkFooter = function(id) { return '<button type="button" class="btn btn-default" onclick="$(\'#' + id + '\').modal(\'hide\')">Close</button>'; };
+	var mkClose = function(id) { return '<button type="button" class="close" onclick="closeModal(\'' + id + '\')">&times;</button>'; };
+	var mkFooter = function(id) { return '<button type="button" class="btn btn-default" onclick="closeModal(\'' + id + '\')">Close</button>'; };
 
 	// Hippocampus modal
 	if (!$('#hippocampusModal').length) {
@@ -1051,13 +1058,13 @@ function renderOrgansPanel() {
 	html += '<div>';
 	html += '<div class="row" style="margin:8px 0;">';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" onclick="$(\'#hippocampusModal\').modal(\'show\')">Hippocampus</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" onclick="openModal(\'hippocampusModal\')">Hippocampus</button>';
 	html += '</div>';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" onclick="$(\'#cerebellumModal\').modal(\'show\')">Cerebellum</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" onclick="openModal(\'cerebellumModal\')">Cerebellum</button>';
 	html += '</div>';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" onclick="$(\'#heartModal\').modal(\'show\')">Heart</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" onclick="openModal(\'heartModal\')">Heart</button>';
 	html += '</div>';
 	html += '</div>';
 	return html;
@@ -1484,9 +1491,14 @@ function renderPageToDisplay(){
 function renderPageByPointer(pagePointer, locationId){
 	var pageDeneChain = humanInterfaceDeneChainIndex.get(pagePointer);
 	console.log("renderPageByPointer pagePointer=" + pagePointer + " pageDeneChain=" +pageDeneChain);
+	if (!pageDeneChain) {
+		console.warn("renderPageByPointer: no denechain found for pointer: " + pagePointer);
+		$('#' + locationId).empty().html('<div class="row top-buffer"><div class="col-lg-12 text-center" style="padding:40px;color:#999;">Page not yet configured.</div></div>');
+		return;
+	}
 	//
 	// get the denes, every dene is a panel in this page
-	//   
+	//
 	var denePanelArray = pageDeneChain["Denes"];
 	//
 	// loop over every dene and get two denes
@@ -1960,6 +1972,15 @@ function renderPageByPointer(pagePointer, locationId){
 
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MANUAL_ACTION_WITH_TIMER){
+
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MNEMOSYNE_VIEW){
+			panelHTML += '<div class="col-lg-12">';
+			panelHTML += '<div class="bs-component">';
+			panelHTML += '<div class="panel panel-default">';
+			panelHTML += '<div class="panel-heading"><h4>Mnemosyne</h4></div>';
+			panelHTML += '<div class="panel-body text-center">';
+			panelHTML += '<div><p class="text-muted" style="padding:20px;">Historical data view — coming soon.</p>';
+
 		}else{
 
 		}
