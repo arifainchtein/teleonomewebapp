@@ -944,6 +944,74 @@ function updateTelepathonsView(text){
 	}
 }
 
+function renderMnemosyneViewPanel() {
+	// Get Mnemosyne nucleus denechains
+	var mnemoDCs = [];
+	for (var ni = 0; ni < nucleiJSONArray.length; ni++) {
+		if (nucleiJSONArray[ni]["Name"] === NUCLEI_MNEMOSYNE) {
+			mnemoDCs = nucleiJSONArray[ni]["DeneChains"];
+			break;
+		}
+	}
+
+	// Filter to denechains that have at least one dene with denewords
+	var periods = [];
+	for (var di = 0; di < mnemoDCs.length; di++) {
+		var dc = mnemoDCs[di];
+		var denes = dc["Denes"] || [];
+		if (denes.length > 0 && denes[0]["DeneWords"] && denes[0]["DeneWords"].length > 0) {
+			periods.push(dc);
+		}
+	}
+
+	var html = '<div class="col-lg-12">';
+	html += '<div class="bs-component">';
+	html += '<div class="panel panel-default">';
+	html += '<div class="panel-heading"><h4>Mnemosyne</h4></div>';
+	html += '<div class="panel-body">';
+	html += '<div>';
+
+	if (periods.length === 0) {
+		html += '<p class="text-muted text-center" style="padding:20px;">No Mnemosyne data available yet.</p>';
+		return html;
+	}
+
+	// Pill nav
+	html += '<ul class="nav nav-pills" style="margin-bottom:12px;flex-wrap:wrap;">';
+	for (var pi = 0; pi < periods.length; pi++) {
+		var label = periods[pi]["Name"].replace("Mnemosyne ", "");
+		var pid = "mnemo-tab-" + pi;
+		var activeClass = pi === 0 ? ' class="active"' : '';
+		html += '<li' + activeClass + ' onclick="return teleonomeShowTab(\'' + pid + '\', this)" style="margin-bottom:4px;"><a href="#">' + label + '</a></li>';
+	}
+	html += '</ul>';
+
+	// Tab content
+	html += '<div class="tab-content">';
+	for (var ti = 0; ti < periods.length; ti++) {
+		var pid2 = "mnemo-tab-" + ti;
+		var activeClass2 = ti === 0 ? ' active' : '';
+		html += '<div class="tab-pane' + activeClass2 + '" id="' + pid2 + '">';
+		var denes2 = periods[ti]["Denes"];
+		for (var dei = 0; dei < denes2.length; dei++) {
+			var dene = denes2[dei];
+			var dws = dene["DeneWords"] || [];
+			if (dws.length === 0) continue;
+			if (denes2.length > 1) html += '<h5 style="margin-top:10px;color:#555;">' + dene["Name"] + '</h5>';
+			html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
+			for (var dwi = 0; dwi < dws.length; dwi++) {
+				html += '<tr><td style="width:50%;">' + dws[dwi]["Name"] + '</td>';
+				html += '<td><strong>' + dws[dwi]["Value"] + '</strong></td></tr>';
+			}
+			html += '</table>';
+		}
+		html += '</div>';
+	}
+	html += '</div>';
+
+	return html;
+}
+
 function renderOrgansPanel() {
 	if (organsRenderedThisCycle) {
 		return '<div style="display:none;"><div><div><div><div>';
@@ -1058,13 +1126,13 @@ function renderOrgansPanel() {
 	html += '<div>';
 	html += '<div class="row" style="margin:8px 0;">';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" onclick="openModal(\'hippocampusModal\')">Hippocampus</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#hippocampusModal">Hippocampus</button>';
 	html += '</div>';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" onclick="openModal(\'cerebellumModal\')">Cerebellum</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#cerebellumModal">Cerebellum</button>';
 	html += '</div>';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" onclick="openModal(\'heartModal\')">Heart</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#heartModal">Heart</button>';
 	html += '</div>';
 	html += '</div>';
 	return html;
@@ -1979,12 +2047,7 @@ function renderPageByPointer(pagePointer, locationId){
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MANUAL_ACTION_WITH_TIMER){
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MNEMOSYNE_VIEW){
-			panelHTML += '<div class="col-lg-12">';
-			panelHTML += '<div class="bs-component">';
-			panelHTML += '<div class="panel panel-default">';
-			panelHTML += '<div class="panel-heading"><h4>Mnemosyne</h4></div>';
-			panelHTML += '<div class="panel-body text-center">';
-			panelHTML += '<div><p class="text-muted" style="padding:20px;">Historical data view — coming soon.</p>';
+			panelHTML += renderMnemosyneViewPanel();
 
 		}else{
 
