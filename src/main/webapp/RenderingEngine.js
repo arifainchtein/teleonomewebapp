@@ -1075,8 +1075,7 @@ function renderOrgansPanel() {
 			'</div></div></div>'
 		);
 	}
-	var cerebDataContent = '';
-	var cerebSchedContent = '';
+	var cerebModalContent = '';
 	var cerebPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM;
 	var cerebellumDeneChain = getDeneChainByIdentityPointer(cerebPointer);
 	if (cerebellumDeneChain) {
@@ -1084,27 +1083,25 @@ function renderOrgansPanel() {
 		if (cerebDenes && cerebDenes.length > 0) {
 			for (var ic = 0; ic < cerebDenes.length; ic++) {
 				var cerebDws = cerebDenes[ic]["DeneWords"];
-				var isSchedule = cerebDenes[ic]["Name"].toLowerCase().indexOf("schedule") >= 0;
-				var tableHtml = '';
-				if (cerebDenes.length > 1) tableHtml += '<h5>' + cerebDenes[ic]["Name"] + '</h5>';
-				tableHtml += '<table class="table table-condensed table-striped">';
+				cerebModalContent += '<div style="margin-bottom:16px;">';
+				cerebModalContent += '<div style="background:#f0f4f8;padding:8px 12px;border-left:4px solid #337ab7;' +
+					'font-weight:bold;font-size:14px;margin-bottom:6px;border-radius:0 4px 4px 0;">' +
+					cerebDenes[ic]["Name"] + '</div>';
+				cerebModalContent += '<table class="table table-condensed table-striped" style="margin-bottom:0;">';
 				for (var jc = 0; jc < cerebDws.length; jc++) {
 					var cerebDwName = cerebDws[jc]["Name"];
 					if (cerebDwName === "Annabelle Command" || cerebDwName === "Annabelle Action Pointer") continue;
-					tableHtml += '<tr><td>' + cerebDwName + '</td><td><strong>' + cerebDws[jc]["Value"] + '</strong></td></tr>';
+					cerebModalContent += '<tr><td style="width:55%;">' + cerebDwName + '</td>' +
+						'<td><strong>' + cerebDws[jc]["Value"] + '</strong></td></tr>';
 				}
-				tableHtml += '</table>';
-				if (isSchedule) cerebSchedContent += tableHtml;
-				else cerebDataContent += tableHtml;
+				cerebModalContent += '</table></div>';
 			}
+		} else {
+			cerebModalContent = '<p class="text-muted text-center" style="padding:20px;">No tasks available.</p>';
 		}
+	} else {
+		cerebModalContent = '<p class="text-muted text-center" style="padding:20px;">Cerebellum data not found.</p>';
 	}
-	var cerebModalContent = '<ul class="nav nav-pills" style="margin-bottom:10px;">';
-	cerebModalContent += '<li class="active" onclick="return teleonomeShowTab(\'cerebellum-data\', this)"><a href="#">Data</a></li>';
-	cerebModalContent += '<li onclick="return teleonomeShowTab(\'cerebellum-schedule\', this)"><a href="#">Schedule</a></li>';
-	cerebModalContent += '</ul>';
-	cerebModalContent += '<div class="tab-pane active" id="cerebellum-data">' + (cerebDataContent || '<p class="text-muted">No data available.</p>') + '</div>';
-	cerebModalContent += '<div class="tab-pane" id="cerebellum-schedule">' + (cerebSchedContent || '<p class="text-muted">No schedule available yet.</p>') + '</div>';
 	$('#cerebellumModalBody').html(cerebModalContent);
 
 	// Heart modal
@@ -1565,6 +1562,7 @@ function renderPageToDisplay(){
 
 
 function renderPageByPointer(pagePointer, locationId){
+	organsRenderedThisCycle = false;
 	var pageDeneChain = humanInterfaceDeneChainIndex.get(pagePointer);
 	console.log("renderPageByPointer pagePointer=" + pagePointer + " pageDeneChain=" +pageDeneChain);
 	if (!pageDeneChain) {
