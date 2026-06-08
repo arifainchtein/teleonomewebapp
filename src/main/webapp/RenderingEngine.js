@@ -954,13 +954,18 @@ function renderMnemosyneViewPanel() {
 		}
 	}
 
-	// Filter to denechains that have at least one dene with denewords
+	// Include all time-period denechains (show empty ones too)
+	var periodPrefixes = ["Mnemosyne Current Hour", "Mnemosyne Today", "Mnemosyne Yesterday",
+		"Mnemosyne Current Week", "Mnemosyne Current Month", "Mnemosyne Current Quarter",
+		"Mnemosyne Current Semester", "Mnemosyne Current Year"];
 	var periods = [];
 	for (var di = 0; di < mnemoDCs.length; di++) {
 		var dc = mnemoDCs[di];
-		var denes = dc["Denes"] || [];
-		if (denes.length > 0 && denes[0]["DeneWords"] && denes[0]["DeneWords"].length > 0) {
-			periods.push(dc);
+		for (var pi2 = 0; pi2 < periodPrefixes.length; pi2++) {
+			if (dc["Name"] === periodPrefixes[pi2]) {
+				periods.push(dc);
+				break;
+			}
 		}
 	}
 
@@ -992,11 +997,13 @@ function renderMnemosyneViewPanel() {
 		var pid2 = "mnemo-tab-" + ti;
 		var activeClass2 = ti === 0 ? ' active' : '';
 		html += '<div class="tab-pane' + activeClass2 + '" id="' + pid2 + '">';
-		var denes2 = periods[ti]["Denes"];
+		var denes2 = periods[ti]["Denes"] || [];
+		var hasContent = false;
 		for (var dei = 0; dei < denes2.length; dei++) {
 			var dene = denes2[dei];
 			var dws = dene["DeneWords"] || [];
 			if (dws.length === 0) continue;
+			hasContent = true;
 			if (denes2.length > 1) html += '<h5 style="margin-top:10px;color:#555;">' + dene["Name"] + '</h5>';
 			html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
 			for (var dwi = 0; dwi < dws.length; dwi++) {
@@ -1005,6 +1012,7 @@ function renderMnemosyneViewPanel() {
 			}
 			html += '</table>';
 		}
+		if (!hasContent) html += '<p class="text-muted text-center" style="padding:16px;">No data available for this period.</p>';
 		html += '</div>';
 	}
 	html += '</div>';
@@ -1126,13 +1134,13 @@ function renderOrgansPanel() {
 	html += '<div>';
 	html += '<div class="row" style="margin:8px 0;">';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#hippocampusModal">Hippocampus</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" onclick="openModal(\'hippocampusModal\')">Hippocampus</button>';
 	html += '</div>';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#cerebellumModal">Cerebellum</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" onclick="openModal(\'cerebellumModal\')">Cerebellum</button>';
 	html += '</div>';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#heartModal">Heart</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" onclick="openModal(\'heartModal\')">Heart</button>';
 	html += '</div>';
 	html += '</div>';
 	return html;
