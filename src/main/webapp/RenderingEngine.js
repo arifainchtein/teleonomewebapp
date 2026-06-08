@@ -814,71 +814,245 @@ function updateTelepathonsView(text){
 }
 
 function renderHippocampusStatusPanel() {
+	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
+	var statusColor = ageSeconds < 60 ? '#27ae60' : (ageSeconds < 120 ? '#f39c12' : '#e74c3c');
+
+	if (!$('#hippocampusModal').length) {
+		$('body').append(
+			'<div class="modal fade" id="hippocampusModal" tabindex="-1" role="dialog">' +
+			'<div class="modal-dialog"><div class="modal-content">' +
+			'<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>' +
+			'<h4 class="modal-title">Hippocampus</h4></div>' +
+			'<div class="modal-body" id="hippocampusModalBody"></div>' +
+			'<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>' +
+			'</div></div></div>'
+		);
+	}
+
 	var pointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_HIPPOCAMPUS;
 	var hippoDeneChain = getDeneChainByIdentityPointer(pointer);
+	var modalContent = '';
+	if (hippoDeneChain) {
+		var denes = hippoDeneChain["Denes"];
+		for (var ih = 0; ih < denes.length; ih++) {
+			if (denes[ih]["Name"] === DENE_HIPPOCAMPUS_MEMORY_STATUS_DENE) {
+				var dene = denes[ih];
+				var ts = dene["Timestamp"] || "";
+				if (ts) modalContent += '<p class="text-muted small">Last update: ' + ts + '</p>';
+				modalContent += '<table class="table table-condensed table-striped">';
+				var dws = dene["DeneWords"];
+				for (var jh = 0; jh < dws.length; jh++) {
+					modalContent += '<tr><td>' + dws[jh]["Name"] + '</td><td><strong>' + dws[jh]["Value"] + '</strong></td></tr>';
+				}
+				modalContent += '</table>';
+				break;
+			}
+		}
+	}
+	$('#hippocampusModalBody').html(modalContent);
+
 	var html = '<div class="col-lg-6">';
 	html += '<div class="bs-component"><div class="panel panel-default">';
 	html += '<div class="panel-heading"><h4>Hippocampus</h4></div>';
 	html += '<div class="panel-body">';
 	html += '<div>';
-	if (!hippoDeneChain) {
-		html += '<p>No hippocampus data</p>';
-	} else {
-		var denes = hippoDeneChain["Denes"];
-		var memoryStatusDene;
-		for (var ih = 0; ih < denes.length; ih++) {
-			if (denes[ih]["Name"] === DENE_HIPPOCAMPUS_MEMORY_STATUS_DENE) { memoryStatusDene = denes[ih]; break; }
-		}
-		if (!memoryStatusDene) {
-			html += '<p>No memory status</p>';
-		} else {
-			var ts = memoryStatusDene["Timestamp"] || "";
-			if (ts) html += '<div style="font-size:12px;color:#888;">Last update: ' + ts + '</div>';
-			var dws = memoryStatusDene["DeneWords"];
-			html += '<table class="table table-condensed table-striped">';
-			for (var jh = 0; jh < dws.length; jh++) {
-				html += '<tr><td>' + dws[jh]["Name"] + '</td><td><strong>' + dws[jh]["Value"] + '</strong></td></tr>';
-			}
-			html += '</table>';
-		}
-	}
+	html += '<div style="text-align:center;padding:15px;cursor:pointer;" data-toggle="modal" data-target="#hippocampusModal">';
+	html += '<div style="width:70px;height:70px;border-radius:50%;background:' + statusColor + ';margin:0 auto;line-height:70px;text-align:center;">';
+	html += '<span style="color:white;font-size:24px;font-weight:bold;">H</span>';
+	html += '</div>';
+	html += '<p style="color:#777;font-size:13px;margin-top:10px;">Click for details</p>';
+	html += '</div>';
 	return html;
 }
 
 function renderCerebellumStatusPanel() {
+	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
+	var statusColor = ageSeconds < 60 ? '#27ae60' : (ageSeconds < 120 ? '#f39c12' : '#e74c3c');
+
+	if (!$('#cerebellumModal').length) {
+		$('body').append(
+			'<div class="modal fade" id="cerebellumModal" tabindex="-1" role="dialog">' +
+			'<div class="modal-dialog"><div class="modal-content">' +
+			'<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>' +
+			'<h4 class="modal-title">Cerebellum</h4></div>' +
+			'<div class="modal-body" id="cerebellumModalBody"></div>' +
+			'<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>' +
+			'</div></div></div>'
+		);
+	}
+
 	var pointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM;
 	var cerebellumDeneChain = getDeneChainByIdentityPointer(pointer);
+	var modalContent = '';
+	var pillsHtml = '';
+	if (cerebellumDeneChain) {
+		var denes = cerebellumDeneChain["Denes"];
+		if (denes && denes.length > 0) {
+			for (var ic = 0; ic < denes.length; ic++) {
+				pillsHtml += '<span class="label label-default" style="margin:2px;font-size:11px;">' + denes[ic]["Name"] + '</span> ';
+				var dws2 = denes[ic]["DeneWords"];
+				if (denes.length > 1) modalContent += '<h5>' + denes[ic]["Name"] + '</h5>';
+				modalContent += '<table class="table table-condensed table-striped">';
+				for (var jc = 0; jc < dws2.length; jc++) {
+					var dwName = dws2[jc]["Name"];
+					if (dwName === "Annabelle Command" || dwName === "Annabelle Action Pointer") continue;
+					modalContent += '<tr><td>' + dwName + '</td><td><strong>' + dws2[jc]["Value"] + '</strong></td></tr>';
+				}
+				modalContent += '</table>';
+			}
+		}
+	}
+	$('#cerebellumModalBody').html(modalContent);
+
 	var html = '<div class="col-lg-6">';
 	html += '<div class="bs-component"><div class="panel panel-default">';
 	html += '<div class="panel-heading"><h4>Cerebellum</h4></div>';
 	html += '<div class="panel-body">';
 	html += '<div>';
-	if (!cerebellumDeneChain) {
-		html += '<p>No cerebellum data</p>';
-	} else {
-		var denes = cerebellumDeneChain["Denes"];
-		if (!denes || denes.length === 0) {
-			html += '<p>No tasks</p>';
-		} else {
-			html += '<div class="text-center" style="margin-bottom:10px;">';
-			for (var ic = 0; ic < denes.length; ic++) {
-				html += '<span class="label label-info" style="margin:3px;font-size:13px;display:inline-block;">' + denes[ic]["Name"] + '</span>';
-			}
-			html += '</div>';
-			for (var ic2 = 0; ic2 < denes.length; ic2++) {
-				var dene = denes[ic2];
-				var dws2 = dene["DeneWords"];
-				if (denes.length > 1) html += '<h5>' + dene["Name"] + '</h5>';
-				html += '<table class="table table-condensed table-striped">';
-				for (var jc = 0; jc < dws2.length; jc++) {
-					var dwName = dws2[jc]["Name"];
-					if (dwName === "Annabelle Command" || dwName === "Annabelle Action Pointer") continue;
-					html += '<tr><td>' + dwName + '</td><td><strong>' + dws2[jc]["Value"] + '</strong></td></tr>';
-				}
-				html += '</table>';
-			}
-		}
+	html += '<div style="text-align:center;padding:15px;cursor:pointer;" data-toggle="modal" data-target="#cerebellumModal">';
+	html += '<div style="width:70px;height:70px;border-radius:50%;background:' + statusColor + ';margin:0 auto;line-height:70px;text-align:center;">';
+	html += '<span style="color:white;font-size:24px;font-weight:bold;">C</span>';
+	html += '</div>';
+	if (pillsHtml) html += '<div style="margin-top:8px;">' + pillsHtml + '</div>';
+	html += '<p style="color:#777;font-size:13px;margin-top:8px;">Click for details</p>';
+	html += '</div>';
+	return html;
+}
+
+function buildChinampaContent(telepathon) {
+	var purposeDene = null, configDene = null, sensorsDene = null;
+	var denes = telepathon["Denes"];
+	for (var i = 0; i < denes.length; i++) {
+		if (denes[i]["Name"] === "Purpose") purposeDene = denes[i];
+		else if (denes[i]["Name"] === "Configuration") configDene = denes[i];
+		else if (denes[i]["Name"] === "Sensors") sensorsDene = denes[i];
 	}
+	var pw = purposeDene ? purposeDene["DeneWords"] : [];
+	var sw = sensorsDene ? sensorsDene["DeneWords"] : [];
+
+	function findDW(words, name) {
+		for (var i = 0; i < words.length; i++) if (words[i]["Name"] === name) return words[i];
+		return null;
+	}
+	function fmtVal(dw) {
+		if (!dw) return "—";
+		var v = String(dw["Value"]);
+		if (v.toLowerCase() === "true") return '<span style="color:#27ae60;font-weight:bold;">● ACTIVE</span>';
+		if (v.toLowerCase() === "false") return '<span style="color:#999;">○ OFF</span>';
+		return v + (dw["Units"] ? " " + dw["Units"] : "");
+	}
+	function svgGauge(totalH, measuredH, flash) {
+		totalH = parseFloat(totalH) || 1;
+		measuredH = parseFloat(measuredH) || 0;
+		var fh = Math.max(5, Math.round(((totalH - measuredH) / totalH) * 100));
+		var fy = 5 + (100 - fh);
+		var fc = flash ? '#e74c3c' : '#3498db';
+		return '<svg width="80" height="120"><rect x="10" y="5" width="60" height="100" fill="#eaedef" rx="4" stroke="#ccc"/>' +
+			'<rect x="10" y="' + fy + '" width="60" height="' + fh + '" fill="' + fc + '" rx="2"/>' +
+			'<text x="40" y="115" text-anchor="middle" font-size="11" font-weight="bold">' + Math.round(totalH - measuredH) + 'cm</text></svg>';
+	}
+	function metricBox(dw) {
+		if (!dw) return '';
+		return '<div style="border-left:3px solid #3498db;background:#f0f4f8;padding:4px 6px;margin-bottom:4px;border-radius:2px;">' +
+			'<div style="font-size:9px;color:#777;font-weight:bold;text-transform:uppercase;">' + dw["Name"] + '</div>' +
+			'<div style="font-size:12px;color:#333;">' + fmtVal(dw) + '</div></div>';
+	}
+	function vitalCard(label, val, unit, color) {
+		return '<div class="col-xs-4 col-sm-2" style="margin-bottom:8px;padding:2px;">' +
+			'<div style="border-radius:10px;padding:8px 4px;color:white;text-align:center;background:' + color + ';">' +
+			'<div style="font-size:9px;text-transform:uppercase;font-weight:bold;opacity:0.9;">' + label + '</div>' +
+			'<div style="font-size:16px;font-weight:800;">' + val + unit + '</div>' +
+			'</div></div>';
+	}
+
+	var localTime = findDW(pw, "Local Time");
+	var alertStatusDW = findDW(pw, "Alert Status");
+	var alertCodeDW = findDW(pw, "Alert Code");
+	var alertStatus = alertStatusDW && String(alertStatusDW["Value"]).toLowerCase() === "true";
+	var alertCode = alertCodeDW ? parseInt(alertCodeDW["Value"]) : 0;
+	var alertMessages = {0:"Initializing...",1:"Fish Tank Data Stale",2:"Sump Trough Stale",3:"FT & Sump Data Stale",4:"Solenoid Open / Low Flow",5:"Sump Level Too Low",6:"System Low In Water"};
+
+	var ftH = findDW(sw, "Fish Tank Height");
+	var ftM = findDW(pw, "Fish Tank Measured Height");
+	var stH = findDW(sw, "Sump TroughHeight");
+	var stM = findDW(pw, "Sump Trough Measured Height");
+	var maxPCBdw = findDW(sw, "u Temperature Maximum");
+	var maxPCB = maxPCBdw ? parseFloat(maxPCBdw["Value"]) : 75;
+	var pcbDW = findDW(pw, "PCB Temperature");
+	var rssiDW = findDW(pw, "rssi");
+	var snrDW = findDW(pw, "snr");
+	var outdoorTempDW = findDW(pw, "Outdoor Temperature");
+	var outdoorHumDW = findDW(pw, "Outdoor Humidity");
+
+	var usedKeys = ["Fish Tank Outflow Flow Rate","Fish Tank Outflow Solenoid Relay Status","Pump Flow Rate","Pump Relay Status",
+		"Fish Tank Measured Height","Sump Trough Measured Height","Local Time","TOTP","Alert Status","Alert Code",
+		"Outdoor Temperature","Outdoor Humidity","PCB Temperature","rssi","snr",
+		"Seconds Since Last Fish Tank Data","Seconds Since Last Sump Trough Data"];
+
+	var html = '<div style="margin:10px;border-radius:8px;background:white;border:1px solid #ddd;overflow:hidden;" class="col-lg-12">';
+	html += '<div style="background:#2c3e50;color:white;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;">';
+	html += '<span style="font-size:16px;font-weight:bold;">Chinampa</span>';
+	html += '<span style="font-size:12px;color:#aaa;">' + (localTime ? localTime["Value"] : "") + '</span>';
+	html += '</div>';
+
+	if (alertStatus) {
+		html += '<div style="background:#e74c3c;color:white;padding:8px 15px;text-align:center;font-weight:bold;">' + (alertMessages[alertCode] || "Alert") + '</div>';
+	}
+
+	html += '<div class="row" style="padding:12px 15px 0;">';
+
+	// Fish Tank
+	html += '<div class="col-xs-12 col-sm-6" style="margin-bottom:12px;">';
+	html += '<div style="background:#f8f9fa;border-radius:8px;border-top:4px solid #3498db;padding:10px;">';
+	html += '<div style="font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:1px solid #eee;margin-bottom:8px;padding-bottom:4px;">Fish Tank (Pebble Mediate)</div>';
+	html += '<div class="row"><div class="col-xs-5 text-center">';
+	html += svgGauge(ftH ? ftH["Value"] : 1, ftM ? ftM["Value"] : 0, alertCode === 6);
+	html += '<div style="font-size:9px;font-weight:bold;color:#777;margin-top:2px;">WATER LEVEL</div>';
+	html += '</div><div class="col-xs-7">';
+	html += metricBox(findDW(pw, "Fish Tank Outflow Flow Rate"));
+	html += metricBox(findDW(pw, "Fish Tank Outflow Solenoid Relay Status"));
+	html += metricBox(findDW(pw, "Seconds Since Last Fish Tank Data"));
+	html += '</div></div></div></div>';
+
+	// Sump Trough
+	html += '<div class="col-xs-12 col-sm-6" style="margin-bottom:12px;">';
+	html += '<div style="background:#f8f9fa;border-radius:8px;border-top:4px solid #3498db;padding:10px;">';
+	html += '<div style="font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:1px solid #eee;margin-bottom:8px;padding-bottom:4px;">Sump Trough</div>';
+	html += '<div class="row"><div class="col-xs-5 text-center">';
+	html += svgGauge(stH ? stH["Value"] : 1, stM ? stM["Value"] : 0, alertCode === 5 || alertCode === 6);
+	html += '<div style="font-size:9px;font-weight:bold;color:#777;margin-top:2px;">WATER LEVEL</div>';
+	html += '</div><div class="col-xs-7">';
+	html += metricBox(findDW(pw, "Pump Flow Rate"));
+	html += metricBox(findDW(pw, "Pump Relay Status"));
+	html += metricBox(findDW(pw, "Seconds Since Last Sump Trough Data"));
+	html += '</div></div></div></div>';
+
+	html += '</div>'; // end tanks row
+
+	// Vitals
+	html += '<div class="row" style="padding:0 15px 8px;">';
+	if (outdoorTempDW) html += vitalCard("Outdoor Temp", outdoorTempDW["Value"], "°C", "#3498db");
+	if (outdoorHumDW) html += vitalCard("Outdoor Hum", outdoorHumDW["Value"], "%", "#3498db");
+	if (pcbDW) { var pcbV = parseFloat(pcbDW["Value"]); html += vitalCard("PCB Temp", pcbDW["Value"], "°C", pcbV > maxPCB ? "#e74c3c" : "#27ae60"); }
+	if (rssiDW) { var rssiV = parseFloat(rssiDW["Value"]); html += vitalCard("Signal (RSSI)", rssiDW["Value"], "", rssiV > -95 ? "#27ae60" : "#f39c12"); }
+	if (snrDW) { var snrV = parseFloat(snrDW["Value"]); html += vitalCard("SNR", snrDW["Value"], "", snrV > 0 ? "#27ae60" : "#f39c12"); }
+	html += '</div>';
+
+	// Diagnostics grid
+	html += '<div style="padding:0 15px 12px;">';
+	html += '<div style="font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:2px solid #eee;margin-bottom:8px;padding-bottom:3px;">Full Diagnostics</div>';
+	html += '<div class="row">';
+	for (var di = 0; di < pw.length; di++) {
+		var dw = pw[di];
+		if (usedKeys.indexOf(dw["Name"]) >= 0) continue;
+		html += '<div class="col-xs-6 col-sm-3" style="margin-bottom:6px;padding:2px 4px;">';
+		html += '<div style="border:1px solid #eee;border-radius:4px;padding:5px;border-left:3px solid #3498db;">';
+		html += '<div style="font-size:9px;color:#777;">' + dw["Name"] + '</div>';
+		html += '<div style="font-weight:bold;font-size:12px;">' + dw["Value"] + (dw["Units"] ? " " + dw["Units"] : "") + '</div>';
+		html += '</div></div>';
+	}
+	html += '</div></div>';
+	html += '</div>'; // end chinampa card
 	return html;
 }
 
@@ -893,7 +1067,11 @@ function refreshTelepathonsView(){
 		if(telepathonName!="TopTank" && telepathonName!="Chinampa" && telepathonName!="SeedlingMonitor"){
 			continue;
 		}
-		panelHTML += buildTelepathonPillsContent(deneChains[j13]);
+		if (telepathonName === "Chinampa") {
+			panelHTML += buildChinampaContent(deneChains[j13]);
+		} else {
+			panelHTML += buildTelepathonPillsContent(deneChains[j13]);
+		}
 	}
 	$('#TelepathonsView').append(panelHTML);
 	return panelHTML;
