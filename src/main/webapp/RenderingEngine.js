@@ -1090,7 +1090,17 @@ function renderOrgansPanel() {
 	if (cerebTasks.length > 0) {
 		cerebModalContent += '<ul class="nav nav-pills" style="margin-bottom:14px;flex-wrap:wrap;">';
 		for (var cpi = 0; cpi < cerebTasks.length; cpi++) {
-			var cTaskLabel = cerebTasks[cpi]["Name"].replace(" GraveyardShift", " Shift");
+			var cTaskRawName = cerebTasks[cpi]["Name"];
+			var cTaskDwsLabel = cerebTasks[cpi]["DeneWords"] || [];
+			var cTeleopathonType = "";
+			for (var tl = 0; tl < cTaskDwsLabel.length; tl++) {
+				if (cTaskDwsLabel[tl]["Name"] === DENEWORD_CEREBELLUM_TELEPATHON_TYPE) { cTeleopathonType = cTaskDwsLabel[tl]["Value"]; break; }
+			}
+			var cTaskLabel = cTaskRawName;
+			if (cTeleopathonType && cTaskLabel.indexOf(cTeleopathonType + " ") === 0) {
+				cTaskLabel = cTaskLabel.substring(cTeleopathonType.length + 1);
+			}
+			cTaskLabel = cTaskLabel.replace(/([a-z])([A-Z])/g, '$1 $2');
 			var cpid = "cereb-task-" + cpi;
 			cerebModalContent += '<li' + (cpi === 0 ? ' class="active"' : '') +
 				' onclick="return teleonomeShowTab(\'' + cpid + '\', this)" style="margin-bottom:4px;">' +
