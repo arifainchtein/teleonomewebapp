@@ -788,6 +788,7 @@ function buildTelepathonCardView(telepathon) {
 
 	var deviceType = '';
 	var localTime = '';
+	var purposeWords = [];
 	var denes = telepathon["Denes"] || [];
 	for (var di = 0; di < denes.length; di++) {
 		if (denes[di]["Name"] === "Configuration") {
@@ -801,12 +802,39 @@ function buildTelepathonCardView(telepathon) {
 			for (var pi = 0; pi < pws.length; pi++) {
 				if (pws[pi]["Name"] === "Local Time") localTime = pws[pi]["Value"];
 			}
+			purposeWords = pws;
 		}
+	}
+
+	function findPW(n) {
+		for (var fi = 0; fi < purposeWords.length; fi++) if (purposeWords[fi]["Name"] === n) return purposeWords[fi];
+		return null;
 	}
 
 	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
 	var statusColor = ageSeconds < 60 ? '#27ae60' : (ageSeconds < 120 ? '#f39c12' : '#e74c3c');
-	var statusLabel = ageSeconds < 60 ? 'Live' : (ageSeconds < 120 ? 'Delayed' : 'Offline');
+
+	// Build device-specific status info line
+	var statusExtra = '';
+	if (name === "Chinampa") {
+		var alertDW = findPW("Alert Status");
+		var alertCodeDW = findPW("Alert Code");
+		if (alertDW && String(alertDW["Value"]).toLowerCase() === "true") {
+			var alertMsgs = {0:"Initializing...",1:"Fish Tank Data Stale",2:"Sump Trough Stale",3:"FT & Sump Data Stale",4:"Solenoid Open / Low Flow",5:"Sump Level Too Low",6:"System Low In Water"};
+			var ac = alertCodeDW ? parseInt(alertCodeDW["Value"]) : 0;
+			statusExtra = '<span style="font-size:11px;color:#e74c3c;font-weight:bold;margin-left:4px;">' + (alertMsgs[ac] || "Alert") + '</span>';
+		}
+	} else {
+		var battDW = findPW("Battery Voltage");
+		var secsDW = findPW("Seconds Time");
+		var extras = [];
+		if (battDW) extras.push(battDW["Value"] + 'V');
+		if (secsDW) {
+			var secsSince = Math.floor(Date.now() / 1000 - parseFloat(secsDW["Value"]));
+			if (secsSince >= 0) extras.push(secsSince + 's ago');
+		}
+		if (extras.length) statusExtra = '<span style="font-size:11px;color:#555;margin-left:4px;">' + extras.join('  ') + '</span>';
+	}
 
 	var detailHtml = name === "Chinampa" ? buildChinampaContent(telepathon) : buildTelepathonDetailContent(telepathon);
 
@@ -830,17 +858,21 @@ function buildTelepathonCardView(telepathon) {
 	var html = '<div class="col-xs-12 col-sm-6 col-md-4" id="tpCardCol_' + safeId + '" style="margin-bottom:16px;padding:6px;">';
 	html += '<div style="border-radius:12px;border:1px solid #ddd;overflow:hidden;cursor:pointer;' +
 		'box-shadow:0 2px 8px rgba(0,0,0,0.08);background:white;display:flex;align-items:stretch;" ' +
-		'data-toggle="modal" data-target="#' + modalId + '">';
-	html += '<div style="flex:0 0 90px;background:white;padding:14px;display:flex;align-items:center;' +
+		'onclick="$(\'#' + modalId + '\').modal(\'show\')">';
+	html += '<div style="flex:0 0 110px;background:white;padding:10px;display:flex;align-items:center;' +
 		'justify-content:center;border-right:1px solid #eee;">';
-	html += '<img src="' + imgSrc + '" style="height:65px;width:65px;object-fit:contain;" onerror="this.style.display=\'none\'">';
+	html += '<img src="' + imgSrc + '" style="width:90px;height:90px;object-fit:contain;" onerror="this.style.display=\'none\'">';
 	html += '</div>';
+	var cardAgeSec = Math.floor(ageSeconds);
 	html += '<div style="flex:1;padding:14px;background:#fafafa;display:flex;flex-direction:column;justify-content:center;">';
 	html += '<div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + name + '</div>';
-	if (localTime) html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTime + '</div>';
-	html += '<div style="margin-top:8px;display:flex;align-items:center;">';
-	html += '<span style="width:10px;height:10px;border-radius:50%;background:' + statusColor + ';display:inline-block;margin-right:6px;"></span>';
-	html += '<span style="font-size:12px;color:' + statusColor + ';font-weight:bold;">' + statusLabel + '</span>';
+	if (localTime) {
+		html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTime +
+			'&nbsp;<span style="color:' + statusColor + ';font-weight:bold;">(' + cardAgeSec + 's ago)</span></div>';
+	}
+	html += '<div style="margin-top:6px;display:flex;align-items:center;">';
+	html += '<span style="width:10px;height:10px;border-radius:50%;background:' + statusColor + ';display:inline-block;flex-shrink:0;"></span>';
+	html += statusExtra;
 	html += '</div>';
 	html += '</div>';
 	html += '</div>';
@@ -1019,13 +1051,13 @@ function renderOrgansPanel() {
 	html += '<div>';
 	html += '<div class="row" style="margin:8px 0;">';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#hippocampusModal">Hippocampus</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" onclick="$(\'#hippocampusModal\').modal(\'show\')">Hippocampus</button>';
 	html += '</div>';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#cerebellumModal">Cerebellum</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" onclick="$(\'#cerebellumModal\').modal(\'show\')">Cerebellum</button>';
 	html += '</div>';
 	html += '<div class="col-xs-4 text-center">';
-	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#heartModal">Heart</button>';
+	html += '<button class="btn btn-lg ' + statusClass + '" onclick="$(\'#heartModal\').modal(\'show\')">Heart</button>';
 	html += '</div>';
 	html += '</div>';
 	return html;
@@ -1114,23 +1146,26 @@ function buildChinampaContent(telepathon) {
 		return g;
 	}
 
-	var html = '<div style="border-radius:8px;background:white;overflow:hidden;">';
-	html += '<div style="background:white;color:#2c3e50;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #3498db;">';
-	html += '<span style="font-size:16px;font-weight:bold;color:#2c3e50;">Chinampa</span>';
-	html += '<span style="font-size:12px;color:#888;">' + (localTime ? localTime["Value"] : "") + '</span>';
-	html += '</div>';
+	var html = '<div style="background:white;">';
 
 	if (alertStatus) {
-		html += '<div style="background:#e74c3c;color:white;padding:8px 15px;text-align:center;font-weight:bold;">' + (alertMessages[alertCode] || "Alert") + '</div>';
+		html += '<div style="background:#e74c3c;color:white;padding:6px 12px;text-align:center;font-weight:bold;font-size:13px;">' + (alertMessages[alertCode] || "Alert") + '</div>';
 	}
 
 	// Pill tabs
-	html += '<ul class="nav nav-pills" style="padding:10px 15px 0;margin:0;">';
+	html += '<ul class="nav nav-pills" style="padding:8px 12px 0;margin:0;">';
 	html += '<li class="active" onclick="return teleonomeShowTab(\'chinampa-purpose\', this)"><a href="#">Purpose</a></li>';
 	html += '<li onclick="return teleonomeShowTab(\'chinampa-sensors\', this)"><a href="#">Sensors</a></li>';
 	html += '<li onclick="return teleonomeShowTab(\'chinampa-config\', this)"><a href="#">Configuration</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'chinampa-diag\', this)"><a href="#">Diagnostics</a></li>';
 	html += '</ul>';
 
+	var modalAgeSec = Math.floor((Date.now() - pulseTimestampMilliseconds) / 1000);
+	var modalStatusColor = modalAgeSec < 60 ? '#27ae60' : (modalAgeSec < 120 ? '#f39c12' : '#e74c3c');
+	html += '<div style="padding:4px 12px 6px;font-size:11px;color:#888;border-bottom:1px solid #eee;">';
+	html += (localTime ? localTime["Value"] : '') +
+		'&nbsp;&nbsp;<span style="color:' + modalStatusColor + ';font-weight:bold;">' + modalAgeSec + 's ago</span>';
+	html += '</div>';
 	html += '<div class="tab-content" style="padding:12px 15px;">';
 
 	// Purpose tab
@@ -1174,13 +1209,17 @@ function buildChinampaContent(telepathon) {
 	if (snrDW) { var snrV = parseFloat(snrDW["Value"]); html += vitalCard("SNR", snrDW["Value"], "", snrV > 0 ? "#27ae60" : "#f39c12"); }
 	html += '</div>';
 
-	// Remaining purpose fields
-	var remainingPw = pw.filter(function(d) { return usedKeys.indexOf(d["Name"]) < 0; });
-	if (remainingPw.length > 0) {
-		html += '<div style="font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:2px solid #eee;margin-bottom:8px;padding-bottom:3px;">Full Diagnostics</div>';
-		html += denewordGrid(remainingPw, '#3498db');
-	}
 	html += '</div>'; // end purpose tab-pane
+
+	// Diagnostics tab (remaining purpose fields)
+	var remainingPw = pw.filter(function(d) { return usedKeys.indexOf(d["Name"]) < 0; });
+	html += '<div class="tab-pane" id="chinampa-diag">';
+	if (remainingPw.length > 0) {
+		html += denewordGrid(remainingPw, '#3498db');
+	} else {
+		html += '<p class="text-muted">No additional diagnostics.</p>';
+	}
+	html += '</div>';
 
 	// Sensors tab
 	html += '<div class="tab-pane" id="chinampa-sensors">';
