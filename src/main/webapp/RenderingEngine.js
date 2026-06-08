@@ -1076,31 +1076,85 @@ function renderOrgansPanel() {
 		);
 	}
 	var cerebModalContent = '';
-	var cerebPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM;
-	var cerebellumDeneChain = getDeneChainByIdentityPointer(cerebPointer);
-	if (cerebellumDeneChain) {
-		var cerebDenes = cerebellumDeneChain["Denes"];
-		if (cerebDenes && cerebDenes.length > 0) {
-			for (var ic = 0; ic < cerebDenes.length; ic++) {
-				var cerebDws = cerebDenes[ic]["DeneWords"];
-				cerebModalContent += '<div style="margin-bottom:16px;">';
-				cerebModalContent += '<div style="background:#f0f4f8;padding:8px 12px;border-left:4px solid #337ab7;' +
-					'font-weight:bold;font-size:14px;margin-bottom:6px;border-radius:0 4px 4px 0;">' +
-					cerebDenes[ic]["Name"] + '</div>';
-				cerebModalContent += '<table class="table table-condensed table-striped" style="margin-bottom:0;">';
-				for (var jc = 0; jc < cerebDws.length; jc++) {
-					var cerebDwName = cerebDws[jc]["Name"];
-					if (cerebDwName === "Annabelle Command" || cerebDwName === "Annabelle Action Pointer") continue;
-					cerebModalContent += '<tr><td style="width:55%;">' + cerebDwName + '</td>' +
-						'<td><strong>' + cerebDws[jc]["Value"] + '</strong></td></tr>';
+	var cerebInternalPointer = "@" + teleonomeName + ":" + NUCLEI_INTERNAL + ":" + DENECHAIN_INTERNAL_CEREBELLUM;
+	var cerebPurposePointer  = "@" + teleonomeName + ":" + NUCLEI_PURPOSE  + ":" + DENECHAIN_PURPOSE_CEREBELLUM;
+	var cerebInternalDC = getDeneChainByIdentityPointer(cerebInternalPointer);
+	var cerebPurposeDC  = getDeneChainByIdentityPointer(cerebPurposePointer);
+	var cerebSkipFields = ["Annabelle Action Pointer", "Annabelle Command", "Task True Expression",
+		"Telepathon Type", "Mnemosyne Today", "Mnemosyne Current Week", "UsingSolarPower",
+		"Evaluation Position"];
+	if (cerebInternalDC && cerebInternalDC["Denes"] && cerebInternalDC["Denes"].length > 0) {
+		var cerebTasks = cerebInternalDC["Denes"];
+		cerebModalContent += '<ul class="nav nav-pills" style="margin-bottom:14px;flex-wrap:wrap;">';
+		for (var cpi = 0; cpi < cerebTasks.length; cpi++) {
+			var cTaskLabel = cerebTasks[cpi]["Name"].replace(" GraveyardShift", " Shift");
+			var cpid = "cereb-task-" + cpi;
+			cerebModalContent += '<li' + (cpi === 0 ? ' class="active"' : '') +
+				' onclick="return teleonomeShowTab(\'' + cpid + '\', this)" style="margin-bottom:4px;">' +
+				'<a href="#">' + cTaskLabel + '</a></li>';
+		}
+		cerebModalContent += '</ul><div class="tab-content">';
+		for (var cti = 0; cti < cerebTasks.length; cti++) {
+			var cTask = cerebTasks[cti];
+			var cTaskName = cTask["Name"];
+			var cpid2 = "cereb-task-" + cti;
+			var isGraveyardShift = cTaskName.toLowerCase().indexOf("graveyardshift") !== -1 ||
+				cTaskName.toLowerCase().indexOf("graveyard") !== -1;
+			cerebModalContent += '<div class="tab-pane' + (cti === 0 ? ' active' : '') + '" id="' + cpid2 + '">';
+			if (isGraveyardShift) {
+				var gsNextId = "cereb-gs-next-" + cti;
+				var gsLastId = "cereb-gs-last-" + cti;
+				cerebModalContent += '<ul class="nav nav-pills nav-sm" style="margin-bottom:10px;">';
+				cerebModalContent += '<li class="active" onclick="return teleonomeShowTab(\'' + gsNextId + '\', this)"><a href="#">Next Calculation</a></li>';
+				cerebModalContent += '<li onclick="return teleonomeShowTab(\'' + gsLastId + '\', this)"><a href="#">Last Calculated</a></li>';
+				cerebModalContent += '</ul><div class="tab-content">';
+				cerebModalContent += '<div class="tab-pane active" id="' + gsNextId + '">';
+				cerebModalContent += '<table class="table table-condensed table-striped">';
+				var gsSchedFields = ["Active", "Expression", "Execution Time", "Execution Frequency"];
+				var gsDws = cTask["DeneWords"] || [];
+				for (var sf = 0; sf < gsSchedFields.length; sf++) {
+					for (var sdw = 0; sdw < gsDws.length; sdw++) {
+						if (gsDws[sdw]["Name"] === gsSchedFields[sf]) {
+							cerebModalContent += '<tr><td style="width:50%;">' + gsDws[sdw]["Name"] + '</td>' +
+								'<td><strong>' + gsDws[sdw]["Value"] + '</strong></td></tr>';
+							break;
+						}
+					}
 				}
 				cerebModalContent += '</table></div>';
+				cerebModalContent += '<div class="tab-pane" id="' + gsLastId + '">';
+				var cerebPurposeDenes = cerebPurposeDC ? (cerebPurposeDC["Denes"] || []) : [];
+				var cerebResultDene = cerebPurposeDenes.length > 0 ? cerebPurposeDenes[0] : null;
+				if (cerebResultDene) {
+					var cerebResultDws = cerebResultDene["DeneWords"] || [];
+					cerebModalContent += '<table class="table table-condensed table-striped">';
+					for (var rdw = 0; rdw < cerebResultDws.length; rdw++) {
+						var rdwName = cerebResultDws[rdw]["Name"];
+						if (cerebSkipFields.indexOf(rdwName) !== -1) continue;
+						cerebModalContent += '<tr><td style="width:55%;">' + rdwName + '</td>' +
+							'<td><strong>' + cerebResultDws[rdw]["Value"] + '</strong></td></tr>';
+					}
+					cerebModalContent += '</table>';
+				} else {
+					cerebModalContent += '<p class="text-muted text-center" style="padding:16px;">No calculated data yet.</p>';
+				}
+				cerebModalContent += '</div></div>';
+			} else {
+				var cTaskDws = cTask["DeneWords"] || [];
+				cerebModalContent += '<table class="table table-condensed table-striped">';
+				for (var ctdw = 0; ctdw < cTaskDws.length; ctdw++) {
+					var ctdwName = cTaskDws[ctdw]["Name"];
+					if (cerebSkipFields.indexOf(ctdwName) !== -1) continue;
+					cerebModalContent += '<tr><td style="width:50%;">' + ctdwName + '</td>' +
+						'<td><strong>' + cTaskDws[ctdw]["Value"] + '</strong></td></tr>';
+				}
+				cerebModalContent += '</table>';
 			}
-		} else {
-			cerebModalContent = '<p class="text-muted text-center" style="padding:20px;">No tasks available.</p>';
+			cerebModalContent += '</div>';
 		}
+		cerebModalContent += '</div>';
 	} else {
-		cerebModalContent = '<p class="text-muted text-center" style="padding:20px;">Cerebellum data not found.</p>';
+		cerebModalContent = '<p class="text-muted text-center" style="padding:20px;">No tasks available.</p>';
 	}
 	$('#cerebellumModalBody').html(cerebModalContent);
 
