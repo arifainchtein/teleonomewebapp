@@ -27,6 +27,7 @@ var chartDataSourcePointerHashMap = new HashMap();
 var chartStyleHashMap = new HashMap();
 var chartTimeStringHashMap = new HashMap();
 var chartTitleHashMap = new HashMap();
+var organsRenderedThisCycle = false;
 
 var organismInfoJsonData;
 var telepathonsJsonData;
@@ -807,11 +808,13 @@ function buildTelepathonCardView(telepathon) {
 		$('body').append(
 			'<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog modal-lg"><div class="modal-content">' +
-			'<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>' +
+			'<div class="modal-header">' +
+			'<button type="button" class="close" onclick="$(this).closest(\'.modal\').modal(\'hide\')">&times;</button>' +
 			'<h4 class="modal-title">' + name + '</h4></div>' +
 			'<div class="modal-body" id="' + modalId + 'Body"></div>' +
-			'<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>' +
-			'</div></div></div>'
+			'<div class="modal-footer">' +
+			'<button type="button" class="btn btn-default" onclick="$(this).closest(\'.modal\').modal(\'hide\')">Close</button>' +
+			'</div></div></div></div>'
 		);
 	}
 	$('#' + modalId + 'Body').html(detailHtml);
@@ -820,16 +823,16 @@ function buildTelepathonCardView(telepathon) {
 
 	var html = '<div class="col-xs-12 col-sm-6 col-md-4" id="tpCardCol_' + safeId + '" style="margin-bottom:16px;padding:6px;">';
 	html += '<div style="border-radius:12px;border:1px solid #ddd;overflow:hidden;cursor:pointer;' +
-		'box-shadow:0 2px 8px rgba(0,0,0,0.08);background:white;" data-toggle="modal" data-target="#' + modalId + '">';
-	html += '<div style="background:white;padding:24px 20px;text-align:center;border-bottom:1px solid #eee;">';
-	html += '<img src="' + imgSrc + '" style="height:100px;width:100px;object-fit:contain;" ' +
-		'onerror="this.style.display=\'none\'">';
-	html += '<div style="font-size:42px;color:#bbb;display:none;" class="tp-no-logo">&#9673;</div>';
+		'box-shadow:0 2px 8px rgba(0,0,0,0.08);background:white;display:flex;align-items:stretch;" ' +
+		'data-toggle="modal" data-target="#' + modalId + '">';
+	html += '<div style="flex:0 0 90px;background:white;padding:14px;display:flex;align-items:center;' +
+		'justify-content:center;border-right:1px solid #eee;">';
+	html += '<img src="' + imgSrc + '" style="height:65px;width:65px;object-fit:contain;" onerror="this.style.display=\'none\'">';
 	html += '</div>';
-	html += '<div style="padding:14px;background:#fafafa;">';
+	html += '<div style="flex:1;padding:14px;background:#fafafa;display:flex;flex-direction:column;justify-content:center;">';
 	html += '<div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + name + '</div>';
 	if (localTime) html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTime + '</div>';
-	html += '<div style="margin-top:10px;display:flex;align-items:center;">';
+	html += '<div style="margin-top:8px;display:flex;align-items:center;">';
 	html += '<span style="width:10px;height:10px;border-radius:50%;background:' + statusColor + ';display:inline-block;margin-right:6px;"></span>';
 	html += '<span style="font-size:12px;color:' + statusColor + ';font-weight:bold;">' + statusLabel + '</span>';
 	html += '</div>';
@@ -897,18 +900,24 @@ function updateTelepathonsView(text){
 }
 
 function renderOrgansPanel() {
+	if (organsRenderedThisCycle) {
+		return '<div style="display:none;"><div><div><div><div>';
+	}
+	organsRenderedThisCycle = true;
+
 	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
 	var statusClass = ageSeconds < 60 ? 'btn-success' : (ageSeconds < 120 ? 'btn-warning' : 'btn-danger');
+	var dismissBtn = '<button type="button" class="close" onclick="$(this).closest(\'.modal\').modal(\'hide\')">&times;</button>';
+	var closeFooterBtn = '<button type="button" class="btn btn-default" onclick="$(this).closest(\'.modal\').modal(\'hide\')">Close</button>';
 
 	// Hippocampus modal
 	if (!$('#hippocampusModal').length) {
 		$('body').append(
 			'<div class="modal fade" id="hippocampusModal" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog"><div class="modal-content">' +
-			'<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>' +
-			'<h4 class="modal-title">Hippocampus</h4></div>' +
+			'<div class="modal-header">' + dismissBtn + '<h4 class="modal-title">Hippocampus</h4></div>' +
 			'<div class="modal-body" id="hippocampusModalBody"></div>' +
-			'<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>' +
+			'<div class="modal-footer">' + closeFooterBtn + '</div>' +
 			'</div></div></div>'
 		);
 	}
@@ -939,10 +948,9 @@ function renderOrgansPanel() {
 		$('body').append(
 			'<div class="modal fade" id="cerebellumModal" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog"><div class="modal-content">' +
-			'<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>' +
-			'<h4 class="modal-title">Cerebellum</h4></div>' +
+			'<div class="modal-header">' + dismissBtn + '<h4 class="modal-title">Cerebellum</h4></div>' +
 			'<div class="modal-body" id="cerebellumModalBody"></div>' +
-			'<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>' +
+			'<div class="modal-footer">' + closeFooterBtn + '</div>' +
 			'</div></div></div>'
 		);
 	}
@@ -967,17 +975,40 @@ function renderOrgansPanel() {
 	}
 	$('#cerebellumModalBody').html(cerebContent);
 
+	// Heart modal
+	if (!$('#heartModal').length) {
+		$('body').append(
+			'<div class="modal fade" id="heartModal" tabindex="-1" role="dialog">' +
+			'<div class="modal-dialog"><div class="modal-content">' +
+			'<div class="modal-header">' + dismissBtn + '<h4 class="modal-title">Heart</h4></div>' +
+			'<div class="modal-body" id="heartModalBody"></div>' +
+			'<div class="modal-footer">' + closeFooterBtn + '</div>' +
+			'</div></div></div>'
+		);
+	}
+	var heartContent = '<table class="table table-condensed table-striped">';
+	heartContent += '<tr><td>Last Pulse</td><td><strong>' + (pulseTimestamp || '—') + '</strong></td></tr>';
+	heartContent += '<tr><td>Time Since Pulse</td><td><strong>' + (timeStringSinceLastPulse || '—') + '</strong></td></tr>';
+	heartContent += '<tr><td>Operational Mode</td><td><strong>' + (operationalMode || '—') + '</strong></td></tr>';
+	if (currentPulseFrequency != undefined) heartContent += '<tr><td>Pulse Frequency</td><td><strong>' + msToTime(currentPulseFrequency) + '</strong></td></tr>';
+	if (currentPulseGenerationDuration != undefined) heartContent += '<tr><td>Generation Duration</td><td><strong>' + msToTime(currentPulseGenerationDuration) + '</strong></td></tr>';
+	heartContent += '</table>';
+	$('#heartModalBody').html(heartContent);
+
 	var html = '<div class="col-lg-12">';
 	html += '<div class="bs-component"><div class="panel panel-default">';
 	html += '<div class="panel-heading"><h4>Organs</h4></div>';
 	html += '<div class="panel-body">';
 	html += '<div>';
 	html += '<div class="row" style="margin:8px 0;">';
-	html += '<div class="col-xs-6 text-center">';
+	html += '<div class="col-xs-4 text-center">';
 	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#hippocampusModal">Hippocampus</button>';
 	html += '</div>';
-	html += '<div class="col-xs-6 text-center">';
+	html += '<div class="col-xs-4 text-center">';
 	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#cerebellumModal">Cerebellum</button>';
+	html += '</div>';
+	html += '<div class="col-xs-4 text-center">';
+	html += '<button class="btn btn-lg ' + statusClass + '" data-toggle="modal" data-target="#heartModal">Heart</button>';
 	html += '</div>';
 	html += '</div>';
 	return html;
@@ -1053,6 +1084,19 @@ function buildChinampaContent(telepathon) {
 		"Outdoor Temperature","Outdoor Humidity","PCB Temperature","rssi","snr",
 		"Seconds Since Last Fish Tank Data","Seconds Since Last Sump Trough Data"];
 
+	function denewordGrid(words, accentColor) {
+		var g = '<div class="row" style="margin:0;">';
+		for (var gi = 0; gi < words.length; gi++) {
+			g += '<div class="col-xs-6 col-sm-4" style="margin-bottom:6px;padding:2px 4px;">';
+			g += '<div style="border:1px solid #eee;border-radius:4px;padding:5px;border-left:3px solid ' + accentColor + ';">';
+			g += '<div style="font-size:9px;color:#777;">' + words[gi]["Name"] + '</div>';
+			g += '<div style="font-weight:bold;font-size:12px;">' + fmtVal(words[gi]) + '</div>';
+			g += '</div></div>';
+		}
+		g += '</div>';
+		return g;
+	}
+
 	var html = '<div style="border-radius:8px;background:white;overflow:hidden;">';
 	html += '<div style="background:white;color:#2c3e50;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #3498db;">';
 	html += '<span style="font-size:16px;font-weight:bold;color:#2c3e50;">Chinampa</span>';
@@ -1063,7 +1107,18 @@ function buildChinampaContent(telepathon) {
 		html += '<div style="background:#e74c3c;color:white;padding:8px 15px;text-align:center;font-weight:bold;">' + (alertMessages[alertCode] || "Alert") + '</div>';
 	}
 
-	html += '<div class="row" style="padding:12px 15px 0;">';
+	// Pill tabs
+	html += '<ul class="nav nav-pills" style="padding:10px 15px 0;margin:0;">';
+	html += '<li class="active"><a data-toggle="tab" href="#chinampa-purpose">Purpose</a></li>';
+	html += '<li><a data-toggle="tab" href="#chinampa-sensors">Sensors</a></li>';
+	html += '<li><a data-toggle="tab" href="#chinampa-config">Configuration</a></li>';
+	html += '</ul>';
+
+	html += '<div class="tab-content" style="padding:12px 15px;">';
+
+	// Purpose tab
+	html += '<div class="tab-pane active" id="chinampa-purpose">';
+	html += '<div class="row">';
 
 	// Fish Tank
 	html += '<div class="col-xs-12 col-sm-6" style="margin-bottom:12px;">';
@@ -1094,7 +1149,7 @@ function buildChinampaContent(telepathon) {
 	html += '</div>'; // end tanks row
 
 	// Vitals
-	html += '<div class="row" style="padding:0 15px 8px;">';
+	html += '<div class="row" style="margin-bottom:8px;">';
 	if (outdoorTempDW) html += vitalCard("Outdoor Temp", outdoorTempDW["Value"], "°C", "#3498db");
 	if (outdoorHumDW) html += vitalCard("Outdoor Hum", outdoorHumDW["Value"], "%", "#3498db");
 	if (pcbDW) { var pcbV = parseFloat(pcbDW["Value"]); html += vitalCard("PCB Temp", pcbDW["Value"], "°C", pcbV > maxPCB ? "#e74c3c" : "#27ae60"); }
@@ -1102,20 +1157,33 @@ function buildChinampaContent(telepathon) {
 	if (snrDW) { var snrV = parseFloat(snrDW["Value"]); html += vitalCard("SNR", snrDW["Value"], "", snrV > 0 ? "#27ae60" : "#f39c12"); }
 	html += '</div>';
 
-	// Diagnostics grid
-	html += '<div style="padding:0 15px 12px;">';
-	html += '<div style="font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:2px solid #eee;margin-bottom:8px;padding-bottom:3px;">Full Diagnostics</div>';
-	html += '<div class="row">';
-	for (var di = 0; di < pw.length; di++) {
-		var dw = pw[di];
-		if (usedKeys.indexOf(dw["Name"]) >= 0) continue;
-		html += '<div class="col-xs-6 col-sm-3" style="margin-bottom:6px;padding:2px 4px;">';
-		html += '<div style="border:1px solid #eee;border-radius:4px;padding:5px;border-left:3px solid #3498db;">';
-		html += '<div style="font-size:9px;color:#777;">' + dw["Name"] + '</div>';
-		html += '<div style="font-weight:bold;font-size:12px;">' + dw["Value"] + (dw["Units"] ? " " + dw["Units"] : "") + '</div>';
-		html += '</div></div>';
+	// Remaining purpose fields
+	var remainingPw = pw.filter(function(d) { return usedKeys.indexOf(d["Name"]) < 0; });
+	if (remainingPw.length > 0) {
+		html += '<div style="font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:2px solid #eee;margin-bottom:8px;padding-bottom:3px;">Full Diagnostics</div>';
+		html += denewordGrid(remainingPw, '#3498db');
 	}
-	html += '</div></div>';
+	html += '</div>'; // end purpose tab-pane
+
+	// Sensors tab
+	html += '<div class="tab-pane" id="chinampa-sensors">';
+	if (sensorsDene && sensorsDene["DeneWords"].length > 0) {
+		html += denewordGrid(sensorsDene["DeneWords"], '#27ae60');
+	} else {
+		html += '<p class="text-muted">No sensor data available.</p>';
+	}
+	html += '</div>';
+
+	// Configuration tab
+	html += '<div class="tab-pane" id="chinampa-config">';
+	if (configDene && configDene["DeneWords"].length > 0) {
+		html += denewordGrid(configDene["DeneWords"], '#8e44ad');
+	} else {
+		html += '<p class="text-muted">No configuration data available.</p>';
+	}
+	html += '</div>';
+
+	html += '</div>'; // end tab-content
 	html += '</div>'; // end chinampa card
 	return html;
 }
@@ -1215,6 +1283,7 @@ function loadDenomeRefreshInterface(denomeFileInString) {
 }
 
 function RefreshInterface(){
+	organsRenderedThisCycle = false;
 
 	identityFactory = new IdentityFactory();
 	denomeJSONObject = pulseJSONObject.Denome;
