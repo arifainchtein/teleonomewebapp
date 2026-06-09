@@ -808,7 +808,7 @@ function buildDaffodilContent(telepathon) {
 	function mkGraphBtns(tpName, deneName, dwName) {
 		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '" data-denewordname="' + dwName + '"';
 		var btnCls = 'btn btn-xs btn-default telepathon-history-value';
-		return '<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="3600000">1h</button> ' +
+		return '<button class="' + btnCls + '" ' + d + ' data-range="3600000">1h</button> ' +
 			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
 			'<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="604800000">7d</button>';
 	}
