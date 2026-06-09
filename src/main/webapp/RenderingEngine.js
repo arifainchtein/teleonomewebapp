@@ -797,8 +797,16 @@ function buildDaffodilContent(telepathon) {
 	}
 	function getVal(dene, name, fallbackDene) {
 		var r = getDW(dene, name);
-		if (!r && fallbackDene) r = getDW(fallbackDene, name);
-		return r;
+		var dn = r ? dene["Name"] : null;
+		if (!r && fallbackDene) { r = getDW(fallbackDene, name); dn = r ? fallbackDene["Name"] : null; }
+		return r ? { value: r.value, units: r.units, deneName: dn } : null;
+	}
+	function mkGraphBtns(tpName, deneName, dwName) {
+		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '" data-denewordname="' + dwName + '"';
+		var btnCls = 'btn btn-xs btn-default telepathon-history-value';
+		return '<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="3600000">1h</button> ' +
+			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
+			'<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="604800000">7d</button>';
 	}
 
 	// Subheader values
@@ -812,19 +820,21 @@ function buildDaffodilContent(telepathon) {
 		timestampStr = ts.toLocaleString();
 	}
 
-	var safeId = telepathon["Name"].replace(/[^a-zA-Z0-9]/g, '_');
-	var html = '<div style="display:flex;flex-wrap:wrap;gap:20px;padding:6px 0 14px 0;border-bottom:1px solid #eee;margin-bottom:12px;font-size:13px;">';
+	var tpName = telepathon["Name"];
+	var safeId = tpName.replace(/[^a-zA-Z0-9]/g, '_');
+	var html = '<div style="display:flex;flex-wrap:wrap;gap:20px;padding:2px 0 10px 0;margin-top:-8px;border-bottom:1px solid #eee;margin-bottom:10px;font-size:13px;">';
 	html += '<span><strong>Time:</strong> ' + (timestampStr || (secsDW ? secsDW.value : '—')) + '</span>';
 	html += '<span><strong>Function:</strong> ' + functionLabel + '</span>';
 	html += '</div>';
 
-	html += '<ul class="nav nav-pills" style="margin-bottom:12px;">';
+	html += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
 	html += '<li class="active" onclick="return teleonomeShowTab(\'daff-results-' + safeId + '\', this)"><a href="#">Results</a></li>';
 	html += '<li onclick="return teleonomeShowTab(\'daff-config-' + safeId + '\', this)"><a href="#">Config</a></li>';
 	html += '</ul><div class="tab-content">';
 
 	// Results tab — 4 cards in a 2x2 grid
 	html += '<div class="tab-pane active" id="daff-results-' + safeId + '"><div class="row">';
+	var noGraphFields = {"Op Mode":1,"Weather Fresh":1,"INA219 Found":1,"BH1750 Found":1,"ADS1115 Found":1,"RTC Found":1,"DS18B20 Found":1,"SHT Found":1,"Invalid Time":1,"Using Solar Power":1,"Local Time":1,"Source Original Time":1,"Operating Status":1};
 	var cardGroups = [
 		{ title: "Sensors", fields: ["Measured Height", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature"] },
 		{ title: "Power",   fields: ["Led Brightness", "Battery Voltage", "Operating Status", "Async Data", "Wake Time Sec", "Sleep Time", "Estimated Runtime", "Battery Current"] },
@@ -845,7 +855,9 @@ function buildDaffodilContent(telepathon) {
 			if (fieldName === "Operating Status") {
 				displayVal = daffodilOperatingStatusNames[String(parseInt(r.value))] || r.value;
 			}
-			html += '<tr><td style="width:55%;">' + fieldName + '</td><td><strong>' + displayVal + (r.units ? ' ' + r.units : '') + '</strong></td></tr>';
+			var valCell = '<strong>' + displayVal + (r.units ? ' ' + r.units : '') + '</strong>';
+			var btnCell = noGraphFields[fieldName] ? '' : '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, r.deneName, fieldName) + '</td>';
+			html += '<tr><td style="width:40%;">' + fieldName + '</td><td>' + valCell + '</td>' + btnCell + '</tr>';
 		}
 		html += '</table></div></div>';
 	}
