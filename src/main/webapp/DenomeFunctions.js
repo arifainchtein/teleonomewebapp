@@ -437,8 +437,11 @@ function extraLowerNavInfo(deneChainPanel){
 				glyphIcon = deneWord["Value"];
 			}
 		}
+		var shortNavTitles = {"Mnemosyne": "Mnemo", "Diagnostics": "Diag", "Pathology": "Pathos"};
+		var shortTitle = shortNavTitles[pageTitle] || pageTitle;
+		var titleHtml = '<span class="hidden-xs">' + pageTitle + '</span><span class="visible-xs">' + shortTitle + '</span>';
 		returnText+="<div class=\"col-xs-2 text-center LowerNavFunction\">";
-		returnText+="<a href=\"javascript:setPageToDisplay("+ pageInNavPosition+")\"><i class=\""+ glyphIcon +"\"></i><br>"+pageTitle+"</a>";
+		returnText+="<a href=\"javascript:setPageToDisplay("+ pageInNavPosition+")\"><i class=\""+ glyphIcon +"\"></i><br>"+titleHtml+"</a>";
 		returnText+="</div>";
 		
 	}
