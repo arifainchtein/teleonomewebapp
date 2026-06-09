@@ -772,6 +772,107 @@ function updateOrganismView(text){
 	refreshOrganismView();
 }
 
+var daffodilFunctionNames = {
+	"1": "1 Flow Sensor", "2": "2 Flow Sensors", "3": "1 Flow + 1 Tank",
+	"4": "1 Tank", "5": "2 Tanks", "6": "Septic Tank",
+	"7": "Water Trough", "8": "Temp & Soil Moisture", "9": "Light Detector"
+};
+var daffodilOperatingStatusNames = {"0": "Unknown", "1": "Pulse Sleep", "2": "No LED", "3": "Full"};
+
+function buildDaffodilContent(telepathon) {
+	var denes = telepathon["Denes"] || [];
+	var purposeDene = null, configDene = null, sensorsDene = null;
+	for (var i = 0; i < denes.length; i++) {
+		if (denes[i]["Name"] === "Purpose") purposeDene = denes[i];
+		else if (denes[i]["Name"] === "Configuration") configDene = denes[i];
+		else if (denes[i]["Name"] === "Sensors") sensorsDene = denes[i];
+	}
+	function getDW(dene, name) {
+		if (!dene) return null;
+		var dws = dene["DeneWords"] || [];
+		for (var di = 0; di < dws.length; di++) {
+			if (dws[di]["Name"] === name) return { value: dws[di]["Value"], units: dws[di]["Units"] || "" };
+		}
+		return null;
+	}
+	function getVal(dene, name, fallbackDene) {
+		var r = getDW(dene, name);
+		if (!r && fallbackDene) r = getDW(fallbackDene, name);
+		return r;
+	}
+
+	// Subheader values
+	var secsDW = getDW(purposeDene, "Seconds Time");
+	var funcDW = getDW(configDene, "Current Function");
+	var funcNum = funcDW ? String(parseInt(funcDW.value)) : "";
+	var functionLabel = daffodilFunctionNames[funcNum] || ("Function " + funcNum);
+	var timestampStr = "";
+	if (secsDW) {
+		var ts = new Date(parseInt(secsDW.value) * 1000);
+		timestampStr = ts.toLocaleString();
+	}
+
+	var safeId = telepathon["Name"].replace(/[^a-zA-Z0-9]/g, '_');
+	var html = '<div style="display:flex;flex-wrap:wrap;gap:20px;padding:6px 0 14px 0;border-bottom:1px solid #eee;margin-bottom:12px;font-size:13px;">';
+	html += '<span><strong>Time:</strong> ' + (timestampStr || (secsDW ? secsDW.value : '—')) + '</span>';
+	html += '<span><strong>Function:</strong> ' + functionLabel + '</span>';
+	html += '</div>';
+
+	html += '<ul class="nav nav-pills" style="margin-bottom:12px;">';
+	html += '<li class="active" onclick="return teleonomeShowTab(\'daff-results-' + safeId + '\', this)"><a href="#">Results</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'daff-config-' + safeId + '\', this)"><a href="#">Config</a></li>';
+	html += '</ul><div class="tab-content">';
+
+	// Results tab — 4 cards in a 2x2 grid
+	html += '<div class="tab-pane active" id="daff-results-' + safeId + '"><div class="row">';
+	var cardGroups = [
+		{ title: "Sensors", fields: ["Measured Height", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature"] },
+		{ title: "Power",   fields: ["Led Brightness", "Battery Voltage", "Operating Status", "Async Data", "Wake Time Sec", "Sleep Time", "Estimated Runtime", "Battery Current"] },
+		{ title: "Communication", fields: ["rssi", "snr", "Digital Stables Upload", "Lora Active", "ds Last Upload"] },
+		{ title: "Diagnostics", fields: ["RTC Battery Volt", "Op Mode", "Weather Fresh", "INA219 Found", "BH1750 Found", "ADS1115 Found", "RTC Found", "DS18B20 Found", "SHT Found", "Invalid Time", "Using Solar Power", "Source Original Time", "Local Time"] }
+	];
+	for (var ci = 0; ci < cardGroups.length; ci++) {
+		var card = cardGroups[ci];
+		html += '<div class="col-xs-12 col-sm-6" style="padding:5px;">';
+		html += '<div style="border:1px solid #ddd;border-radius:4px;overflow:hidden;margin-bottom:4px;">';
+		html += '<div style="background:#f0f4f8;padding:7px 12px;font-weight:bold;font-size:13px;color:#337ab7;border-bottom:1px solid #ddd;">' + card.title + '</div>';
+		html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">';
+		for (var fi = 0; fi < card.fields.length; fi++) {
+			var fieldName = card.fields[fi];
+			var r = getVal(purposeDene, fieldName, sensorsDene);
+			if (!r) continue;
+			var displayVal = r.value;
+			if (fieldName === "Operating Status") {
+				displayVal = daffodilOperatingStatusNames[String(parseInt(r.value))] || r.value;
+			}
+			html += '<tr><td style="width:55%;">' + fieldName + '</td><td><strong>' + displayVal + (r.units ? ' ' + r.units : '') + '</strong></td></tr>';
+		}
+		html += '</table></div></div>';
+	}
+	html += '</div></div>';
+
+	// Config tab
+	html += '<div class="tab-pane" id="daff-config-' + safeId + '">';
+	html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
+	// Config dene fields
+	var configFields = configDene ? (configDene["DeneWords"] || []) : [];
+	for (var cfi = 0; cfi < configFields.length; cfi++) {
+		var cfName = configFields[cfi]["Name"];
+		var cfVal = configFields[cfi]["Value"];
+		if (cfName === "Current Function") cfVal = functionLabel;
+		html += '<tr><td style="width:50%;">' + cfName + '</td><td><strong>' + cfVal + '</strong></td></tr>';
+	}
+	// Sensor config fields (tank/trough name, max height)
+	var sensFields = sensorsDene ? (sensorsDene["DeneWords"] || []) : [];
+	for (var sfi = 0; sfi < sensFields.length; sfi++) {
+		html += '<tr><td style="width:50%;">' + sensFields[sfi]["Name"] + '</td><td><strong>' + sensFields[sfi]["Value"] + (sensFields[sfi]["Units"] ? ' ' + sensFields[sfi]["Units"] : '') + '</strong></td></tr>';
+	}
+	html += '</table></div>';
+
+	html += '</div>'; // tab-content
+	return html;
+}
+
 function buildTelepathonDetailContent(telepathon) {
 	var denes = telepathon["Denes"] || [];
 	if (denes.length === 0) return '<p class="text-muted text-center" style="padding:20px;">No data available.</p>';
@@ -854,7 +955,9 @@ function buildTelepathonCardView(telepathon) {
 		if (extras.length) statusExtra = '<span style="font-size:11px;color:#555;margin-left:4px;">' + extras.join('  ') + '</span>';
 	}
 
-	var detailHtml = name === "Chinampa" ? buildChinampaContent(telepathon) : buildTelepathonDetailContent(telepathon);
+	var detailHtml = name === "Chinampa" ? buildChinampaContent(telepathon) :
+		deviceType === "Daffodil" ? buildDaffodilContent(telepathon) :
+		buildTelepathonDetailContent(telepathon);
 
 	if (!$('#' + modalId).length) {
 		$('body').append(
