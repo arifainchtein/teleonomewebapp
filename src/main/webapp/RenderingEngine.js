@@ -746,6 +746,10 @@ function displayHippocampusResponse(payload){
 	$('#telepathon-data').empty();
 	$('#telepathon-data').append(dataPanel);
 	$('#telepathon-graph-modal').modal('show');
+	setTimeout(function() {
+		$('#telepathon-graph-modal').css('z-index', 1060);
+		$('.modal-backdrop').last().css('z-index', 1055);
+	}, 0);
 
 }
 
