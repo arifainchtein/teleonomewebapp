@@ -774,18 +774,28 @@ function updateOrganismView(text){
 
 function buildTelepathonDetailContent(telepathon) {
 	var denes = telepathon["Denes"] || [];
-	var html = '';
-	for (var i = 0; i < denes.length; i++) {
-		var dene = denes[i];
-		html += '<h5 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:4px;margin-bottom:8px;">' + dene["Name"] + '</h5>';
+	if (denes.length === 0) return '<p class="text-muted text-center" style="padding:20px;">No data available.</p>';
+	var safeId = telepathon["Name"].replace(/[^a-zA-Z0-9]/g, '_');
+	var html = '<ul class="nav nav-pills" style="margin-bottom:12px;flex-wrap:wrap;">';
+	for (var pi = 0; pi < denes.length; pi++) {
+		var paneId = 'tpDetail-' + safeId + '-' + pi;
+		html += '<li' + (pi === 0 ? ' class="active"' : '') +
+			' onclick="return teleonomeShowTab(\'' + paneId + '\', this)" style="margin-bottom:4px;">' +
+			'<a href="#">' + denes[pi]["Name"] + '</a></li>';
+	}
+	html += '</ul><div class="tab-content">';
+	for (var ti = 0; ti < denes.length; ti++) {
+		var paneId2 = 'tpDetail-' + safeId + '-' + ti;
+		html += '<div class="tab-pane' + (ti === 0 ? ' active' : '') + '" id="' + paneId2 + '">';
 		html += '<table class="table table-condensed table-striped">';
-		var dws = dene["DeneWords"] || [];
+		var dws = denes[ti]["DeneWords"] || [];
 		for (var j = 0; j < dws.length; j++) {
 			html += '<tr><td>' + dws[j]["Name"] + '</td><td><strong>' + dws[j]["Value"] + '</strong>' +
 				(dws[j]["Units"] ? ' ' + dws[j]["Units"] : '') + '</td></tr>';
 		}
-		html += '</table>';
+		html += '</table></div>';
 	}
+	html += '</div>';
 	return html;
 }
 
@@ -1048,9 +1058,9 @@ function renderMnemosyneViewPanel() {
 			var newestPos = parseInt(newest["Position"]) || total;
 			// Navigation bar
 			html += '<div style="display:flex;align-items:center;margin-bottom:10px;">';
-			html += '<button id="mnemo-prev-' + ti + '" class="btn btn-sm btn-default" onclick="mnemoNav(' + ti + ',-1)">&#8592; Previous</button>';
+			html += '<button id="mnemo-prev-' + ti + '" class="btn btn-sm btn-default" onclick="mnemoNav(' + ti + ',1)">&#8592; Previous</button>';
 			html += '<span id="mnemo-indicator-' + ti + '" style="margin:0 14px;font-size:13px;color:#555;">Entry ' + newestPos + ' of ' + total + '</span>';
-			html += '<button id="mnemo-next-' + ti + '" class="btn btn-sm btn-default" disabled onclick="mnemoNav(' + ti + ',1)">Next &#8594;</button>';
+			html += '<button id="mnemo-next-' + ti + '" class="btn btn-sm btn-default" disabled onclick="mnemoNav(' + ti + ',-1)">Next &#8594;</button>';
 			html += '</div>';
 			// Content area — starts showing newest entry
 			html += '<div id="mnemo-content-' + ti + '">';
