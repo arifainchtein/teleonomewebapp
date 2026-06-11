@@ -1282,7 +1282,7 @@ function renderOrgansPanel() {
 	var cerebPurposeDC  = getDeneChainByIdentityPointer(cerebPurposePointer);
 	var cerebSkipFields = ["Annabelle Action Pointer", "Annabelle Command", "Task True Expression",
 		"Telepathon Type", "Mnemosyne Today", "Mnemosyne Current Week", "UsingSolarPower",
-		"Evaluation Position"];
+		"Evaluation Position", "SolarAnalysis Execution Time", "SolarAnalysis Duration"];
 	var cerebAllDenes = cerebInternalDC ? (cerebInternalDC["Denes"] || []) : [];
 	var cerebTasks = cerebAllDenes.filter(function(d) {
 		return d["DeneType"] === DENE_TYPE_CEREBELLUM_TASK;
@@ -1315,10 +1315,20 @@ function renderOrgansPanel() {
 			var isGraveyardShift = cTaskName.toLowerCase().indexOf("graveyardshift") !== -1 ||
 				cTaskName.toLowerCase().indexOf("graveyard") !== -1;
 			cerebModalContent += '<div class="tab-pane' + (cti === 0 ? ' active' : '') + '" id="' + cpid2 + '">';
-			// Find matching dene in Purpose:Cerebellum by task name
+			// Find matching dene in Purpose:Cerebellum by Telepathon Type (Purpose denes are named after the telepathon)
 			var cPurposeDene = null;
+			var cTaskDwsMatch = cTask["DeneWords"] || [];
+			var cTelepathonTypeMatch = "";
+			for (var tdw = 0; tdw < cTaskDwsMatch.length; tdw++) {
+				if (cTaskDwsMatch[tdw]["Name"] === DENEWORD_CEREBELLUM_TELEPATHON_TYPE) { cTelepathonTypeMatch = cTaskDwsMatch[tdw]["Value"]; break; }
+			}
 			for (var cpd = 0; cpd < cerebPurposeDenes.length; cpd++) {
-				if (cerebPurposeDenes[cpd]["Name"] === cTaskName) { cPurposeDene = cerebPurposeDenes[cpd]; break; }
+				if (cTelepathonTypeMatch && cerebPurposeDenes[cpd]["Name"] === cTelepathonTypeMatch) { cPurposeDene = cerebPurposeDenes[cpd]; break; }
+			}
+			if (!cPurposeDene) {
+				for (var cpd = 0; cpd < cerebPurposeDenes.length; cpd++) {
+					if (cerebPurposeDenes[cpd]["Name"] === cTaskName) { cPurposeDene = cerebPurposeDenes[cpd]; break; }
+				}
 			}
 			// For Graveyard Shift: show schedule section as plain text header
 			if (isGraveyardShift) {
