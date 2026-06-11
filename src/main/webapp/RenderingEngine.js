@@ -1346,21 +1346,22 @@ function renderOrgansPanel() {
 					}
 				}
 				cerebModalContent += '</table>';
-				cerebModalContent += '<h5 style="margin-top:0;margin-bottom:6px;color:#337ab7;border-bottom:1px solid #ddd;padding-bottom:4px;">Last Calculated</h5>';
 			}
-			// Show Purpose:Cerebellum data for this task
-			if (cPurposeDene) {
-				var cPurposeDws = cPurposeDene["DeneWords"] || [];
-				cerebModalContent += '<table class="table table-condensed table-striped">';
-				for (var cpdw = 0; cpdw < cPurposeDws.length; cpdw++) {
-					var cpdwName = cPurposeDws[cpdw]["Name"];
-					if (cerebSkipFields.indexOf(cpdwName) !== -1) continue;
-					cerebModalContent += '<tr><td style="width:55%;">' + cpdwName + '</td>' +
-						'<td><strong>' + cPurposeDws[cpdw]["Value"] + '</strong></td></tr>';
+			// Show Purpose:Cerebellum data only for non-schedule tasks (Graveyard Shift has no calculated output)
+			if (!isGraveyardShift) {
+				if (cPurposeDene) {
+					var cPurposeDws = cPurposeDene["DeneWords"] || [];
+					cerebModalContent += '<table class="table table-condensed table-striped">';
+					for (var cpdw = 0; cpdw < cPurposeDws.length; cpdw++) {
+						var cpdwName = cPurposeDws[cpdw]["Name"];
+						if (cerebSkipFields.indexOf(cpdwName) !== -1) continue;
+						cerebModalContent += '<tr><td style="width:55%;">' + cpdwName + '</td>' +
+							'<td><strong>' + cPurposeDws[cpdw]["Value"] + '</strong></td></tr>';
+					}
+					cerebModalContent += '</table>';
+				} else {
+					cerebModalContent += '<p class="text-muted text-center" style="padding:16px;">No data available.</p>';
 				}
-				cerebModalContent += '</table>';
-			} else {
-				cerebModalContent += '<p class="text-muted text-center" style="padding:16px;">No data available.</p>';
 			}
 			cerebModalContent += '</div>';
 		}
