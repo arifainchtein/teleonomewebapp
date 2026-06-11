@@ -33,9 +33,19 @@ function showTelepathonGraph(data) {
 	  .domain(d3.extent(data, d => d.time))
 	  .range([0, width]);
   
-	  const maxValue = d3.max(data, d => d.value);
+	  // Filter outliers using 2nd-98th percentile so one bad value
+	  // doesn't distort the Y axis scale for all the normal readings.
+	  const sorted = data.map(d => d.value).slice().sort((a, b) => a - b);
+	  const p2  = sorted[Math.max(0, Math.floor(sorted.length * 0.02))];
+	  const p98 = sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * 0.98))];
+	  const plotData = data.filter(d => d.value >= p2 && d.value <= p98);
+	  const safeData = plotData.length > 0 ? plotData : data;
+
+	  const minValue = d3.min(safeData, d => d.value);
+	  const maxValue = d3.max(safeData, d => d.value);
+	  const padding = (maxValue - minValue) * 0.1 || Math.abs(maxValue) * 0.1 || 1;
 	  const y = d3.scaleLinear()
-		  .domain([0, maxValue * 1.2]) // Add 20% to the maximum value
+		  .domain([minValue - padding, maxValue + padding])
 		  .range([height, 0]);
 	
   
@@ -45,7 +55,7 @@ function showTelepathonGraph(data) {
 	  .y(d => y(d.value));
   
 	svg.append("path")
-	  .datum(data)
+	  .datum(safeData)
 	  .attr("fill", "none")
 	  .attr("stroke", "steelblue")
 	  .attr("stroke-width", 1.5)
@@ -71,7 +81,7 @@ function showTelepathonGraph(data) {
 
  // Add dots with data display update
  svg.selectAll("circle")
-	 .data(data)
+	 .data(safeData)
 	 .enter().append("circle")
 	 .attr("r", 3)
 	 .attr("cx", d => x(d.time))
