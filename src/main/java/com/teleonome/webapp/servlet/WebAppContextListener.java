@@ -23,6 +23,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import com.teleonome.framework.TeleonomeConstants;
 import com.teleonome.framework.denome.DenomeUtils;
 import com.teleonome.framework.denome.Identity;
@@ -37,7 +39,7 @@ import com.teleonome.framework.utils.Utils;
 public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
 	ServletContext servletContext=null;
-	public final static String BUILD_NUMBER="08/06/2026 13:53";
+	public final static String BUILD_NUMBER="10/06/2026 06:52";
 	private PostgresqlPersistenceManager aDBManager=null;
 
 	public void contextInitialized(ServletContextEvent sce) {
@@ -86,6 +88,19 @@ public class WebAppContextListener implements ServletContextListener {
 		}
 		logger.warn("timeZone:" + timeZone );
 
+
+		try {
+			TeleonomeDataGateway dataGateway = new TeleonomeDataGateway();
+			JSONObject initialDenome = (JSONObject) servletContext.getAttribute("CurrentPulse");
+			String teleonomeName = (String) servletContext.getAttribute("TeleonomeName");
+			if (initialDenome != null && teleonomeName != null) {
+				dataGateway.refreshTrackedIdentities(initialDenome, teleonomeName);
+			}
+			servletContext.setAttribute("TeleonomeDataGateway", dataGateway);
+			logger.warn("TeleonomeDataGateway initialized");
+		} catch (MqttException e) {
+			logger.warn("TeleonomeDataGateway could not connect (hippocampus may not be running): " + e.getMessage());
+		}
 
 		logger.warn("Teleonome ContextListener Starting PingThread");
 		PingThread aPingThread = new PingThread();
