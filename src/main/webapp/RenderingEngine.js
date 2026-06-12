@@ -675,11 +675,12 @@ function asyncUpdate(text){
 
 function displayHippocampusResponse(payload){
 
+	console.log('[hippo v3] displayHippocampusResponse called');
 	var response = JSON.parse(payload);
 	var data=response.Data;
 	var telepathonName = response.telepathonName;
 	var deneWordName= response.deneWordName;
-	//console.log(data);
+	console.log('[hippo v3] data.length=' + (data ? data.length : 'null') + ' telepathonName=' + telepathonName);
 
 	var results = analyzeTransmissionIntervals(data);
 
@@ -800,27 +801,33 @@ function displayHippocampusResponse(payload){
 	})();
 
 	var dataPanel = '';
-	dataPanel += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
-	dataPanel += '<li class="active" onclick="$(\'#hippo-pill-stats\').show();$(\'#hippo-pill-contents\').hide();$(this).addClass(\'active\').siblings().removeClass(\'active\');return false;"><a href="#">Stats</a></li>';
-	dataPanel += '<li onclick="$(\'#hippo-pill-contents\').show();$(\'#hippo-pill-stats\').hide();$(this).addClass(\'active\').siblings().removeClass(\'active\');return false;"><a href="#">Contents</a></li>';
-	dataPanel += '</ul>';
-	dataPanel += '<div id="hippo-pill-stats">';
-	dataPanel += '<div style="font-size:13px;margin-bottom:6px;color:#555;">There are ' + data.length + ' samples</div>';
-	dataPanel += '<table class="table table-striped table-condensed text-center" style="font-size:12px;">';
-	dataPanel += '<tr><th>Time</th><th>Value</th><th>Time</th><th>Value</th></tr>';
-	for (var dpi = 0; dpi < data.length; dpi += 2) {
-		var left = data[dpi];
-		var right = data[dpi + 1];
-		dataPanel += '<tr><td>' + left.timeString + '</td><td>' + left.Value + '</td>';
-		if (right) {
-			dataPanel += '<td>' + right.timeString + '</td><td>' + right.Value + '</td>';
-		} else {
-			dataPanel += '<td></td><td></td>';
+	try {
+		dataPanel += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
+		dataPanel += '<li class="active" onclick="$(\'#hippo-pill-stats\').show();$(\'#hippo-pill-contents\').hide();$(this).addClass(\'active\').siblings().removeClass(\'active\');return false;"><a href="#">Stats</a></li>';
+		dataPanel += '<li onclick="$(\'#hippo-pill-contents\').show();$(\'#hippo-pill-stats\').hide();$(this).addClass(\'active\').siblings().removeClass(\'active\');return false;"><a href="#">Contents</a></li>';
+		dataPanel += '</ul>';
+		dataPanel += '<div id="hippo-pill-stats">';
+		dataPanel += '<div style="font-size:13px;margin-bottom:6px;color:#555;">There are ' + data.length + ' samples</div>';
+		dataPanel += '<table class="table table-striped table-condensed text-center" style="font-size:12px;">';
+		dataPanel += '<tr><th>Time</th><th>Value</th><th>Time</th><th>Value</th></tr>';
+		for (var dpi = 0; dpi < data.length; dpi += 2) {
+			var left = data[dpi];
+			var right = data[dpi + 1];
+			dataPanel += '<tr><td>' + left.timeString + '</td><td>' + left.Value + '</td>';
+			if (right) {
+				dataPanel += '<td>' + right.timeString + '</td><td>' + right.Value + '</td>';
+			} else {
+				dataPanel += '<td></td><td></td>';
+			}
+			dataPanel += '</tr>';
 		}
-		dataPanel += '</tr>';
+		dataPanel += '</table></div>';
+		dataPanel += '<div id="hippo-pill-contents" style="display:none;">' + hippoContentsHtml + '</div>';
+		console.log('[hippo v3] dataPanel built, length=' + dataPanel.length);
+	} catch(e) {
+		console.error('[hippo v3] ERROR building dataPanel: ' + e);
+		dataPanel = '<div class="text-danger">Error building data panel: ' + e + '</div>';
 	}
-	dataPanel += '</table></div>';
-	dataPanel += '<div id="hippo-pill-contents" style="display:none;">' + hippoContentsHtml + '</div>';
 	$('#telepathon-graph-modal .nav-link').on('click', function (e) {
 		e.preventDefault()
 		$(this).tab('show')
