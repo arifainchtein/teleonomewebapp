@@ -843,6 +843,7 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 }
 
 // Pie chart using D3 v7. slices: [{name, value}]. colors: optional hex array.
+// Uses .style() for fill/stroke so the global CSS `path { fill: none }` rule is overridden.
 function drawHippocampusPieChart(containerId, slices, colors) {
 	var container = document.getElementById(containerId);
 	if (!container || !slices || slices.length === 0) return;
@@ -850,6 +851,7 @@ function drawHippocampusPieChart(containerId, slices, colors) {
 
 	colors = colors || d3.schemeTableau10;
 	var total = slices.reduce(function(s, d) { return s + d.value; }, 0);
+	if (total === 0) return;
 	var w = Math.max(container.getBoundingClientRect().width || 240, 180);
 	var h = 200;
 	var r = Math.min(w * 0.38, h / 2 - 8);
@@ -865,23 +867,24 @@ function drawHippocampusPieChart(containerId, slices, colors) {
 	var g = svg.append('g')
 		.attr('transform', 'translate(' + r + ',' + (h / 2) + ')');
 
+	// Use .style() not .attr() — the global CSS `path { fill: none }` overrides SVG presentation attributes
 	g.selectAll('.harc')
 		.data(pie(slices))
 		.enter().append('path')
 		.attr('d', arc)
-		.attr('fill', function(d, i) { return colors[i % colors.length]; })
-		.attr('stroke', 'white')
-		.attr('stroke-width', 1);
+		.style('fill', function(d, i) { return colors[i % colors.length]; })
+		.style('stroke', 'white')
+		.style('stroke-width', '1px');
 
 	var legend = svg.append('g').attr('transform', 'translate(' + legendX + ',12)');
 	slices.forEach(function(s, i) {
 		var pct = total > 0 ? Math.round(s.value * 100 / total) : 0;
 		var y = i * 22;
 		legend.append('rect').attr('x', 0).attr('y', y).attr('width', 13).attr('height', 13)
-			.attr('fill', colors[i % colors.length]);
+			.style('fill', colors[i % colors.length]);
 		var label = s.name + ' (' + pct + '%)';
 		if (label.length > 22) label = label.substring(0, 20) + '…';
 		legend.append('text').attr('x', 17).attr('y', y + 11)
-			.style('font-size', '11px').style('fill', '#333').text(label);
+			.style('font-size', '11px').style('fill', '#333').style('stroke', 'none').text(label);
 	});
 }

@@ -1270,6 +1270,7 @@ function renderOrgansPanel() {
 	}
 	var hippoContent = '';
 	var hippoSpaceSlices = null;
+	var hippoBreakdownSlices = null;
 	var hippoPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_HIPPOCAMPUS;
 	var hippoDeneChain = getDeneChainByIdentityPointer(hippoPointer);
 	if (hippoDeneChain) {
@@ -1278,39 +1279,44 @@ function renderOrgansPanel() {
 			if (hippoDenes[ih]["Name"] === DENE_HIPPOCAMPUS_MEMORY_STATUS_DENE) {
 				var hippoDene = hippoDenes[ih];
 				var hippoTs = hippoDene["Timestamp"] || "";
-				if (hippoTs) hippoContent += '<p class="text-muted small">Last update: ' + hippoTs + '</p>';
-				hippoContent += '<table class="table table-condensed table-striped">';
 				var hippoDws = hippoDene["DeneWords"];
 				var hippoUsed = 0, hippoAvail = 0;
+				var hippoTableRows = '';
 				for (var jh = 0; jh < hippoDws.length; jh++) {
-					hippoContent += '<tr><td>' + hippoDws[jh]["Name"] + '</td><td><strong>' + hippoDws[jh]["Value"] + '</strong></td></tr>';
-					if (hippoDws[jh]["Name"] === "PointsUsed") hippoUsed = Number(hippoDws[jh]["Value"]);
-					if (hippoDws[jh]["Name"] === "PointsAvailable") hippoAvail = Number(hippoDws[jh]["Value"]);
+					var dwName = hippoDws[jh]["Name"];
+					var dwVal  = hippoDws[jh]["Value"];
+					if (dwName === "PointsUsed")    hippoUsed  = Number(dwVal);
+					if (dwName === "PointsAvailable") hippoAvail = Number(dwVal);
+					if (dwName === "MemoryBreakdown") {
+						try { hippoBreakdownSlices = JSON.parse(dwVal).map(function(b) { return { name: b.name, value: b.points }; }); } catch(e) {}
+					} else {
+						hippoTableRows += '<tr><td>' + dwName + '</td><td><strong>' + dwVal + '</strong></td></tr>';
+					}
 				}
-				hippoContent += '</table>';
 				if (hippoUsed > 0 || hippoAvail > 0) {
-					hippoSpaceSlices = [
-						{ name: "Used", value: hippoUsed },
-						{ name: "Available", value: hippoAvail }
-					];
+					hippoSpaceSlices = [{ name: "Used", value: hippoUsed }, { name: "Available", value: hippoAvail }];
 				}
+				// Charts first, then metadata table
+				hippoContent += '<div class="row" style="margin-bottom:16px;margin-top:4px;">';
+				hippoContent += '<div class="col-xs-12 col-sm-6" style="padding-left:20px;padding-right:20px;">';
+				hippoContent += '<h5 class="text-center" style="font-size:13px;color:#555;margin-bottom:4px;">Memory Space</h5>';
+				hippoContent += '<div id="hippo-space-chart"></div></div>';
+				hippoContent += '<div class="col-xs-12 col-sm-6" style="padding-left:20px;padding-right:20px;">';
+				hippoContent += '<h5 class="text-center" style="font-size:13px;color:#555;margin-bottom:4px;">Memory by Sensor</h5>';
+				hippoContent += '<div id="hippo-breakdown-chart"></div></div>';
+				hippoContent += '</div>';
+				if (hippoTs) hippoContent += '<p class="text-muted small" style="margin-bottom:4px;">Last update: ' + hippoTs + '</p>';
+				hippoContent += '<table class="table table-condensed table-striped">' + hippoTableRows + '</table>';
 				break;
 			}
 		}
 	}
-	hippoContent += '<div class="row" style="margin-top:14px;">';
-	hippoContent += '<div class="col-xs-12 col-sm-6"><h5 class="text-center" style="font-size:13px;color:#555;margin-bottom:4px;">Memory Space</h5><div id="hippo-space-chart"></div></div>';
-	hippoContent += '<div class="col-xs-12 col-sm-6"><h5 class="text-center" style="font-size:13px;color:#555;margin-bottom:4px;">Memory by Sensor</h5><div id="hippo-breakdown-chart"></div></div>';
-	hippoContent += '</div>';
 	$('#hippocampusModalBody').html(hippoContent);
 	if (hippoSpaceSlices) {
 		drawHippocampusPieChart('hippo-space-chart', hippoSpaceSlices, ['#4e79a7', '#d9d9d9']);
 	}
-	if (lastHippocampusStatus && lastHippocampusStatus.MemoryBreakdown && lastHippocampusStatus.MemoryBreakdown.length > 0) {
-		var breakdownSlices = lastHippocampusStatus.MemoryBreakdown.map(function(b) {
-			return { name: b.name, value: b.points };
-		});
-		drawHippocampusPieChart('hippo-breakdown-chart', breakdownSlices);
+	if (hippoBreakdownSlices && hippoBreakdownSlices.length > 0) {
+		drawHippocampusPieChart('hippo-breakdown-chart', hippoBreakdownSlices);
 	}
 
 	// Cerebellum modal

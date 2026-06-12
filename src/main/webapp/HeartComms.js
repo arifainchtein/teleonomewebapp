@@ -131,6 +131,5 @@ console.log("message arrived");
 		hippocampusReady=true;
 	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_STATUS){
 		if(!hippocampusReady){ hippocampusReady=true; }
-		try { lastHippocampusStatus = JSON.parse(payload); } catch(e) {}
 	}
 };
