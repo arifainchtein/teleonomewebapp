@@ -801,10 +801,10 @@ function displayHippocampusResponse(payload){
 
 	var dataPanel = '';
 	dataPanel += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
-	dataPanel += '<li class="active" onclick="return teleonomeShowTab(\'hippo-pill-stats\', this)"><a href="#">Stats</a></li>';
-	dataPanel += '<li onclick="return teleonomeShowTab(\'hippo-pill-contents\', this)"><a href="#">Contents</a></li>';
-	dataPanel += '</ul><div class="tab-content">';
-	dataPanel += '<div class="tab-pane active" id="hippo-pill-stats">';
+	dataPanel += '<li class="active" onclick="$(\'#hippo-pill-stats\').show();$(\'#hippo-pill-contents\').hide();$(this).addClass(\'active\').siblings().removeClass(\'active\');return false;"><a href="#">Stats</a></li>';
+	dataPanel += '<li onclick="$(\'#hippo-pill-contents\').show();$(\'#hippo-pill-stats\').hide();$(this).addClass(\'active\').siblings().removeClass(\'active\');return false;"><a href="#">Contents</a></li>';
+	dataPanel += '</ul>';
+	dataPanel += '<div id="hippo-pill-stats">';
 	dataPanel += '<div style="font-size:13px;margin-bottom:6px;color:#555;">There are ' + data.length + ' samples</div>';
 	dataPanel += '<table class="table table-striped table-condensed text-center" style="font-size:12px;">';
 	dataPanel += '<tr><th>Time</th><th>Value</th><th>Time</th><th>Value</th></tr>';
@@ -820,8 +820,7 @@ function displayHippocampusResponse(payload){
 		dataPanel += '</tr>';
 	}
 	dataPanel += '</table></div>';
-	dataPanel += '<div class="tab-pane" id="hippo-pill-contents">' + hippoContentsHtml + '</div>';
-	dataPanel += '</div>';
+	dataPanel += '<div id="hippo-pill-contents" style="display:none;">' + hippoContentsHtml + '</div>';
 	$('#telepathon-graph-modal .nav-link').on('click', function (e) {
 		e.preventDefault()
 		$(this).tab('show')
