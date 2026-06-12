@@ -885,74 +885,11 @@ the css for the little box on the top right f external data
 						data: {formName:"GetTelepathonDataValueByPeriod", telepathonName:telepathonName, deneName:deneName, deneWordName:deneWordName},
 						success: function (res) {
 							var data = JSON.parse(res);
-							//console.log(data);
-
-							var results = analyzeTransmissionIntervals(data);
-
-							var statsPanel='';
-							statsPanel +='<div style="margin:20px;font-size:16px">Average Interval Between transmissions:' +Math.trunc(results.totalAverage) + " seconds</div>";
-							statsPanel +='<table class="table table-striped text-center">';
-							
-							// statsPanel +='<tr><th>Hour</th><th>Average Time(Seconds)</th><th># of Samples</th><th>Std Dev</th><th>Min</th><th>Max</th></tr>';
-							// // console.log("Average Interval:");
-							// // console.log(`Seconds: ${analisis.averageIntervalSeconds}`);
-							// // console.log(`Minutes: ${analisis.averageIntervalMinutes}`);
-							// // console.log(`Hours: ${analisis.averageIntervalHours}`);
-							// // console.log("\nHourly Averages:");
-							// Object.entries(analisis.hourlyAverages)
-							// 	.filter(([_, data]) => data.count > 0)
-							// 	.forEach(([hour, data]) => {
-							// 		console.log(`Hour ${hour}: ${data.average.toFixed(2)} (${data.count} samples)`);
-							// 		statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +'</td><td>' + data.count+'</td><td>' + data.stdDev.toFixed(2)+'</td><td>' + data.min+'</td><td>' + data.max+'</td></tr>';
-							// 	});
-							
-
-							statsPanel +='<tr><th>Hour</th><th>Count</th><th>Avg(m:ss)</th><th>Std Dev</th><th>Min(m:ss)</th><th>Max(m:ss)</th></tr>';
-							
-							Object.entries(results.hours)
-								.filter(([_, data]) => data.count > 0)
-								.forEach(([hour, data]) => {
-									if (data.min !== Infinity) {
-										console.log(
-											`${hour.padStart(2, '0')}:00 | ` +
-											`${data.count.toString().padStart(5)} | ` +
-											`${formatTimeInterval(data.average).padStart(9)} | ` +
-											`${data.stdDev.toFixed(2).padStart(10)} | ` +
-											`${formatTimeInterval(data.min).padStart(9)} | ` +
-											`${formatTimeInterval(data.max).padStart(9)}`
-										);
-										statsPanel +='<tr><td>'+hour.padStart(2, '0')+':00</td><td>'+data.count.toString().padStart(5) +'</td><td>' + formatTimeInterval(data.average).padStart(9)+'</td><td>' + data.stdDev.toFixed(2).padStart(10)+'</td><td>' + formatTimeInterval(data.min).padStart(9)+'</td><td>' + formatTimeInterval(data.max).padStart(9)+'</td></tr>';
-								
-									}
-								});
-							statsPanel +='<table>';
-
-							var dataPanel='';
-							dataPanel +='<div style="margin:20px;font-size:16px">There are ' + data.length +' samples</div>';
-							dataPanel +='<table class="table table-striped text-center">';
-							dataPanel +='<tr><th>Time</th><th>Value</th></tr>';
-							data.forEach(function(obj) { 
-								console.log(obj.id); 
-								dataPanel +='<tr><td>'+obj.timeString+'</td><td>'+obj.Value +'</td></tr>';
-							});
-							
-							dataPanel +='<table>';
-							$('#telepathon-graph-modal .nav-link').on('click', function (e) {
-								e.preventDefault()
-								$(this).tab('show')
-							})
-							$('#telepathon-graph-modal').find('.nav-tabs .nav-link:first').tab('show')
-							
-							$('#telepathon-graph-title').html(telepathonName + "-"+deneWordName);
-							$('#telepathon-graph').empty();
-							showTelepathonGraph(data);
-						$('#telepathon-stats').empty();
-							$('#telepathon-stats').append(statsPanel);
-						
-							$('#telepathon-data').empty();
-							$('#telepathon-data').append(dataPanel);
-							$('#telepathon-graph-modal').modal('show');
-
+							displayHippocampusResponse(JSON.stringify({
+								Data: data,
+								telepathonName: telepathonName,
+								deneWordName: deneWordName
+							}));
 						},
 						error: function(data){
 							$("#NewRememberedWordPanel").hide();
@@ -2212,16 +2149,16 @@ the css for the little box on the top right f external data
 					if (Array.isArray(obj)) {
 						if (obj.length === 0) return '<span style="color:#999;">[]</span>';
 						var arrId = 'jt_' + Math.random().toString(36).substr(2, 8);
-						html += '<span class="jt-toggle" data-target="' + arrId + '" style="cursor:pointer;color:#337ab7;user-select:none;">&#9660; [' + obj.length + ']</span>';
-						html += '<div id="' + arrId + '" style="margin-left:' + (indent + 16) + 'px;">';
+						html += '<span class="jt-toggle" data-target="' + arrId + '" style="cursor:pointer;color:#337ab7;user-select:none;">&#9658; [' + obj.length + ']</span>';
+						html += '<div id="' + arrId + '" style="display:none;margin-left:' + (indent + 16) + 'px;">';
 						for (var ai = 0; ai < obj.length; ai++) {
 							var itemName = (obj[ai] && obj[ai]["Name"]) ? obj[ai]["Name"] : ('[' + ai + ']');
 							var itemId = 'jt_' + Math.random().toString(36).substr(2, 8);
 							html += '<div style="margin:2px 0;">';
 							if (typeof obj[ai] === 'object' && obj[ai] !== null) {
-								html += '<span class="jt-toggle" data-target="' + itemId + '" style="cursor:pointer;color:#337ab7;user-select:none;">&#9660; </span>';
+								html += '<span class="jt-toggle" data-target="' + itemId + '" style="cursor:pointer;color:#337ab7;user-select:none;">&#9658; </span>';
 								html += '<strong style="color:#2c3e50;">' + itemName + '</strong>';
-								html += '<div id="' + itemId + '" style="margin-left:16px;border-left:2px solid #e8e8e8;padding-left:8px;margin-top:2px;">' + buildJsonTree(obj[ai], depth + 1) + '</div>';
+								html += '<div id="' + itemId + '" style="display:none;margin-left:16px;border-left:2px solid #e8e8e8;padding-left:8px;margin-top:2px;">' + buildJsonTree(obj[ai], depth + 1) + '</div>';
 							} else {
 								html += '<strong style="color:#2c3e50;">' + itemName + '</strong>: <span style="color:#27ae60;">' + obj[ai] + '</span>';
 							}
@@ -2236,9 +2173,9 @@ the css for the little box on the top right f external data
 							html += '<div style="margin:2px 0;">';
 							if (typeof v === 'object' && v !== null) {
 								var nodeId = 'jt_' + Math.random().toString(36).substr(2, 8);
-								html += '<span class="jt-toggle" data-target="' + nodeId + '" style="cursor:pointer;color:#337ab7;user-select:none;">&#9660; </span>';
+								html += '<span class="jt-toggle" data-target="' + nodeId + '" style="cursor:pointer;color:#337ab7;user-select:none;">&#9658; </span>';
 								html += '<strong style="color:#2c3e50;">' + k + '</strong>';
-								html += '<div id="' + nodeId + '" style="margin-left:16px;border-left:2px solid #e8e8e8;padding-left:8px;margin-top:2px;">' + buildJsonTree(v, depth + 1) + '</div>';
+								html += '<div id="' + nodeId + '" style="display:none;margin-left:16px;border-left:2px solid #e8e8e8;padding-left:8px;margin-top:2px;">' + buildJsonTree(v, depth + 1) + '</div>';
 							} else {
 								html += '<span style="color:#555;">' + k + '</span>: <span style="color:#27ae60;">' + v + '</span>';
 							}
@@ -2264,12 +2201,21 @@ the css for the little box on the top right f external data
 				});
 
 				$(document).on('click', '#JsonDenome', function(e) {
-					var html = '<div style="padding:10px;font-family:monospace;font-size:12px;line-height:1.6;">';
-					html += '<div style="margin-bottom:8px;font-size:13px;color:#888;">Click arrows to expand/collapse. Showing live denome.</div>';
-					html += buildJsonTree(pulseJSONObject);
-					html += '</div>';
-					$('#DiagnosticsWorkArea').html(html);
-					$('#DiagnosticsWorkArea').show();
+					var treeHtml = buildJsonTree(pulseJSONObject);
+					var w = window.open('', '_blank');
+					w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Denome JSON — ' + new Date().toLocaleTimeString() + '</title>'
+						+ '<style>body{font-family:monospace;font-size:12px;line-height:1.6;padding:16px;background:#fff;}'
+						+ '.jt-toggle{cursor:pointer;color:#337ab7;user-select:none;}</style></head><body>'
+						+ '<div style="margin-bottom:10px;font-size:13px;color:#888;">Snapshot at ' + new Date().toLocaleString() + ' — click arrows to expand/collapse.</div>'
+						+ treeHtml
+						+ '<scr' + 'ipt>document.addEventListener("click",function(e){'
+						+ 'var t=e.target;if(!t.classList.contains("jt-toggle"))return;'
+						+ 'var el=document.getElementById(t.getAttribute("data-target"));if(!el)return;'
+						+ 'if(el.style.display==="none"){el.style.display="";t.innerHTML=t.innerHTML.replace("▶","▼");}'
+						+ 'else{el.style.display="none";t.innerHTML=t.innerHTML.replace("▼","▶");}'
+						+ '});<\/scr' + 'ipt>'
+						+ '</body></html>');
+					w.document.close();
 				});
 
 				//
