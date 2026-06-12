@@ -1261,7 +1261,7 @@ function renderOrgansPanel() {
 	if (!$('#hippocampusModal').length) {
 		$('body').append(
 			'<div class="modal fade" id="hippocampusModal" tabindex="-1" role="dialog">' +
-			'<div class="modal-dialog"><div class="modal-content">' +
+			'<div class="modal-dialog modal-lg"><div class="modal-content">' +
 			'<div class="modal-header">' + mkClose('hippocampusModal') + '<h4 class="modal-title">Hippocampus</h4></div>' +
 			'<div class="modal-body" id="hippocampusModalBody"></div>' +
 			'<div class="modal-footer">' + mkFooter('hippocampusModal') + '</div>' +
@@ -1269,6 +1269,7 @@ function renderOrgansPanel() {
 		);
 	}
 	var hippoContent = '';
+	var hippoSpaceSlices = null;
 	var hippoPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_HIPPOCAMPUS;
 	var hippoDeneChain = getDeneChainByIdentityPointer(hippoPointer);
 	if (hippoDeneChain) {
@@ -1280,15 +1281,37 @@ function renderOrgansPanel() {
 				if (hippoTs) hippoContent += '<p class="text-muted small">Last update: ' + hippoTs + '</p>';
 				hippoContent += '<table class="table table-condensed table-striped">';
 				var hippoDws = hippoDene["DeneWords"];
+				var hippoUsed = 0, hippoAvail = 0;
 				for (var jh = 0; jh < hippoDws.length; jh++) {
 					hippoContent += '<tr><td>' + hippoDws[jh]["Name"] + '</td><td><strong>' + hippoDws[jh]["Value"] + '</strong></td></tr>';
+					if (hippoDws[jh]["Name"] === "PointsUsed") hippoUsed = Number(hippoDws[jh]["Value"]);
+					if (hippoDws[jh]["Name"] === "PointsAvailable") hippoAvail = Number(hippoDws[jh]["Value"]);
 				}
 				hippoContent += '</table>';
+				if (hippoUsed > 0 || hippoAvail > 0) {
+					hippoSpaceSlices = [
+						{ name: "Used", value: hippoUsed },
+						{ name: "Available", value: hippoAvail }
+					];
+				}
 				break;
 			}
 		}
 	}
+	hippoContent += '<div class="row" style="margin-top:14px;">';
+	hippoContent += '<div class="col-xs-12 col-sm-6"><h5 class="text-center" style="font-size:13px;color:#555;margin-bottom:4px;">Memory Space</h5><div id="hippo-space-chart"></div></div>';
+	hippoContent += '<div class="col-xs-12 col-sm-6"><h5 class="text-center" style="font-size:13px;color:#555;margin-bottom:4px;">Memory by Sensor</h5><div id="hippo-breakdown-chart"></div></div>';
+	hippoContent += '</div>';
 	$('#hippocampusModalBody').html(hippoContent);
+	if (hippoSpaceSlices) {
+		drawHippocampusPieChart('hippo-space-chart', hippoSpaceSlices, ['#4e79a7', '#d9d9d9']);
+	}
+	if (lastHippocampusStatus && lastHippocampusStatus.MemoryBreakdown && lastHippocampusStatus.MemoryBreakdown.length > 0) {
+		var breakdownSlices = lastHippocampusStatus.MemoryBreakdown.map(function(b) {
+			return { name: b.name, value: b.points };
+		});
+		drawHippocampusPieChart('hippo-breakdown-chart', breakdownSlices);
+	}
 
 	// Cerebellum modal
 	if (!$('#cerebellumModal').length) {

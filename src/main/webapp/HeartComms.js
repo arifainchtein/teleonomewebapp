@@ -4,6 +4,7 @@ var visualizer="";
 var lastMessageTopic;
 var hippocampusReady=false;
 var lastPulse;
+var lastHippocampusStatus = null;
 function HeartConnect() {
 	//
 	// before we actually connect ask the server for the visualizer
@@ -129,9 +130,7 @@ console.log("message arrived");
 	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_RESPONSE){
 		hippocampusReady=true;
 	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_STATUS){
-		if(!hippocampusReady){
-			hippocampusReady=true;
-		}
-		
-	}   
+		if(!hippocampusReady){ hippocampusReady=true; }
+		try { lastHippocampusStatus = JSON.parse(payload); } catch(e) {}
+	}
 };
