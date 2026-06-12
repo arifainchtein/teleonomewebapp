@@ -916,6 +916,28 @@ function buildTelepathonDetailContent(telepathon) {
 	return html;
 }
 
+function getCerebellumDeneWordValue(telepathonType, deneWordName) {
+	for (var _ni = 0; _ni < nucleiJSONArray.length; _ni++) {
+		if (nucleiJSONArray[_ni]["Name"] === "Purpose") {
+			var _chains = nucleiJSONArray[_ni]["DeneChains"] || [];
+			for (var _ci = 0; _ci < _chains.length; _ci++) {
+				if (_chains[_ci]["Name"] === "Cerebellum") {
+					var _denes = _chains[_ci]["Denes"] || [];
+					for (var _di = 0; _di < _denes.length; _di++) {
+						if (_denes[_di]["Name"] === telepathonType) {
+							var _dws = _denes[_di]["DeneWords"] || [];
+							for (var _wi = 0; _wi < _dws.length; _wi++) {
+								if (_dws[_wi]["Name"] === deneWordName) return _dws[_wi]["Value"];
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return null;
+}
+
 function buildTelepathonCardView(telepathon) {
 	var name = telepathon["Name"];
 	var safeId = name.replace(/[^a-zA-Z0-9]/g, '_');
@@ -964,6 +986,10 @@ function buildTelepathonCardView(telepathon) {
 		var secsDW = findPW("Seconds Time");
 		var extras = [];
 		if (battDW) extras.push(battDW["Value"] + 'V');
+		if (deviceType === "Daffodil") {
+			var socVal = getCerebellumDeneWordValue("Daffodil", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
+			if (socVal !== null) extras.push('SOC: ' + parseFloat(socVal).toFixed(1) + '%');
+		}
 		if (secsDW) {
 			var secsSince = Math.floor(Date.now() / 1000 - parseFloat(secsDW["Value"]));
 			if (secsSince >= 0) extras.push(secsSince + 's ago');

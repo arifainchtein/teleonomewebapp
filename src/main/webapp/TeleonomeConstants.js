@@ -230,7 +230,11 @@ var DENEWORD_CEREBELLUM_EXECUTION_TIME_SUNRISE               = "Sunrise";
 var DENEWORD_CEREBELLUM_EXECUTION_FREQUENCY                  = "Execution Frequency";
 var DENEWORD_CEREBELLUM_EXECUTION_FREQUENCY_DAILY            = "Daily";
 var DENEWORD_CEREBELLUM_EXECUTION_FREQUENCY_HOURS_IN_A_DAY   = "Hours In A Day";
+var DENEWORD_CEREBELLUM_EXECUTION_FREQUENCY_EVERY_PULSE      = "Every Pulse";
 var DENEWORD_CEREBELLUM_PATHOLOGY_MNEMOSYNE_LOCATION = "Cerebellum Pathology Mnemosyne Location";
+
+// ── PulseTask output DeneWords (Purpose → Cerebellum → Daffodil) ─────────
+var DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE = "Battery SOC Live %";
 
 // ── Cerebellum → Annabelle action activation (generic) ───────────────────
 var COMMAND_SEND_GRAVEYARD_SHIFT                 = "SendGraveyardShift";
