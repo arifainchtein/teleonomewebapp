@@ -1358,18 +1358,28 @@ function renderOrgansPanel() {
 							break;
 						}
 					}
-					for (var _devi = 0; _devi < devices.length; _devi++) {
-						var dev = devices[_devi];
-						var vars = deviceVars[dev];
-						hippoContentsHtml += '<div style="margin-bottom:14px;">';
-						hippoContentsHtml += '<div style="font-weight:bold;font-size:13px;color:#337ab7;border-bottom:1px solid #ddd;padding-bottom:3px;margin-bottom:6px;">' + dev + '</div>';
-						hippoContentsHtml += '<table class="table table-condensed table-striped" style="font-size:12px;margin-bottom:0;">';
-						for (var _vi = 0; _vi < vars.length; _vi++) {
-							hippoContentsHtml += '<tr><td style="width:60%;">' + vars[_vi].name + '</td><td><strong>' + vars[_vi].value + '</strong></td></tr>';
+					if (devices.length === 0) {
+						hippoContentsHtml = '<p class="text-muted">No variables found.</p>';
+					} else {
+						// Device link bar
+						hippoContentsHtml += '<div style="margin-bottom:10px;font-size:13px;">';
+						for (var _devi = 0; _devi < devices.length; _devi++) {
+							if (_devi > 0) hippoContentsHtml += ' &nbsp;|&nbsp; ';
+							hippoContentsHtml += '<a href="#" onclick="$(\'.hippo-dev-table\').hide();$(\'#hippo-dev-' + _devi + '\').show();return false;">' + devices[_devi] + '</a>';
 						}
-						hippoContentsHtml += '</table></div>';
+						hippoContentsHtml += '</div>';
+						// One table per device, only first visible
+						for (var _devi = 0; _devi < devices.length; _devi++) {
+							var dev = devices[_devi];
+							var vars = deviceVars[dev];
+							hippoContentsHtml += '<div id="hippo-dev-' + _devi + '" class="hippo-dev-table"' + (_devi > 0 ? ' style="display:none;"' : '') + '>';
+							hippoContentsHtml += '<table class="table table-condensed table-striped" style="font-size:12px;margin-bottom:0;">';
+							for (var _vi = 0; _vi < vars.length; _vi++) {
+								hippoContentsHtml += '<tr><td style="width:60%;">' + vars[_vi].name + '</td><td><strong>' + vars[_vi].value + '</strong></td></tr>';
+							}
+							hippoContentsHtml += '</table></div>';
+						}
 					}
-					if (!hippoContentsHtml) hippoContentsHtml = '<p class="text-muted">No variables found.</p>';
 				})();
 
 				// Pills + content divs
