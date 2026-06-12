@@ -8,9 +8,10 @@ class DiagnosticsInfo{
 			var secundaryView = currentViewObject["SecundaryView"];
 			if( secundaryView !="" && 
                 secundaryView!="AsynchronousDiagnostics" &&
-                secundaryView!="SynchronousDiagnostics" && 
-                secundaryView!="MnemosyconsDiagnostics" && 
-                secundaryView!="SystemDiagnostics")
+                secundaryView!="SynchronousDiagnostics" &&
+                secundaryView!="MnemosyconsDiagnostics" &&
+                secundaryView!="SystemDiagnostics" &&
+                secundaryView!="JsonDenome")
             {
                 localStorageManager.removeComponentInfo(LOCAL_STORAGE_CURRENT_VIEW_KEY);
             } 
@@ -61,7 +62,10 @@ class DiagnosticsInfo{
         	
         panelHtml +='                       <div class="col-lg-1 col-xs-3 DiagnosticsBar">';
         panelHtml +='                           <span id="SystemDiagnostics" data-panelpointer="System Diagnostics Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-dashboard"></i><br>System</span>';
-        panelHtml +='                       </div> ';          
+        panelHtml +='                       </div> ';
+        panelHtml +='                       <div class="col-lg-1 col-xs-2 DiagnosticsBar">';
+        panelHtml +='                           <span id="JsonDenome" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-tree-conifer"></i><br>JSON</span>';
+        panelHtml +='                       </div> ';
         panelHtml +='                   </div> ';   
 
         panelHtml +='               </div>';
