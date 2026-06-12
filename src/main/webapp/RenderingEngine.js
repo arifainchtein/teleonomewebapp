@@ -1374,8 +1374,15 @@ function renderOrgansPanel() {
 							var vars = deviceVars[dev];
 							hippoContentsHtml += '<div id="hippo-dev-' + _devi + '" class="hippo-dev-table"' + (_devi > 0 ? ' style="display:none;"' : '') + '>';
 							hippoContentsHtml += '<table class="table table-condensed table-striped" style="font-size:12px;margin-bottom:0;">';
-							for (var _vi = 0; _vi < vars.length; _vi++) {
-								hippoContentsHtml += '<tr><td style="width:60%;">' + vars[_vi].name + '</td><td><strong>' + vars[_vi].value + '</strong></td></tr>';
+							for (var _vi = 0; _vi < vars.length; _vi += 2) {
+								var lv = vars[_vi], rv = vars[_vi + 1];
+								hippoContentsHtml += '<tr><td style="width:25%;">' + lv.name + '</td><td style="width:25%;"><strong>' + lv.value + '</strong></td>';
+								if (rv) {
+									hippoContentsHtml += '<td style="width:25%;">' + rv.name + '</td><td style="width:25%;"><strong>' + rv.value + '</strong></td>';
+								} else {
+									hippoContentsHtml += '<td></td><td></td>';
+								}
+								hippoContentsHtml += '</tr>';
 							}
 							hippoContentsHtml += '</table></div>';
 						}
