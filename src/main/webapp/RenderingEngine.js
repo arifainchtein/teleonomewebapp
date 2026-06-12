@@ -721,16 +721,107 @@ function displayHippocampusResponse(payload){
 		});
 	statsPanel +='<table>';
 
-	var dataPanel='';
-	dataPanel +='<div style="margin-right:10px;font-size:16px">There are ' + data.length +' samples</div>';
-	dataPanel +='<table class="table table-striped text-center">';
-	dataPanel +='<tr><th>Time</th><th>Value</th></tr>';
-	data.forEach(function(obj) { 
-		console.log(obj.id); 
-		dataPanel +='<tr><td>'+obj.timeString+'</td><td>'+obj.Value +'</td></tr>';
-	});
-	
-	dataPanel +='<table>';
+	// Build Contents pill: resolve Internal:Hippocampus:Data pointers to actual variable lists
+	var hippoContentsHtml = '';
+	(function() {
+		var hippoDataDene = null;
+		for (var _ni = 0; _ni < nucleiJSONArray.length; _ni++) {
+			if (nucleiJSONArray[_ni]["Name"] !== "Internal") continue;
+			var _chains = nucleiJSONArray[_ni]["DeneChains"] || [];
+			for (var _ci = 0; _ci < _chains.length; _ci++) {
+				if (_chains[_ci]["Name"] !== "Hippocampus") continue;
+				var _denes = _chains[_ci]["Denes"] || [];
+				for (var _di = 0; _di < _denes.length; _di++) {
+					if (_denes[_di]["Name"] === "Data") { hippoDataDene = _denes[_di]; break; }
+				}
+				break;
+			}
+			break;
+		}
+		if (!hippoDataDene) { hippoContentsHtml = '<p class="text-muted">No hippocampus data configuration found.</p>'; return; }
+		var pointers = hippoDataDene["DeneWords"] || [];
+		// Group by device name (DeneChain part of the pointer)
+		var devices = [];
+		var deviceVars = {};
+		for (var _pi = 0; _pi < pointers.length; _pi++) {
+			var ptr = pointers[_pi]["Value"] || '';
+			var parts = ptr.replace(/^@/, '').split(':');
+			// parts: [teleonome, nucleus, denechain, dene] = 4 → expand dene
+			//        [teleonome, nucleus, denechain, dene, deneword] = 5 → list directly
+			if (parts.length < 4) continue;
+			var devName = parts[2];
+			var nucName = parts[1];
+			var denName = parts[3];
+			var dwName  = parts.length >= 5 ? parts[4] : null;
+			if (!deviceVars[devName]) { devices.push(devName); deviceVars[devName] = []; }
+			for (var _rni = 0; _rni < nucleiJSONArray.length; _rni++) {
+				if (nucleiJSONArray[_rni]["Name"] !== nucName) continue;
+				var _rchains = nucleiJSONArray[_rni]["DeneChains"] || [];
+				for (var _rci = 0; _rci < _rchains.length; _rci++) {
+					if (_rchains[_rci]["Name"] !== devName) continue;
+					var _rdenes = _rchains[_rci]["Denes"] || [];
+					for (var _rdi = 0; _rdi < _rdenes.length; _rdi++) {
+						if (_rdenes[_rdi]["Name"] !== denName) continue;
+						if (dwName) {
+							// DeneWord pointer — find and list just that one variable
+							var _rdws2 = _rdenes[_rdi]["DeneWords"] || [];
+							for (var _rdwi2 = 0; _rdwi2 < _rdws2.length; _rdwi2++) {
+								if (_rdws2[_rdwi2]["Name"] === dwName) {
+									deviceVars[devName].push({ name: _rdws2[_rdwi2]["Name"], value: _rdws2[_rdwi2]["Value"] });
+									break;
+								}
+							}
+						} else {
+							// Dene pointer — expand all DeneWords
+							var _rdws = _rdenes[_rdi]["DeneWords"] || [];
+							for (var _rdwi = 0; _rdwi < _rdws.length; _rdwi++) {
+								deviceVars[devName].push({ name: _rdws[_rdwi]["Name"], value: _rdws[_rdwi]["Value"] });
+							}
+						}
+						break;
+					}
+					break;
+				}
+				break;
+			}
+		}
+		for (var _devi = 0; _devi < devices.length; _devi++) {
+			var dev = devices[_devi];
+			var vars = deviceVars[dev];
+			hippoContentsHtml += '<div style="margin-bottom:14px;">';
+			hippoContentsHtml += '<div style="font-weight:bold;font-size:13px;color:#337ab7;border-bottom:1px solid #ddd;padding-bottom:3px;margin-bottom:6px;">' + dev + '</div>';
+			hippoContentsHtml += '<table class="table table-condensed table-striped" style="font-size:12px;margin-bottom:0;">';
+			for (var _vi = 0; _vi < vars.length; _vi++) {
+				hippoContentsHtml += '<tr><td style="width:60%;">' + vars[_vi].name + '</td><td><strong>' + vars[_vi].value + '</strong></td></tr>';
+			}
+			hippoContentsHtml += '</table></div>';
+		}
+		if (!hippoContentsHtml) hippoContentsHtml = '<p class="text-muted">No variables found.</p>';
+	})();
+
+	var dataPanel = '';
+	dataPanel += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
+	dataPanel += '<li class="active" onclick="return teleonomeShowTab(\'hippo-pill-stats\', this)"><a href="#">Stats</a></li>';
+	dataPanel += '<li onclick="return teleonomeShowTab(\'hippo-pill-contents\', this)"><a href="#">Contents</a></li>';
+	dataPanel += '</ul><div class="tab-content">';
+	dataPanel += '<div class="tab-pane active" id="hippo-pill-stats">';
+	dataPanel += '<div style="font-size:13px;margin-bottom:6px;color:#555;">There are ' + data.length + ' samples</div>';
+	dataPanel += '<table class="table table-striped table-condensed text-center" style="font-size:12px;">';
+	dataPanel += '<tr><th>Time</th><th>Value</th><th>Time</th><th>Value</th></tr>';
+	for (var dpi = 0; dpi < data.length; dpi += 2) {
+		var left = data[dpi];
+		var right = data[dpi + 1];
+		dataPanel += '<tr><td>' + left.timeString + '</td><td>' + left.Value + '</td>';
+		if (right) {
+			dataPanel += '<td>' + right.timeString + '</td><td>' + right.Value + '</td>';
+		} else {
+			dataPanel += '<td></td><td></td>';
+		}
+		dataPanel += '</tr>';
+	}
+	dataPanel += '</table></div>';
+	dataPanel += '<div class="tab-pane" id="hippo-pill-contents">' + hippoContentsHtml + '</div>';
+	dataPanel += '</div>';
 	$('#telepathon-graph-modal .nav-link').on('click', function (e) {
 		e.preventDefault()
 		$(this).tab('show')
