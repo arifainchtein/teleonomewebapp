@@ -675,159 +675,42 @@ function asyncUpdate(text){
 
 function displayHippocampusResponse(payload){
 
-	console.log('[hippo v3] displayHippocampusResponse called');
 	var response = JSON.parse(payload);
 	var data=response.Data;
 	var telepathonName = response.telepathonName;
 	var deneWordName= response.deneWordName;
-	console.log('[hippo v3] data.length=' + (data ? data.length : 'null') + ' telepathonName=' + telepathonName);
 
 	var results = analyzeTransmissionIntervals(data);
 
 	var statsPanel='';
 	statsPanel +='<div style="margin-right:10px;font-size:16px">Average Interval Between transmissions:' +Math.trunc(results.totalAverage) + " seconds</div>";
 	statsPanel +='<table class="table table-striped text-center">';
-	
-	// statsPanel +='<tr><th>Hour</th><th>Average Time(Seconds)</th><th># of Samples</th><th>Std Dev</th><th>Min</th><th>Max</th></tr>';
-	// // console.log("Average Interval:");
-	// // console.log(`Seconds: ${analisis.averageIntervalSeconds}`);
-	// // console.log(`Minutes: ${analisis.averageIntervalMinutes}`);
-	// // console.log(`Hours: ${analisis.averageIntervalHours}`);
-	// // console.log("\nHourly Averages:");
-	// Object.entries(analisis.hourlyAverages)
-	// 	.filter(([_, data]) => data.count > 0)
-	// 	.forEach(([hour, data]) => {
-	// 		console.log(`Hour ${hour}: ${data.average.toFixed(2)} (${data.count} samples)`);
-	// 		statsPanel +='<tr><td>'+hour+'</td><td>'+data.average.toFixed(2) +'</td><td>' + data.count+'</td><td>' + data.stdDev.toFixed(2)+'</td><td>' + data.min+'</td><td>' + data.max+'</td></tr>';
-	// 	});
-	
-
 	statsPanel +='<tr><th>Hour</th><th>Count</th><th>Avg(m:ss)</th><th>Std Dev</th><th>Min(m:ss)</th><th>Max(m:ss)</th></tr>';
-	
 	Object.entries(results.hours)
 		.filter(([_, data]) => data.count > 0)
 		.forEach(([hour, data]) => {
 			if (data.min !== Infinity) {
-				console.log(
-					`${hour.padStart(2, '0')}:00 | ` +
-					`${data.count.toString().padStart(5)} | ` +
-					`${formatTimeInterval(data.average).padStart(9)} | ` +
-					`${data.stdDev.toFixed(2).padStart(10)} | ` +
-					`${formatTimeInterval(data.min).padStart(9)} | ` +
-					`${formatTimeInterval(data.max).padStart(9)}`
-				);
-				statsPanel +='<tr><td>'+hour.padStart(2, '0')+':00</td><td>'+data.count.toString().padStart(5) +'</td><td>' + formatTimeInterval(data.average).padStart(9)+'</td><td>' + data.stdDev.toFixed(2).padStart(10)+'</td><td>' + formatTimeInterval(data.min).padStart(9)+'</td><td>' + formatTimeInterval(data.max).padStart(9)+'</td></tr>';
-		
+				statsPanel +='<tr><td>'+hour.padStart(2, '0')+':00</td><td>'+data.count+'</td><td>' + formatTimeInterval(data.average)+'</td><td>' + data.stdDev.toFixed(2)+'</td><td>' + formatTimeInterval(data.min)+'</td><td>' + formatTimeInterval(data.max)+'</td></tr>';
 			}
 		});
 	statsPanel +='<table>';
 
-	// Build Contents pill: resolve Internal:Hippocampus:Data pointers to actual variable lists
-	var hippoContentsHtml = '';
-	(function() {
-		var hippoDataDene = null;
-		for (var _ni = 0; _ni < nucleiJSONArray.length; _ni++) {
-			if (nucleiJSONArray[_ni]["Name"] !== "Internal") continue;
-			var _chains = nucleiJSONArray[_ni]["DeneChains"] || [];
-			for (var _ci = 0; _ci < _chains.length; _ci++) {
-				if (_chains[_ci]["Name"] !== "Hippocampus") continue;
-				var _denes = _chains[_ci]["Denes"] || [];
-				for (var _di = 0; _di < _denes.length; _di++) {
-					if (_denes[_di]["Name"] === "Data") { hippoDataDene = _denes[_di]; break; }
-				}
-				break;
-			}
-			break;
-		}
-		if (!hippoDataDene) { hippoContentsHtml = '<p class="text-muted">No hippocampus data configuration found.</p>'; return; }
-		var pointers = hippoDataDene["DeneWords"] || [];
-		// Group by device name (DeneChain part of the pointer)
-		var devices = [];
-		var deviceVars = {};
-		for (var _pi = 0; _pi < pointers.length; _pi++) {
-			var ptr = pointers[_pi]["Value"] || '';
-			var parts = ptr.replace(/^@/, '').split(':');
-			// parts: [teleonome, nucleus, denechain, dene] = 4 → expand dene
-			//        [teleonome, nucleus, denechain, dene, deneword] = 5 → list directly
-			if (parts.length < 4) continue;
-			var devName = parts[2];
-			var nucName = parts[1];
-			var denName = parts[3];
-			var dwName  = parts.length >= 5 ? parts[4] : null;
-			if (!deviceVars[devName]) { devices.push(devName); deviceVars[devName] = []; }
-			for (var _rni = 0; _rni < nucleiJSONArray.length; _rni++) {
-				if (nucleiJSONArray[_rni]["Name"] !== nucName) continue;
-				var _rchains = nucleiJSONArray[_rni]["DeneChains"] || [];
-				for (var _rci = 0; _rci < _rchains.length; _rci++) {
-					if (_rchains[_rci]["Name"] !== devName) continue;
-					var _rdenes = _rchains[_rci]["Denes"] || [];
-					for (var _rdi = 0; _rdi < _rdenes.length; _rdi++) {
-						if (_rdenes[_rdi]["Name"] !== denName) continue;
-						if (dwName) {
-							// DeneWord pointer — find and list just that one variable
-							var _rdws2 = _rdenes[_rdi]["DeneWords"] || [];
-							for (var _rdwi2 = 0; _rdwi2 < _rdws2.length; _rdwi2++) {
-								if (_rdws2[_rdwi2]["Name"] === dwName) {
-									deviceVars[devName].push({ name: _rdws2[_rdwi2]["Name"], value: _rdws2[_rdwi2]["Value"] });
-									break;
-								}
-							}
-						} else {
-							// Dene pointer — expand all DeneWords
-							var _rdws = _rdenes[_rdi]["DeneWords"] || [];
-							for (var _rdwi = 0; _rdwi < _rdws.length; _rdwi++) {
-								deviceVars[devName].push({ name: _rdws[_rdwi]["Name"], value: _rdws[_rdwi]["Value"] });
-							}
-						}
-						break;
-					}
-					break;
-				}
-				break;
-			}
-		}
-		for (var _devi = 0; _devi < devices.length; _devi++) {
-			var dev = devices[_devi];
-			var vars = deviceVars[dev];
-			hippoContentsHtml += '<div style="margin-bottom:14px;">';
-			hippoContentsHtml += '<div style="font-weight:bold;font-size:13px;color:#337ab7;border-bottom:1px solid #ddd;padding-bottom:3px;margin-bottom:6px;">' + dev + '</div>';
-			hippoContentsHtml += '<table class="table table-condensed table-striped" style="font-size:12px;margin-bottom:0;">';
-			for (var _vi = 0; _vi < vars.length; _vi++) {
-				hippoContentsHtml += '<tr><td style="width:60%;">' + vars[_vi].name + '</td><td><strong>' + vars[_vi].value + '</strong></td></tr>';
-			}
-			hippoContentsHtml += '</table></div>';
-		}
-		if (!hippoContentsHtml) hippoContentsHtml = '<p class="text-muted">No variables found.</p>';
-	})();
-
 	var dataPanel = '';
-	try {
-		dataPanel += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
-		dataPanel += '<li class="active" onclick="$(\'#hippo-pill-stats\').show();$(\'#hippo-pill-contents\').hide();$(this).addClass(\'active\').siblings().removeClass(\'active\');return false;"><a href="#">Stats</a></li>';
-		dataPanel += '<li onclick="$(\'#hippo-pill-contents\').show();$(\'#hippo-pill-stats\').hide();$(this).addClass(\'active\').siblings().removeClass(\'active\');return false;"><a href="#">Contents</a></li>';
-		dataPanel += '</ul>';
-		dataPanel += '<div id="hippo-pill-stats">';
-		dataPanel += '<div style="font-size:13px;margin-bottom:6px;color:#555;">There are ' + data.length + ' samples</div>';
-		dataPanel += '<table class="table table-striped table-condensed text-center" style="font-size:12px;">';
-		dataPanel += '<tr><th>Time</th><th>Value</th><th>Time</th><th>Value</th></tr>';
-		for (var dpi = 0; dpi < data.length; dpi += 2) {
-			var left = data[dpi];
-			var right = data[dpi + 1];
-			dataPanel += '<tr><td>' + left.timeString + '</td><td>' + left.Value + '</td>';
-			if (right) {
-				dataPanel += '<td>' + right.timeString + '</td><td>' + right.Value + '</td>';
-			} else {
-				dataPanel += '<td></td><td></td>';
-			}
-			dataPanel += '</tr>';
+	dataPanel += '<div style="font-size:13px;margin-bottom:6px;color:#555;">There are ' + data.length + ' samples</div>';
+	dataPanel += '<table class="table table-striped table-condensed text-center" style="font-size:12px;">';
+	dataPanel += '<tr><th>Time</th><th>Value</th><th>Time</th><th>Value</th></tr>';
+	for (var dpi = 0; dpi < data.length; dpi += 2) {
+		var left = data[dpi];
+		var right = data[dpi + 1];
+		dataPanel += '<tr><td>' + left.timeString + '</td><td>' + left.Value + '</td>';
+		if (right) {
+			dataPanel += '<td>' + right.timeString + '</td><td>' + right.Value + '</td>';
+		} else {
+			dataPanel += '<td></td><td></td>';
 		}
-		dataPanel += '</table></div>';
-		dataPanel += '<div id="hippo-pill-contents" style="display:none;">' + hippoContentsHtml + '</div>';
-		console.log('[hippo v3] dataPanel built, length=' + dataPanel.length);
-	} catch(e) {
-		console.error('[hippo v3] ERROR building dataPanel: ' + e);
-		dataPanel = '<div class="text-danger">Error building data panel: ' + e + '</div>';
+		dataPanel += '</tr>';
 	}
+	dataPanel += '</table>';
 	$('#telepathon-graph-modal .nav-link').on('click', function (e) {
 		e.preventDefault()
 		$(this).tab('show')
@@ -1378,7 +1261,7 @@ function renderOrgansPanel() {
 				var hippoTs = hippoDene["Timestamp"] || "";
 				var hippoDws = hippoDene["DeneWords"];
 				var hippoUsed = 0, hippoAvail = 0;
-				var hippoTableRows = '';
+				var hippoRows = [];
 				for (var jh = 0; jh < hippoDws.length; jh++) {
 					var dwName = hippoDws[jh]["Name"];
 					var dwVal  = hippoDws[jh]["Value"];
@@ -1387,13 +1270,14 @@ function renderOrgansPanel() {
 					if (dwName === "MemoryBreakdown") {
 						try { hippoBreakdownSlices = JSON.parse(dwVal).map(function(b) { return { name: b.name, value: b.points }; }); } catch(e) {}
 					} else {
-						hippoTableRows += '<tr><td>' + dwName + '</td><td><strong>' + dwVal + '</strong></td></tr>';
+						hippoRows.push({ name: dwName, value: dwVal });
 					}
 				}
 				if (hippoUsed > 0 || hippoAvail > 0) {
 					hippoSpaceSlices = [{ name: "Used", value: hippoUsed }, { name: "Available", value: hippoAvail }];
 				}
-				// Charts first, then metadata table
+
+				// Charts
 				hippoContent += '<div class="row" style="margin-bottom:16px;margin-top:4px;">';
 				hippoContent += '<div class="col-xs-12 col-sm-6" style="padding-left:20px;padding-right:20px;">';
 				hippoContent += '<h5 class="text-center" style="font-size:13px;color:#555;margin-bottom:4px;">Memory Space</h5>';
@@ -1403,7 +1287,98 @@ function renderOrgansPanel() {
 				hippoContent += '<div id="hippo-breakdown-chart"></div></div>';
 				hippoContent += '</div>';
 				if (hippoTs) hippoContent += '<p class="text-muted small" style="margin-bottom:4px;">Last update: ' + hippoTs + '</p>';
-				hippoContent += '<table class="table table-condensed table-striped">' + hippoTableRows + '</table>';
+
+				// Build 2-per-row stats table
+				var statsTableHtml = '<table class="table table-condensed table-striped" style="font-size:12px;">';
+				for (var ri = 0; ri < hippoRows.length; ri += 2) {
+					var lr = hippoRows[ri], rr = hippoRows[ri + 1];
+					statsTableHtml += '<tr><td style="width:25%;">' + lr.name + '</td><td style="width:25%;"><strong>' + lr.value + '</strong></td>';
+					if (rr) {
+						statsTableHtml += '<td style="width:25%;">' + rr.name + '</td><td style="width:25%;"><strong>' + rr.value + '</strong></td>';
+					} else {
+						statsTableHtml += '<td></td><td></td>';
+					}
+					statsTableHtml += '</tr>';
+				}
+				statsTableHtml += '</table>';
+
+				// Build Contents from Internal:Hippocampus:Data
+				var hippoContentsHtml = '';
+				(function() {
+					var hippoDataDene = null;
+					for (var _ni = 0; _ni < nucleiJSONArray.length; _ni++) {
+						if (nucleiJSONArray[_ni]["Name"] !== "Internal") continue;
+						var _chains = nucleiJSONArray[_ni]["DeneChains"] || [];
+						for (var _ci = 0; _ci < _chains.length; _ci++) {
+							if (_chains[_ci]["Name"] !== "Hippocampus") continue;
+							var _denes = _chains[_ci]["Denes"] || [];
+							for (var _di = 0; _di < _denes.length; _di++) {
+								if (_denes[_di]["Name"] === "Data") { hippoDataDene = _denes[_di]; break; }
+							}
+							break;
+						}
+						break;
+					}
+					if (!hippoDataDene) { hippoContentsHtml = '<p class="text-muted">No hippocampus data configuration found.</p>'; return; }
+					var pointers = hippoDataDene["DeneWords"] || [];
+					var devices = [], deviceVars = {};
+					for (var _pi = 0; _pi < pointers.length; _pi++) {
+						var ptr = pointers[_pi]["Value"] || '';
+						var parts = ptr.replace(/^@/, '').split(':');
+						if (parts.length < 4) continue;
+						var devName = parts[2], nucName = parts[1], denName = parts[3];
+						var dwName2 = parts.length >= 5 ? parts[4] : null;
+						if (!deviceVars[devName]) { devices.push(devName); deviceVars[devName] = []; }
+						for (var _rni = 0; _rni < nucleiJSONArray.length; _rni++) {
+							if (nucleiJSONArray[_rni]["Name"] !== nucName) continue;
+							var _rchains = nucleiJSONArray[_rni]["DeneChains"] || [];
+							for (var _rci = 0; _rci < _rchains.length; _rci++) {
+								if (_rchains[_rci]["Name"] !== devName) continue;
+								var _rdenes = _rchains[_rci]["Denes"] || [];
+								for (var _rdi = 0; _rdi < _rdenes.length; _rdi++) {
+									if (_rdenes[_rdi]["Name"] !== denName) continue;
+									if (dwName2) {
+										var _rdws2 = _rdenes[_rdi]["DeneWords"] || [];
+										for (var _rdwi2 = 0; _rdwi2 < _rdws2.length; _rdwi2++) {
+											if (_rdws2[_rdwi2]["Name"] === dwName2) {
+												deviceVars[devName].push({ name: _rdws2[_rdwi2]["Name"], value: _rdws2[_rdwi2]["Value"] });
+												break;
+											}
+										}
+									} else {
+										var _rdws = _rdenes[_rdi]["DeneWords"] || [];
+										for (var _rdwi = 0; _rdwi < _rdws.length; _rdwi++) {
+											deviceVars[devName].push({ name: _rdws[_rdwi]["Name"], value: _rdws[_rdwi]["Value"] });
+										}
+									}
+									break;
+								}
+								break;
+							}
+							break;
+						}
+					}
+					for (var _devi = 0; _devi < devices.length; _devi++) {
+						var dev = devices[_devi];
+						var vars = deviceVars[dev];
+						hippoContentsHtml += '<div style="margin-bottom:14px;">';
+						hippoContentsHtml += '<div style="font-weight:bold;font-size:13px;color:#337ab7;border-bottom:1px solid #ddd;padding-bottom:3px;margin-bottom:6px;">' + dev + '</div>';
+						hippoContentsHtml += '<table class="table table-condensed table-striped" style="font-size:12px;margin-bottom:0;">';
+						for (var _vi = 0; _vi < vars.length; _vi++) {
+							hippoContentsHtml += '<tr><td style="width:60%;">' + vars[_vi].name + '</td><td><strong>' + vars[_vi].value + '</strong></td></tr>';
+						}
+						hippoContentsHtml += '</table></div>';
+					}
+					if (!hippoContentsHtml) hippoContentsHtml = '<p class="text-muted">No variables found.</p>';
+				})();
+
+				// Pills + content divs
+				hippoContent += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
+				hippoContent += '<li class="active" onclick="$(\'#hippo-modal-stats\').show();$(\'#hippo-modal-contents\').hide();$(this).addClass(\'active\').siblings().removeClass(\'active\');return false;"><a href="#">Stats</a></li>';
+				hippoContent += '<li onclick="$(\'#hippo-modal-contents\').show();$(\'#hippo-modal-stats\').hide();$(this).addClass(\'active\').siblings().removeClass(\'active\');return false;"><a href="#">Contents</a></li>';
+				hippoContent += '</ul>';
+				hippoContent += '<div id="hippo-modal-stats">' + statsTableHtml + '</div>';
+				hippoContent += '<div id="hippo-modal-contents" style="display:none;">' + hippoContentsHtml + '</div>';
 				break;
 			}
 		}

@@ -878,12 +878,12 @@ function drawHippocampusPieChart(containerId, slices, colors) {
 
 	var legend = svg.append('g').attr('transform', 'translate(' + legendX + ',12)');
 	slices.forEach(function(s, i) {
-		var pct = total > 0 ? Math.round(s.value * 100 / total) : 0;
 		var y = i * 22;
 		legend.append('rect').attr('x', 0).attr('y', y).attr('width', 13).attr('height', 13)
 			.style('fill', colors[i % colors.length]);
-		var label = s.name + ' (' + pct + '%)';
-		if (label.length > 22) label = label.substring(0, 20) + '…';
+		var count = s.value.toLocaleString();
+		var label = s.name + ' (' + count + ')';
+		if (label.length > 28) label = label.substring(0, 26) + '…';
 		legend.append('text').attr('x', 17).attr('y', y + 11)
 			.style('font-size', '11px').style('fill', '#333').style('stroke', 'none').text(label);
 	});
