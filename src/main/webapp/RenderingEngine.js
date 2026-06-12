@@ -1338,8 +1338,9 @@ function renderOrgansPanel() {
 			var cTask = cerebTasks[cti];
 			var cTaskName = cTask["Name"];
 			var cpid2 = "cereb-task-" + cti;
-			var isGraveyardShift = cTaskName.toLowerCase().indexOf("graveyardshift") !== -1 ||
-				cTaskName.toLowerCase().indexOf("graveyard") !== -1;
+			var cTaskNameLc = cTaskName.toLowerCase();
+			var isGraveyardShift = cTaskNameLc.indexOf("graveyardshift") !== -1 || cTaskNameLc.indexOf("graveyard") !== -1;
+			var isScheduleTask = isGraveyardShift || cTaskNameLc.indexOf("pulsetask") !== -1;
 			cerebModalContent += '<div class="tab-pane' + (cti === 0 ? ' active' : '') + '" id="' + cpid2 + '">';
 			// Find matching dene in Purpose:Cerebellum by Telepathon Type (Purpose denes are named after the telepathon)
 			var cPurposeDene = null;
@@ -1356,24 +1357,24 @@ function renderOrgansPanel() {
 					if (cerebPurposeDenes[cpd]["Name"] === cTaskName) { cPurposeDene = cerebPurposeDenes[cpd]; break; }
 				}
 			}
-			// For Graveyard Shift: show schedule section as plain text header
-			if (isGraveyardShift) {
+			// For schedule/utility tasks: show their own config fields, not the shared Purpose:Cerebellum output
+			if (isScheduleTask) {
 				cerebModalContent += '<h5 style="margin-top:0;margin-bottom:6px;color:#337ab7;border-bottom:1px solid #ddd;padding-bottom:4px;">Schedule</h5>';
 				cerebModalContent += '<table class="table table-condensed table-striped" style="margin-bottom:14px;">';
-				var gsSchedFields = ["Active", "Expression", "Execution Time", "Execution Frequency"];
-				var gsDws = cTask["DeneWords"] || [];
-				for (var sf = 0; sf < gsSchedFields.length; sf++) {
-					for (var sdw = 0; sdw < gsDws.length; sdw++) {
-						if (gsDws[sdw]["Name"] === gsSchedFields[sf]) {
-							cerebModalContent += '<tr><td style="width:50%;">' + gsDws[sdw]["Name"] + '</td>' +
-								'<td><strong>' + gsDws[sdw]["Value"] + '</strong></td></tr>';
+				var schedFields = ["Active", "Expression", "Execution Time", "Execution Frequency"];
+				var schedDws = cTask["DeneWords"] || [];
+				for (var sf = 0; sf < schedFields.length; sf++) {
+					for (var sdw = 0; sdw < schedDws.length; sdw++) {
+						if (schedDws[sdw]["Name"] === schedFields[sf] && schedDws[sdw]["Value"]) {
+							cerebModalContent += '<tr><td style="width:50%;">' + schedDws[sdw]["Name"] + '</td>' +
+								'<td><strong>' + schedDws[sdw]["Value"] + '</strong></td></tr>';
 							break;
 						}
 					}
 				}
 				cerebModalContent += '</table>';
 			}
-			// Show Purpose:Cerebellum data only for non-schedule tasks (Graveyard Shift has no calculated output)
+			// Show Purpose:Cerebellum data for all tasks except GraveyardShift (which has no computed output)
 			if (!isGraveyardShift) {
 				if (cPurposeDene) {
 					var cPurposeDws = cPurposeDene["DeneWords"] || [];
