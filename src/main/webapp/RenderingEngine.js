@@ -1618,6 +1618,17 @@ function buildChinampaContent(telepathon) {
 			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
 			'<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="604800000">7d</button>';
 	}
+	function vitalCard(label, val, unit, color, btns) {
+		var html = '<div class="col-xs-4 col-sm-2" style="margin-bottom:8px;padding:2px;">';
+		html += '<div style="border-radius:10px;overflow:hidden;">';
+		html += '<div style="padding:8px 4px;color:white;text-align:center;background:' + color + ';">';
+		html += '<div style="font-size:9px;text-transform:uppercase;font-weight:bold;opacity:0.9;">' + label + '</div>';
+		html += '<div style="font-size:16px;font-weight:800;">' + val + unit + '</div>';
+		html += '</div>';
+		if (btns) html += '<div style="background:#f0f0f0;text-align:center;padding:3px 2px;">' + btns + '</div>';
+		html += '</div></div>';
+		return html;
+	}
 
 	var localTime = findDW(pw, "Local Time");
 	var alertStatusDW = findDW(pw, "Alert Status");
@@ -1710,30 +1721,14 @@ function buildChinampaContent(telepathon) {
 
 	html += '</div>'; // end tanks row
 
-	// Vitals — table with history buttons
-	var vitals = [
-		{ dw: outdoorTempDW, name: "Outdoor Temperature" },
-		{ dw: outdoorHumDW,  name: "Outdoor Humidity" },
-		{ dw: pcbDW,         name: "PCB Temperature" },
-		{ dw: rssiDW,        name: "rssi" },
-		{ dw: snrDW,         name: "snr" }
-	];
-	var vitalsRows = '';
-	for (var vi = 0; vi < vitals.length; vi++) {
-		var vit = vitals[vi];
-		if (!vit.dw) continue;
-		var displayVal = vit.dw["Value"] + (vit.dw["Units"] ? ' ' + vit.dw["Units"] : '');
-		vitalsRows += '<tr><td style="width:40%;">' + vit.name + '</td>';
-		vitalsRows += '<td><strong>' + displayVal + '</strong></td>';
-		vitalsRows += '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, "Purpose", vit.name) + '</td>';
-		vitalsRows += '</tr>';
-	}
-	if (vitalsRows) {
-		html += '<div style="border:1px solid #ddd;border-radius:4px;overflow:hidden;margin-bottom:8px;">';
-		html += '<div style="background:#f0f4f8;padding:7px 12px;font-weight:bold;font-size:13px;color:#337ab7;border-bottom:1px solid #ddd;">Sensor Readings</div>';
-		html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">' + vitalsRows + '</table>';
-		html += '</div>';
-	}
+	// Vitals — colored cards with history buttons below
+	html += '<div class="row" style="margin-bottom:8px;">';
+	if (outdoorTempDW) html += vitalCard("Outdoor Temp", outdoorTempDW["Value"], "°C", "#3498db", mkGraphBtns(tpName, "Purpose", "Outdoor Temperature"));
+	if (outdoorHumDW) html += vitalCard("Outdoor Hum", outdoorHumDW["Value"], "%", "#3498db", mkGraphBtns(tpName, "Purpose", "Outdoor Humidity"));
+	if (pcbDW) { var pcbV = parseFloat(pcbDW["Value"]); html += vitalCard("PCB Temp", pcbDW["Value"], "°C", pcbV > maxPCB ? "#e74c3c" : "#27ae60", mkGraphBtns(tpName, "Purpose", "PCB Temperature")); }
+	if (rssiDW) { var rssiV = parseFloat(rssiDW["Value"]); html += vitalCard("Signal", rssiDW["Value"], "", rssiV > -95 ? "#27ae60" : "#f39c12", mkGraphBtns(tpName, "Purpose", "rssi")); }
+	if (snrDW) { var snrV = parseFloat(snrDW["Value"]); html += vitalCard("SNR", snrDW["Value"], "", snrV > 0 ? "#27ae60" : "#f39c12", mkGraphBtns(tpName, "Purpose", "snr")); }
+	html += '</div>';
 
 	html += '</div>'; // end purpose tab-pane
 
