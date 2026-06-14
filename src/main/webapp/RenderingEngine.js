@@ -1573,6 +1573,7 @@ function renderOrgansPanel() {
 }
 
 function buildChinampaContent(telepathon) {
+	var tpName = telepathon["Name"];
 	var purposeDene = null, configDene = null, sensorsDene = null;
 	var denes = telepathon["Denes"];
 	for (var i = 0; i < denes.length; i++) {
