@@ -761,7 +761,7 @@ var daffodilFunctionNames = {
 	"4": "1 Tank", "5": "2 Tanks", "6": "Septic Tank",
 	"7": "Water Trough", "8": "Temp & Soil Moisture", "9": "Light Detector"
 };
-var daffodilOperatingStatusNames = {"0": "Unknown", "1": "Pulse Sleep", "2": "No LED", "3": "Full"};
+var daffodilOperatingStatusNames = {"0": "Unknown", "1": "Pulse Sleep", "2": "No LED", "3": "Full", "4": "Cloudy", "5": "Comma"};
 
 function buildDaffodilContent(telepathon) {
 	var denes = telepathon["Denes"] || [];
@@ -953,6 +953,7 @@ function buildTelepathonCardView(telepathon) {
 
 	// Build device-specific status info line
 	var statusExtra = '';
+	var opModeHtml = '';
 	if (name === "Chinampa") {
 		var alertDW = findPW("Alert Status");
 		var alertCodeDW = findPW("Alert Code");
@@ -962,6 +963,19 @@ function buildTelepathonCardView(telepathon) {
 			statusExtra = '<span style="font-size:11px;color:#e74c3c;font-weight:bold;margin-left:4px;">' + (alertMsgs[ac] || "Alert") + '</span>';
 		}
 	} else {
+		if (deviceType === "Daffodil") {
+			var opStatusDW = findPW("Operating Status");
+			if (opStatusDW) {
+				var opNum = String(parseInt(opStatusDW["Value"]));
+				var opLabel = daffodilOperatingStatusNames[opNum] || ('Mode ' + opNum);
+				var sleepStr = '';
+				if (opNum === "1" || opNum === "4" || opNum === "5") {
+					var sleepDW = findPW("Sleep Time");
+					if (sleepDW) sleepStr = ', ' + sleepDW["Value"] + (sleepDW["Units"] ? sleepDW["Units"] : 's');
+				}
+				opModeHtml = '<div style="font-size:11px;color:#555;margin-top:2px;">' + opLabel + sleepStr + '</div>';
+			}
+		}
 		var battDW = findPW("Battery Voltage");
 		var secsDW = findPW("Seconds Time");
 		var extras = [];
@@ -1013,7 +1027,8 @@ function buildTelepathonCardView(telepathon) {
 		html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTime +
 			'&nbsp;<span style="color:' + statusColor + ';font-weight:bold;">(' + cardAgeSec + 's ago)</span></div>';
 	}
-	html += '<div style="margin-top:6px;text-align:center;">';
+	if (opModeHtml) html += opModeHtml;
+	html += '<div style="margin-top:4px;text-align:center;">';
 	html += statusExtra;
 	html += '</div>';
 	html += '</div>';
@@ -1082,26 +1097,36 @@ function updateTelepathonsView(text){
 var mnemoPeriodsData = [];
 var mnemoNavIdx = {};
 
+function mnemoSortDenes(denes) {
+	return denes.slice().sort(function(a, b) {
+		var hasPA = (a["Position"] !== undefined && a["Position"] !== null && a["Position"] !== '');
+		var hasPB = (b["Position"] !== undefined && b["Position"] !== null && b["Position"] !== '');
+		var posA = hasPA ? parseInt(a["Position"]) : (a._arrayIdx !== undefined ? a._arrayIdx : 0);
+		var posB = hasPB ? parseInt(b["Position"]) : (b._arrayIdx !== undefined ? b._arrayIdx : 0);
+		return posB - posA;
+	});
+}
+
 function mnemoNav(pi, delta) {
 	var denes = mnemoPeriodsData[pi] || [];
-	var sorted = denes.slice().sort(function(a, b) {
-		return (parseInt(b["Position"]) || 0) - (parseInt(a["Position"]) || 0);
-	});
+	var sorted = mnemoSortDenes(denes);
 	var total = sorted.length;
 	if (total === 0) return;
 	if (mnemoNavIdx[pi] === undefined) mnemoNavIdx[pi] = 0;
 	mnemoNavIdx[pi] = Math.max(0, Math.min(total - 1, mnemoNavIdx[pi] + delta));
 	var cur = mnemoNavIdx[pi];
 	var dene = sorted[cur];
-	var pos = parseInt(dene["Position"]) || (total - cur);
+	var hasPos = (dene["Position"] !== undefined && dene["Position"] !== null && dene["Position"] !== '');
+	var pos = hasPos ? parseInt(dene["Position"]) : (total - cur);
 	var dws = dene["DeneWords"] || [];
-	var contentHtml = '<table class="table table-condensed table-striped" style="font-size:13px;">';
+	var label = dene["Name"] ? '<strong>' + dene["Name"] + '</strong> &mdash; ' : '';
+	var contentHtml = '<div style="margin-bottom:6px;font-size:13px;color:#555;">' + label + 'Entry ' + pos + ' of ' + total + '</div>';
+	contentHtml += '<table class="table table-condensed table-striped" style="font-size:13px;">';
 	for (var i = 0; i < dws.length; i++) {
 		contentHtml += '<tr><td style="width:50%;">' + dws[i]["Name"] + '</td><td><strong>' + dws[i]["Value"] + '</strong></td></tr>';
 	}
 	contentHtml += '</table>';
 	$('#mnemo-content-' + pi).html(contentHtml);
-	$('#mnemo-indicator-' + pi).text('Entry ' + pos + ' of ' + total);
 	$('#mnemo-prev-' + pi).prop('disabled', cur >= total - 1);
 	$('#mnemo-next-' + pi).prop('disabled', cur <= 0);
 }
@@ -1163,32 +1188,27 @@ function renderMnemosyneViewPanel() {
 		var activeClass2 = ti === 0 ? ' active' : '';
 		html += '<div class="tab-pane' + activeClass2 + '" id="' + pid2 + '">';
 		var denes2 = periods[ti]["Denes"] || [];
-		mnemoPeriodsData[ti] = denes2;
+		// Tag each dene with its original array index so mnemoNav can sort without Position
+		var taggedDenes = denes2.map(function(d, i) { return Object.assign({}, d, { _arrayIdx: i }); });
+		mnemoPeriodsData[ti] = taggedDenes;
 
-		// Check if denes have Position (HyperCard mode)
-		var hasPosition = false;
-		for (var hpi = 0; hpi < denes2.length; hpi++) {
-			if (denes2[hpi]["Position"] !== undefined && denes2[hpi]["Position"] !== null && denes2[hpi]["Position"] !== '') {
-				hasPosition = true; break;
-			}
-		}
-
-		if (hasPosition) {
-			var sortedDenes = denes2.slice().sort(function(a, b) {
-				return (parseInt(b["Position"]) || 0) - (parseInt(a["Position"]) || 0);
-			});
+		if (taggedDenes.length > 1) {
+			// HyperCard navigation — newest first (by Position if present, else by array order)
+			var sortedDenes = mnemoSortDenes(taggedDenes);
 			mnemoNavIdx[ti] = 0;
 			var total = sortedDenes.length;
 			var newest = sortedDenes[0];
-			var newestPos = parseInt(newest["Position"]) || total;
+			var hasPos = (newest["Position"] !== undefined && newest["Position"] !== null && newest["Position"] !== '');
+			var newestPos = hasPos ? parseInt(newest["Position"]) : total;
 			// Navigation bar
 			html += '<div style="display:flex;align-items:center;margin-bottom:10px;">';
-			html += '<button id="mnemo-prev-' + ti + '" class="btn btn-sm btn-default" onclick="mnemoNav(' + ti + ',1)">&#8592; Previous</button>';
-			html += '<span id="mnemo-indicator-' + ti + '" style="margin:0 14px;font-size:13px;color:#555;">Entry ' + newestPos + ' of ' + total + '</span>';
-			html += '<button id="mnemo-next-' + ti + '" class="btn btn-sm btn-default" disabled onclick="mnemoNav(' + ti + ',-1)">Next &#8594;</button>';
+			html += '<button id="mnemo-prev-' + ti + '" class="btn btn-sm btn-default" onclick="mnemoNav(' + ti + ',1)">&#8592; Older</button>';
+			html += '<button id="mnemo-next-' + ti + '" class="btn btn-sm btn-default" disabled onclick="mnemoNav(' + ti + ',-1)" style="margin-left:8px;">Newer &#8594;</button>';
 			html += '</div>';
 			// Content area — starts showing newest entry
 			html += '<div id="mnemo-content-' + ti + '">';
+			var newestLabel = newest["Name"] ? '<strong>' + newest["Name"] + '</strong> &mdash; ' : '';
+			html += '<div style="margin-bottom:6px;font-size:13px;color:#555;">' + newestLabel + 'Entry ' + newestPos + ' of ' + total + '</div>';
 			var initDws = newest["DeneWords"] || [];
 			if (initDws.length > 0) {
 				html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
@@ -1198,26 +1218,23 @@ function renderMnemosyneViewPanel() {
 				}
 				html += '</table>';
 			} else {
-				html += '<p class="text-muted text-center" style="padding:16px;">No data available for this period.</p>';
+				html += '<p class="text-muted text-center" style="padding:16px;">No data for this entry.</p>';
 			}
 			html += '</div>';
 		} else {
-			// Flat display for periods without Position
-			var hasContent = false;
-			for (var dei = 0; dei < denes2.length; dei++) {
-				var dene = denes2[dei];
-				var dws = dene["DeneWords"] || [];
-				if (dws.length === 0) continue;
-				hasContent = true;
-				if (denes2.length > 1) html += '<h5 style="margin-top:10px;color:#555;">' + dene["Name"] + '</h5>';
+			// Single dene — show directly
+			var singleDene = taggedDenes.length > 0 ? taggedDenes[0] : null;
+			var dws = singleDene ? (singleDene["DeneWords"] || []) : [];
+			if (dws.length > 0) {
 				html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
 				for (var dwi = 0; dwi < dws.length; dwi++) {
 					html += '<tr><td style="width:50%;">' + dws[dwi]["Name"] + '</td>';
 					html += '<td><strong>' + dws[dwi]["Value"] + '</strong></td></tr>';
 				}
 				html += '</table>';
+			} else {
+				html += '<p class="text-muted text-center" style="padding:16px;">No data available for this period.</p>';
 			}
-			if (!hasContent) html += '<p class="text-muted text-center" style="padding:16px;">No data available for this period.</p>';
 		}
 		html += '</div>';
 	}
@@ -1593,12 +1610,12 @@ function buildChinampaContent(telepathon) {
 			'<div style="font-size:9px;color:#777;font-weight:bold;text-transform:uppercase;">' + dw["Name"] + '</div>' +
 			'<div style="font-size:12px;color:#333;">' + fmtVal(dw) + '</div></div>';
 	}
-	function vitalCard(label, val, unit, color) {
-		return '<div class="col-xs-4 col-sm-2" style="margin-bottom:8px;padding:2px;">' +
-			'<div style="border-radius:10px;padding:8px 4px;color:white;text-align:center;background:' + color + ';">' +
-			'<div style="font-size:9px;text-transform:uppercase;font-weight:bold;opacity:0.9;">' + label + '</div>' +
-			'<div style="font-size:16px;font-weight:800;">' + val + unit + '</div>' +
-			'</div></div>';
+	function mkGraphBtns(tpName, deneName, dwName) {
+		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '" data-denewordname="' + dwName + '"';
+		var btnCls = 'btn btn-xs btn-default telepathon-history-value';
+		return '<button class="' + btnCls + '" ' + d + ' data-range="3600000">1h</button> ' +
+			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
+			'<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="604800000">7d</button>';
 	}
 
 	var localTime = findDW(pw, "Local Time");
@@ -1692,14 +1709,30 @@ function buildChinampaContent(telepathon) {
 
 	html += '</div>'; // end tanks row
 
-	// Vitals
-	html += '<div class="row" style="margin-bottom:8px;">';
-	if (outdoorTempDW) html += vitalCard("Outdoor Temp", outdoorTempDW["Value"], "°C", "#3498db");
-	if (outdoorHumDW) html += vitalCard("Outdoor Hum", outdoorHumDW["Value"], "%", "#3498db");
-	if (pcbDW) { var pcbV = parseFloat(pcbDW["Value"]); html += vitalCard("PCB Temp", pcbDW["Value"], "°C", pcbV > maxPCB ? "#e74c3c" : "#27ae60"); }
-	if (rssiDW) { var rssiV = parseFloat(rssiDW["Value"]); html += vitalCard("Signal (RSSI)", rssiDW["Value"], "", rssiV > -95 ? "#27ae60" : "#f39c12"); }
-	if (snrDW) { var snrV = parseFloat(snrDW["Value"]); html += vitalCard("SNR", snrDW["Value"], "", snrV > 0 ? "#27ae60" : "#f39c12"); }
-	html += '</div>';
+	// Vitals — table with history buttons
+	var vitals = [
+		{ dw: outdoorTempDW, name: "Outdoor Temperature" },
+		{ dw: outdoorHumDW,  name: "Outdoor Humidity" },
+		{ dw: pcbDW,         name: "PCB Temperature" },
+		{ dw: rssiDW,        name: "rssi" },
+		{ dw: snrDW,         name: "snr" }
+	];
+	var vitalsRows = '';
+	for (var vi = 0; vi < vitals.length; vi++) {
+		var vit = vitals[vi];
+		if (!vit.dw) continue;
+		var displayVal = vit.dw["Value"] + (vit.dw["Units"] ? ' ' + vit.dw["Units"] : '');
+		vitalsRows += '<tr><td style="width:40%;">' + vit.name + '</td>';
+		vitalsRows += '<td><strong>' + displayVal + '</strong></td>';
+		vitalsRows += '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, "Purpose", vit.name) + '</td>';
+		vitalsRows += '</tr>';
+	}
+	if (vitalsRows) {
+		html += '<div style="border:1px solid #ddd;border-radius:4px;overflow:hidden;margin-bottom:8px;">';
+		html += '<div style="background:#f0f4f8;padding:7px 12px;font-weight:bold;font-size:13px;color:#337ab7;border-bottom:1px solid #ddd;">Sensor Readings</div>';
+		html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">' + vitalsRows + '</table>';
+		html += '</div>';
+	}
 
 	html += '</div>'; // end purpose tab-pane
 
