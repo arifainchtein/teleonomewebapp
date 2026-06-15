@@ -863,15 +863,23 @@ function buildDaffodilContent(telepathon) {
 	}
 	function computeWifiLeds() {
 		var m = {};
-		var rw = getDW(purposeDene, 'rssi');
-		var du = getDW(purposeDene, 'Digital Stables Upload');
+		var ws = getDW(purposeDene, 'Wifi Status');
+		var status = ws ? parseInt(ws.value) : 0;
 		var ant = [1,2,3,5,9,11,12,13];
-		if (!rw || !rw.value) {
-			ant.forEach(function(i){ m[i]='#ff2020'; });
-		} else {
+		if (status === 1) {
+			// AP mode — green antenna
+			ant.forEach(function(i){ m[i]='#00e050'; });
+		} else if (status === 2) {
+			// Station, no internet — blue antenna, red centre
 			ant.forEach(function(i){ m[i]='#2080ff'; });
-			m[7] = (du && String(du.value) === '200') ? '#2080ff' : '#ff2020';
+			m[7] = '#ff2020';
+		} else if (status === 3) {
+			// Station + internet — blue antenna, blue centre
+			ant.forEach(function(i){ m[i]='#2080ff'; });
+			m[7] = '#2080ff';
 		}
+		// status 0 or unknown — red antenna (WiFi off)
+		if (status === 0 || !ws) ant.forEach(function(i){ m[i]='#ff2020'; });
 		return m;
 	}
 	function computeLoraLeds() {
