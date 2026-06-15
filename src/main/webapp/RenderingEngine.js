@@ -811,9 +811,11 @@ function buildDaffodilContent(telepathon) {
 		return '<svg viewBox="0 0 '+W+' '+H+'" style="width:90px;height:auto;border-radius:6px;display:block;margin:0 auto;">'
 			+ '<rect width="'+W+'" height="'+H+'" rx="10" fill="#0c0c1a"/>' + c + '</svg>';
 	}
-	function snapPanel(title, svgHtml) {
+	function snapPanel(title, svgHtml, subtitle) {
 		return '<div style="text-align:center;padding:4px 6px;">' + svgHtml
-			+ '<div style="color:#aaa;font-size:10px;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">' + title + '</div></div>';
+			+ '<div style="color:#aaa;font-size:10px;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">' + title + '</div>'
+			+ (subtitle ? '<div style="color:#fff;font-size:11px;font-weight:bold;margin-top:2px;">' + subtitle + '</div>' : '')
+			+ '</div>';
 	}
 	function computeBatLeds() {
 		var m = {};
@@ -915,7 +917,9 @@ function buildDaffodilContent(telepathon) {
 
 	// Status tab — LED snapshot + 4 data cards
 	var ledSnapshot = '<div style="background:#0c0c1a;border-radius:10px;padding:10px 4px 8px;margin-bottom:14px;display:flex;flex-wrap:wrap;justify-content:space-around;gap:4px;">';
-	ledSnapshot += snapPanel('Battery',     ledSvg(computeBatLeds()));
+	var socSnap = getCerebellumDeneWordValue("Daffodil", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
+	var socLabel = socSnap !== null ? parseFloat(socSnap).toFixed(1) + '%' : null;
+	ledSnapshot += snapPanel('Battery', ledSvg(computeBatLeds()), socLabel);
 	ledSnapshot += snapPanel('Temperature', ledSvg(computeTempLeds()));
 	ledSnapshot += snapPanel('Level',       ledSvg(computeLevelLeds()));
 	ledSnapshot += snapPanel('WiFi',        ledSvg(computeWifiLeds()));
