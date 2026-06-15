@@ -793,6 +793,95 @@ function buildDaffodilContent(telepathon) {
 			'<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="604800000">7d</button>';
 	}
 
+	// ── LED snapshot helpers ──────────────────────────────────────────────────
+	function ledSvg(onMap) {
+		var W = 310, H = 190, R = 18, c = '';
+		for (var i = 0; i < 15; i++) {
+			var col = i % 5, row = Math.floor(i / 5);
+			var x = 31 + col * 50, y = 35 + row * 58;
+			var clr = onMap[i] || null;
+			if (clr) {
+				c += '<circle cx="'+x+'" cy="'+y+'" r="'+(R+8)+'" fill="'+clr+'" opacity="0.18"/>';
+				c += '<circle cx="'+x+'" cy="'+y+'" r="'+(R+3)+'" fill="'+clr+'" opacity="0.30"/>';
+				c += '<circle cx="'+x+'" cy="'+y+'" r="'+R+'" fill="'+clr+'"/>';
+			} else {
+				c += '<circle cx="'+x+'" cy="'+y+'" r="'+R+'" fill="#1a1a2e" stroke="#2d2d4a" stroke-width="1.5"/>';
+			}
+		}
+		return '<svg viewBox="0 0 '+W+' '+H+'" style="width:90px;height:auto;border-radius:6px;display:block;margin:0 auto;">'
+			+ '<rect width="'+W+'" height="'+H+'" rx="10" fill="#0c0c1a"/>' + c + '</svg>';
+	}
+	function snapPanel(title, svgHtml) {
+		return '<div style="text-align:center;padding:4px 6px;">' + svgHtml
+			+ '<div style="color:#aaa;font-size:10px;margin-top:5px;text-transform:uppercase;letter-spacing:0.5px;">' + title + '</div></div>';
+	}
+	function computeBatLeds() {
+		var m = {};
+		var bv = getDW(purposeDene, 'Battery Voltage');
+		var bc = getDW(purposeDene, 'Battery Current');
+		var wf = getDW(purposeDene, 'Weather Fresh');
+		var os = getDW(purposeDene, 'Operating Status');
+		var voltage = bv ? parseFloat(bv.value) : 0;
+		var current = bc ? parseFloat(bc.value) : 0;
+		var fresh   = wf ? String(wf.value).toLowerCase() === 'true' : false;
+		var opNum   = os ? parseInt(os.value) : 0;
+		var batClr  = voltage >= 3.28 ? '#2060ff' : voltage >= 3.18 ? '#00e050' : voltage >= 3.10 ? '#ffc800' : '#ff2020';
+		var srcClr  = current < -1.0 ? '#00e050' : current > 1.0 ? '#ff2020' : '#2060ff';
+		m[1]=batClr; m[6]=batClr; m[7]=batClr; m[11]=batClr; m[12]=batClr;
+		m[4] = srcClr;
+		if (opNum === 3) m[9] = '#00e050';
+		else if (opNum === 4) m[9] = '#ffc800';
+		m[14] = fresh ? '#00e050' : '#ff2020';
+		m[3] = '#00e050';
+		return m;
+	}
+	function computeTempLeds() {
+		var m = {};
+		var tw = getDW(purposeDene, 'Outdoor Temperature') || getDW(sensorsDene, 'Outdoor Temperature');
+		if (!tw) return m;
+		var t = parseFloat(tw.value);
+		if (isNaN(t) || t === -99) { [1,2,3,7,12].forEach(function(i){ m[i]='#ff2020'; }); return m; }
+		var clr = t > 0 ? '#00e050' : t < 0 ? '#2080ff' : '#ffff20';
+		var abs_t = Math.abs(t);
+		var hd = Math.min(Math.floor(abs_t / 10), 4);
+		var ld = Math.floor(abs_t % 10);
+		var hdMap = [[],[0],[0,5],[0,5,10],[0,1,5,10]];
+		hdMap[hd].forEach(function(i){ m[i]=clr; });
+		var ldMap = [[],[4],[4,9],[4,9,14],[4,9,14,3],[4,9,14,3,8],[4,9,14,3,8,13],[4,9,14,3,8,13,2],[4,9,14,3,8,13,2,7],[4,9,14,3,8,13,2,7,12]];
+		if (ldMap[ld]) ldMap[ld].forEach(function(i){ m[i]=clr; });
+		return m;
+	}
+	function computeLevelLeds() {
+		var m = {};
+		var sw = getDW(purposeDene, 'Sceptic Available') || getDW(sensorsDene, 'Sceptic Available');
+		if (!sw) return m;
+		var pct = parseFloat(sw.value);
+		if (isNaN(pct)) return m;
+		var clr = pct <= 25 ? '#ff2020' : pct <= 50 ? '#ffdd00' : pct <= 75 ? '#00e050' : '#2080ff';
+		[1,2,3,6,7,8,11,12,13].forEach(function(i){ m[i]=clr; });
+		return m;
+	}
+	function computeWifiLeds() {
+		var m = {};
+		var rw = getDW(purposeDene, 'rssi');
+		var du = getDW(purposeDene, 'Digital Stables Upload');
+		var ant = [1,2,3,5,9,11,12,13];
+		if (!rw || !rw.value) {
+			ant.forEach(function(i){ m[i]='#ff2020'; });
+		} else {
+			ant.forEach(function(i){ m[i]='#2080ff'; });
+			m[7] = (du && String(du.value) === '200') ? '#2080ff' : '#ff2020';
+		}
+		return m;
+	}
+	function computeLoraLeds() {
+		var m = {};
+		var lw = getDW(purposeDene, 'Lora Active');
+		var clr = (lw && String(lw.value).toLowerCase() === 'true') ? '#00e050' : '#ff2020';
+		[1,6,11,12].forEach(function(i){ m[i]=clr; });
+		return m;
+	}
+
 	// Subheader values
 	var secsDW = getDW(purposeDene, "Seconds Time");
 	var funcDW = getDW(configDene, "Current Function");
@@ -812,12 +901,22 @@ function buildDaffodilContent(telepathon) {
 	html += '</div>';
 
 	html += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
-	html += '<li class="active" onclick="return teleonomeShowTab(\'daff-results-' + safeId + '\', this)"><a href="#">Results</a></li>';
+	html += '<li class="active" onclick="return teleonomeShowTab(\'daff-results-' + safeId + '\', this)"><a href="#">Status</a></li>';
 	html += '<li onclick="return teleonomeShowTab(\'daff-config-' + safeId + '\', this)"><a href="#">Config</a></li>';
 	html += '</ul><div class="tab-content">';
 
-	// Results tab — 4 cards in a 2x2 grid
-	html += '<div class="tab-pane active" id="daff-results-' + safeId + '"><div class="row">';
+	// Status tab — LED snapshot + 4 data cards
+	var ledSnapshot = '<div style="background:#0c0c1a;border-radius:10px;padding:10px 4px 8px;margin-bottom:14px;display:flex;flex-wrap:wrap;justify-content:space-around;gap:4px;">';
+	ledSnapshot += snapPanel('Battery',     ledSvg(computeBatLeds()));
+	ledSnapshot += snapPanel('Temperature', ledSvg(computeTempLeds()));
+	ledSnapshot += snapPanel('Level',       ledSvg(computeLevelLeds()));
+	ledSnapshot += snapPanel('WiFi',        ledSvg(computeWifiLeds()));
+	ledSnapshot += snapPanel('LoRa',        ledSvg(computeLoraLeds()));
+	ledSnapshot += '</div>';
+
+	html += '<div class="tab-pane active" id="daff-results-' + safeId + '">';
+	html += ledSnapshot;
+	html += '<div class="row">';
 	var noGraphFields = {"Op Mode":1,"Weather Fresh":1,"INA219 Found":1,"BH1750 Found":1,"ADS1115 Found":1,"RTC Found":1,"DS18B20 Found":1,"SHT Found":1,"Invalid Time":1,"Using Solar Power":1,"Local Time":1,"Source Original Time":1,"Operating Status":1};
 	var cardGroups = [
 		{ title: "Sensors", fields: ["Measured Height", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature"] },
