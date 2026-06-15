@@ -847,7 +847,8 @@ the css for the little box on the top right f external data
 				        var denewordname = $(this).data('denewordname');
 						var range = $(this).data('range');
 						 
-				        var identity = "@" + teleonomeName + ":" + NUCLEI_TELEPATHONS + ":"+ telepathon + ":" + denename + ":" + denewordname;
+				        var nucleus = $(this).data('nucleus') || NUCLEI_TELEPATHONS;
+				        var identity = "@" + teleonomeName + ":" + nucleus + ":"+ telepathon + ":" + denename + ":" + denewordname;
 				
 				        // 3. Create the Request Payload
 				        var requestPayload = {

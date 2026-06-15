@@ -950,6 +950,18 @@ function buildDaffodilContent(telepathon) {
 			var btnCell = noGraphFields[fieldName] ? '' : '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, r.deneName, fieldName) + '</td>';
 			html += '<tr><td style="width:40%;">' + fieldName + '</td><td>' + valCell + '</td>' + btnCell + '</tr>';
 		}
+		if (card.title === "Power") {
+			var socVal = getCerebellumDeneWordValue("Daffodil", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
+			if (socVal !== null) {
+				var socBtnD = 'data-nucleus="' + NUCLEI_PURPOSE + '" data-telepathonname="Cerebellum" data-denename="Daffodil" data-denewordname="' + DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE + '"';
+				var btnCls = 'btn btn-xs btn-default telepathon-history-value';
+				var socBtns = '<button class="' + btnCls + '" ' + socBtnD + ' data-range="3600000">1h</button> '
+					+ '<button class="' + btnCls + '" ' + socBtnD + ' data-range="86400000">24h</button> '
+					+ '<button class="' + btnCls + ' hidden-xs" ' + socBtnD + ' data-range="604800000">7d</button>';
+				html += '<tr><td style="width:40%;">Battery SOC</td><td><strong>' + parseFloat(socVal).toFixed(1) + '%</strong></td>'
+					+ '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + socBtns + '</td></tr>';
+			}
+		}
 		html += '</table></div></div>';
 	}
 	html += '</div></div>';
