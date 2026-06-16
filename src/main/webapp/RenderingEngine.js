@@ -11,8 +11,9 @@ var heartLogTopics = [];
 function heartLogMessage(topic, payload) {
 	var now = new Date();
 	var ts = now.toTimeString().slice(0, 8);
-	var preview = String(payload).length > 120 ? String(payload).slice(0, 120) + '…' : String(payload);
-	var entry = { time: ts, topic: topic, preview: preview };
+	var full = String(payload);
+	var preview = full.length > 120 ? full.slice(0, 120) + '…' : full;
+	var entry = { time: ts, topic: topic, preview: preview, full: full };
 	heartMessageLog.unshift(entry);
 	if (heartMessageLog.length > HEART_LOG_MAX) heartMessageLog.pop();
 	// Track unique topics and update dropdown if new one seen
@@ -58,7 +59,7 @@ function heartLogApplyFilter() {
 }
 function heartLogDownload() {
 	var lines = heartMessageLog.map(function(e) {
-		return e.time + '\t' + e.topic + '\t' + e.preview;
+		return e.time + '\t' + e.topic + '\t' + (e.full || e.preview);
 	});
 	var text = 'Time\tTopic\tPayload\n' + lines.join('\n');
 	var blob = new Blob([text], { type: 'text/plain' });
