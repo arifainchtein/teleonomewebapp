@@ -6,6 +6,8 @@ var pulseJSONObject;
 var heartMessageLog = [];
 var HEART_LOG_MAX = 150;
 
+var heartLogTopics = [];
+
 function heartLogMessage(topic, payload) {
 	var now = new Date();
 	var ts = now.toTimeString().slice(0, 8);
@@ -13,11 +15,21 @@ function heartLogMessage(topic, payload) {
 	var entry = { time: ts, topic: topic, preview: preview };
 	heartMessageLog.unshift(entry);
 	if (heartMessageLog.length > HEART_LOG_MAX) heartMessageLog.pop();
+	// Track unique topics and update dropdown if new one seen
+	if (heartLogTopics.indexOf(topic) === -1) {
+		heartLogTopics.push(topic);
+		heartLogTopics.sort();
+		heartLogUpdateFilterOptions();
+	}
+	// Only add to visible log if it matches the current filter
 	var $log = $('#heart-log-view');
 	if ($log.length) {
-		$log.prepend(heartLogEntryHtml(entry));
-		var rows = $log.children();
-		if (rows.length > HEART_LOG_MAX) rows.last().remove();
+		var filter = $('#heart-log-filter').val() || '';
+		if (!filter || filter === topic) {
+			$log.prepend(heartLogEntryHtml(entry));
+			var rows = $log.children();
+			if (rows.length > HEART_LOG_MAX) rows.last().remove();
+		}
 	}
 }
 function heartLogEntryHtml(entry) {
@@ -29,6 +41,35 @@ function heartLogEntryHtml(entry) {
 }
 function heartLogBuildHtml() {
 	return heartMessageLog.map(heartLogEntryHtml).join('');
+}
+function heartLogUpdateFilterOptions() {
+	var $sel = $('#heart-log-filter');
+	if (!$sel.length) return;
+	var current = $sel.val();
+	$sel.empty().append('<option value="">Show All</option>');
+	heartLogTopics.forEach(function(t) {
+		$sel.append('<option value="' + t + '"' + (t === current ? ' selected' : '') + '>' + t + '</option>');
+	});
+}
+function heartLogApplyFilter() {
+	var filter = $('#heart-log-filter').val() || '';
+	var entries = filter ? heartMessageLog.filter(function(e) { return e.topic === filter; }) : heartMessageLog;
+	$('#heart-log-view').html(entries.map(heartLogEntryHtml).join(''));
+}
+function heartLogDownload() {
+	var lines = heartMessageLog.map(function(e) {
+		return e.time + '\t' + e.topic + '\t' + e.preview;
+	});
+	var text = 'Time\tTopic\tPayload\n' + lines.join('\n');
+	var blob = new Blob([text], { type: 'text/plain' });
+	var url = URL.createObjectURL(blob);
+	var a = document.createElement('a');
+	a.href = url;
+	a.download = 'heart-log-' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.txt';
+	document.body.appendChild(a);
+	a.click();
+	document.body.removeChild(a);
+	URL.revokeObjectURL(url);
 }
 var teleonomeName;
 var nucleiJSONArray;
@@ -1749,15 +1790,25 @@ function renderOrgansPanel() {
 		$('body').append(
 			'<div class="modal fade" id="heartModal" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog"><div class="modal-content">' +
-			'<div class="modal-header">' + mkClose('heartModal') + '<h4 class="modal-title">Heart</h4></div>' +
+			'<div class="modal-header">' + mkClose('heartModal') + '<button type="button" class="btn btn-xs btn-default" onclick="heartLogDownload()" style="float:right;margin-right:6px;margin-top:3px;" title="Download log">&#8659; Download</button><h4 class="modal-title">Heart</h4></div>' +
 			'<div class="modal-body" style="padding:0;">' +
-			'<div id="heart-log-view" style="background:#0d1117;font-family:monospace;font-size:11px;padding:8px 10px;max-height:240px;overflow-y:auto;border-bottom:2px solid #1e2a3a;"></div>' +
+			'<div id="heart-log-view" style="background:#0d1117;font-family:monospace;font-size:11px;padding:8px 10px;max-height:240px;overflow-y:auto;"></div>' +
+			'<div style="background:#161b22;padding:4px 8px;border-bottom:2px solid #1e2a3a;">' +
+			'<select id="heart-log-filter" onchange="heartLogApplyFilter()" style="width:100%;background:#0d1117;color:#9cdcfe;border:1px solid #2a2a3a;border-radius:3px;font-family:monospace;font-size:11px;padding:2px 4px;">' +
+			'<option value="">Show All</option>' +
+			'</select></div>' +
 			'<div id="heart-stats-view" style="padding:12px 15px;"></div>' +
 			'</div>' +
 			'<div class="modal-footer">' + mkFooter('heartModal') + '</div>' +
 			'</div></div></div>'
 		);
 		$('#heart-log-view').html(heartLogBuildHtml());
+		// Seed topic dropdown from existing buffer
+		heartMessageLog.forEach(function(e) {
+			if (heartLogTopics.indexOf(e.topic) === -1) heartLogTopics.push(e.topic);
+		});
+		heartLogTopics.sort();
+		heartLogUpdateFilterOptions();
 	}
 	var heartContent = '<table class="table table-condensed table-striped" style="margin-bottom:0;">';
 	heartContent += '<tr><td>Last Pulse</td><td><strong>' + (pulseTimestamp || '—') + '</strong></td></tr>';
