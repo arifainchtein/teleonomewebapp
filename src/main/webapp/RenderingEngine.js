@@ -956,10 +956,14 @@ function buildDaffodilContent(telepathon) {
 			var r = getVal(purposeDene, fieldName, sensorsDene);
 			if (!r) continue;
 			var displayVal = r.value;
+			var displayUnits = r.units;
 			if (fieldName === "Operating Status") {
 				displayVal = daffodilOperatingStatusNames[String(parseInt(r.value))] || r.value;
 			}
-			var valCell = '<strong>' + displayVal + (r.units ? ' ' + r.units : '') + '</strong>';
+			if (fieldName === "Light Level" && displayUnits && displayUnits.toLowerCase() === 'meter') {
+				displayUnits = 'Lux';
+			}
+			var valCell = '<strong>' + displayVal + (displayUnits ? ' ' + displayUnits : '') + '</strong>';
 			var btnCell = noGraphFields[fieldName] ? '' : '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, r.deneName, fieldName) + '</td>';
 			html += '<tr><td style="width:40%;">' + fieldName + '</td><td>' + valCell + '</td>' + btnCell + '</tr>';
 		}
@@ -993,7 +997,7 @@ function buildDaffodilContent(telepathon) {
 		['Voltage color', '<span style="color:#2060ff;font-weight:bold;">Blue</span> ≥3.28 V (excellent) &nbsp; <span style="color:#00b040;font-weight:bold;">Green</span> ≥3.18 V (good) &nbsp; <span style="color:#cc8800;font-weight:bold;">Yellow</span> ≥3.10 V (low) &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> &lt;3.10 V (critical)'],
 		['Source (LED 5)',  '<span style="color:#00b040;font-weight:bold;">Green</span> = charging/solar &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> = discharging &nbsp; <span style="color:#2060ff;font-weight:bold;">Blue</span> = stable/idle'],
 		['Op mode (LED 10)', '<span style="color:#00b040;font-weight:bold;">Green</span> = Full operation &nbsp; <span style="color:#cc8800;font-weight:bold;">Yellow</span> = Cloudy (reduced)'],
-		['Freshness (LED 15)', '<span style="color:#00b040;font-weight:bold;">Green</span> = weather data fresh &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> = weather data stale'],
+		['Weather Forecast (LED 15)', '<span style="color:#00b040;font-weight:bold;">Green</span> = weather data fresh &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> = weather data stale'],
 		['Comma Records (LED 4)', '<span style="color:#00b040;font-weight:bold;">Green</span> = no comma records pending &nbsp; <span style="color:#2060ff;font-weight:bold;">Blue</span> = transmitting &nbsp; <span style="color:#cc8800;font-weight:bold;">Yellow</span> = comma records queued']
 	]);
 
@@ -1783,11 +1787,16 @@ function buildChinampaContent(telepathon) {
 			'<rect x="10" y="' + fy + '" width="60" height="' + fh + '" fill="' + fc + '" rx="2"/>' +
 			'<text x="40" y="115" text-anchor="middle" font-size="11" font-weight="bold">' + Math.round(totalH - measuredH) + 'cm</text></svg>';
 	}
-	function metricBox(dw) {
+	function metricBox(dw, btns) {
 		if (!dw) return '';
-		return '<div style="border-left:3px solid #3498db;background:#f0f4f8;padding:4px 6px;margin-bottom:4px;border-radius:2px;">' +
-			'<div style="font-size:9px;color:#777;font-weight:bold;text-transform:uppercase;">' + dw["Name"] + '</div>' +
-			'<div style="font-size:12px;color:#333;">' + fmtVal(dw) + '</div></div>';
+		var s = '<div style="border-left:3px solid #3498db;background:#f0f4f8;margin-bottom:4px;border-radius:2px;overflow:hidden;">';
+		s += '<div style="padding:4px 6px;">';
+		s += '<div style="font-size:9px;color:#777;font-weight:bold;text-transform:uppercase;">' + dw["Name"] + '</div>';
+		s += '<div style="font-size:12px;color:#333;">' + fmtVal(dw) + '</div>';
+		s += '</div>';
+		if (btns) s += '<div style="background:#e8edf2;text-align:right;padding:2px 4px;">' + btns + '</div>';
+		s += '</div>';
+		return s;
 	}
 	function mkGraphBtns(tpName, deneName, dwName) {
 		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '" data-denewordname="' + dwName + '"';
@@ -1879,8 +1888,8 @@ function buildChinampaContent(telepathon) {
 	html += svgGauge(ftH ? ftH["Value"] : 1, ftM ? ftM["Value"] : 0, alertCode === 6);
 	html += '<div style="font-size:9px;font-weight:bold;color:#777;margin-top:2px;">WATER LEVEL</div>';
 	html += '</div><div class="col-xs-7">';
-	html += metricBox(findDW(pw, "Fish Tank Outflow Flow Rate"));
-	html += metricBox(findDW(pw, "Fish Tank Outflow Solenoid Relay Status"));
+	html += metricBox(findDW(pw, "Fish Tank Outflow Flow Rate"), mkGraphBtns(tpName, "Purpose", "Fish Tank Outflow Flow Rate"));
+	html += metricBox(findDW(pw, "Fish Tank Outflow Solenoid Relay Status"), mkGraphBtns(tpName, "Purpose", "Fish Tank Outflow Solenoid Relay Status"));
 	html += metricBox(findDW(pw, "Seconds Since Last Fish Tank Data"));
 	html += '</div></div></div></div>';
 
@@ -1892,8 +1901,8 @@ function buildChinampaContent(telepathon) {
 	html += svgGauge(stH ? stH["Value"] : 1, stM ? stM["Value"] : 0, alertCode === 5 || alertCode === 6);
 	html += '<div style="font-size:9px;font-weight:bold;color:#777;margin-top:2px;">WATER LEVEL</div>';
 	html += '</div><div class="col-xs-7">';
-	html += metricBox(findDW(pw, "Pump Flow Rate"));
-	html += metricBox(findDW(pw, "Pump Relay Status"));
+	html += metricBox(findDW(pw, "Pump Flow Rate"), mkGraphBtns(tpName, "Purpose", "Pump Flow Rate"));
+	html += metricBox(findDW(pw, "Pump Relay Status"), mkGraphBtns(tpName, "Purpose", "Pump Relay Status"));
 	html += metricBox(findDW(pw, "Seconds Since Last Sump Trough Data"));
 	html += '</div></div></div></div>';
 
