@@ -13,10 +13,14 @@ function showTelepathonGraph(data) {
   
 	// Parse time
 	const parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
-	data = data.map(d => ({
-	  time: parseTime(d.timeString),
-	  value: +d.Value
-	}));
+	data = data.map(d => {
+		var raw = d.Value;
+		var num;
+		if (typeof raw === 'string' && raw.toLowerCase() === 'true') num = 1;
+		else if (typeof raw === 'string' && raw.toLowerCase() === 'false') num = 0;
+		else num = +raw;
+		return { time: parseTime(d.timeString), value: num };
+	});
   
 	// Create SVG
 	const svg = d3.select("#telepathon-graph")

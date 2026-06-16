@@ -1,6 +1,35 @@
 "use strict";
 var denomeJSONObject;
 var pulseJSONObject;
+
+// Heart message log — ring buffer, newest first
+var heartMessageLog = [];
+var HEART_LOG_MAX = 150;
+
+function heartLogMessage(topic, payload) {
+	var now = new Date();
+	var ts = now.toTimeString().slice(0, 8);
+	var preview = String(payload).length > 120 ? String(payload).slice(0, 120) + '…' : String(payload);
+	var entry = { time: ts, topic: topic, preview: preview };
+	heartMessageLog.unshift(entry);
+	if (heartMessageLog.length > HEART_LOG_MAX) heartMessageLog.pop();
+	var $log = $('#heart-log-view');
+	if ($log.length) {
+		$log.prepend(heartLogEntryHtml(entry));
+		var rows = $log.children();
+		if (rows.length > HEART_LOG_MAX) rows.last().remove();
+	}
+}
+function heartLogEntryHtml(entry) {
+	return '<div style="padding:2px 0 2px 0;border-bottom:1px solid #1e2a3a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+		+ '<span style="color:#569cd6;flex-shrink:0;">' + entry.time + '</span>'
+		+ '&nbsp;<span style="color:#dcdcaa;font-weight:bold;">' + entry.topic + '</span>'
+		+ '&nbsp;<span style="color:#9cdcfe;font-size:10px;">' + entry.preview + '</span>'
+		+ '</div>';
+}
+function heartLogBuildHtml() {
+	return heartMessageLog.map(heartLogEntryHtml).join('');
+}
 var teleonomeName;
 var nucleiJSONArray;
 var pageToDisplay = -1;
@@ -1721,19 +1750,23 @@ function renderOrgansPanel() {
 			'<div class="modal fade" id="heartModal" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog"><div class="modal-content">' +
 			'<div class="modal-header">' + mkClose('heartModal') + '<h4 class="modal-title">Heart</h4></div>' +
-			'<div class="modal-body" id="heartModalBody"></div>' +
+			'<div class="modal-body" style="padding:0;">' +
+			'<div id="heart-log-view" style="background:#0d1117;font-family:monospace;font-size:11px;padding:8px 10px;max-height:240px;overflow-y:auto;border-bottom:2px solid #1e2a3a;"></div>' +
+			'<div id="heart-stats-view" style="padding:12px 15px;"></div>' +
+			'</div>' +
 			'<div class="modal-footer">' + mkFooter('heartModal') + '</div>' +
 			'</div></div></div>'
 		);
+		$('#heart-log-view').html(heartLogBuildHtml());
 	}
-	var heartContent = '<table class="table table-condensed table-striped">';
+	var heartContent = '<table class="table table-condensed table-striped" style="margin-bottom:0;">';
 	heartContent += '<tr><td>Last Pulse</td><td><strong>' + (pulseTimestamp || '—') + '</strong></td></tr>';
 	heartContent += '<tr><td>Time Since Pulse</td><td><strong>' + (timeStringSinceLastPulse || '—') + '</strong></td></tr>';
 	heartContent += '<tr><td>Operational Mode</td><td><strong>' + (operationalMode || '—') + '</strong></td></tr>';
 	if (currentPulseFrequency != undefined) heartContent += '<tr><td>Pulse Frequency</td><td><strong>' + msToTime(currentPulseFrequency) + '</strong></td></tr>';
 	if (currentPulseGenerationDuration != undefined) heartContent += '<tr><td>Generation Duration</td><td><strong>' + msToTime(currentPulseGenerationDuration) + '</strong></td></tr>';
 	heartContent += '</table>';
-	$('#heartModalBody').html(heartContent);
+	$('#heart-stats-view').html(heartContent);
 
 	var html = '<div class="col-lg-12">';
 	html += '<div class="bs-component"><div class="panel panel-default">';
@@ -1887,6 +1920,7 @@ function buildChinampaContent(telepathon) {
 	html += '<div class="row"><div class="col-xs-5 text-center">';
 	html += svgGauge(ftH ? ftH["Value"] : 1, ftM ? ftM["Value"] : 0, alertCode === 6);
 	html += '<div style="font-size:9px;font-weight:bold;color:#777;margin-top:2px;">WATER LEVEL</div>';
+	html += '<div style="margin-top:4px;">' + mkGraphBtns(tpName, "Purpose", "Fish Tank Measured Height") + '</div>';
 	html += '</div><div class="col-xs-7">';
 	html += metricBox(findDW(pw, "Fish Tank Outflow Flow Rate"), mkGraphBtns(tpName, "Purpose", "Fish Tank Outflow Flow Rate"));
 	html += metricBox(findDW(pw, "Fish Tank Outflow Solenoid Relay Status"), mkGraphBtns(tpName, "Purpose", "Fish Tank Outflow Solenoid Relay Status"));
@@ -1900,6 +1934,7 @@ function buildChinampaContent(telepathon) {
 	html += '<div class="row"><div class="col-xs-5 text-center">';
 	html += svgGauge(stH ? stH["Value"] : 1, stM ? stM["Value"] : 0, alertCode === 5 || alertCode === 6);
 	html += '<div style="font-size:9px;font-weight:bold;color:#777;margin-top:2px;">WATER LEVEL</div>';
+	html += '<div style="margin-top:4px;">' + mkGraphBtns(tpName, "Purpose", "Sump Trough Measured Height") + '</div>';
 	html += '</div><div class="col-xs-7">';
 	html += metricBox(findDW(pw, "Pump Flow Rate"), mkGraphBtns(tpName, "Purpose", "Pump Flow Rate"));
 	html += metricBox(findDW(pw, "Pump Relay Status"), mkGraphBtns(tpName, "Purpose", "Pump Relay Status"));

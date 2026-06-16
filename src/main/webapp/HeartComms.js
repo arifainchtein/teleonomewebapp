@@ -87,10 +87,9 @@ function onFailure(){
 
 
 function onMessageArrived(message) {
-console.log("message arrived");
 	lastMessageTopic = message.destinationName;
 	var payload = message.payloadString;
-	console.log("message arrive, topic=" + lastMessageTopic);
+	heartLogMessage(lastMessageTopic, payload);
 	if(lastMessageTopic=='Status'){
 		//
 		// the payload is a pulse so refresh the interface
