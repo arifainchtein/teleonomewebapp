@@ -1789,10 +1789,10 @@ function renderOrgansPanel() {
 	if (!$('#heartModal').length) {
 		$('body').append(
 			'<div class="modal fade" id="heartModal" tabindex="-1" role="dialog">' +
-			'<div class="modal-dialog"><div class="modal-content">' +
+			'<div class="modal-dialog" style="max-width:calc(100vw - 20px);width:500px;margin:10px auto;"><div class="modal-content">' +
 			'<div class="modal-header">' + mkClose('heartModal') + '<button type="button" class="btn btn-xs btn-default" onclick="heartLogDownload()" style="float:right;margin-right:6px;margin-top:3px;" title="Download log">&#8659; Download</button><h4 class="modal-title">Heart</h4></div>' +
 			'<div class="modal-body" style="padding:0;">' +
-			'<div id="heart-log-view" style="background:#0d1117;font-family:monospace;font-size:11px;padding:8px 10px;max-height:240px;overflow-y:auto;"></div>' +
+			'<div id="heart-log-view" style="background:#0d1117;font-family:monospace;font-size:11px;padding:8px 10px;max-height:240px;overflow-y:auto;overflow-x:hidden;"></div>' +
 			'<div style="background:#161b22;padding:4px 8px;border-bottom:2px solid #1e2a3a;">' +
 			'<select id="heart-log-filter" onchange="heartLogApplyFilter()" style="width:100%;background:#0d1117;color:#9cdcfe;border:1px solid #2a2a3a;border-radius:3px;font-family:monospace;font-size:11px;padding:2px 4px;">' +
 			'<option value="">Show All</option>' +
