@@ -887,7 +887,7 @@ function buildDaffodilContent(telepathon) {
 	function computeLoraLeds() {
 		var m = {};
 		var lw = getDW(purposeDene, 'Lora Active');
-		var clr = (lw && String(lw.value).toLowerCase() === 'true') ? '#00e050' : '#ff2020';
+		var clr = (lw && (String(lw.value).toLowerCase() === 'true' || String(lw.value) === '1')) ? '#00e050' : '#ff2020';
 		[1,6,11,12].forEach(function(i){ m[i]=clr; });
 		return m;
 	}
@@ -915,10 +915,10 @@ function buildDaffodilContent(telepathon) {
 	html += '<li onclick="return teleonomeShowTab(\'daff-config-' + safeId + '\', this)"><a href="#">Config</a></li>';
 	html += '</ul><div class="tab-content">';
 
-	// Status tab — LED snapshot + 4 data cards
+	// Status tab — LED snapshot + sub-pills for data sections
 	var ledSnapshot = '<div style="background:#0c0c1a;border-radius:10px;padding:10px 4px 8px;margin-bottom:14px;display:flex;flex-wrap:wrap;justify-content:space-around;gap:4px;">';
 	var socSnap = getCerebellumDeneWordValue("Daffodil", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
-	var socLabel = socSnap !== null ? parseFloat(socSnap).toFixed(1) + '%' : null;
+	var socLabel = socSnap !== null ? 'SOC: ' + parseFloat(socSnap).toFixed(1) + '%' : null;
 	ledSnapshot += snapPanel('Battery', ledSvg(computeBatLeds()), socLabel);
 	ledSnapshot += snapPanel('Temperature', ledSvg(computeTempLeds()));
 	ledSnapshot += snapPanel('Level',       ledSvg(computeLevelLeds()));
@@ -928,19 +928,28 @@ function buildDaffodilContent(telepathon) {
 
 	html += '<div class="tab-pane active" id="daff-results-' + safeId + '">';
 	html += ledSnapshot;
-	html += '<div class="row">';
+
+	// Sub-pills (smaller than top-level pills)
+	var subPillStyle = 'font-size:12px;padding:3px 9px;';
+	html += '<ul class="nav nav-pills" style="margin-bottom:8px;flex-wrap:wrap;">';
+	html += '<li class="active" onclick="return teleonomeShowTab(\'daff-sensors-' + safeId + '\', this)"><a href="#" style="' + subPillStyle + '">Sensors</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'daff-power-' + safeId + '\', this)"><a href="#" style="' + subPillStyle + '">Power</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'daff-comms-' + safeId + '\', this)"><a href="#" style="' + subPillStyle + '">Comms</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'daff-diag-' + safeId + '\', this)"><a href="#" style="' + subPillStyle + '">Diagnostics</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'daff-help-' + safeId + '\', this)"><a href="#" style="' + subPillStyle + '">Help</a></li>';
+	html += '</ul>';
+	html += '<div class="tab-content">';
+
 	var noGraphFields = {"Op Mode":1,"Weather Fresh":1,"INA219 Found":1,"BH1750 Found":1,"ADS1115 Found":1,"RTC Found":1,"DS18B20 Found":1,"SHT Found":1,"Invalid Time":1,"Using Solar Power":1,"Local Time":1,"Source Original Time":1,"Operating Status":1};
 	var cardGroups = [
-		{ title: "Sensors", fields: ["Measured Height", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature"] },
-		{ title: "Power",   fields: ["Led Brightness", "Battery Voltage", "Operating Status", "Async Data", "Wake Time Sec", "Sleep Time", "Estimated Runtime", "Battery Current"] },
-		{ title: "Communication", fields: ["rssi", "snr", "Digital Stables Upload", "Lora Active", "ds Last Upload"] },
-		{ title: "Diagnostics", fields: ["RTC Battery Volt", "Op Mode", "Weather Fresh", "INA219 Found", "BH1750 Found", "ADS1115 Found", "RTC Found", "DS18B20 Found", "SHT Found", "Invalid Time", "Using Solar Power", "Source Original Time", "Local Time"] }
+		{ id: 'daff-sensors-' + safeId, title: "Sensors", fields: ["Measured Height", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature"] },
+		{ id: 'daff-power-' + safeId,   title: "Power",   fields: ["Led Brightness", "Battery Voltage", "Operating Status", "Async Data", "Wake Time Sec", "Sleep Time", "Estimated Runtime", "Battery Current"] },
+		{ id: 'daff-comms-' + safeId,   title: "Comms",   fields: ["rssi", "snr", "Digital Stables Upload", "Lora Active", "ds Last Upload"] },
+		{ id: 'daff-diag-' + safeId,    title: "Diagnostics", fields: ["RTC Battery Volt", "Op Mode", "Weather Fresh", "INA219 Found", "BH1750 Found", "ADS1115 Found", "RTC Found", "DS18B20 Found", "SHT Found", "Invalid Time", "Using Solar Power", "Source Original Time", "Local Time"] }
 	];
 	for (var ci = 0; ci < cardGroups.length; ci++) {
 		var card = cardGroups[ci];
-		html += '<div class="col-xs-12 col-sm-6" style="padding:5px;">';
-		html += '<div style="border:1px solid #ddd;border-radius:4px;overflow:hidden;margin-bottom:4px;">';
-		html += '<div style="background:#f0f4f8;padding:7px 12px;font-weight:bold;font-size:13px;color:#337ab7;border-bottom:1px solid #ddd;">' + card.title + '</div>';
+		html += '<div class="tab-pane' + (ci === 0 ? ' active' : '') + '" id="' + card.id + '">';
 		html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">';
 		for (var fi = 0; fi < card.fields.length; fi++) {
 			var fieldName = card.fields[fi];
@@ -957,23 +966,70 @@ function buildDaffodilContent(telepathon) {
 		if (card.title === "Power") {
 			var socVal = getCerebellumDeneWordValue("Daffodil", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
 			if (socVal !== null) {
-				var socBtnD = 'data-nucleus="' + NUCLEI_PURPOSE + '" data-telepathonname="Cerebellum" data-denename="Daffodil" data-denewordname="' + DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE + '"';
-				var btnCls = 'btn btn-xs btn-default telepathon-history-value';
-				var socBtns = '<button class="' + btnCls + '" ' + socBtnD + ' data-range="3600000">1h</button> '
-					+ '<button class="' + btnCls + '" ' + socBtnD + ' data-range="86400000">24h</button> '
-					+ '<button class="' + btnCls + ' hidden-xs" ' + socBtnD + ' data-range="604800000">7d</button>';
 				html += '<tr><td style="width:40%;">Battery SOC</td><td><strong>' + parseFloat(socVal).toFixed(1) + '%</strong></td>'
-					+ '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + socBtns + '</td></tr>';
+					+ '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, "Purpose", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE) + '</td></tr>';
 			}
 		}
-		html += '</table></div></div>';
+		html += '</table></div>';
 	}
-	html += '</div></div>';
+
+	// Help sub-tab — LED panel descriptions
+	html += '<div class="tab-pane" id="daff-help-' + safeId + '">';
+	html += '<div style="font-size:12px;line-height:1.6;">';
+
+	function helpSection(title, color, rows) {
+		var s = '<div style="margin-bottom:14px;">';
+		s += '<div style="font-weight:bold;font-size:13px;color:' + color + ';border-bottom:1px solid #eee;padding-bottom:3px;margin-bottom:6px;">' + title + '</div>';
+		s += '<table style="width:100%;border-collapse:collapse;">';
+		for (var hi = 0; hi < rows.length; hi++) {
+			s += '<tr><td style="width:36%;padding:2px 6px 2px 0;color:#555;vertical-align:top;">' + rows[hi][0] + '</td>'
+				+ '<td style="padding:2px 0;vertical-align:top;">' + rows[hi][1] + '</td></tr>';
+		}
+		s += '</table></div>';
+		return s;
+	}
+
+	html += helpSection('Battery', '#2060ff', [
+		['Voltage color', '<span style="color:#2060ff;font-weight:bold;">Blue</span> ≥3.28 V (excellent) &nbsp; <span style="color:#00b040;font-weight:bold;">Green</span> ≥3.18 V (good) &nbsp; <span style="color:#cc8800;font-weight:bold;">Yellow</span> ≥3.10 V (low) &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> &lt;3.10 V (critical)'],
+		['Source (LED 4)',  '<span style="color:#00b040;font-weight:bold;">Green</span> = charging/solar &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> = discharging &nbsp; <span style="color:#2060ff;font-weight:bold;">Blue</span> = stable/idle'],
+		['Op mode (LED 9)', '<span style="color:#00b040;font-weight:bold;">Green</span> = Full operation &nbsp; <span style="color:#cc8800;font-weight:bold;">Yellow</span> = Cloudy (reduced)'],
+		['Freshness (LED 14)', '<span style="color:#00b040;font-weight:bold;">Green</span> = weather data fresh &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> = weather data stale'],
+		['Heartbeat (LED 3)', '<span style="color:#00b040;font-weight:bold;">Always green</span> — confirms device is alive']
+	]);
+
+	html += helpSection('Temperature', '#00b040', [
+		['Sign color', '<span style="color:#00b040;font-weight:bold;">Green</span> = above 0 °C &nbsp; <span style="color:#2060ff;font-weight:bold;">Blue</span> = below 0 °C &nbsp; <span style="color:#cccc00;font-weight:bold;">Yellow</span> = exactly 0 °C'],
+		['Tens digit', 'Left-column LEDs (0,5,10,1,6) — number of lit LEDs encodes the tens value (0–4)'],
+		['Units digit', 'Right-column LEDs (4,9,14,3,8,13,2,7,12) — LEDs light progressively for 1–9'],
+		['Error', '<span style="color:#cc2020;font-weight:bold;">Red</span> on a fixed pattern = sensor read failure or invalid value']
+	]);
+
+	html += helpSection('Level (Sceptic)', '#27ae60', [
+		['Reading', 'Nine LEDs in a 3×3 grid, all the same color, showing tank capacity %'],
+		['Colors', '<span style="color:#2060ff;font-weight:bold;">Blue</span> &gt;75% (full) &nbsp; <span style="color:#00b040;font-weight:bold;">Green</span> 26–75% (normal) &nbsp; <span style="color:#cc8800;font-weight:bold;">Yellow</span> 11–25% (low) &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> ≤10% (critical)'],
+		['No LEDs', 'Sensor not fitted or no reading available']
+	]);
+
+	html += helpSection('WiFi', '#2080ff', [
+		['All red', 'WiFi is disabled or turned off'],
+		['All green', 'AP mode — the Daffodil is broadcasting its own hotspot'],
+		['Blue + red center', 'Connected to WiFi network but no internet access'],
+		['Blue + blue center', 'Connected to WiFi with full internet access']
+	]);
+
+	html += helpSection('LoRa', '#9b59b6', [
+		['Green', 'LoRa radio is active and transmitting data to the gateway'],
+		['Red', 'LoRa radio is inactive or not connected']
+	]);
+
+	html += '</div></div>'; // help content + tab-pane
+
+	html += '</div>'; // inner tab-content
+	html += '</div>'; // daff-results tab-pane
 
 	// Config tab
 	html += '<div class="tab-pane" id="daff-config-' + safeId + '">';
 	html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
-	// Config dene fields
 	var configFields = configDene ? (configDene["DeneWords"] || []) : [];
 	for (var cfi = 0; cfi < configFields.length; cfi++) {
 		var cfName = configFields[cfi]["Name"];
@@ -981,14 +1037,13 @@ function buildDaffodilContent(telepathon) {
 		if (cfName === "Current Function") cfVal = functionLabel;
 		html += '<tr><td style="width:50%;">' + cfName + '</td><td><strong>' + cfVal + '</strong></td></tr>';
 	}
-	// Sensor config fields (tank/trough name, max height)
 	var sensFields = sensorsDene ? (sensorsDene["DeneWords"] || []) : [];
 	for (var sfi = 0; sfi < sensFields.length; sfi++) {
 		html += '<tr><td style="width:50%;">' + sensFields[sfi]["Name"] + '</td><td><strong>' + sensFields[sfi]["Value"] + (sensFields[sfi]["Units"] ? ' ' + sensFields[sfi]["Units"] : '') + '</strong></td></tr>';
 	}
 	html += '</table></div>';
 
-	html += '</div>'; // tab-content
+	html += '</div>'; // outer tab-content
 	return html;
 }
 
