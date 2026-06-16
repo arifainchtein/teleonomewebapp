@@ -991,10 +991,10 @@ function buildDaffodilContent(telepathon) {
 
 	html += helpSection('Battery', '#2060ff', [
 		['Voltage color', '<span style="color:#2060ff;font-weight:bold;">Blue</span> ≥3.28 V (excellent) &nbsp; <span style="color:#00b040;font-weight:bold;">Green</span> ≥3.18 V (good) &nbsp; <span style="color:#cc8800;font-weight:bold;">Yellow</span> ≥3.10 V (low) &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> &lt;3.10 V (critical)'],
-		['Source (LED 4)',  '<span style="color:#00b040;font-weight:bold;">Green</span> = charging/solar &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> = discharging &nbsp; <span style="color:#2060ff;font-weight:bold;">Blue</span> = stable/idle'],
-		['Op mode (LED 9)', '<span style="color:#00b040;font-weight:bold;">Green</span> = Full operation &nbsp; <span style="color:#cc8800;font-weight:bold;">Yellow</span> = Cloudy (reduced)'],
-		['Freshness (LED 14)', '<span style="color:#00b040;font-weight:bold;">Green</span> = weather data fresh &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> = weather data stale'],
-		['Heartbeat (LED 3)', '<span style="color:#00b040;font-weight:bold;">Always green</span> — confirms device is alive']
+		['Source (LED 5)',  '<span style="color:#00b040;font-weight:bold;">Green</span> = charging/solar &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> = discharging &nbsp; <span style="color:#2060ff;font-weight:bold;">Blue</span> = stable/idle'],
+		['Op mode (LED 10)', '<span style="color:#00b040;font-weight:bold;">Green</span> = Full operation &nbsp; <span style="color:#cc8800;font-weight:bold;">Yellow</span> = Cloudy (reduced)'],
+		['Freshness (LED 15)', '<span style="color:#00b040;font-weight:bold;">Green</span> = weather data fresh &nbsp; <span style="color:#cc2020;font-weight:bold;">Red</span> = weather data stale'],
+		['Comma Records (LED 4)', '<span style="color:#00b040;font-weight:bold;">Green</span> = no comma records pending &nbsp; <span style="color:#2060ff;font-weight:bold;">Blue</span> = transmitting &nbsp; <span style="color:#cc8800;font-weight:bold;">Yellow</span> = comma records queued']
 	]);
 
 	html += helpSection('Temperature', '#00b040', [
