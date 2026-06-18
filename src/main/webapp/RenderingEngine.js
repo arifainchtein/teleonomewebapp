@@ -1227,10 +1227,10 @@ function buildTelepathonCardView(telepathon) {
 	var opModeHtml = '';
 	if (name === "Chinampa") {
 		var alertCodeDW = findPW("Alert Code");
-		var ac = alertCodeDW ? parseInt(alertCodeDW["Value"]) : 0;
+		var ac = alertCodeDW ? parseInt(alertCodeDW["Value"]) : 99;
 		var alertMsgs = {0:"Initializing...",1:"Fish Tank Data Stale",2:"Sump Trough Stale",3:"FT & Sump Data Stale",4:"Solenoid Open / Low Flow",5:"Sump Level Too Low",6:"System Low In Water"};
-		if (ac > 0) {
-			opModeHtml = '<div style="background:#fadbd8;color:#000;font-size:11px;font-weight:bold;padding:3px 6px;margin-top:4px;border-radius:4px;width:100%;box-sizing:border-box;">' + (alertMsgs[ac] || "Alert") + '</div>';
+		if (ac !== 99) {
+			opModeHtml = '<div style="background:#fadbd8;color:#000;font-size:11px;font-weight:bold;padding:3px 6px;margin-top:4px;border-radius:4px;width:100%;box-sizing:border-box;">' + (alertMsgs[ac] || ("Alert Code " + ac)) + '</div>';
 		} else {
 			opModeHtml = '<div style="background:#d5f5e3;color:#000;font-size:11px;font-weight:bold;padding:3px 6px;margin-top:4px;border-radius:4px;width:100%;box-sizing:border-box;">&nbsp;</div>';
 		}
