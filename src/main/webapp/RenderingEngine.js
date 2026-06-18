@@ -1290,7 +1290,17 @@ function buildTelepathonCardView(telepathon) {
 	html += '<div style="flex:1;padding:14px;background:#fafafa;display:flex;flex-direction:column;justify-content:center;">';
 	html += '<div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + name + '</div>';
 	if (localTime) {
-		var localTimeShort = String(localTime).replace(/^\d{4}\//, '');
+		var localTimeRaw = String(localTime);
+		var localTimeShort = localTimeRaw.replace(/^\d{4}\//, '');
+		if (window.innerWidth < 768) {
+			var dm = localTimeRaw.match(/^(\d{4})\/(\d{2})\/(\d{2})\s+(.*)$/);
+			if (dm) {
+				var now = new Date();
+				var todayStr = now.getFullYear() + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + String(now.getDate()).padStart(2, '0');
+				var dateStr = dm[1] + '/' + dm[2] + '/' + dm[3];
+				if (dateStr === todayStr) localTimeShort = dm[4];
+			}
+		}
 		html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTimeShort +
 			'&nbsp;<span style="color:' + statusColor + ';font-weight:bold;">(' + cardAgeSec + 's ago)</span></div>';
 	}
