@@ -1805,14 +1805,50 @@ function renderOrgansPanel() {
 			if (!isGraveyardShift) {
 				if (cPurposeDene) {
 					var cPurposeDws = cPurposeDene["DeneWords"] || [];
-					cerebModalContent += '<table class="table table-condensed table-striped">';
-					for (var cpdw = 0; cpdw < cPurposeDws.length; cpdw++) {
-						var cpdwName = cPurposeDws[cpdw]["Name"];
-						if (cerebSkipFields.indexOf(cpdwName) !== -1) continue;
-						cerebModalContent += '<tr><td style="width:55%;">' + cpdwName + '</td>' +
-							'<td><strong>' + cPurposeDws[cpdw]["Value"] + '</strong></td></tr>';
+
+					// Cerebellum merges every task that shares this Telepathon Type into
+					// one flat Purpose dene (so e.g. a live per-pulse task's words don't
+					// erase an hourly task's words). Each task's own words are delimited
+					// at the end by the "<TaskShortName> Execution Time" / "<TaskShortName>
+					// Duration" markers Cerebellum.java appends after task.process()
+					// returns. Use those to show only this tab's own task, not everyone's.
+					var cClassName = "";
+					for (var cdw = 0; cdw < cTaskDwsMatch.length; cdw++) {
+						if (cTaskDwsMatch[cdw]["Name"] === "Task True Expression") { cClassName = cTaskDwsMatch[cdw]["Value"]; break; }
 					}
-					cerebModalContent += '</table>';
+					var cShortName = cClassName.substring(cClassName.lastIndexOf(".") + 1);
+
+					var cMyWords = null;
+					var segStart = 0;
+					for (var pdw = 0; pdw < cPurposeDws.length; pdw++) {
+						var pdwName = cPurposeDws[pdw]["Name"];
+						var durSuffix = " Duration";
+						if (typeof pdwName === "string" && pdwName.indexOf(durSuffix) === pdwName.length - durSuffix.length) {
+							var ownerName = pdwName.substring(0, pdwName.length - durSuffix.length);
+							if (pdw > 0 && cPurposeDws[pdw - 1]["Name"] === ownerName + " Execution Time") {
+								if (ownerName === cShortName) { cMyWords = cPurposeDws.slice(segStart, pdw + 1); break; }
+								segStart = pdw + 1;
+							}
+						}
+					}
+					// No markers for this task yet (e.g. an hourly task that hasn't fired
+					// its first run) — show nothing rather than falling back to everyone
+					// else's words.
+					if (!cMyWords) cMyWords = [];
+
+					if (cMyWords.length > 0) {
+						cerebModalContent += '<table class="table table-condensed table-striped">';
+						for (var cpdw = 0; cpdw < cMyWords.length; cpdw++) {
+							var cpdwName = cMyWords[cpdw]["Name"];
+							if (cerebSkipFields.indexOf(cpdwName) !== -1) continue;
+							if (cpdwName === cShortName + " Execution Time" || cpdwName === cShortName + " Duration") continue;
+							cerebModalContent += '<tr><td style="width:55%;">' + cpdwName + '</td>' +
+								'<td><strong>' + cMyWords[cpdw]["Value"] + '</strong></td></tr>';
+						}
+						cerebModalContent += '</table>';
+					} else {
+						cerebModalContent += '<p class="text-muted text-center" style="padding:16px;">No data available.</p>';
+					}
 				} else {
 					cerebModalContent += '<p class="text-muted text-center" style="padding:16px;">No data available.</p>';
 				}
