@@ -1243,9 +1243,11 @@ function buildTelepathonCardView(telepathon) {
 
 		var fishFlowDW = findPW("Fish Tank Outflow Flow Rate");
 		var fishFlowStr = fishFlowDW ? (fishFlowDW["Value"] + (fishFlowDW["Units"] ? ' ' + fishFlowDW["Units"] : '')) : '—';
-		statusExtra = '<span style="font-size:11px;color:#555;">Fish: ' + fishFlowStr +
+		var fishLabel = window.innerWidth < 768 ? 'F' : 'Fish';
+		var sumpLabel = window.innerWidth < 768 ? 'S' : 'Sump';
+		statusExtra = '<span style="font-size:11px;color:#555;">' + fishLabel + ': ' + fishFlowStr +
 			'&nbsp;<span style="color:' + fishColorHex + ';font-weight:bold;">' + fishColor + '</span>' +
-			'&nbsp;&nbsp;Sump: <span style="color:' + sumpColorHex + ';font-weight:bold;">' + sumpColor + '</span></span>';
+			'&nbsp;&nbsp;' + sumpLabel + ': <span style="color:' + sumpColorHex + ';font-weight:bold;">' + sumpColor + '</span></span>';
 	} else {
 		if (deviceType === "Daffodil") {
 			var opStatusDW = findPW("Operating Status");
