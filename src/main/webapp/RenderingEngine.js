@@ -1179,6 +1179,7 @@ function buildTelepathonCardView(telepathon) {
 	var deviceType = '';
 	var localTime = '';
 	var purposeWords = [];
+	var sensorWords = [];
 	var denes = telepathon["Denes"] || [];
 	for (var di = 0; di < denes.length; di++) {
 		if (denes[di]["Name"] === "Configuration") {
@@ -1194,11 +1195,28 @@ function buildTelepathonCardView(telepathon) {
 			}
 			purposeWords = pws;
 		}
+		if (denes[di]["Name"] === "Sensors") {
+			sensorWords = denes[di]["DeneWords"] || [];
+		}
 	}
 
 	function findPW(n) {
 		for (var fi = 0; fi < purposeWords.length; fi++) if (purposeWords[fi]["Name"] === n) return purposeWords[fi];
 		return null;
+	}
+	function findSW(n) {
+		for (var fi = 0; fi < sensorWords.length; fi++) if (sensorWords[fi]["Name"] === n) return sensorWords[fi];
+		return null;
+	}
+	function levelColor(heightDW, measuredDW) {
+		if (!heightDW || !measuredDW) return null;
+		var min = parseFloat(heightDW["Minimum"]);
+		var max = parseFloat(heightDW["Maximum"]);
+		if (isNaN(min) || isNaN(max)) return null;
+		var level = parseFloat(heightDW["Value"]) - parseFloat(measuredDW["Value"]);
+		if (level < min) return 'Red';
+		if (level > max) return 'Blue';
+		return 'Green';
 	}
 
 	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
@@ -1208,26 +1226,26 @@ function buildTelepathonCardView(telepathon) {
 	var statusExtra = '';
 	var opModeHtml = '';
 	if (name === "Chinampa") {
-		var alertDW = findPW("Alert Status");
 		var alertCodeDW = findPW("Alert Code");
-		var alertActive = alertDW && String(alertDW["Value"]).toLowerCase() === "true";
 		var ac = alertCodeDW ? parseInt(alertCodeDW["Value"]) : 0;
-		if (alertActive) {
-			var alertMsgs = {0:"Initializing...",1:"Fish Tank Data Stale",2:"Sump Trough Stale",3:"FT & Sump Data Stale",4:"Solenoid Open / Low Flow",5:"Sump Level Too Low",6:"System Low In Water"};
-			statusExtra = '<span style="font-size:11px;color:#e74c3c;font-weight:bold;margin-left:4px;">' + (alertMsgs[ac] || "Alert") + '</span>';
+		var alertMsgs = {0:"Initializing...",1:"Fish Tank Data Stale",2:"Sump Trough Stale",3:"FT & Sump Data Stale",4:"Solenoid Open / Low Flow",5:"Sump Level Too Low",6:"System Low In Water"};
+		if (ac > 0) {
+			opModeHtml = '<div style="background:#fadbd8;color:#000;font-size:11px;font-weight:bold;padding:3px 6px;margin-top:4px;border-radius:4px;width:100%;box-sizing:border-box;">' + (alertMsgs[ac] || "Alert") + '</div>';
+		} else {
+			opModeHtml = '<div style="background:#d5f5e3;color:#000;font-size:11px;font-weight:bold;padding:3px 6px;margin-top:4px;border-radius:4px;width:100%;box-sizing:border-box;">&nbsp;</div>';
 		}
 
-		var fishColor = (alertActive && ac === 6) ? 'Red' : (alertActive && (ac === 1 || ac === 3 || ac === 4)) ? 'Yellow' : 'Green';
-		var fishColorHex = {Red:'#e74c3c', Yellow:'#f39c12', Green:'#27ae60'}[fishColor];
-		var sumpColor = (alertActive && ac === 6) ? 'Red' : (alertActive && (ac === 2 || ac === 3 || ac === 5)) ? 'Yellow' : 'Green';
-		var sumpColorHex = {Red:'#e74c3c', Yellow:'#f39c12', Green:'#27ae60'}[sumpColor];
+		var fishColor = levelColor(findSW("Fish Tank Height"), findPW("Fish Tank Measured Height")) || 'Green';
+		var sumpColor = levelColor(findSW("Sump TroughHeight"), findPW("Sump Trough Measured Height")) || 'Green';
+		var levelColorHexMap = {Red:'#e74c3c', Green:'#27ae60', Blue:'#2060ff'};
+		var fishColorHex = levelColorHexMap[fishColor];
+		var sumpColorHex = levelColorHexMap[sumpColor];
 
 		var fishFlowDW = findPW("Fish Tank Outflow Flow Rate");
 		var fishFlowStr = fishFlowDW ? (fishFlowDW["Value"] + (fishFlowDW["Units"] ? ' ' + fishFlowDW["Units"] : '')) : '—';
-		opModeHtml = '<div style="font-size:11px;color:#555;margin-top:2px;">Fish: ' + fishFlowStr +
-			'&nbsp;&nbsp;<span style="color:' + fishColorHex + ';font-weight:bold;">' + fishColor + '</span></div>' +
-			'<div style="font-size:11px;color:#555;margin-top:2px;">Sump: ' +
-			'<span style="color:' + sumpColorHex + ';font-weight:bold;">' + sumpColor + '</span></div>';
+		statusExtra = '<span style="font-size:11px;color:#555;">Fish: ' + fishFlowStr +
+			'&nbsp;<span style="color:' + fishColorHex + ';font-weight:bold;">' + fishColor + '</span>' +
+			'&nbsp;&nbsp;Sump: <span style="color:' + sumpColorHex + ';font-weight:bold;">' + sumpColor + '</span></span>';
 	} else {
 		if (deviceType === "Daffodil") {
 			var opStatusDW = findPW("Operating Status");
