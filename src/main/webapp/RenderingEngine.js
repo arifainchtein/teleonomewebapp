@@ -1261,16 +1261,11 @@ function buildTelepathonCardView(telepathon) {
 			}
 		}
 		var battDW = findPW("Battery Voltage");
-		var secsDW = findPW("Seconds Time");
 		var extras = [];
 		if (battDW) extras.push(battDW["Value"] + 'V');
 		if (deviceType === "Daffodil") {
 			var socVal = getCerebellumDeneWordValue("Daffodil", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
 			if (socVal !== null) extras.push('SOC: ' + parseFloat(socVal).toFixed(1) + '%');
-		}
-		if (secsDW) {
-			var secsSince = Math.floor(Date.now() / 1000 - parseFloat(secsDW["Value"]));
-			if (secsSince >= 0) extras.push(secsSince + 's ago');
 		}
 		if (extras.length) statusExtra = '<span style="font-size:11px;color:#555;margin-left:4px;">' + extras.join('  ') + '</span>';
 	}
