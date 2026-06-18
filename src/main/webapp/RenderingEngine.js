@@ -1230,9 +1230,9 @@ function buildTelepathonCardView(telepathon) {
 		var ac = alertCodeDW ? parseInt(alertCodeDW["Value"]) : 99;
 		var alertMsgs = {0:"Initializing...",1:"Fish Tank Data Stale",2:"Sump Trough Stale",3:"FT & Sump Data Stale",4:"Solenoid Open / Low Flow",5:"Sump Level Too Low",6:"System Low In Water"};
 		if (ac !== 99) {
-			opModeHtml = '<div style="background:#fadbd8;color:#000;font-size:11px;font-weight:bold;padding:3px 6px;margin-top:4px;border-radius:4px;width:100%;box-sizing:border-box;">' + (alertMsgs[ac] || ("Alert Code " + ac)) + '</div>';
+			opModeHtml = '<div style="background:#fadbd8;color:#000;font-size:11px;font-weight:bold;padding:0 6px;margin-top:2px;border-radius:4px;width:100%;box-sizing:border-box;">' + (alertMsgs[ac] || ("Alert Code " + ac)) + '</div>';
 		} else {
-			opModeHtml = '<div style="background:#d5f5e3;color:#000;font-size:11px;font-weight:bold;padding:3px 6px;margin-top:4px;border-radius:4px;width:100%;box-sizing:border-box;">&nbsp;</div>';
+			opModeHtml = '<div style="background:#d5f5e3;color:#000;font-size:11px;font-weight:bold;padding:0 6px;margin-top:2px;border-radius:4px;width:100%;box-sizing:border-box;">&nbsp;</div>';
 		}
 
 		var fishColor = levelColor(findSW("Fish Tank Height"), findPW("Fish Tank Measured Height")) || 'Green';
