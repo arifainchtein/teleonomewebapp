@@ -1560,6 +1560,7 @@ function renderOrgansPanel() {
 	var hippoContent = '';
 	var hippoSpaceSlices = null;
 	var hippoBreakdownSlices = null;
+	var hippoDeviceRanges = {};
 	var hippoPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_HIPPOCAMPUS;
 	var hippoDeneChain = getDeneChainByIdentityPointer(hippoPointer);
 	if (hippoDeneChain) {
@@ -1578,6 +1579,10 @@ function renderOrgansPanel() {
 					if (dwName === "PointsAvailable") hippoAvail = Number(dwVal);
 					if (dwName === "MemoryBreakdown") {
 						try { hippoBreakdownSlices = JSON.parse(dwVal).map(function(b) { return { name: b.name, value: b.points }; }); } catch(e) {}
+					} else if (dwName === "DeviceDateRanges") {
+						try {
+							JSON.parse(dwVal).forEach(function(r) { hippoDeviceRanges[r.name] = { start: r.start, end: r.end }; });
+						} catch(e) {}
 					} else {
 						hippoRows.push({ name: dwName, value: dwVal });
 					}
@@ -1682,6 +1687,10 @@ function renderOrgansPanel() {
 							var dev = devices[_devi];
 							var vars = deviceVars[dev];
 							hippoContentsHtml += '<div id="hippo-dev-' + _devi + '" class="hippo-dev-table"' + (_devi > 0 ? ' style="display:none;"' : '') + '>';
+							var devRange = hippoDeviceRanges[dev];
+							if (devRange) {
+								hippoContentsHtml += '<p class="text-muted small" style="margin-bottom:4px;">Data available: ' + devRange.start + ' &nbsp;to&nbsp; ' + devRange.end + '</p>';
+							}
 							hippoContentsHtml += '<table class="table table-condensed table-striped" style="font-size:12px;margin-bottom:0;">';
 							for (var _vi = 0; _vi < vars.length; _vi += 2) {
 								var lv = vars[_vi], rv = vars[_vi + 1];
