@@ -1210,11 +1210,24 @@ function buildTelepathonCardView(telepathon) {
 	if (name === "Chinampa") {
 		var alertDW = findPW("Alert Status");
 		var alertCodeDW = findPW("Alert Code");
-		if (alertDW && String(alertDW["Value"]).toLowerCase() === "true") {
+		var alertActive = alertDW && String(alertDW["Value"]).toLowerCase() === "true";
+		var ac = alertCodeDW ? parseInt(alertCodeDW["Value"]) : 0;
+		if (alertActive) {
 			var alertMsgs = {0:"Initializing...",1:"Fish Tank Data Stale",2:"Sump Trough Stale",3:"FT & Sump Data Stale",4:"Solenoid Open / Low Flow",5:"Sump Level Too Low",6:"System Low In Water"};
-			var ac = alertCodeDW ? parseInt(alertCodeDW["Value"]) : 0;
 			statusExtra = '<span style="font-size:11px;color:#e74c3c;font-weight:bold;margin-left:4px;">' + (alertMsgs[ac] || "Alert") + '</span>';
 		}
+
+		var fishColor = (alertActive && ac === 6) ? 'Red' : (alertActive && (ac === 1 || ac === 3 || ac === 4)) ? 'Yellow' : 'Green';
+		var fishColorHex = {Red:'#e74c3c', Yellow:'#f39c12', Green:'#27ae60'}[fishColor];
+		var sumpColor = (alertActive && ac === 6) ? 'Red' : (alertActive && (ac === 2 || ac === 3 || ac === 5)) ? 'Yellow' : 'Green';
+		var sumpColorHex = {Red:'#e74c3c', Yellow:'#f39c12', Green:'#27ae60'}[sumpColor];
+
+		var fishFlowDW = findPW("Fish Tank Outflow Flow Rate");
+		var fishFlowStr = fishFlowDW ? (fishFlowDW["Value"] + (fishFlowDW["Units"] ? ' ' + fishFlowDW["Units"] : '')) : '—';
+		opModeHtml = '<div style="font-size:11px;color:#555;margin-top:2px;">Fish: ' + fishFlowStr +
+			'&nbsp;&nbsp;<span style="color:' + fishColorHex + ';font-weight:bold;">' + fishColor + '</span></div>' +
+			'<div style="font-size:11px;color:#555;margin-top:2px;">Sump: ' +
+			'<span style="color:' + sumpColorHex + ';font-weight:bold;">' + sumpColor + '</span></div>';
 	} else {
 		if (deviceType === "Daffodil") {
 			var opStatusDW = findPW("Operating Status");
@@ -1277,7 +1290,8 @@ function buildTelepathonCardView(telepathon) {
 	html += '<div style="flex:1;padding:14px;background:#fafafa;display:flex;flex-direction:column;justify-content:center;">';
 	html += '<div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + name + '</div>';
 	if (localTime) {
-		html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTime +
+		var localTimeShort = String(localTime).replace(/^\d{4}\//, '');
+		html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTimeShort +
 			'&nbsp;<span style="color:' + statusColor + ';font-weight:bold;">(' + cardAgeSec + 's ago)</span></div>';
 	}
 	if (opModeHtml) html += opModeHtml;
