@@ -1,5 +1,5 @@
 
-function showTelepathonGraph(data) {
+function showTelepathonGraph(data, rangeMs) {
 	// Set dimensions 
 	//d3.select("#telepathon-graph").html("");
 	// Get container width - using getBoundingClientRect() for better compatibility
@@ -66,11 +66,14 @@ function showTelepathonGraph(data) {
 	  .attr("d", line);
   
 	 // Add axes with responsive formatting
+	 // For multi-day ranges (e.g. the 7d button), hourly ticks all land on
+	 // midnight and would all read "00:00" — show the date instead.
+	 const axisTickFormat = rangeMs > 86400000 ? d3.timeFormat("%d %b") : d3.timeFormat("%H:%M");
 	 const xAxis = svg.append("g")
 	 .attr("transform", `translate(0,${height})`)
 	 .call(d3.axisBottom(x)
 		 .ticks(width < 600 ? 4 : 8) // Reduced number of ticks
-		 .tickFormat(d3.timeFormat("%H:%M")));
+		 .tickFormat(axisTickFormat));
 
  // Adjust x-axis labels for better mobile display
  xAxis.selectAll("text")

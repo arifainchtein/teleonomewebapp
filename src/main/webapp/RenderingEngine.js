@@ -790,7 +790,7 @@ function displayHippocampusResponse(payload){
 	
 	$('#telepathon-graph-title').html(telepathonName + "-"+deneWordName);
 	$('#telepathon-graph').empty();
-	showTelepathonGraph(data);
+	showTelepathonGraph(data, window.lastTelepathonGraphRangeMs);
 	$('#telepathon-stats').empty();
 	$('#telepathon-stats').append(statsPanel);
 
@@ -1690,7 +1690,7 @@ function renderOrgansPanel() {
 							var devRange = hippoDeviceRanges[dev];
 							hippoContentsHtml += '<table class="table table-condensed table-striped" style="font-size:12px;margin-bottom:0;">';
 							if (devRange) {
-								hippoContentsHtml += '<tr><td colspan="4" class="text-muted small">Data available: ' + devRange.start + ' &nbsp;to&nbsp; ' + devRange.end + '</td></tr>';
+								hippoContentsHtml += '<tr><td colspan="4">Data available: ' + devRange.start + ' &nbsp;to&nbsp; ' + devRange.end + '</td></tr>';
 							}
 							for (var _vi = 0; _vi < vars.length; _vi += 2) {
 								var lv = vars[_vi], rv = vars[_vi + 1];
