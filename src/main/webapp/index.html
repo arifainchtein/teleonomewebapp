@@ -846,6 +846,7 @@ the css for the little box on the top right f external data
 				        var denename = $(this).data('denename');
 				        var denewordname = $(this).data('denewordname');
 						var range = $(this).data('range');
+						window.lastTelepathonGraphRangeMs = range;
 						 
 				        var nucleus = $(this).data('nucleus') || NUCLEI_TELEPATHONS;
 				        var identity = "@" + teleonomeName + ":" + nucleus + ":"+ telepathon + ":" + denename + ":" + denewordname;
