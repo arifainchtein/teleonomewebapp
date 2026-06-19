@@ -1688,10 +1688,10 @@ function renderOrgansPanel() {
 							var vars = deviceVars[dev];
 							hippoContentsHtml += '<div id="hippo-dev-' + _devi + '" class="hippo-dev-table"' + (_devi > 0 ? ' style="display:none;"' : '') + '>';
 							var devRange = hippoDeviceRanges[dev];
-							if (devRange) {
-								hippoContentsHtml += '<p class="text-muted small" style="margin-bottom:4px;">Data available: ' + devRange.start + ' &nbsp;to&nbsp; ' + devRange.end + '</p>';
-							}
 							hippoContentsHtml += '<table class="table table-condensed table-striped" style="font-size:12px;margin-bottom:0;">';
+							if (devRange) {
+								hippoContentsHtml += '<tr><td colspan="4" class="text-muted small">Data available: ' + devRange.start + ' &nbsp;to&nbsp; ' + devRange.end + '</td></tr>';
+							}
 							for (var _vi = 0; _vi < vars.length; _vi += 2) {
 								var lv = vars[_vi], rv = vars[_vi + 1];
 								hippoContentsHtml += '<tr><td style="width:25%;">' + lv.name + '</td><td style="width:25%;"><strong>' + lv.value + '</strong></td>';
