@@ -1219,8 +1219,36 @@ function buildTelepathonCardView(telepathon) {
 		return 'Green';
 	}
 
-	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
-	var statusColor = ageSeconds < 60 ? '#27ae60' : (ageSeconds < 120 ? '#f39c12' : '#e74c3c');
+	var opStatusDW = findPW("Operating Status");
+	var opNum = opStatusDW ? String(parseInt(opStatusDW["Value"])) : null;
+
+	var dataTimestampMs = (function() {
+		var m = String(localTime || '').match(/^(\d{4})\/(\d{2})\/(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/);
+		if (!m) return null;
+		return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]), parseInt(m[4]), parseInt(m[5]), parseInt(m[6])).getTime();
+	})();
+	var ageSeconds = (dataTimestampMs !== null ? (Date.now() - dataTimestampMs) : (Date.now() - pulseTimestampMilliseconds)) / 1000;
+
+	function rangeColor(green, yellow) {
+		return ageSeconds < green ? '#27ae60' : (ageSeconds < yellow ? '#f39c12' : '#e74c3c');
+	}
+
+	var statusColor;
+	if (name === "Chinampa") {
+		statusColor = rangeColor(120, 240);
+	} else if (deviceType === "Daffodil") {
+		if (opNum === "4") {
+			var cloudySleepDW = findPW("Sleep Time");
+			var cloudySleepSec = cloudySleepDW ? parseFloat(cloudySleepDW["Value"]) : null;
+			statusColor = cloudySleepSec ?
+				(ageSeconds <= cloudySleepSec ? '#27ae60' : (ageSeconds <= cloudySleepSec * 2 ? '#f39c12' : '#e74c3c')) :
+				rangeColor(120, 240);
+		} else {
+			statusColor = rangeColor(120, 240);
+		}
+	} else {
+		statusColor = rangeColor(60, 120);
+	}
 
 	// Build device-specific status info line
 	var statusExtra = '';
@@ -1249,18 +1277,14 @@ function buildTelepathonCardView(telepathon) {
 			'&nbsp;<span style="color:' + fishColorHex + ';font-weight:bold;">' + fishColor + '</span>' +
 			'&nbsp;&nbsp;' + sumpLabel + ': <span style="color:' + sumpColorHex + ';font-weight:bold;">' + sumpColor + '</span></span>';
 	} else {
-		if (deviceType === "Daffodil") {
-			var opStatusDW = findPW("Operating Status");
-			if (opStatusDW) {
-				var opNum = String(parseInt(opStatusDW["Value"]));
-				var opLabel = daffodilOperatingStatusNames[opNum] || ('Mode ' + opNum);
-				var sleepStr = '';
-				if (opNum === "1" || opNum === "4" || opNum === "5") {
-					var sleepDW = findPW("Sleep Time");
-					if (sleepDW) sleepStr = ', ' + sleepDW["Value"] + (sleepDW["Units"] ? sleepDW["Units"] : 's');
-				}
-				opModeHtml = '<div style="font-size:11px;color:#555;margin-top:2px;">' + opLabel + sleepStr + '</div>';
+		if (deviceType === "Daffodil" && opStatusDW) {
+			var opLabel = daffodilOperatingStatusNames[opNum] || ('Mode ' + opNum);
+			var sleepStr = '';
+			if (opNum === "1" || opNum === "4" || opNum === "5") {
+				var sleepDW = findPW("Sleep Time");
+				if (sleepDW) sleepStr = ', ' + sleepDW["Value"] + (sleepDW["Units"] ? sleepDW["Units"] : 's');
 			}
+			opModeHtml = '<div style="font-size:11px;color:#555;margin-top:2px;">' + opLabel + sleepStr + '</div>';
 		}
 		var battDW = findPW("Battery Voltage");
 		var extras = [];
