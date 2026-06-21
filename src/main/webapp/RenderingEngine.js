@@ -85,6 +85,7 @@ var rowPanelCounter=0;
 //the pointer is of the form @teleonomeName:Human Interface:Home Page
 var humanInterfaceDeneChainIndex = new HashMap();
 var humanInterfaceDeneChainArray;
+var telepathonCardDataCache = {};
 var pulseTimestamp;
 var pulseTimestampMilliseconds;
 var timeStringSinceLastPulse;
@@ -1404,11 +1405,22 @@ function updateTelepathonsView(text){
 		return;
 	}
 	var safeId = telepathonName.replace(/[^a-zA-Z0-9]/g, '_');
+	telepathonCardDataCache[telepathonName] = telepathon;
 	var newCard = buildTelepathonCardView(telepathon);
 	if ($('#tpCardCol_' + safeId).length) {
 		$('#tpCardCol_' + safeId).replaceWith(newCard);
 	}
 }
+
+function tickTelepathonCards(){
+	for (var tName in telepathonCardDataCache) {
+		var safeId = tName.replace(/[^a-zA-Z0-9]/g, '_');
+		if ($('#tpCardCol_' + safeId).length) {
+			$('#tpCardCol_' + safeId).replaceWith(buildTelepathonCardView(telepathonCardDataCache[tName]));
+		}
+	}
+}
+setInterval(tickTelepathonCards, 10 * 1000);
 
 var mnemoPeriodsData = [];
 var mnemoNavIdx = {};
@@ -2158,6 +2170,7 @@ function refreshTelepathonsView(){
 		if(telepathonName!="TopTank" && telepathonName!="Chinampa" && telepathonName!="SeedlingMonitor"){
 			continue;
 		}
+		telepathonCardDataCache[telepathonName] = deneChains[j13];
 		panelHTML += buildTelepathonCardView(deneChains[j13]);
 	}
 	$('#TelepathonsView').append(panelHTML);
