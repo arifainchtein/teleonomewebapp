@@ -1398,6 +1398,27 @@ function buildTelepathonPillsContent(telepathon) {
 	return html;
 }
 
+function mergeTelepathonDenes(cached, incoming) {
+	// Live per-telepathon MQTT pushes sometimes carry only the Denes that changed
+	// (e.g. just "Purpose"), omitting others like "Configuration". Render off a
+	// shallow merge so fields like Device Type Id don't transiently disappear.
+	if (!cached) return incoming;
+	var mergedDenes = (cached["Denes"] || []).slice();
+	var incomingDenes = incoming["Denes"] || [];
+	for (var i = 0; i < incomingDenes.length; i++) {
+		var found = false;
+		for (var j = 0; j < mergedDenes.length; j++) {
+			if (mergedDenes[j]["Name"] === incomingDenes[i]["Name"]) {
+				mergedDenes[j] = incomingDenes[i];
+				found = true;
+				break;
+			}
+		}
+		if (!found) mergedDenes.push(incomingDenes[i]);
+	}
+	return { "Name": incoming["Name"] || cached["Name"], "Denes": mergedDenes };
+}
+
 function updateTelepathonsView(text){
 	var telepathon = JSON.parse(text);
 	var telepathonName = telepathon["Name"];
@@ -1405,6 +1426,7 @@ function updateTelepathonsView(text){
 		return;
 	}
 	var safeId = telepathonName.replace(/[^a-zA-Z0-9]/g, '_');
+	telepathon = mergeTelepathonDenes(telepathonCardDataCache[telepathonName], telepathon);
 	telepathonCardDataCache[telepathonName] = telepathon;
 	var newCard = buildTelepathonCardView(telepathon);
 	if ($('#tpCardCol_' + safeId).length) {
