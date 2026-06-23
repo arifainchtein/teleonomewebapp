@@ -86,6 +86,7 @@ var rowPanelCounter=0;
 var humanInterfaceDeneChainIndex = new HashMap();
 var humanInterfaceDeneChainArray;
 var telepathonCardDataCache = {};
+var lastKnownCerebellumValues = {};
 var pulseTimestamp;
 var pulseTimestampMilliseconds;
 var timeStringSinceLastPulse;
@@ -1151,17 +1152,23 @@ function buildTelepathonDetailContent(telepathon) {
 }
 
 function getCerebellumDeneWordValue(telepathonType, deneWordName) {
-	for (var _ni = 0; _ni < nucleiJSONArray.length; _ni++) {
-		if (nucleiJSONArray[_ni]["Name"] === "Purpose") {
-			var _chains = nucleiJSONArray[_ni]["DeneChains"] || [];
-			for (var _ci = 0; _ci < _chains.length; _ci++) {
-				if (_chains[_ci]["Name"] === "Cerebellum") {
-					var _denes = _chains[_ci]["Denes"] || [];
-					for (var _di = 0; _di < _denes.length; _di++) {
-						if (_denes[_di]["Name"] === telepathonType) {
-							var _dws = _denes[_di]["DeneWords"] || [];
-							for (var _wi = 0; _wi < _dws.length; _wi++) {
-								if (_dws[_wi]["Name"] === deneWordName) return _dws[_wi]["Value"];
+	var cacheKey = telepathonType + ':' + deneWordName;
+	if (nucleiJSONArray) {
+		for (var _ni = 0; _ni < nucleiJSONArray.length; _ni++) {
+			if (nucleiJSONArray[_ni]["Name"] === "Purpose") {
+				var _chains = nucleiJSONArray[_ni]["DeneChains"] || [];
+				for (var _ci = 0; _ci < _chains.length; _ci++) {
+					if (_chains[_ci]["Name"] === "Cerebellum") {
+						var _denes = _chains[_ci]["Denes"] || [];
+						for (var _di = 0; _di < _denes.length; _di++) {
+							if (_denes[_di]["Name"] === telepathonType) {
+								var _dws = _denes[_di]["DeneWords"] || [];
+								for (var _wi = 0; _wi < _dws.length; _wi++) {
+									if (_dws[_wi]["Name"] === deneWordName) {
+										lastKnownCerebellumValues[cacheKey] = _dws[_wi]["Value"];
+										return _dws[_wi]["Value"];
+									}
+								}
 							}
 						}
 					}
@@ -1169,7 +1176,65 @@ function getCerebellumDeneWordValue(telepathonType, deneWordName) {
 			}
 		}
 	}
-	return null;
+	// Cerebellum data can be momentarily absent from a given pulse snapshot
+	// (it's a periodic task, not present on every pulse). Fall back to the
+	// last known value rather than flashing the UI to blank.
+	return cacheKey in lastKnownCerebellumValues ? lastKnownCerebellumValues[cacheKey] : null;
+}
+
+function computeTelepathonAgeStatus(telepathon) {
+	var name = telepathon["Name"];
+	var deviceType = '';
+	var localTime = '';
+	var purposeWords = [];
+	var denes = telepathon["Denes"] || [];
+	for (var di = 0; di < denes.length; di++) {
+		if (denes[di]["Name"] === "Configuration") {
+			var cws = denes[di]["DeneWords"] || [];
+			for (var ci = 0; ci < cws.length; ci++) {
+				if (cws[ci]["Name"] === "Device Type Id") deviceType = cws[ci]["Value"];
+			}
+		}
+		if (denes[di]["Name"] === "Purpose") {
+			var pws = denes[di]["DeneWords"] || [];
+			for (var pi = 0; pi < pws.length; pi++) {
+				if (pws[pi]["Name"] === "Local Time") localTime = pws[pi]["Value"];
+			}
+			purposeWords = pws;
+		}
+	}
+	function findPW(n) {
+		for (var fi = 0; fi < purposeWords.length; fi++) if (purposeWords[fi]["Name"] === n) return purposeWords[fi];
+		return null;
+	}
+	var opStatusDW = findPW("Operating Status");
+	var opNum = opStatusDW ? String(parseInt(opStatusDW["Value"])) : null;
+	var dataTimestampMs = (function() {
+		var m = String(localTime || '').match(/^(\d{4})\/(\d{2})\/(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/);
+		if (!m) return null;
+		return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]), parseInt(m[4]), parseInt(m[5]), parseInt(m[6])).getTime();
+	})();
+	var ageSeconds = (dataTimestampMs !== null ? (Date.now() - dataTimestampMs) : (Date.now() - pulseTimestampMilliseconds)) / 1000;
+	function rangeColor(green, yellow) {
+		return ageSeconds < green ? '#27ae60' : (ageSeconds < yellow ? '#f39c12' : '#e74c3c');
+	}
+	var statusColor;
+	if (name === "Chinampa") {
+		statusColor = rangeColor(120, 240);
+	} else if (deviceType === "Daffodil") {
+		if (opNum === "4") {
+			var cloudySleepDW = findPW("Sleep Time");
+			var cloudySleepSec = cloudySleepDW ? parseFloat(cloudySleepDW["Value"]) : null;
+			statusColor = cloudySleepSec ?
+				(ageSeconds <= cloudySleepSec ? '#27ae60' : (ageSeconds <= cloudySleepSec * 2 ? '#f39c12' : '#e74c3c')) :
+				rangeColor(120, 240);
+		} else {
+			statusColor = rangeColor(120, 240);
+		}
+	} else {
+		statusColor = rangeColor(60, 120);
+	}
+	return { ageSeconds: ageSeconds, statusColor: statusColor };
 }
 
 function buildTelepathonCardView(telepathon) {
@@ -1342,7 +1407,7 @@ function buildTelepathonCardView(telepathon) {
 			}
 		}
 		html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTimeShort +
-			'&nbsp;<span style="color:' + statusColor + ';font-weight:bold;">(' + cardAgeSec + 's ago)</span></div>';
+			'&nbsp;<span id="tpAge_' + safeId + '" style="color:' + statusColor + ';font-weight:bold;">(' + cardAgeSec + 's ago)</span></div>';
 	}
 	if (opModeHtml) html += opModeHtml;
 	html += '<div style="margin-top:4px;text-align:center;">';
@@ -1435,11 +1500,15 @@ function updateTelepathonsView(text){
 }
 
 function tickTelepathonCards(){
+	// Only refresh the "Xs ago" age label/color in place — rebuilding the whole
+	// card (image + SOC etc.) on this timer was causing periodic flicker since
+	// the underlying telepathon data hasn't actually changed.
 	for (var tName in telepathonCardDataCache) {
 		var safeId = tName.replace(/[^a-zA-Z0-9]/g, '_');
-		if ($('#tpCardCol_' + safeId).length) {
-			$('#tpCardCol_' + safeId).replaceWith(buildTelepathonCardView(telepathonCardDataCache[tName]));
-		}
+		var $age = $('#tpAge_' + safeId);
+		if (!$age.length) continue;
+		var ageInfo = computeTelepathonAgeStatus(telepathonCardDataCache[tName]);
+		$age.text('(' + Math.floor(ageInfo.ageSeconds) + 's ago)').css('color', ageInfo.statusColor);
 	}
 }
 setInterval(tickTelepathonCards, 10 * 1000);
