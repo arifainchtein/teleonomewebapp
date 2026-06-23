@@ -2253,18 +2253,31 @@ function buildChinampaContent(telepathon) {
 function refreshTelepathonsView(){
 	var telepathonsNuclei=getTelepathonsDeneChains();
 	if(!telepathonsNuclei) return "";
-	var panelHTML="";
-	$('#TelepathonsView').empty();
 	var deneChains = telepathonsNuclei['DeneChains'];
+	var panelHTML="";
 	for(var j13=0;j13<deneChains.length;j13++){
 		var telepathonName = deneChains[j13]["Name"];
 		if(telepathonName!="TopTank" && telepathonName!="Chinampa" && telepathonName!="SeedlingMonitor"){
 			continue;
 		}
-		telepathonCardDataCache[telepathonName] = deneChains[j13];
-		panelHTML += buildTelepathonCardView(deneChains[j13]);
+		// This full-pulse snapshot of a telepathon's denes can itself be partial
+		// (e.g. missing "Configuration" on a given pulse). Merge onto the cache
+		// instead of overwriting it outright, otherwise fields like Device Type Id
+		// (used for the card image) transiently disappear and the card flickers.
+		var merged = mergeTelepathonDenes(telepathonCardDataCache[telepathonName], deneChains[j13]);
+		var changed = JSON.stringify(merged) !== JSON.stringify(telepathonCardDataCache[telepathonName]);
+		telepathonCardDataCache[telepathonName] = merged;
+		var safeId = telepathonName.replace(/[^a-zA-Z0-9]/g, '_');
+		var $existing = $('#tpCardCol_' + safeId);
+		if ($existing.length) {
+			// Only tear down and rebuild the card (which reloads the image and
+			// recomputes SOC) when the underlying data actually changed.
+			if (changed) $existing.replaceWith(buildTelepathonCardView(merged));
+		} else {
+			panelHTML += buildTelepathonCardView(merged);
+		}
 	}
-	$('#TelepathonsView').append(panelHTML);
+	if (panelHTML) $('#TelepathonsView').append(panelHTML);
 	return panelHTML;
 }
 
