@@ -858,8 +858,9 @@ function buildDaffodilContent(telepathon) {
 		if (!r && fallbackDene) { r = getDW(fallbackDene, name); dn = r ? fallbackDene["Name"] : null; }
 		return r ? { value: r.value, units: r.units, deneName: dn } : null;
 	}
-	function mkGraphBtns(tpName, deneName, dwName) {
-		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '" data-denewordname="' + dwName + '"';
+	function mkGraphBtns(tpName, deneName, dwName, nucleus) {
+		var nucleusAttr = nucleus ? ' data-nucleus="' + nucleus + '"' : '';
+		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '" data-denewordname="' + dwName + '"' + nucleusAttr;
 		var btnCls = 'btn btn-xs btn-default telepathon-history-value';
 		return '<button class="' + btnCls + '" ' + d + ' data-range="3600000">1h</button> ' +
 			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
@@ -990,7 +991,7 @@ function buildDaffodilContent(telepathon) {
 
 	// Status tab — LED snapshot + sub-pills for data sections
 	var ledSnapshot = '<div style="background:#0c0c1a;border-radius:10px;padding:10px 4px 8px;margin-bottom:14px;display:flex;flex-wrap:wrap;justify-content:space-around;gap:4px;">';
-	var socSnap = getCerebellumDeneWordValue("Daffodil", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
+	var socSnap = getCerebellumDeneWordValue(tpName, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
 	var socLabel = socSnap !== null ? 'SOC: ' + parseFloat(socSnap).toFixed(1) + '%' : null;
 	ledSnapshot += snapPanel('Battery', ledSvg(computeBatLeds()), socLabel);
 	ledSnapshot += snapPanel('Temperature', ledSvg(computeTempLeds()));
@@ -1041,7 +1042,7 @@ function buildDaffodilContent(telepathon) {
 			html += '<tr><td style="width:40%;">' + fieldName + '</td><td>' + valCell + '</td>' + btnCell + '</tr>';
 		}
 		if (card.title === "Power") {
-			var socVal = getCerebellumDeneWordValue("Daffodil", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
+			var socVal = getCerebellumDeneWordValue(tpName, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
 			if (socVal !== null) {
 				html += '<tr><td style="width:40%;">Battery SOC</td><td><strong>' + parseFloat(socVal).toFixed(1) + '%</strong></td>'
 					+ '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, "Purpose", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE) + '</td></tr>';
@@ -1356,7 +1357,7 @@ function buildTelepathonCardView(telepathon) {
 		var extras = [];
 		if (battDW) extras.push(battDW["Value"] + 'V');
 		if (deviceType === "Daffodil") {
-			var socVal = getCerebellumDeneWordValue("Daffodil", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
+			var socVal = getCerebellumDeneWordValue(name, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
 			if (socVal !== null) extras.push('SOC: ' + parseFloat(socVal).toFixed(1) + '%');
 		}
 		if (extras.length) statusExtra = '<span style="font-size:11px;color:#555;margin-left:4px;">' + extras.join('  ') + '</span>';
@@ -1392,7 +1393,7 @@ function buildTelepathonCardView(telepathon) {
 	html += '<img src="' + imgSrc + '" style="width:90px;height:90px;object-fit:contain;" onerror="this.style.display=\'none\'">';
 	html += '</div>';
 	var cardAgeSec = Math.floor(ageSeconds);
-	html += '<div style="flex:1;padding:14px;background:#fafafa;display:flex;flex-direction:column;justify-content:center;">';
+	html += '<div id="tpText_' + safeId + '" style="flex:1;padding:14px;background:#fafafa;display:flex;flex-direction:column;justify-content:center;">';
 	html += '<div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + name + '</div>';
 	if (localTime) {
 		var localTimeRaw = String(localTime);
@@ -1493,9 +1494,15 @@ function updateTelepathonsView(text){
 	var safeId = telepathonName.replace(/[^a-zA-Z0-9]/g, '_');
 	telepathon = mergeTelepathonDenes(telepathonCardDataCache[telepathonName], telepathon);
 	telepathonCardDataCache[telepathonName] = telepathon;
-	var newCard = buildTelepathonCardView(telepathon);
-	if ($('#tpCardCol_' + safeId).length) {
-		$('#tpCardCol_' + safeId).replaceWith(newCard);
+	var fullHtml = buildTelepathonCardView(telepathon); // updates modal as a side effect
+	var $textPanel = $('#tpText_' + safeId);
+	if ($textPanel.length) {
+		// Update only the text panel — leave the image element untouched so the
+		// browser never has to reload it, eliminating the "no image" flash.
+		var $newCard = $(fullHtml);
+		$textPanel.html($newCard.find('#tpText_' + safeId).html());
+	} else if (!$('#tpCardCol_' + safeId).length) {
+		$('#TelepathonsView').append(fullHtml);
 	}
 }
 
@@ -2094,8 +2101,9 @@ function buildChinampaContent(telepathon) {
 		s += '</div>';
 		return s;
 	}
-	function mkGraphBtns(tpName, deneName, dwName) {
-		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '" data-denewordname="' + dwName + '"';
+	function mkGraphBtns(tpName, deneName, dwName, nucleus) {
+		var nucleusAttr = nucleus ? ' data-nucleus="' + nucleus + '"' : '';
+		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '" data-denewordname="' + dwName + '"' + nucleusAttr;
 		var btnCls = 'btn btn-xs btn-default telepathon-history-value';
 		return '<button class="' + btnCls + '" ' + d + ' data-range="3600000">1h</button> ' +
 			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
@@ -2268,11 +2276,15 @@ function refreshTelepathonsView(){
 		var changed = JSON.stringify(merged) !== JSON.stringify(telepathonCardDataCache[telepathonName]);
 		telepathonCardDataCache[telepathonName] = merged;
 		var safeId = telepathonName.replace(/[^a-zA-Z0-9]/g, '_');
-		var $existing = $('#tpCardCol_' + safeId);
-		if ($existing.length) {
-			// Only tear down and rebuild the card (which reloads the image and
-			// recomputes SOC) when the underlying data actually changed.
-			if (changed) $existing.replaceWith(buildTelepathonCardView(merged));
+		var $textPanel = $('#tpText_' + safeId);
+		if ($textPanel.length) {
+			// Card already exists — update only the text panel, leaving the
+			// image div untouched. This prevents the image from being destroyed
+			// and re-fetched on every pulse cycle, eliminating the flicker.
+			if (changed) {
+				var fullHtml = buildTelepathonCardView(merged); // modal update side effect
+				$textPanel.html($(fullHtml).find('#tpText_' + safeId).html());
+			}
 		} else {
 			panelHTML += buildTelepathonCardView(merged);
 		}
