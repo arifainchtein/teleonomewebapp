@@ -87,6 +87,7 @@ var humanInterfaceDeneChainIndex = new HashMap();
 var humanInterfaceDeneChainArray;
 var telepathonCardDataCache = {};
 var lastKnownCerebellumValues = {};
+var telepathonDeviceTypeCache = {}; // keyed by device name, populated only from live TelepathonStatus packets
 var pulseTimestamp;
 var pulseTimestampMilliseconds;
 var timeStringSinceLastPulse;
@@ -1185,7 +1186,7 @@ function getCerebellumDeneWordValue(telepathonType, deneWordName) {
 
 function computeTelepathonAgeStatus(telepathon) {
 	var name = telepathon["Name"];
-	var deviceType = '';
+	var deviceType = telepathonDeviceTypeCache[name] || '';
 	var localTime = '';
 	var purposeWords = [];
 	var denes = telepathon["Denes"] || [];
@@ -1193,7 +1194,7 @@ function computeTelepathonAgeStatus(telepathon) {
 		if (denes[di]["Name"] === "Configuration") {
 			var cws = denes[di]["DeneWords"] || [];
 			for (var ci = 0; ci < cws.length; ci++) {
-				if (cws[ci]["Name"] === "Device Type Id") deviceType = cws[ci]["Value"];
+				if (cws[ci]["Name"] === "Device Type Id" && !deviceType) deviceType = cws[ci]["Value"];
 			}
 		}
 		if (denes[di]["Name"] === "Purpose") {
@@ -1243,7 +1244,8 @@ function buildTelepathonCardView(telepathon) {
 	var safeId = name.replace(/[^a-zA-Z0-9]/g, '_');
 	var modalId = 'tpModal_' + safeId;
 
-	var deviceType = '';
+	// Prefer the live-packet cache over the denome value which can be stale/garbled.
+	var deviceType = telepathonDeviceTypeCache[name] || '';
 	var localTime = '';
 	var purposeWords = [];
 	var sensorWords = [];
@@ -1252,7 +1254,7 @@ function buildTelepathonCardView(telepathon) {
 		if (denes[di]["Name"] === "Configuration") {
 			var cws = denes[di]["DeneWords"] || [];
 			for (var ci = 0; ci < cws.length; ci++) {
-				if (cws[ci]["Name"] === "Device Type Id") deviceType = cws[ci]["Value"];
+				if (cws[ci]["Name"] === "Device Type Id" && !deviceType) deviceType = cws[ci]["Value"];
 			}
 		}
 		if (denes[di]["Name"] === "Purpose") {
@@ -1490,6 +1492,20 @@ function updateTelepathonsView(text){
 	var telepathonName = telepathon["Name"];
 	if(telepathonName!="TopTank" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" ){
 		return;
+	}
+	// TelepathonStatus is the authoritative source for Device Type Id — it comes
+	// directly from the LoRa deserializer, while the Status pulse reads the denome
+	// file which can hold a stale or garbled value.
+	var _tsDenes = telepathon["Denes"] || [];
+	for (var _tsi = 0; _tsi < _tsDenes.length; _tsi++) {
+		if (_tsDenes[_tsi]["Name"] === "Configuration") {
+			var _tsCws = _tsDenes[_tsi]["DeneWords"] || [];
+			for (var _tsci = 0; _tsci < _tsCws.length; _tsci++) {
+				if (_tsCws[_tsci]["Name"] === "Device Type Id" && _tsCws[_tsci]["Value"]) {
+					telepathonDeviceTypeCache[telepathonName] = _tsCws[_tsci]["Value"];
+				}
+			}
+		}
 	}
 	var safeId = telepathonName.replace(/[^a-zA-Z0-9]/g, '_');
 	telepathon = mergeTelepathonDenes(telepathonCardDataCache[telepathonName], telepathon);
