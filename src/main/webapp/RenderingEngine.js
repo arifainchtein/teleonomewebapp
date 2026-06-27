@@ -1223,7 +1223,7 @@ function computeTelepathonAgeStatus(telepathon) {
 	var statusColor;
 	if (name === "Chinampa") {
 		statusColor = rangeColor(120, 240);
-	} else if (deviceType === "daffodilTF") {
+	} else if (deviceType === "Daffodil") {
 		if (opNum === "4") {
 			var cloudySleepDW = findPW("Sleep Time");
 			var cloudySleepSec = cloudySleepDW ? parseFloat(cloudySleepDW["Value"]) : null;
@@ -1305,7 +1305,7 @@ function buildTelepathonCardView(telepathon) {
 	var statusColor;
 	if (name === "Chinampa") {
 		statusColor = rangeColor(120, 240);
-	} else if (deviceType === "daffodilTF") {
+	} else if (deviceType === "Daffodil") {
 		if (opNum === "4") {
 			var cloudySleepDW = findPW("Sleep Time");
 			var cloudySleepSec = cloudySleepDW ? parseFloat(cloudySleepDW["Value"]) : null;
@@ -1346,7 +1346,7 @@ function buildTelepathonCardView(telepathon) {
 			'&nbsp;<span style="color:' + fishColorHex + ';font-weight:bold;">' + fishColor + '</span>' +
 			'&nbsp;&nbsp;' + sumpLabel + ': <span style="color:' + sumpColorHex + ';font-weight:bold;">' + sumpColor + '</span></span>';
 	} else {
-		if (deviceType === "daffodilTF" && opStatusDW) {
+		if (deviceType === "Daffodil" && opStatusDW) {
 			var opLabel = daffodilOperatingStatusNames[opNum] || ('Mode ' + opNum);
 			var sleepStr = '';
 			if (opNum === "1" || opNum === "4" || opNum === "5") {
@@ -1358,7 +1358,7 @@ function buildTelepathonCardView(telepathon) {
 		var battDW = findPW("Battery Voltage");
 		var extras = [];
 		if (battDW) extras.push(battDW["Value"] + 'V');
-		if (deviceType === "daffodilTF") {
+		if (deviceType === "Daffodil") {
 			var socVal = getCerebellumDeneWordValue(name, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
 			if (socVal !== null) extras.push('SOC: ' + parseFloat(socVal).toFixed(1) + '%');
 		}
@@ -1366,7 +1366,7 @@ function buildTelepathonCardView(telepathon) {
 	}
 
 	var detailHtml = name === "Chinampa" ? buildChinampaContent(telepathon) :
-		deviceType === "daffodilTF" ? buildDaffodilContent(telepathon) :
+		deviceType === "Daffodil" ? buildDaffodilContent(telepathon) :
 		buildTelepathonDetailContent(telepathon);
 
 	if (!$('#' + modalId).length) {
