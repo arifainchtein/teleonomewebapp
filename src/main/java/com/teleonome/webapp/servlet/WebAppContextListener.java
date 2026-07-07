@@ -39,7 +39,7 @@ import com.teleonome.framework.utils.Utils;
 public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
 	ServletContext servletContext=null;
-	public final static String BUILD_NUMBER="26/06/2026 07:42";
+	public final static String BUILD_NUMBER="02/07/2026 18:49";
 	private PostgresqlPersistenceManager aDBManager=null;
 
 	public void contextInitialized(ServletContextEvent sce) {

@@ -1126,6 +1126,111 @@ function buildDaffodilContent(telepathon) {
 	return html;
 }
 
+// Field names below come from LangleyDataDeserializer.java (com.teleonome.framework
+// .microcontroller.annabellemicrocontroller) — the "Purpose" DeneWords it emits for a
+// Langley electric-fence monitor. Operating Status shares the same 1-5 taxonomy as
+// Daffodil (see LangleyData.h), so daffodilOperatingStatusNames is reused for its label.
+function buildLangleyContent(telepathon) {
+	var denes = telepathon["Denes"] || [];
+	var purposeDene = null, configDene = null;
+	for (var i = 0; i < denes.length; i++) {
+		if (denes[i]["Name"] === "Purpose") purposeDene = denes[i];
+		else if (denes[i]["Name"] === "Configuration") configDene = denes[i];
+	}
+	var pw = purposeDene ? (purposeDene["DeneWords"] || []) : [];
+	var cw = configDene ? (configDene["DeneWords"] || []) : [];
+
+	function findDW(words, name) {
+		for (var fi = 0; fi < words.length; fi++) if (words[fi]["Name"] === name) return words[fi];
+		return null;
+	}
+	function mkGraphBtns(tpName, deneName, dwName) {
+		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '" data-denewordname="' + dwName + '"';
+		var btnCls = 'btn btn-xs btn-default telepathon-history-value';
+		return '<button class="' + btnCls + '" ' + d + ' data-range="3600000">1h</button> ' +
+			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
+			'<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="604800000">7d</button>';
+	}
+	function vitalCard(label, val, unit, color) {
+		return '<div class="col-xs-4 col-sm-2" style="margin-bottom:8px;padding:2px;">' +
+			'<div style="border-radius:10px;overflow:hidden;">' +
+			'<div style="padding:8px 4px;color:white;text-align:center;background:' + color + ';">' +
+			'<div style="font-size:9px;text-transform:uppercase;font-weight:bold;opacity:0.9;">' + label + '</div>' +
+			'<div style="font-size:16px;font-weight:800;">' + val + unit + '</div>' +
+			'</div></div></div>';
+	}
+	function row(label, dw, tpName, deneName) {
+		if (!dw) return '';
+		return '<tr><td style="width:40%;">' + label + '</td><td><strong>' + dw["Value"] + (dw["Units"] ? ' ' + dw["Units"] : '') + '</strong></td>' +
+			'<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, deneName, dw["Name"]) + '</td></tr>';
+	}
+
+	var tpName = telepathon["Name"];
+	var safeId = tpName.replace(/[^a-zA-Z0-9]/g, '_');
+
+	var localTimeDW = findDW(pw, "Local Time");
+	var fenceAvgDW = findDW(pw, "Fence Voltage Avg");
+	var opStatusDW = findDW(pw, "Operating Status");
+	var opNum = opStatusDW ? String(parseInt(opStatusDW["Value"])) : null;
+	var opLabel = opNum !== null ? (daffodilOperatingStatusNames[opNum] || ('Mode ' + opNum)) : '—';
+	var battDW = findDW(pw, "Battery Voltage");
+	var solarDW = findDW(pw, "Solar Voltage");
+	var energizerDW = findDW(pw, "Energizer Battery Voltage");
+	var tempDW = findDW(pw, "Internal Temperature");
+	var rssiDW = findDW(pw, "rssi");
+
+	// Thresholds are a reasonable default for a working energizer (a healthy fence
+	// typically pulses well above 3kV; under ~1kV it's generally not delivering an
+	// effective shock) — adjust here if the real-world numbers say otherwise.
+	var fenceKV = fenceAvgDW ? parseFloat(fenceAvgDW["Value"]) : null;
+	var fenceColor = fenceKV === null ? '#999' : (fenceKV >= 3 ? '#27ae60' : (fenceKV >= 1 ? '#f39c12' : '#e74c3c'));
+
+	var html = '<div style="background:white;">';
+	html += '<div style="padding:2px 0 10px 0;margin-top:-8px;border-bottom:1px solid #eee;margin-bottom:10px;font-size:13px;color:#888;">';
+	html += (localTimeDW ? localTimeDW["Value"] : '') + '&nbsp;&nbsp;' + opLabel;
+	html += '</div>';
+
+	html += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
+	html += '<li class="active" onclick="return teleonomeShowTab(\'lang-status-' + safeId + '\', this)"><a href="#">Status</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'lang-config-' + safeId + '\', this)"><a href="#">Config</a></li>';
+	html += '</ul><div class="tab-content">';
+
+	html += '<div class="tab-pane active" id="lang-status-' + safeId + '">';
+	html += '<div class="row" style="margin-bottom:8px;">';
+	html += vitalCard('Fence Voltage', fenceKV !== null ? fenceKV.toFixed(1) : '—', 'kV', fenceColor);
+	if (battDW) html += vitalCard('Battery', battDW["Value"], 'V', '#3498db');
+	if (solarDW) html += vitalCard('Solar', solarDW["Value"], 'V', '#3498db');
+	if (energizerDW) html += vitalCard('Energizer Batt', energizerDW["Value"], 'V', '#3498db');
+	if (tempDW) html += vitalCard('Temp', tempDW["Value"], '°C', '#3498db');
+	if (rssiDW) { var rssiV = parseFloat(rssiDW["Value"]); html += vitalCard('Signal', rssiDW["Value"], '', rssiV > -95 ? '#27ae60' : '#f39c12'); }
+	html += '</div>';
+
+	html += '<table class="table table-condensed table-striped" style="font-size:12px;">';
+	html += row('Fence Voltage Min', findDW(pw, 'Fence Voltage Min'), tpName, 'Purpose');
+	html += row('Fence Voltage Max', findDW(pw, 'Fence Voltage Max'), tpName, 'Purpose');
+	html += row('Pulse Count', findDW(pw, 'Pulse Count'), tpName, 'Purpose');
+	html += row('Energizer Battery Current', findDW(pw, 'Energizer Battery Current'), tpName, 'Purpose');
+	html += row('External Battery Voltage', findDW(pw, 'External Battery Voltage'), tpName, 'Purpose');
+	html += row('Solar Current', findDW(pw, 'Solar Current'), tpName, 'Purpose');
+	html += row('Battery Current', findDW(pw, 'Battery Current'), tpName, 'Purpose');
+	html += row('Seconds Since Last Pulse', findDW(pw, 'Seconds Since Last Pulse'), tpName, 'Purpose');
+	html += row('snr', findDW(pw, 'snr'), tpName, 'Purpose');
+	html += row('rssi', rssiDW, tpName, 'Purpose');
+	html += '</table>';
+	html += '</div>'; // status pane
+
+	html += '<div class="tab-pane" id="lang-config-' + safeId + '">';
+	html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
+	for (var ci = 0; ci < cw.length; ci++) {
+		html += '<tr><td style="width:50%;">' + cw[ci]["Name"] + '</td><td><strong>' + cw[ci]["Value"] + (cw[ci]["Units"] ? ' ' + cw[ci]["Units"] : '') + '</strong></td></tr>';
+	}
+	html += '</table></div>';
+
+	html += '</div>'; // tab-content
+	html += '</div>';
+	return html;
+}
+
 function buildTelepathonDetailContent(telepathon) {
 	var denes = telepathon["Denes"] || [];
 	if (denes.length === 0) return '<p class="text-muted text-center" style="padding:20px;">No data available.</p>';
@@ -1223,7 +1328,7 @@ function computeTelepathonAgeStatus(telepathon) {
 	var statusColor;
 	if (name === "Chinampa") {
 		statusColor = rangeColor(120, 240);
-	} else if (deviceType === "Daffodil") {
+	} else if (deviceType === "Daffodil" || deviceType === "Langley") {
 		if (opNum === "4") {
 			var cloudySleepDW = findPW("Sleep Time");
 			var cloudySleepSec = cloudySleepDW ? parseFloat(cloudySleepDW["Value"]) : null;
@@ -1305,7 +1410,7 @@ function buildTelepathonCardView(telepathon) {
 	var statusColor;
 	if (name === "Chinampa") {
 		statusColor = rangeColor(120, 240);
-	} else if (deviceType === "Daffodil") {
+	} else if (deviceType === "Daffodil" || deviceType === "Langley") {
 		if (opNum === "4") {
 			var cloudySleepDW = findPW("Sleep Time");
 			var cloudySleepSec = cloudySleepDW ? parseFloat(cloudySleepDW["Value"]) : null;
@@ -1346,7 +1451,7 @@ function buildTelepathonCardView(telepathon) {
 			'&nbsp;<span style="color:' + fishColorHex + ';font-weight:bold;">' + fishColor + '</span>' +
 			'&nbsp;&nbsp;' + sumpLabel + ': <span style="color:' + sumpColorHex + ';font-weight:bold;">' + sumpColor + '</span></span>';
 	} else {
-		if (deviceType === "Daffodil" && opStatusDW) {
+		if ((deviceType === "Daffodil" || deviceType === "Langley") && opStatusDW) {
 			var opLabel = daffodilOperatingStatusNames[opNum] || ('Mode ' + opNum);
 			var sleepStr = '';
 			if (opNum === "1" || opNum === "4" || opNum === "5") {
@@ -1362,11 +1467,16 @@ function buildTelepathonCardView(telepathon) {
 			var socVal = getCerebellumDeneWordValue(name, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
 			if (socVal !== null) extras.push('SOC: ' + parseFloat(socVal).toFixed(1) + '%');
 		}
+		if (deviceType === "Langley") {
+			var fenceAvgCardDW = findPW("Fence Voltage Avg");
+			if (fenceAvgCardDW) extras.push('Fence: ' + fenceAvgCardDW["Value"] + 'kV');
+		}
 		if (extras.length) statusExtra = '<span style="font-size:11px;color:#555;margin-left:4px;">' + extras.join('  ') + '</span>';
 	}
 
 	var detailHtml = name === "Chinampa" ? buildChinampaContent(telepathon) :
 		deviceType === "Daffodil" ? buildDaffodilContent(telepathon) :
+		deviceType === "Langley" ? buildLangleyContent(telepathon) :
 		buildTelepathonDetailContent(telepathon);
 
 	if (!$('#' + modalId).length) {
@@ -1490,9 +1600,6 @@ function mergeTelepathonDenes(cached, incoming) {
 function updateTelepathonsView(text){
 	var telepathon = JSON.parse(text);
 	var telepathonName = telepathon["Name"];
-	if(telepathonName!="TopTank" &&  telepathonName!="Chinampa" &&  telepathonName!="SeedlingMonitor" ){
-		return;
-	}
 	// TelepathonStatus is the authoritative source for Device Type Id — it comes
 	// directly from the LoRa deserializer, while the Status pulse reads the denome
 	// file which can hold a stale or garbled value.
@@ -2281,9 +2388,6 @@ function refreshTelepathonsView(){
 	var panelHTML="";
 	for(var j13=0;j13<deneChains.length;j13++){
 		var telepathonName = deneChains[j13]["Name"];
-		if(telepathonName!="TopTank" && telepathonName!="Chinampa" && telepathonName!="SeedlingMonitor"){
-			continue;
-		}
 		// This full-pulse snapshot of a telepathon's denes can itself be partial
 		// (e.g. missing "Configuration" on a given pulse). Merge onto the cache
 		// instead of overwriting it outright, otherwise fields like Device Type Id
