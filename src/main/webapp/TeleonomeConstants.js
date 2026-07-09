@@ -920,6 +920,7 @@ var  PATHOLOGY_HEART_DIED= "Heart died";
 var PATHOLOGY_HIPPOCAMPUS_DIED= "Hippocampus died";
 var PATHOLOGY_HIPPOCAMPUS_LATE= "Hippocampus Late";
 var  PATHOLOGY_HEART_PULSE_LATE= "Heart Pulse Late";
+var  PATHOLOGY_HEART_SESSION_LOOP_DEAD= "Heart Session Loop Dead";
 var  PATHOLOGY_CORRUPT_PULSE_FILE= "Corrupt Pulse File";
 var PATHOLOGY_TOMCAT_PING_LATE= "Tomcat Ping Late";
 var PATHOLOGY_DETAILS_LABEL= "Details";
