@@ -165,11 +165,11 @@ function drawPieChart(id, data, title){
 //	d3.max(pie_data, d=>d.value)])
 //	.range(["red", "yellow", "green"]);
 
-	var arc = d3.svg.arc()
+	var arc = d3.arc()
 	.outerRadius(radius - 10)
 	.innerRadius(0);
 
-	var pie = d3.layout.pie()
+	var pie = d3.pie()
 	.sort(null)
 	.value(function(d) {
 		return d.Value;
@@ -303,21 +303,19 @@ function drawTimeSeriesLineChart(id, dataSource, graphTitle, timeScale){
 	if(height<170)height = 247 - margin.top - margin.bottom;
 ////	// // // console.log("starting drawtimeseries");
 //	Parse the date / time
-	var	parseDate = d3.time.format(timeScale).parse;
+	var	parseDate = d3.timeParse(timeScale);
 
 //	Set the ranges
-	var	x = d3.time.scale().range([0, width]);
-	var	y = d3.scale.linear().range([height, 0]);
+	var	x = d3.scaleTime().range([0, width]);
+	var	y = d3.scaleLinear().range([height, 0]);
 
 //	Define the axes
-	var	xAxis = d3.svg.axis().scale(x)
-	.orient("bottom").ticks(5);
+	var	xAxis = d3.axisBottom(x).ticks(5);
 
-	var	yAxis = d3.svg.axis().scale(y)
-	.orient("left").ticks(5);
+	var	yAxis = d3.axisLeft(y).ticks(5);
 
 //	Define the line
-	var	valueline = d3.svg.line()
+	var	valueline = d3.line()
 	.x(function(d) { return x(d.date); })
 	.y(function(d) { return y(d.close); });
 
@@ -693,20 +691,18 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 
 	if(height<170)height = 247 - margin.top - margin.bottom;
 //	if(width<490)width=560- margin.left-margin.right;
-	var	parseDate = d3.time.format(dateRange).parse;
+	var	parseDate = d3.timeParse(dateRange);
 
 
-	var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
-	var y = d3.scale.linear().range([height, 0]);
+	var x = d3.scaleBand().range([0, width]).round(true).padding(.05);
+	var y = d3.scaleLinear().range([height, 0]);
 
 
 
 //	Define the axes
-	var	xAxis = d3.svg.axis().scale(x)
-	.orient("bottom").tickFormat(d3.time.format(dateRange));
+	var	xAxis = d3.axisBottom(x).tickFormat(d3.timeFormat(dateRange));
 
-	var	yAxis = d3.svg.axis().scale(y)
-	.orient("left").ticks(10);
+	var	yAxis = d3.axisLeft(y).ticks(10);
 
 
 
@@ -784,8 +780,8 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 	.enter().append("rect")
 	.style("fill", "steelblue")
 	.attr("x", function(d) { return x(d.date); })
-	.attr("width", x.rangeBand())
-//	.attr("width", Math.min(x.rangeBand()-2, 20))
+	.attr("width", x.bandwidth())
+//	.attr("width", Math.min(x.bandwidth()-2, 20))
 	.attr("y", function(d) { return y(d.Value); })
 	.attr("height", function(d) { return height - y(d.Value); });
 
@@ -794,7 +790,7 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 	.enter()
 	.append("text")
 	.attr("class","label")
-	.attr("x", (function(d) { return x(d.date) + x.rangeBand()/4 ; }  ))
+	.attr("x", (function(d) { return x(d.date) + x.bandwidth()/4 ; }  ))
 	.attr("y", function(d) { return y(d.Value) +10; })
 	.attr("dy", ".75em")
 	.style("font-size", barLabelFontSize)
@@ -819,8 +815,7 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 		console.log('----resiz height----'+height);
 		// resize the chart
 
-		x.range([0, width]);
-		x.rangeRoundBands([0, width], .03);
+		x.range([0, width]).round(true).padding(.03);
 		y.range([height, 0]);
 
 		yAxis.ticks(Math.max(height/50, 2));
@@ -831,16 +826,16 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 
 		chart1.selectAll('.bar')
 		.attr("x", function(d) { return x(d.date); })
-		.attr("width", x.rangeBand());
+		.attr("width", x.bandwidth());
 
-		chart1.selectAll("text")          
+		chart1.selectAll("text")
 		// .attr("x", function(d) { return xScale(d.food); })
-		.attr("x", (function(d) { return x(d.date    ) + x.rangeBand() / 2 ; }  ))
+		.attr("x", (function(d) { return x(d.date    ) + x.bandwidth() / 2 ; }  ))
 		.attr("y", function(d) { return yScale(d.Value) + 1; })
-		.attr("width", Math.min(x.rangeBand()-2, 20))
-		.attr("dy", ".75em");             
+		.attr("width", Math.min(x.bandwidth()-2, 20))
+		.attr("dy", ".75em");
 
-		chart1.select('.x.axis').call(xAxis.orient('bottom')).selectAll("text").attr("y",10).call(wrap, x.rangeBand());
+		chart1.select('.x.axis').call(xAxis).selectAll("text").attr("y",10).call(wrap, x.bandwidth());
 		// Swap the version below for the one above to disable rotating the titles
 		// svgContainer.select('.x.axis').call(xAxis.orient('top')).selectAll("text").attr("x",55).attr("y",-25);
 
