@@ -932,6 +932,7 @@ var PATHOLOGY_EVENT_TIMESTAMP = "Pathology Event Timestamp";
 var PATHOLOGY_EVENT_MILLISECONDS =  "Pathology Event Milliseconds";
 var PATHOLOGY_AVAILABLE_MEMORY_BELOW_THRESHOLD = "Available Memory Below Threshold";
 var PATHOLOGY_DISK_SPACE_BELOW_THRESHOLD = "Disk Space Below Threshold";
+var PATHOLOGY_POWER_UNDERVOLTAGE = "Power Undervoltage";
 var PATHOLOGY_PULSE_DURATION_ABOVE_THRESHOLD = "Pulse Generation Above Threshold";
 var PATHOLOGY_ANALYTICON_SOURCES_LATE = "Analyticon Sources Late";
 
