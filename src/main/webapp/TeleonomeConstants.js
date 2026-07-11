@@ -935,6 +935,7 @@ var PATHOLOGY_DISK_SPACE_BELOW_THRESHOLD = "Disk Space Below Threshold";
 var PATHOLOGY_POWER_UNDERVOLTAGE = "Power Undervoltage";
 var PATHOLOGY_PULSE_DURATION_ABOVE_THRESHOLD = "Pulse Generation Above Threshold";
 var PATHOLOGY_ANALYTICON_SOURCES_LATE = "Analyticon Sources Late";
+var PATHOLOGY_MICROCONTROLLER_COMMUNICATION_FAILED = "Microcontroller Communication Failed";
 
 
 //
