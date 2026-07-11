@@ -98,9 +98,15 @@ public class TeleonomeDataGateway {
     }
 
     /**
-     * Reads Internal:Hippocampus:Data from the live denome and builds the set
-     * of full identity strings that the hippocampus is currently tracking.
-     * Call this once at startup (and optionally on denome refresh).
+     * Reads Internal:Hippocampus:Data (a list of device TYPES, e.g. "Chinampa",
+     * "Daffodil", "Langley") from the live denome, then discovers which actual
+     * telepathon instances are present in that same denome and match one of
+     * those types. Builds the set of full dene-pointer prefixes the hippocampus
+     * is tracking. Mirrors Hippocampus.absorbPulse()'s dynamic discovery, so a
+     * new instance of an already-listed type (e.g. LangleyWest) is routed
+     * through MQTT/hippocampus automatically instead of silently falling back
+     * to the slower Postgres path. Call this once at startup (and optionally on
+     * denome refresh).
      *
      * @param denome        the current denome JSONObject (CurrentPulse)
      * @param teleonomeName the organism name
@@ -115,14 +121,38 @@ public class TeleonomeDataGateway {
             JSONObject dataDene = DenomeUtils.getDeneByIdentity(denome, dataIdentity);
             JSONArray dataDeneWords = dataDene.getJSONArray("DeneWords");
 
+            Set<String> allowedDeviceTypes = new HashSet<>();
             for (int i = 0; i < dataDeneWords.length(); i++) {
-                String denePointer = dataDeneWords.getJSONObject(i)
+                String deviceType = dataDeneWords.getJSONObject(i)
                         .optString(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE, "");
-                if (denePointer.isEmpty()) continue;
+                if (!deviceType.isEmpty()) allowedDeviceTypes.add(deviceType);
+            }
 
-                // denePointer is "@TeleonomeName:Nucleus:DeneChain:Dene"
-                // The hippocampus stores all non-String/non-long DeneWords of that dene.
+            JSONArray telepathonChains = DenomeUtils.getAllDeneChainsForNucleus(denome, TeleonomeConstants.NUCLEI_TELEPATHONS);
+            for (int t = 0; telepathonChains != null && t < telepathonChains.length(); t++) {
+                JSONObject telepathonChain = telepathonChains.getJSONObject(t);
+                String telepathonName = telepathonChain.getString(TeleonomeConstants.DENE_NAME_ATTRIBUTE);
+                JSONArray telepathonDenes = telepathonChain.optJSONArray("Denes");
+                if (telepathonDenes == null) continue;
+
+                String deviceType = null;
+                for (int d = 0; d < telepathonDenes.length(); d++) {
+                    JSONObject dene = telepathonDenes.getJSONObject(d);
+                    if (!TeleonomeConstants.TELEPATHON_DENE_CONFIGURATION.equals(dene.getString(TeleonomeConstants.DENE_NAME_ATTRIBUTE))) continue;
+                    JSONArray configWords = dene.optJSONArray("DeneWords");
+                    for (int c = 0; configWords != null && c < configWords.length(); c++) {
+                        JSONObject cw = configWords.getJSONObject(c);
+                        if ("Device Type Id".equals(cw.getString(TeleonomeConstants.DENEWORD_NAME_ATTRIBUTE))) {
+                            deviceType = cw.optString(TeleonomeConstants.DENEWORD_VALUE_ATTRIBUTE, null);
+                        }
+                    }
+                }
+                if (deviceType == null || !allowedDeviceTypes.contains(deviceType)) continue;
+
+                // The hippocampus stores all non-String/non-long DeneWords of the Purpose dene.
                 // We store the dene pointer prefix so isTrackedByHippocampus() can match.
+                String denePointer = "@" + teleonomeName + ":" + TeleonomeConstants.NUCLEI_TELEPATHONS
+                        + ":" + telepathonName + ":" + TeleonomeConstants.TELEPATHON_DENE_PURPOSE;
                 hippocampusTrackedIdentities.add(denePointer);
             }
             logger.info("TeleonomeDataGateway: " + hippocampusTrackedIdentities.size()

@@ -1891,42 +1891,34 @@ function renderOrgansPanel() {
 						break;
 					}
 					if (!hippoDataDene) { hippoContentsHtml = '<p class="text-muted">No hippocampus data configuration found.</p>'; return; }
-					var pointers = hippoDataDene["DeneWords"] || [];
+					// "Data" DeneWords list device TYPES (e.g. "Chinampa", "Daffodil", "Langley"), not
+					// specific instances -- so which telepathons show up here is discovered dynamically
+					// from whatever is actually present in the live denome right now, same as
+					// Hippocampus.absorbPulse(). This means a new instance of an already-listed type
+					// (e.g. LangleyWest, later Langley_North/Langley_East) appears here automatically.
+					var allowedDeviceTypes = (hippoDataDene["DeneWords"] || []).map(function(dw) { return dw["Value"]; }).filter(Boolean);
 					var devices = [], deviceVars = {};
-					for (var _pi = 0; _pi < pointers.length; _pi++) {
-						var ptr = pointers[_pi]["Value"] || '';
-						var parts = ptr.replace(/^@/, '').split(':');
-						if (parts.length < 4) continue;
-						var devName = parts[2], nucName = parts[1], denName = parts[3];
-						var dwName2 = parts.length >= 5 ? parts[4] : null;
-						if (!deviceVars[devName]) { devices.push(devName); deviceVars[devName] = []; }
-						for (var _rni = 0; _rni < nucleiJSONArray.length; _rni++) {
-							if (nucleiJSONArray[_rni]["Name"] !== nucName) continue;
-							var _rchains = nucleiJSONArray[_rni]["DeneChains"] || [];
-							for (var _rci = 0; _rci < _rchains.length; _rci++) {
-								if (_rchains[_rci]["Name"] !== devName) continue;
-								var _rdenes = _rchains[_rci]["Denes"] || [];
-								for (var _rdi = 0; _rdi < _rdenes.length; _rdi++) {
-									if (_rdenes[_rdi]["Name"] !== denName) continue;
-									if (dwName2) {
-										var _rdws2 = _rdenes[_rdi]["DeneWords"] || [];
-										for (var _rdwi2 = 0; _rdwi2 < _rdws2.length; _rdwi2++) {
-											if (_rdws2[_rdwi2]["Name"] === dwName2) {
-												deviceVars[devName].push({ name: _rdws2[_rdwi2]["Name"], value: _rdws2[_rdwi2]["Value"] });
-												break;
-											}
-										}
-									} else {
-										var _rdws = _rdenes[_rdi]["DeneWords"] || [];
-										for (var _rdwi = 0; _rdwi < _rdws.length; _rdwi++) {
-											deviceVars[devName].push({ name: _rdws[_rdwi]["Name"], value: _rdws[_rdwi]["Value"] });
-										}
-									}
-									break;
+					var telepathonsNucleus = getTelepathonsDeneChains();
+					var telepathonChains = (telepathonsNucleus && telepathonsNucleus["DeneChains"]) || [];
+					for (var _ti = 0; _ti < telepathonChains.length; _ti++) {
+						var tChain = telepathonChains[_ti];
+						var tDenes = tChain["Denes"] || [];
+						var deviceType = null, purposeDeneWords = [];
+						for (var _tdi = 0; _tdi < tDenes.length; _tdi++) {
+							if (tDenes[_tdi]["Name"] === "Configuration") {
+								var _cws = tDenes[_tdi]["DeneWords"] || [];
+								for (var _cwi = 0; _cwi < _cws.length; _cwi++) {
+									if (_cws[_cwi]["Name"] === "Device Type Id") deviceType = _cws[_cwi]["Value"];
 								}
-								break;
+							} else if (tDenes[_tdi]["Name"] === "Purpose") {
+								purposeDeneWords = tDenes[_tdi]["DeneWords"] || [];
 							}
-							break;
+						}
+						if (!deviceType || allowedDeviceTypes.indexOf(deviceType) === -1) continue;
+						var devName = tChain["Name"];
+						if (!deviceVars[devName]) { devices.push(devName); deviceVars[devName] = []; }
+						for (var _pdwi = 0; _pdwi < purposeDeneWords.length; _pdwi++) {
+							deviceVars[devName].push({ name: purposeDeneWords[_pdwi]["Name"], value: purposeDeneWords[_pdwi]["Value"] });
 						}
 					}
 					if (devices.length === 0) {
