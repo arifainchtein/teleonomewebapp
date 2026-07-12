@@ -1216,6 +1216,7 @@ function buildLangleyContent(telepathon) {
 	html += row('Seconds Since Last Pulse', findDW(pw, 'Seconds Since Last Pulse'), tpName, 'Purpose');
 	html += row('snr', findDW(pw, 'snr'), tpName, 'Purpose');
 	html += row('rssi', rssiDW, tpName, 'Purpose');
+	html += row('RTC Battery Voltage', findDW(pw, 'RTC Battery Voltage'), tpName, 'Purpose');
 	html += '</table>';
 	html += '</div>'; // status pane
 
