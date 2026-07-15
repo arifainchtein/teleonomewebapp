@@ -42,14 +42,24 @@ class DiagnosticsInfo{
         
         
         
-        panelHtml +='                       <div class="col-lg-6"> </div>';
+        panelHtml +='                       <div class="col-lg-3 col-xs-1"> </div>';
+
+        panelHtml +='                       <div class="col-lg-2 col-xs-4 DiagnosticsPageLinksGroup">';
+        panelHtml +='                         <div class="row">';
+        panelHtml +='                           <div class="col-lg-6 col-xs-6 DiagnosticsBar">';
+        panelHtml +='                               <span id="JsonDenome" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-tree-conifer"></i><br>JSON</span>';
+        panelHtml +='                           </div> ';
+
+        panelHtml +='                           <div class="col-lg-6 col-xs-6 DiagnosticsBar">';
+        panelHtml +='                               <span id="Analysis" data-panelpointer="Analysis Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-list-alt"></i><br>Analysis</span>';
+        panelHtml +='                           </div>';
+        panelHtml +='                         </div>';
+        panelHtml +='                       </div>';
+
+        panelHtml +='                       <div class="col-lg-1 col-xs-1"> </div>';
 
         panelHtml +='                       <div class="col-lg-1 col-xs-2 DiagnosticsBar">';
-        panelHtml +='                           <span id="JsonDenome" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-tree-conifer"></i><br>JSON</span>';
-        panelHtml +='                       </div> ';
-
-        panelHtml +='                       <div class="col-lg-1 col-xs-2 DiagnosticsBar">';
-        panelHtml +='                           <span id="Analysis" data-panelpointer="Analysis Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-list-alt"></i><br>Analysis</span>';
+        panelHtml +='                           <span id="Memory" data-panelpointer="Memory Panel" class="text-center DiagnosticsMenu"><i class="glyphicon glyphicon-signal"></i><br>Memory</span>';
         panelHtml +='                       </div>';
 
         panelHtml +='                       <div class="col-lg-1 col-xs-2 DiagnosticsBar">';

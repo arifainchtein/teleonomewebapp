@@ -1681,6 +1681,27 @@ function mnemoNav(pi, delta) {
 	$('#mnemo-next-' + pi).prop('disabled', cur <= 0);
 }
 
+// "Mnemosyne Pulse Count" Denes store DeneWords of Value Type "Time Series" -- an array of
+// {Value, "Pulse Timestamp in Milliseconds"} entries (see UpdateTimeSeriesCounterOperation.java)
+// rather than a plain scalar, which the generic table rendering below would otherwise just
+// print as "[object Object]". Show entry count plus the few most recent samples instead.
+function formatMnemosyneDeneWordValue(value) {
+	if (Array.isArray(value)) {
+		if (value.length === 0) return '<em>0 entries</em>';
+		var preview = value.slice(-3).reverse().map(function(e) {
+			var ts = e["Pulse Timestamp in Milliseconds"];
+			var when = ts ? new Date(ts).toLocaleString() : '?';
+			var v = e["Value"];
+			return when + ': ' + (v === undefined || v === null ? '<em>no value</em>' : v);
+		}).join('<br>');
+		return value.length + ' entries, most recent:<br>' + preview;
+	}
+	if (value !== null && typeof value === 'object') {
+		return '<pre style="white-space:pre-wrap;margin:0;">' + JSON.stringify(value, null, 2) + '</pre>';
+	}
+	return value;
+}
+
 function renderMnemosyneViewPanel() {
 	mnemoPeriodsData = [];
 	mnemoNavIdx = {};
@@ -1697,7 +1718,7 @@ function renderMnemosyneViewPanel() {
 	// Include all time-period denechains (show empty ones too)
 	var periodPrefixes = ["Mnemosyne Current Hour", "Mnemosyne Today", "Mnemosyne Yesterday",
 		"Mnemosyne Current Week", "Mnemosyne Current Month", "Mnemosyne Current Quarter",
-		"Mnemosyne Current Semester", "Mnemosyne Current Year"];
+		"Mnemosyne Current Semester", "Mnemosyne Current Year", "Mnemosyne Pulse Count", "Mnemosyne Pulse"];
 	var periods = [];
 	for (var di = 0; di < mnemoDCs.length; di++) {
 		var dc = mnemoDCs[di];
@@ -1764,7 +1785,7 @@ function renderMnemosyneViewPanel() {
 				html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
 				for (var idwi = 0; idwi < initDws.length; idwi++) {
 					html += '<tr><td style="width:50%;">' + initDws[idwi]["Name"] + '</td>';
-					html += '<td><strong>' + initDws[idwi]["Value"] + '</strong></td></tr>';
+					html += '<td><strong>' + formatMnemosyneDeneWordValue(initDws[idwi]["Value"]) + '</strong></td></tr>';
 				}
 				html += '</table>';
 			} else {
@@ -1779,7 +1800,7 @@ function renderMnemosyneViewPanel() {
 				html += '<table class="table table-condensed table-striped" style="font-size:13px;">';
 				for (var dwi = 0; dwi < dws.length; dwi++) {
 					html += '<tr><td style="width:50%;">' + dws[dwi]["Name"] + '</td>';
-					html += '<td><strong>' + dws[dwi]["Value"] + '</strong></td></tr>';
+					html += '<td><strong>' + formatMnemosyneDeneWordValue(dws[dwi]["Value"]) + '</strong></td></tr>';
 				}
 				html += '</table>';
 			} else {
