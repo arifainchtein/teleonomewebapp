@@ -3042,8 +3042,8 @@ function renderPageByPointer(pagePointer, locationId){
 
 			// console.log("before rendering chart");
 			// Was storing the function reference (getAllDeneWordsByIdentityPointer) instead of its
-			// result -- drawTimeSeriesMultiLineChart would have received a function, not data. Fixed
-			// 2026-07-15 alongside adding the actual drawTimeSeriesMultiLineChart implementation.
+			// result -- drawDenomeMultiLineChart would have received a function, not data. Fixed
+			// 2026-07-15 alongside adding the actual drawDenomeMultiLineChart implementation.
 			chartDataSourcePointerHashMap.put(id,renderedDataSourceDeneWordsArray);
 			chartStyleHashMap.put(id,mainPanelVisualStyle);
 			chartTimeStringHashMap.put(id,timeScale);
@@ -3213,7 +3213,10 @@ function renderPageByPointer(pagePointer, locationId){
 		if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_LINE_CHART){
 			drawTimeSeriesLineChart(pId, renderedDataSourceDeneWord, title, timeString);	
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MULTI_LINE_CHART){
-			drawTimeSeriesMultiLineChart(pId, renderedDataSourceDeneWord, title, timeString);	
+			// Distinct function name from the CSV path below on purpose -- see D3Chart.js's
+			// drawDenomeMultiLineChart comment. Both used to be named drawTimeSeriesMultiLineChart,
+			// which silently clobbered one another depending on script load order.
+			drawDenomeMultiLineChart(pId, renderedDataSourceDeneWord, title, timeString);
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART){
 			var fileName = renderedDataSourceDeneWord.Value.replace('$Webserver_Root/','');
 			var units = renderedDataSourceDeneWord.Units;

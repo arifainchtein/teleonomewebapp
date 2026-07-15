@@ -401,18 +401,20 @@ function drawTimeSeriesLineChart(id, dataSource, graphTitle, timeScale){
  *   {Name, Units, Minimum, Value: [{Value, "Pulse Timestamp in Milliseconds"}, ...]}
  * (i.e. exactly what getAllDeneWordsByIdentityPointer(..., COMPLETE) returns per pointer.)
  *
- * Only handles the Denome-array call shape used by PANEL_VISUALIZATION_STYLE_MULTI_LINE_CHART.
- * The separate PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART call site passes (id, fileName,
- * units) instead -- a pre-existing, differently-shaped call this function does not handle.
- * That CSV path was already calling a function that didn't exist at all before this change,
- * so it's no worse off than before -- just a separate gap, not introduced here.
+ * Named distinctly from drawTimeSeriesMultiLineChart (CSVMultiLineChart.js) on purpose -- that
+ * pre-existing function already handles the (id, fileName, units) CSV call shape used by
+ * PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART (e.g. "Charge and Load Last 24 Hrs Chart").
+ * Reusing that name here would silently clobber whichever of the two script tags loads last,
+ * which is exactly what broke both the CSV chart and this one when first tried. This function
+ * is only ever called for the PANEL_VISUALIZATION_STYLE_MULTI_LINE_CHART (Denome-array) case --
+ * see the RenderingEngine.js call site.
  */
-function drawTimeSeriesMultiLineChart(id, dataSources, graphTitle, timeScale){
+function drawDenomeMultiLineChart(id, dataSources, graphTitle, timeScale){
 	if (arguments.length < 3) graphTitle = "";
 	if (arguments.length < 4) timeScale = "%H:%M";
 
 	if (!Array.isArray(dataSources)) {
-		console.warn("drawTimeSeriesMultiLineChart: expected an array of DeneWords for id=" + id + " (CSV call shape not supported here)");
+		console.warn("drawDenomeMultiLineChart: expected an array of DeneWords for id=" + id);
 		return;
 	}
 
