@@ -33,17 +33,34 @@ public class FileWatcherThread extends Thread{
 	String denomeFileName="";
 	Logger logger;
 	private ServletContext servletContext;
+	// Set the moment the WatchService is created in run(), so stopWatching() (called from
+	// another thread, e.g. WebAppContextListener.contextDestroyed()) has something to close.
+	// Closing it is what breaks the blocking watchService.take() call below -- there's no
+	// other way to interrupt it, since it isn't just a sleep/wait.
+	private volatile WatchService watchService;
 	public FileWatcherThread(ServletContext s){
 		servletContext=s;
 		logger = Logger.getLogger(getClass());
 
 	}
-	
+
+	public void stopWatching() {
+		WatchService ws = watchService;
+		if (ws != null) {
+			try {
+				ws.close();
+			} catch (IOException e) {
+				logger.warn("FileWatcherThread: error closing WatchService: " + e.getMessage());
+			}
+		}
+	}
+
 	public void run() {
 	    final Path path = FileSystems.getDefault().getPath(Utils.getLocalDirectory());
-	    
-	    try (final WatchService watchService = FileSystems.getDefault().newWatchService()) {
-	        path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+
+	    try (final WatchService ws = FileSystems.getDefault().newWatchService()) {
+	        watchService = ws;
+	        path.register(ws, StandardWatchEventKinds.ENTRY_MODIFY);
 	        boolean keepRunning = true;
 	        
 	        while (keepRunning) {

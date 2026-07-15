@@ -39,8 +39,16 @@ import com.teleonome.framework.utils.Utils;
 public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
 	ServletContext servletContext=null;
-	public final static String BUILD_NUMBER="11/07/2026 11:36";
+	public final static String BUILD_NUMBER="15/07/2026 19:24";
 	private PostgresqlPersistenceManager aDBManager=null;
+	// Held onto (rather than left as contextInitialized() locals) so contextDestroyed() can
+	// shut each of them down -- Tomcat's own classloader-leak detector flags exactly these
+	// three (MQTT client's threads, PingThread, FileWatcherThread/WatchService) as "failed to
+	// stop" on every webapp redeploy otherwise, pinning the whole old classloader in memory
+	// permanently. See conversation 2026-07-15.
+	private TeleonomeDataGateway dataGateway=null;
+	private PingThread pingThread=null;
+	private FileWatcherThread fileWatcherThread=null;
 
 	public void contextInitialized(ServletContextEvent sce) {
 		String fileName =  Utils.getLocalDirectory() + "lib/Log4J.properties";
@@ -90,7 +98,7 @@ public class WebAppContextListener implements ServletContextListener {
 
 
 		try {
-			TeleonomeDataGateway dataGateway = new TeleonomeDataGateway();
+			dataGateway = new TeleonomeDataGateway();
 			JSONObject initialDenome = (JSONObject) servletContext.getAttribute("CurrentPulse");
 			String teleonomeName = (String) servletContext.getAttribute("TeleonomeName");
 			if (initialDenome != null && teleonomeName != null) {
@@ -103,21 +111,31 @@ public class WebAppContextListener implements ServletContextListener {
 		}
 
 		logger.warn("Teleonome ContextListener Starting PingThread");
-		PingThread aPingThread = new PingThread();
-		aPingThread.start();
+		pingThread = new PingThread();
+		pingThread.start();
 		logger.warn("Teleonome ContextListener initialized");
-		FileWatcherThread aFileWatcherThread = new FileWatcherThread(servletContext);
-		aFileWatcherThread.start();
+		fileWatcherThread = new FileWatcherThread(servletContext);
+		fileWatcherThread.start();
 	}
 
 
 	class PingThread extends Thread{
 
+		private volatile boolean running=true;
+
 		public PingThread(){
 			setDaemon(true);
 		}
+
+		// Flips the loop condition and interrupts the thread so it doesn't have to wait out
+		// its current Thread.sleep() before noticing.
+		public void shutdown(){
+			running=false;
+			this.interrupt();
+		}
+
 		public void run(){
-			while(true) {
+			while(running) {
 				JSONObject deneWordsToRemember =  getDeneWordsToRemember();
 				servletContext.setAttribute("DeneWordsToRemember", deneWordsToRemember);
 
@@ -226,7 +244,16 @@ public class WebAppContextListener implements ServletContextListener {
 	}
 
 	public void contextDestroyed(ServletContextEvent sce) {
-		// stop the thread
+		logger.warn("WebAppContextListener contextDestroyed -- shutting down PingThread, FileWatcherThread and TeleonomeDataGateway's MQTT client");
+		if (pingThread != null) {
+			pingThread.shutdown();
+		}
+		if (fileWatcherThread != null) {
+			fileWatcherThread.stopWatching();
+		}
+		if (dataGateway != null) {
+			dataGateway.disconnect();
+		}
 	}
 
 	private JSONObject getAutoCompleteValues1() {
