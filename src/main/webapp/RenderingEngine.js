@@ -3033,8 +3033,11 @@ function renderPageByPointer(pagePointer, locationId){
 			var id = "Chart" + panelCounter;
 			panelHTML += "<div id=\""+ id +"\" class=\"col-lg-12 col-md-12 col-sm12 col-xs-12\">";
 			panelHTML += "</div>";
-			panelHTML += "</div>";
-			
+			// Not closing the "row" div here -- the shared closing block below (5 closing
+			// </div> tags, shared with SingleValuePanel-style panels) closes it. Closing it
+			// here too was an extra </div> that prematurely closed the outer
+			// "row top-buffer" container, kicking every later panel outside any .row.
+
 			// t add multiline support, need to get all denewords not just one
 			// create an array of all the denewords
 			// and store it in line 1246 chartDataSourcePointerHashMap.put(id,renderedDataSourceDeneWord);
@@ -3078,8 +3081,9 @@ function renderPageByPointer(pagePointer, locationId){
 			var id = "Chart" + panelCounter;
 			panelHTML += "<div id=\""+ id +"\" class=\"col-lg-12 col-md-12 col-sm12 col-xs-12\">";
 			panelHTML += "</div>";
-			panelHTML += "</div>";
-			
+			// Not closing the "row" div here -- see matching note in the MULTI_LINE_CHART
+			// branch above; the shared closing block closes it.
+
 			// t add multiline support, need to get all denewords not just one
 			// create an array of all the denewords
 			// and store it in line 1246 chartDataSourcePointerHashMap.put(id,renderedDataSourceDeneWord);
@@ -3138,7 +3142,7 @@ function renderPageByPointer(pagePointer, locationId){
 		//// console.log("unidentified style, mainPanelVisualStyle=" + mainPanelVisualStyle)
 
 		panelHTML += "</div>";    // closing <div class=\"panel-body text-center\"
-		panelHTML += "</div>";    // closing <div class=\"panel-heading\"
+		panelHTML += "</div>";    // closing <div class=\"row\" (panel-heading self-closes inline above)
 		panelHTML += "</div>";    // closing <div class=\"panel panel-default\"
 		panelHTML += "</div>";    // closing <div class=\"bs-component\"
 		panelHTML += "</div>";    // closing <div class=\"col-lg-6\"
