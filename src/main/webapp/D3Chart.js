@@ -453,9 +453,15 @@ function drawTimeSeriesMultiLineChart(id, dataSources, graphTitle, timeScale){
 	}
 
 	var series = dataSources.map(function(ds) {
-		var values = (ds.Value || []).map(function(d) {
-			return { date: new Date(d["Pulse Timestamp in Milliseconds"]), close: +d.Value };
-		});
+		// Some pulses can land in the time series with a timestamp but no "Value" (e.g. the
+		// source read failed just for that one cycle) -- skip those points rather than letting
+		// +undefined become NaN and break the line's "d" attribute / the min/max calculations
+		// below. The rest of that series' line still draws fine across the gap.
+		var values = (ds.Value || [])
+			.filter(function(d) { return d.Value !== undefined && d.Value !== null && !isNaN(+d.Value); })
+			.map(function(d) {
+				return { date: new Date(d["Pulse Timestamp in Milliseconds"]), close: +d.Value };
+			});
 		return { name: ds.Name, minimum: ds.Minimum, values: values };
 	});
 
