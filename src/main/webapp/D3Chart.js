@@ -418,10 +418,17 @@ function drawDenomeMultiLineChart(id, dataSources, graphTitle, timeScale){
 		return;
 	}
 
-	var margin = {top: 30, right: 20, bottom: 60, left: 50},
+	// Legend is a vertical stack below the chart (one row per series) rather than packed onto
+	// one line -- with a fixed per-entry width, long labels or a narrow panel (this chart sits
+	// in the same col-lg-6 half-width column as the single-line charts) could push the last
+	// entry past the SVG's own boundary, which isn't clipped by default (SVG's default overflow
+	// is visible) -- that's what was making the panel look wider than its neighbors and made
+	// the entries overlap. Stacking guarantees every row fits within the chart's own width.
+	var legendRowHeight = 24;
+	var margin = {top: 30, right: 20, bottom: 70 + (dataSources.length * legendRowHeight), left: 60},
 		width = parseInt(d3.select("#"+id).style("width")) - margin.left - margin.right,
 		height = parseInt(d3.select("#"+id).style("height")) - margin.top - margin.bottom;
-	if (isNaN(height) || height < 170) height = 247 - margin.top - margin.bottom;
+	if (isNaN(height) || height < 260) height = 420 - margin.top - margin.bottom;
 	if (isNaN(width) || width < 200) width = 500 - margin.left - margin.right;
 
 	var x = d3.scaleTime().range([0, width]);
@@ -441,7 +448,7 @@ function drawDenomeMultiLineChart(id, dataSources, graphTitle, timeScale){
 		.attr("x", width / 2)
 		.attr("y", 0 - (margin.top / 2))
 		.attr("text-anchor", "middle")
-		.style("font-size", "16px")
+		.style("font-size", "18px")
 		.style("text-decoration", "underline")
 		.text(graphTitle);
 
@@ -491,28 +498,30 @@ function drawDenomeMultiLineChart(id, dataSources, graphTitle, timeScale){
 			// getting a distinct value here.
 			.style("fill", "none")
 			.style("stroke", colors[i % colors.length])
-			.style("stroke-width", "1.5px")
+			.style("stroke-width", "2.5px")
 			.attr("d", valueline);
 	});
 
 	chart1.append("g")
 		.attr("class", "x axis")
 		.attr("transform", "translate(0," + height + ")")
-		.call(xAxis);
+		.call(xAxis)
+		.selectAll("text")
+		.style("font-size", "13px");
 
 	chart1.append("g")
 		.attr("class", "y axis")
-		.call(yAxis);
+		.call(yAxis)
+		.selectAll("text")
+		.style("font-size", "13px");
 
-	// Legend, one row below the chart (below the x-axis and its tick labels), entries laid
-	// out left to right rather than stacked to the side, so it never overflows the panel.
-	var legendY = height + 45;
-	var legendEntryWidth = Math.max(80, width / series.length);
-	var legend = chart1.append("g");
+	// Legend: one row per series, stacked vertically below the x-axis, each row using the
+	// chart's full width -- guarantees it fits regardless of label length or panel width.
+	var legend = chart1.append("g").attr("transform", "translate(0," + (height + 45) + ")");
 	series.forEach(function(s, i) {
-		var row = legend.append("g").attr("transform", "translate(" + (i * legendEntryWidth) + "," + legendY + ")");
-		row.append("rect").attr("width", 10).attr("height", 10).style("fill", colors[i % colors.length]);
-		row.append("text").attr("x", 14).attr("y", 9).style("font-size", "11px").text(s.name);
+		var row = legend.append("g").attr("transform", "translate(0," + (i * legendRowHeight) + ")");
+		row.append("rect").attr("width", 16).attr("height", 16).style("fill", colors[i % colors.length]);
+		row.append("text").attr("x", 24).attr("y", 13).style("font-size", "15px").text(s.name);
 	});
 }
 
