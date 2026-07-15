@@ -418,7 +418,7 @@ function drawDenomeMultiLineChart(id, dataSources, graphTitle, timeScale){
 		return;
 	}
 
-	var margin = {top: 30, right: 110, bottom: 30, left: 50},
+	var margin = {top: 30, right: 20, bottom: 60, left: 50},
 		width = parseInt(d3.select("#"+id).style("width")) - margin.left - margin.right,
 		height = parseInt(d3.select("#"+id).style("height")) - margin.top - margin.bottom;
 	if (isNaN(height) || height < 170) height = 247 - margin.top - margin.bottom;
@@ -485,9 +485,13 @@ function drawDenomeMultiLineChart(id, dataSources, graphTitle, timeScale){
 	series.forEach(function(s, i) {
 		chart1.append("path")
 			.datum(s.values)
-			.attr("fill", "none")
-			.attr("stroke", colors[i % colors.length])
-			.attr("stroke-width", 1.5)
+			// .style(), not .attr() -- the app's global CSS has a bare `path { ... }` rule
+			// (see drawHippocampusPieChart's comment above) that overrides SVG presentation
+			// attributes, which is why every line was rendering in the same color despite each
+			// getting a distinct value here.
+			.style("fill", "none")
+			.style("stroke", colors[i % colors.length])
+			.style("stroke-width", "1.5px")
 			.attr("d", valueline);
 	});
 
@@ -500,11 +504,14 @@ function drawDenomeMultiLineChart(id, dataSources, graphTitle, timeScale){
 		.attr("class", "y axis")
 		.call(yAxis);
 
-	// Legend, one entry per series, to the right of the plot area
-	var legend = chart1.append("g").attr("transform", "translate(" + (width + 10) + ",0)");
+	// Legend, one row below the chart (below the x-axis and its tick labels), entries laid
+	// out left to right rather than stacked to the side, so it never overflows the panel.
+	var legendY = height + 45;
+	var legendEntryWidth = Math.max(80, width / series.length);
+	var legend = chart1.append("g");
 	series.forEach(function(s, i) {
-		var row = legend.append("g").attr("transform", "translate(0," + (i * 18) + ")");
-		row.append("rect").attr("width", 10).attr("height", 10).attr("fill", colors[i % colors.length]);
+		var row = legend.append("g").attr("transform", "translate(" + (i * legendEntryWidth) + "," + legendY + ")");
+		row.append("rect").attr("width", 10).attr("height", 10).style("fill", colors[i % colors.length]);
 		row.append("text").attr("x", 14).attr("y", 9).style("font-size", "11px").text(s.name);
 	});
 }

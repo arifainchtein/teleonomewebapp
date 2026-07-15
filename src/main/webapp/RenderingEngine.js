@@ -2628,6 +2628,15 @@ function renderPageToDisplay(){
 
 function renderPageByPointer(pagePointer, locationId){
 	organsRenderedThisCycle = false;
+	// This function empties and fully rebuilds the panel HTML (including chart SVGs) on every
+	// pulse refresh and every AsyncUpdate (see Ra's PLSeries AsyncUpdate mode) -- emptying the
+	// container collapses the page's scrollable height for a moment, and the browser clamps
+	// scroll position down when that happens, so anyone scrolled down to e.g. the memory chart
+	// gets kicked back to the top on every single refresh. Save/restore scroll position around
+	// the rebuild so it doesn't move. Scoped to the main "EntryPoint" container specifically,
+	// not any other locationId this function might be called with (e.g. modals), so it doesn't
+	// affect scroll behavior anywhere that isn't the main page.
+	var restoreScrollY = (locationId === "EntryPoint") ? window.pageYOffset : null;
 	var pageDeneChain = humanInterfaceDeneChainIndex.get(pagePointer);
 	console.log("renderPageByPointer pagePointer=" + pagePointer + " pageDeneChain=" +pageDeneChain);
 	if (!pageDeneChain) {
@@ -3254,7 +3263,12 @@ function renderPageByPointer(pagePointer, locationId){
 	// end of network identity
 	//
 
-
+	if (restoreScrollY !== null) {
+		// Deferred one tick so it runs after the browser has finished laying out the panels
+		// and chart SVGs just appended above -- restoring synchronously can still race layout
+		// on slower devices/large pages.
+		setTimeout(function() { window.scrollTo(0, restoreScrollY); }, 0);
+	}
 
 }
 
