@@ -3041,7 +3041,10 @@ function renderPageByPointer(pagePointer, locationId){
 
 
 			// console.log("before rendering chart");
-			chartDataSourcePointerHashMap.put(id,getAllDeneWordsByIdentityPointer);
+			// Was storing the function reference (getAllDeneWordsByIdentityPointer) instead of its
+			// result -- drawTimeSeriesMultiLineChart would have received a function, not data. Fixed
+			// 2026-07-15 alongside adding the actual drawTimeSeriesMultiLineChart implementation.
+			chartDataSourcePointerHashMap.put(id,renderedDataSourceDeneWordsArray);
 			chartStyleHashMap.put(id,mainPanelVisualStyle);
 			chartTimeStringHashMap.put(id,timeScale);
 			chartTitleHashMap.put(id,title);

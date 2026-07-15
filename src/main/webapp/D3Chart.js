@@ -393,105 +393,113 @@ function drawTimeSeriesLineChart(id, dataSource, graphTitle, timeScale){
 //	// // // console.log("finsished drawlineseries");
 }
 /*
- * this function will draw multiple lines on the same chart
- * the units must be the same
+ * Draws multiple time series lines on one shared chart. All series must share
+ * the same units (matches how RenderingEngine.js's PANEL_VISUALIZATION_STYLE_MULTI_LINE_CHART
+ * gathers every "Panel Data Source Pointer" DeneWord in a chart DeneChain into one array).
+ *
+ * dataSources: array of DeneWord-shaped objects, each like:
+ *   {Name, Units, Minimum, Value: [{Value, "Pulse Timestamp in Milliseconds"}, ...]}
+ * (i.e. exactly what getAllDeneWordsByIdentityPointer(..., COMPLETE) returns per pointer.)
+ *
+ * Only handles the Denome-array call shape used by PANEL_VISUALIZATION_STYLE_MULTI_LINE_CHART.
+ * The separate PANEL_VISUALIZATION_STYLE_CSV_MULTI_LINE_CHART call site passes (id, fileName,
+ * units) instead -- a pre-existing, differently-shaped call this function does not handle.
+ * That CSV path was already calling a function that didn't exist at all before this change,
+ * so it's no worse off than before -- just a separate gap, not introduced here.
  */
-function drawMultipleTimeSeriesLineChart(id, dataSources){
-	// Set the dimensions of the canvas / graph
-	var	margin = {top: 30, right: 20, bottom: 30, left: 50},
-		width = 340 - margin.left - margin.right,
-		height = 220 - margin.top - margin.bottom;
+function drawTimeSeriesMultiLineChart(id, dataSources, graphTitle, timeScale){
+	if (arguments.length < 3) graphTitle = "";
+	if (arguments.length < 4) timeScale = "%H:%M";
 
-	// Parse the date / time
-	var	parseDate = d3.time.format("%d-%b-%y").parse;
+	if (!Array.isArray(dataSources)) {
+		console.warn("drawTimeSeriesMultiLineChart: expected an array of DeneWords for id=" + id + " (CSV call shape not supported here)");
+		return;
+	}
 
-	// Set the ranges
-	var	x = d3.time.scale().range([0, width]);
-	var	y = d3.scale.linear().range([height, 0]);
+	var margin = {top: 30, right: 110, bottom: 30, left: 50},
+		width = parseInt(d3.select("#"+id).style("width")) - margin.left - margin.right,
+		height = parseInt(d3.select("#"+id).style("height")) - margin.top - margin.bottom;
+	if (isNaN(height) || height < 170) height = 247 - margin.top - margin.bottom;
+	if (isNaN(width) || width < 200) width = 500 - margin.left - margin.right;
 
-	// Define the axes
-	var	xAxis = d3.svg.axis().scale(x)
-		.orient("bottom").ticks(5);
+	var x = d3.scaleTime().range([0, width]);
+	var y = d3.scaleLinear().range([height, 0]);
+	var xAxis = d3.axisBottom(x).ticks(5);
+	var yAxis = d3.axisLeft(y).ticks(5);
+	var colors = d3.schemeTableau10;
 
-	var	yAxis = d3.svg.axis().scale(y)
-		.orient("left").ticks(5);
-
-	// Define the line
-	var	valueline = d3.svg.line()
-		.x(function(d) { return x(d.date); })
-		.y(function(d) { return y(d.Value); });
-		
-		
-		var pie = d3.layout.pie()
-	      .value(function(d) {
-	        return d.count;
-	      })
-		  .sort(null);
-		  
-	// Adds the svg canvas
-	var	chart1 = d3.select("#"+id)
+	var chart1 = d3.select("#"+id)
 		.append("svg")
-			.attr("width", width + margin.left + margin.right)
-			.attr("height", height + margin.top + margin.bottom)
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
 		.append("g")
-			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	// Get the data
+	chart1.append("text")
+		.attr("x", width / 2)
+		.attr("y", 0 - (margin.top / 2))
+		.attr("text-anchor", "middle")
+		.style("font-size", "16px")
+		.style("text-decoration", "underline")
+		.text(graphTitle);
 
+	if (dataSources.length > 0 && dataSources[0].Units) {
+		chart1.append("text")
+			.attr("text-anchor", "end")
+			.attr("y", -15)
+			.attr("x", 15)
+			.style("font-size", "16px")
+			.text(dataSources[0].Units);
+	}
 
-
-	var maxY = 0;
-
-	var concatValues=[];
-
-	for(var i=0;i<dataSources.length;i++){
-		
-		dataSources[i].forEach(function(d) {
-			d.date = new Date(d["Timestamp in Millis"]);
-	       d.close = +d.Value;
+	var series = dataSources.map(function(ds) {
+		var values = (ds.Value || []).map(function(d) {
+			return { date: new Date(d["Pulse Timestamp in Milliseconds"]), close: +d.Value };
 		});
+		return { name: ds.Name, minimum: ds.Minimum, values: values };
+	});
 
-	}
-	for(var i=0;i<dataSources.length;i++){
-		
+	var allValues = [];
+	series.forEach(function(s) { allValues = allValues.concat(s.values); });
+	if (allValues.length === 0) return;
 
-		concatValues = concatValues.concat(dataSources[i].map(function (d) {
-			return d.date;
-		}));
-	}
-	var colorLines=["magentaline","cyanline","greenline","redline","violetline","orangeline","yellowline"];
-	for(var i=0;i<dataSources.length;i++){
-		if(maxY<d3.max(dataSources[i], function(d) { return d.close; }))maxY=d3.max(dataSources[i], function(d) { return d.close; });
-	}
+	var yDomainMin = d3.min(series.map(function(s) { return s.minimum !== undefined ? s.minimum : d3.min(s.values, function(d){return d.close;}); }));
+	if (yDomainMin === undefined) yDomainMin = 0;
+	var yMax = d3.max(allValues, function(d) { return d.close; });
 
+	x.domain(d3.extent(allValues, function(d) { return d.date; }));
+	y.domain([yDomainMin, 1.1 * yMax]);
 
-		x.domain(d3.extent(concatValues));
-		
-		
-		y.domain([0, maxY]);
+	var valueline = d3.line()
+		.x(function(d) { return x(d.date); })
+		.y(function(d) { return y(d.close); });
 
-		// Add the valueline path.
-		for(var i=0;i<dataSources.length;i++){
-			chart1.append("path")
-		.attr("class", colorLines[i])
-			.attr("d", valueline(dataSources[i]));
-		}
-		
+	series.forEach(function(s, i) {
+		chart1.append("path")
+			.datum(s.values)
+			.attr("fill", "none")
+			.attr("stroke", colors[i % colors.length])
+			.attr("stroke-width", 1.5)
+			.attr("d", valueline);
+	});
 
+	chart1.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
 
-		// Add the X Axis
-		chart1.append("g")
-			.attr("class", "x axis")
-			.attr("transform", "translate(0," + height + ")")
-			.call(xAxis);
+	chart1.append("g")
+		.attr("class", "y axis")
+		.call(yAxis);
 
-		// Add the Y Axis
-		chart1.append("g")
-			.attr("class", "y axis")
-			.call(yAxis);
-
-
-	}
+	// Legend, one entry per series, to the right of the plot area
+	var legend = chart1.append("g").attr("transform", "translate(" + (width + 10) + ",0)");
+	series.forEach(function(s, i) {
+		var row = legend.append("g").attr("transform", "translate(0," + (i * 18) + ")");
+		row.append("rect").attr("width", 10).attr("height", 10).attr("fill", colors[i % colors.length]);
+		row.append("text").attr("x", 14).attr("y", 9).style("font-size", "11px").text(s.name);
+	});
+}
 
 function drawStackedBarChart(id, dataSource, graphTitle, dateRange){
 	if (arguments.length == 2) {
