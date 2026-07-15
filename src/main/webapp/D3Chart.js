@@ -425,10 +425,12 @@ function drawDenomeMultiLineChart(id, dataSources, graphTitle, timeScale){
 	// is visible) -- that's what was making the panel look wider than its neighbors and made
 	// the entries overlap. Stacking guarantees every row fits within the chart's own width.
 	var legendRowHeight = 24;
-	var margin = {top: 30, right: 20, bottom: 70 + (dataSources.length * legendRowHeight), left: 60},
+	var margin = {top: 30, right: 20, bottom: 40 + (dataSources.length * legendRowHeight), left: 60},
 		width = parseInt(d3.select("#"+id).style("width")) - margin.left - margin.right,
 		height = parseInt(d3.select("#"+id).style("height")) - margin.top - margin.bottom;
-	if (isNaN(height) || height < 260) height = 420 - margin.top - margin.bottom;
+	// Fallback total SVG height (247) matches drawTimeSeriesLineChart's fallback so this panel
+	// isn't taller than its single-line-chart siblings sitting in the same col-lg-6 row.
+	if (isNaN(height) || height < 170) height = 247 - margin.top - margin.bottom;
 	if (isNaN(width) || width < 200) width = 500 - margin.left - margin.right;
 
 	var x = d3.scaleTime().range([0, width]);
