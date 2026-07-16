@@ -361,6 +361,9 @@ function drawTimeSeriesLineChart(id, dataSource, graphTitle, timeScale){
 		d.date = new Date(d["Pulse Timestamp in Milliseconds"]);
 		d.close = +d.Value;
 	});
+	// d3's line generator connects points in array order, not x-position order -- see the
+	// same fix/comment in drawDenomeMultiLineChart above for why this can't be assumed.
+	data.sort(function(a, b) { return a.date - b.date; });
 
 	var yDomainMin=dataSource.Minimum;
 
@@ -472,7 +475,16 @@ function drawDenomeMultiLineChart(id, dataSources, graphTitle, timeScale){
 			.filter(function(d) { return d.Value !== undefined && d.Value !== null && !isNaN(+d.Value); })
 			.map(function(d) {
 				return { date: new Date(d["Pulse Timestamp in Milliseconds"]), close: +d.Value };
-			});
+			})
+			// d3's line generator connects points in array order, not x-position order --
+			// it assumes the source array is already chronological. That assumption broke
+			// on ChinampaMonitor's memory time series (a Mnemosyne write bug flipped the
+			// array's ordering convention partway through its life, see
+			// UpdateTimeSeriesCounterOperation.java, 2026-07-16), so the line zigzagged
+			// forward and backward through time instead of reading left to right. Sort here
+			// defensively so the chart is correct regardless of what order the denome array
+			// happens to be in.
+			.sort(function(a, b) { return a.date - b.date; });
 		return { name: ds.Name, minimum: ds.Minimum, values: values };
 	});
 
