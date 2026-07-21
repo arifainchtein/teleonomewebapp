@@ -24,7 +24,9 @@ import com.teleonome.framework.exception.TeleonomeValidationException;
 import com.teleonome.framework.persistence.PostgresqlPersistenceManager;
 import com.teleonome.framework.utils.Utils;
 import com.teleonome.webapp.servlet.ProcessingFormHandler;
-
+/*
+ *  * curl "http://chinampamonitor.local/TeleonomeServlet?formName=GetTelepathonDataValueByPeriod&telepathonName=Langley_West&denename="
+ */
 
 public class GetTelepathonDataValueByPeriodProcessingHandler extends ProcessingFormHandler {
 

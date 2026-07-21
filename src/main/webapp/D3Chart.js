@@ -282,6 +282,14 @@ function drawTimeSeriesLineChart(id, dataSource, graphTitle, timeScale){
 		console.log("could not find div " + id);
 		//return;
 	}
+	// dataSource is undefined when its Panel Data Source Pointer doesn't currently resolve to a
+	// DeneWord (e.g. a Mnemosyne pulse-count Dene not yet recreated after a Hypothalamus restart -
+	// see conversation 2026-07-21). Without this guard, one missing chart's data throws here and
+	// aborts renderPageByPointer's shared loop, leaving every other chart on the page unpainted too.
+	if (dataSource === undefined || dataSource === null) {
+		console.log("drawTimeSeriesLineChart: no data source for " + id + " (" + graphTitle + ") - skipping");
+		return;
+	}
 	if (arguments.length == 2) {
 		graphTitle="";
 		timeScale="%H:%M";

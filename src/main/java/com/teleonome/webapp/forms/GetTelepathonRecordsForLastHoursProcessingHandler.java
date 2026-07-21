@@ -17,6 +17,7 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
 
 /**
  * curl "http://chinampamonitor.local/TeleonomeServlet?formName=GetTelepathonRecordsForLastHours&telepathonName=TopTank&hours=8"
+ * curl "http://chinampamonitor.local/TeleonomeServlet?formName=GetTelepathonRecordsForLastHours&telepathonName=TopTank&hours=8"
  *
  * Returns every record stored in the last <hours> hours for the given telepathon,
  * across whichever daily telepathon_<date> tables that window spans (e.g. hours=24

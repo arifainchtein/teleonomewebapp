@@ -1018,7 +1018,7 @@ function buildDaffodilContent(telepathon) {
 	var noGraphFields = {"Op Mode":1,"Weather Fresh":1,"INA219 Found":1,"BH1750 Found":1,"ADS1115 Found":1,"RTC Found":1,"DS18B20 Found":1,"SHT Found":1,"Invalid Time":1,"Using Solar Power":1,"Local Time":1,"Source Original Time":1,"Operating Status":1};
 	var cardGroups = [
 		{ id: 'daff-sensors-' + safeId, title: "Sensors", fields: ["Measured Height", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature"] },
-		{ id: 'daff-power-' + safeId,   title: "Power",   fields: ["Led Brightness", "Battery Voltage", "Operating Status", "Async Data", "Wake Time Sec", "Sleep Time", "Estimated Runtime", "Battery Current"] },
+		{ id: 'daff-power-' + safeId,   title: "Power",   fields: ["Led Brightness", "Battery Voltage", "V50 Voltage", "Operating Status", "Async Data", "Wake Time Sec", "Sleep Time", "Estimated Runtime", "Battery Current"] },
 		{ id: 'daff-comms-' + safeId,   title: "Comms",   fields: ["rssi", "snr", "Digital Stables Upload", "Lora Active", "ds Last Upload"] },
 		{ id: 'daff-diag-' + safeId,    title: "Diagnostics", fields: ["RTC Battery Volt", "Op Mode", "Weather Fresh", "INA219 Found", "BH1750 Found", "ADS1115 Found", "RTC Found", "DS18B20 Found", "SHT Found", "Invalid Time", "Using Solar Power", "Source Original Time", "Local Time"] }
 	];
