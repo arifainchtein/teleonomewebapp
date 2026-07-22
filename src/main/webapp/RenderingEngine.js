@@ -1467,6 +1467,8 @@ function buildTelepathonCardView(telepathon) {
 		if (deviceType === "Daffodil") {
 			var socVal = getCerebellumDeneWordValue(name, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
 			if (socVal !== null) extras.push('SOC: ' + parseFloat(socVal).toFixed(1) + '%');
+			var v50DW = findPW("V50 Voltage");
+			if (v50DW) extras.push('V50_I=' + v50DW["Value"] + 'V');
 		}
 		if (deviceType === "Langley") {
 			var fenceAvgCardDW = findPW("Fence Voltage Avg");

@@ -137,9 +137,30 @@ public class HippocampusQueryProcessingHandler extends ProcessingFormHandler {
             JSONObject response = gateway.queryHippocampus(identity, rangeMs);
             JSONArray data = response.optJSONArray("Data");
             if (data == null) data = new JSONArray();
-            result.put("source", "hippocampus");
-            result.put("count",  data.length());
-            result.put("data",   data);
+
+            // Hippocampus's in-memory cache can lose older history out from under a tracked
+            // identity (observed 2026-07-22: a 24h request backfilled 151 points from Postgres,
+            // then a re-query moments later was back down to ~9, all from after local midnight --
+            // root cause not yet found). Whatever Hippocampus actually returned is trusted as-is;
+            // only the older slice it's missing gets filled from Postgres, so this self-heals
+            // regardless of why the cache came up short.
+            long requestedStartSeconds = range[0] / 1000;
+            long requestedEndSeconds   = range[1] / 1000;
+            long earliestReturnedSeconds = data.length() > 0 ? earliestTimeSeconds(data) : requestedEndSeconds + 1;
+            if (earliestReturnedSeconds > requestedStartSeconds) {
+                JSONArray dbGap = db().getTelepathonDeneWordStart(telepathon, dene, deneword,
+                        requestedStartSeconds, earliestReturnedSeconds - 1);
+                if (dbGap.length() > 0) {
+                    data = mergeAndSortByTime(dbGap, data);
+                    result.put("source", "hippocampus+database");
+                } else {
+                    result.put("source", "hippocampus");
+                }
+            } else {
+                result.put("source", "hippocampus");
+            }
+            result.put("count", data.length());
+            result.put("data",  data);
         } else {
             long startSeconds = range[0] / 1000;
             long endSeconds   = range[1] / 1000;
@@ -149,6 +170,37 @@ public class HippocampusQueryProcessingHandler extends ProcessingFormHandler {
             result.put("data",   data);
         }
         return result;
+    }
+
+    /**
+     * Merges two {timeSeconds, timeString, Value} arrays into one, sorted ascending by
+     * timeSeconds and deduplicated by timeSeconds (later argument wins on collision).
+     * Needed because the two sources disagree on order: Hippocampus returns ascending
+     * (oldest first), while the multi-table Postgres query concatenates each day's table
+     * in its own descending order without a global sort.
+     */
+    private JSONArray mergeAndSortByTime(JSONArray a, JSONArray b) {
+        java.util.TreeMap<Long, JSONObject> merged = new java.util.TreeMap<>();
+        for (int i = 0; i < a.length(); i++) {
+            JSONObject o = a.getJSONObject(i);
+            merged.put(o.getLong("timeSeconds"), o);
+        }
+        for (int i = 0; i < b.length(); i++) {
+            JSONObject o = b.getJSONObject(i);
+            merged.put(o.getLong("timeSeconds"), o);
+        }
+        JSONArray result = new JSONArray();
+        for (JSONObject o : merged.values()) result.put(o);
+        return result;
+    }
+
+    private long earliestTimeSeconds(JSONArray data) {
+        long earliest = Long.MAX_VALUE;
+        for (int i = 0; i < data.length(); i++) {
+            long t = data.getJSONObject(i).getLong("timeSeconds");
+            if (t < earliest) earliest = t;
+        }
+        return earliest;
     }
 
     /**
@@ -210,6 +262,14 @@ public class HippocampusQueryProcessingHandler extends ProcessingFormHandler {
                                 JSONObject resp = gateway.queryHippocampus(identity, rangeMs);
                                 data = resp.optJSONArray("Data");
                                 if (data == null) data = new JSONArray();
+                                // See handleVariableReport's matching comment: fill whatever
+                                // older slice Hippocampus's cache is missing from Postgres.
+                                long earliestReturnedSeconds = data.length() > 0 ? earliestTimeSeconds(data) : endSeconds + 1;
+                                if (earliestReturnedSeconds > startSeconds) {
+                                    JSONArray dbGap = db().getTelepathonDeneWordStart(telepathonName, deneName, dwName,
+                                            startSeconds, earliestReturnedSeconds - 1);
+                                    if (dbGap.length() > 0) data = mergeAndSortByTime(dbGap, data);
+                                }
                             } catch (Exception e) {
                                 logger.warn("deviceReport hippocampus query failed for " + dwName + ", falling back to DB: " + e.getMessage());
                                 data = db().getTelepathonDeneWordStart(telepathonName, deneName, dwName, startSeconds, endSeconds);
