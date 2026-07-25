@@ -1018,7 +1018,7 @@ function buildDaffodilContent(telepathon) {
 	var noGraphFields = {"Op Mode":1,"Weather Fresh":1,"INA219 Found":1,"BH1750 Found":1,"ADS1115 Found":1,"RTC Found":1,"DS18B20 Found":1,"SHT Found":1,"Invalid Time":1,"Using Solar Power":1,"Local Time":1,"Source Original Time":1,"Operating Status":1};
 	var cardGroups = [
 		{ id: 'daff-sensors-' + safeId, title: "Sensors", fields: ["Measured Height", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature"] },
-		{ id: 'daff-power-' + safeId,   title: "Power",   fields: ["Led Brightness", "Battery Voltage", "V50 Voltage", "Operating Status", "Async Data", "Wake Time Sec", "Sleep Time", "Estimated Runtime", "Battery Current"] },
+		{ id: 'daff-power-' + safeId,   title: "Power",   fields: ["Panel Voltage", "Panel Current", "Battery Voltage", "Battery Current", "Led Brightness", "Operating Status", "Async Data", "Wake Time Sec", "Sleep Time", "Estimated Runtime"] },
 		{ id: 'daff-comms-' + safeId,   title: "Comms",   fields: ["rssi", "snr", "Digital Stables Upload", "Lora Active", "ds Last Upload"] },
 		{ id: 'daff-diag-' + safeId,    title: "Diagnostics", fields: ["RTC Battery Volt", "Op Mode", "Weather Fresh", "INA219 Found", "BH1750 Found", "ADS1115 Found", "RTC Found", "DS18B20 Found", "SHT Found", "Invalid Time", "Using Solar Power", "Source Original Time", "Local Time"] }
 	];
@@ -1041,12 +1041,12 @@ function buildDaffodilContent(telepathon) {
 			var valCell = '<strong>' + displayVal + (displayUnits ? ' ' + displayUnits : '') + '</strong>';
 			var btnCell = noGraphFields[fieldName] ? '' : '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, r.deneName, fieldName) + '</td>';
 			html += '<tr><td style="width:40%;">' + fieldName + '</td><td>' + valCell + '</td>' + btnCell + '</tr>';
-		}
-		if (card.title === "Power") {
-			var socVal = getCerebellumDeneWordValue(tpName, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
-			if (socVal !== null) {
-				html += '<tr><td style="width:40%;">Battery SOC</td><td><strong>' + parseFloat(socVal).toFixed(1) + '%</strong></td>'
-					+ '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, "Purpose", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE) + '</td></tr>';
+			if (card.title === "Power" && fieldName === "Battery Current") {
+				var socVal = getCerebellumDeneWordValue(tpName, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
+				if (socVal !== null) {
+					html += '<tr><td style="width:40%;">Battery SOC</td><td><strong>' + parseFloat(socVal).toFixed(1) + '%</strong></td>'
+						+ '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, "Purpose", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE) + '</td></tr>';
+				}
 			}
 		}
 		html += '</table></div>';
@@ -1467,8 +1467,10 @@ function buildTelepathonCardView(telepathon) {
 		if (deviceType === "Daffodil") {
 			var socVal = getCerebellumDeneWordValue(name, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
 			if (socVal !== null) extras.push('SOC: ' + parseFloat(socVal).toFixed(1) + '%');
-			var v50DW = findPW("V50 Voltage");
-			if (v50DW) extras.push('V50_I=' + v50DW["Value"] + 'V');
+			var panelVoltDW = findPW("Panel Voltage");
+			if (panelVoltDW) extras.push('Panel: ' + panelVoltDW["Value"] + 'V');
+			var panelCurrDW = findPW("Panel Current");
+			if (panelCurrDW) extras.push(panelCurrDW["Value"] + 'mA');
 		}
 		if (deviceType === "Langley") {
 			var fenceAvgCardDW = findPW("Fence Voltage Avg");
