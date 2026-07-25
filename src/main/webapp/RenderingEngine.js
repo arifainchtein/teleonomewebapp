@@ -1465,12 +1465,12 @@ function buildTelepathonCardView(telepathon) {
 		var extras = [];
 		if (deviceType === "Daffodil") {
 			var battCurrDW = findPW("Battery Current");
-			if (battDW) extras.push('Battery: ' + battDW["Value"] + 'V' + (battCurrDW ? ' ' + battCurrDW["Value"] + 'mA' : ''));
+			if (battDW) extras.push('B: ' + battDW["Value"] + 'V' + (battCurrDW ? ' ' + battCurrDW["Value"] + 'mA' : ''));
 			var socVal = getCerebellumDeneWordValue(name, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
-			if (socVal !== null) extras.push('SOC: ' + parseFloat(socVal).toFixed(1) + '%');
+			if (socVal !== null) extras.push(parseFloat(socVal).toFixed(1) + '%');
 			var panelVoltDW = findPW("Panel Voltage");
 			var panelCurrDW = findPW("Panel Current");
-			if (panelVoltDW) extras.push('Panel: ' + panelVoltDW["Value"] + 'V' + (panelCurrDW ? ' ' + panelCurrDW["Value"] + 'mA' : ''));
+			if (panelVoltDW) extras.push('P: ' + panelVoltDW["Value"] + 'V' + (panelCurrDW ? ' ' + panelCurrDW["Value"] + 'mA' : ''));
 		} else if (battDW) {
 			extras.push(battDW["Value"] + 'V');
 		}
