@@ -747,12 +747,28 @@ function asyncUpdate(text){
 
 }
 
+// A "combined chart" button (see mkMultiGraphBtns) fires one Hippocampus_Request per DeneWord
+// but they all land back on the browser's single responseChanel one at a time. window.telepathonMultiChartRequest,
+// set by the click handler in index.html, is the buffer these get collected into until every
+// requested name has arrived, at which point they're drawn together by
+// displayHippocampusMultiResponse rather than as individual single-line charts.
 function displayHippocampusResponse(payload){
 
 	var response = JSON.parse(payload);
 	var data=response.Data;
 	var telepathonName = response.telepathonName;
 	var deneWordName= response.deneWordName;
+
+	var multiReq = window.telepathonMultiChartRequest;
+	if (multiReq && multiReq.telepathon === telepathonName && multiReq.names.indexOf(deneWordName) !== -1) {
+		multiReq.received[deneWordName] = data;
+		var allIn = multiReq.names.every(function(n) { return multiReq.received.hasOwnProperty(n); });
+		if (allIn) {
+			window.telepathonMultiChartRequest = null;
+			displayHippocampusMultiResponse(multiReq);
+		}
+		return;
+	}
 
 	var results = analyzeTransmissionIntervals(data);
 
@@ -805,6 +821,39 @@ function displayHippocampusResponse(payload){
 		$('.modal-backdrop').last().css('z-index', 1055);
 	}, 0);
 
+}
+
+// Renders a combined chart from a fully-collected window.telepathonMultiChartRequest buffer
+// (see displayHippocampusResponse). Reuses the same #telepathon-graph-modal as the single-series
+// path, but the per-point stats/data tables don't make sense across multiple series so those
+// panes just get a placeholder note instead.
+function displayHippocampusMultiResponse(req){
+
+	var seriesArray = req.names.map(function(n, i) {
+		return { name: n, units: req.units[i], data: req.received[n] || [] };
+	});
+
+	$('#telepathon-graph-modal .nav-link').on('click', function (e) {
+		e.preventDefault()
+		$(this).tab('show')
+	})
+	$('#telepathon-graph-modal').find('.nav-tabs .nav-link:first').tab('show')
+
+	$('#telepathon-graph-title').html(req.telepathon + " - " + req.title);
+	$('#telepathon-graph').empty();
+	showTelepathonMultiGraph(seriesArray, req.range);
+
+	$('#telepathon-stats').empty();
+	$('#telepathon-stats').append('<div style="padding:10px;color:#777;">Combined chart — per-series stats not shown.</div>');
+
+	$('#telepathon-data').empty();
+	$('#telepathon-data').append('<div style="padding:10px;color:#777;">Combined chart — raw data table not shown.</div>');
+
+	$('#telepathon-graph-modal').modal('show');
+	setTimeout(function() {
+		$('#telepathon-graph-modal').css('z-index', 1060);
+		$('.modal-backdrop').last().css('z-index', 1055);
+	}, 0);
 }
 
 
@@ -866,6 +915,25 @@ function buildDaffodilContent(telepathon) {
 		return '<button class="' + btnCls + '" ' + d + ' data-range="3600000">1h</button> ' +
 			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
 			'<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="604800000">7d</button>';
+	}
+	// Combined multi-series chart button group — fires N Hippocampus history requests at once
+	// (one per DeneWord in dwNames) that get buffered client-side and drawn on one shared chart.
+	// See displayHippocampusResponse's multi-request buffering and showTelepathonMultiGraph
+	// (D3Chart.js) for the receiving/rendering side.
+	function mkMultiGraphBtns(tpName, deneName, dwNames, dwUnits, chartTitle) {
+		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '"' +
+			' data-denewordnames="' + dwNames.join(',') + '" data-denewordunits="' + dwUnits.join(',') + '"' +
+			' data-title="' + chartTitle + '"';
+		var btnCls = 'btn btn-xs btn-primary telepathon-multi-history-value';
+		return '<button class="' + btnCls + '" ' + d + ' data-range="3600000">1h</button> ' +
+			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
+			'<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="604800000">7d</button>';
+	}
+	function multiChartPanel(chartTitle, dwNames, dwUnits) {
+		return '<div style="margin-bottom:8px;padding:6px 8px;background:#eef3fa;border-radius:6px;display:flex;align-items:center;flex-wrap:wrap;gap:6px;">' +
+			'<span style="font-size:12px;font-weight:bold;color:#2c3e50;margin-right:4px;">' + chartTitle + '</span>' +
+			mkMultiGraphBtns(tpName, 'Purpose', dwNames, dwUnits, chartTitle) +
+			'</div>';
 	}
 
 	// ── LED snapshot helpers ──────────────────────────────────────────────────
@@ -1025,6 +1093,10 @@ function buildDaffodilContent(telepathon) {
 	for (var ci = 0; ci < cardGroups.length; ci++) {
 		var card = cardGroups[ci];
 		html += '<div class="tab-pane' + (ci === 0 ? ' active' : '') + '" id="' + card.id + '">';
+		if (card.title === "Power") {
+			html += multiChartPanel("Power Chart", ["Panel Voltage", "Battery Voltage", "Battery Current", "Panel Current"], ["V", "V", "mA", "mA"]);
+			html += multiChartPanel("Solar / Light Chart", ["Panel Current", "Light Level"], ["mA", "Lux"]);
+		}
 		html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">';
 		for (var fi = 0; fi < card.fields.length; fi++) {
 			var fieldName = card.fields[fi];
@@ -1820,6 +1892,56 @@ function renderMnemosyneViewPanel() {
 	return html;
 }
 
+// ── Emergency Channel ──────────────────────────────────────────────────────
+// A banner shown above the Organs panel whenever something publishes to
+// HEART_TOPIC_EMERGENCY_CHANNEL ("Emergency Channel") -- e.g. the Cerebellum discovering a
+// telepathon has gone missing. Nothing publishes to this topic yet; this is the receiving half
+// of the contract (see the constant's comment in TeleonomeConstants.js for the expected payload).
+// Messages persist (across pulse-driven re-renders of renderOrgansPanel, since this array lives
+// outside of it) until the operator dismisses them individually.
+var emergencyChannelMessages = [];
+var emergencyChannelMessageCounter = 0;
+
+function handleEmergencyChannelMessage(payload) {
+	var sender = 'Unknown', msgText = payload, timeStr;
+	try {
+		var parsed = JSON.parse(payload);
+		sender = parsed.Sender || parsed.sender || 'Unknown';
+		msgText = parsed.Message || parsed.message || payload;
+		if (parsed.TimestampMillis || parsed.timestampMillis) {
+			timeStr = new Date(parseInt(parsed.TimestampMillis || parsed.timestampMillis)).toLocaleString();
+		} else if (parsed.Timestamp || parsed.timestamp) {
+			timeStr = parsed.Timestamp || parsed.timestamp;
+		}
+	} catch (e) {
+		// Not JSON -- treat the raw payload as the message text.
+	}
+	if (!timeStr) timeStr = new Date().toLocaleString();
+
+	emergencyChannelMessageCounter++;
+	emergencyChannelMessages.unshift({ id: emergencyChannelMessageCounter, sender: sender, message: msgText, timeStr: timeStr });
+
+	$('#emergency-channel-banner').html(buildEmergencyBannerHtml());
+}
+
+function dismissEmergencyMessage(id) {
+	emergencyChannelMessages = emergencyChannelMessages.filter(function(m) { return m.id !== id; });
+	$('#emergency-channel-banner').html(buildEmergencyBannerHtml());
+}
+
+function buildEmergencyBannerHtml() {
+	if (emergencyChannelMessages.length === 0) return '';
+	var html = '';
+	emergencyChannelMessages.forEach(function(m) {
+		html += '<div class="alert alert-danger" style="margin:8px 0;padding:10px 34px 10px 14px;position:relative;" role="alert">' +
+			'<button type="button" class="close" onclick="dismissEmergencyMessage(' + m.id + ')" style="position:absolute;top:8px;right:12px;">&times;</button>' +
+			'<strong>&#9888; Emergency:</strong> ' + m.message +
+			'<div style="font-size:12px;margin-top:4px;opacity:0.8;">From <strong>' + m.sender + '</strong> at ' + m.timeStr + '</div>' +
+			'</div>';
+	});
+	return html;
+}
+
 function renderOrgansPanel() {
 	if (organsRenderedThisCycle) {
 		return '<div style="display:none;"><div><div><div><div>';
@@ -2181,7 +2303,8 @@ function renderOrgansPanel() {
 	heartContent += '</table>';
 	$('#heart-stats-view').html(heartContent);
 
-	var html = '<div class="col-lg-12">';
+	var html = '<div class="col-lg-12" id="emergency-channel-banner">' + buildEmergencyBannerHtml() + '</div>';
+	html += '<div class="col-lg-12">';
 	html += '<div class="bs-component"><div class="panel panel-default">';
 	html += '<div class="panel-heading"><h4>Organs</h4></div>';
 	html += '<div class="panel-body">';

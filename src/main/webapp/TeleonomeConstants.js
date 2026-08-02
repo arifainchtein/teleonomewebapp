@@ -1164,6 +1164,11 @@ var HEART_TOPIC_ORGANISM_UPDATE="OrganismUpdate";
 var HEART_TOPIC_AVAILABLE_SSIDS="Available SSID";
 var HEART_TOPIC_EXECUTE_MANUAL_ACTION="Manual Action";
 var HEART_TOPIC_RESIGNAL="Resignal";
+// Expected payload (JSON): {"Sender": "...", "Message": "...", "TimestampMillis": <epoch ms>}
+// ("Timestamp" as a preformatted string is also accepted in place of TimestampMillis).
+// Not yet published by anything server-side -- see handleEmergencyChannelMessage in
+// RenderingEngine.js for the webapp half of this contract.
+var HEART_TOPIC_EMERGENCY_CHANNEL="Emergency Channel";
 
 var PROCESS_HYPOTHALAMUS="Hypothalamus";
 var PROCESS_HEART="Heart";

@@ -885,6 +885,45 @@ the css for the little box on the top right f external data
 				        // $(this).css("opacity", "0.5");
 				});	 
  				 
+				$(document).on('click', '.telepathon-multi-history-value', function() {
+				        // Combined-chart button (see mkMultiGraphBtns in RenderingEngine.js) — fires one
+				        // Hippocampus_Request per DeneWord in data-denewordnames, all on the same
+				        // responseChanel/RequestId. displayHippocampusResponse buffers them in
+				        // window.telepathonMultiChartRequest until all have arrived, then draws them
+				        // together via displayHippocampusMultiResponse instead of one at a time.
+				        var telepathon = $(this).data('telepathonname');
+				        var denename = $(this).data('denename');
+				        var names = String($(this).data('denewordnames')).split(',');
+				        var units = String($(this).data('denewordunits')).split(',');
+				        var chartTitle = $(this).data('title') || 'Combined Chart';
+				        var range = $(this).data('range');
+						window.lastTelepathonGraphRangeMs = range;
+
+				        var nucleus = $(this).data('nucleus') || NUCLEI_TELEPATHONS;
+
+						window.telepathonMultiChartRequest = {
+							telepathon: telepathon,
+							title: chartTitle,
+							range: range,
+							names: names,
+							units: units,
+							received: {}
+						};
+
+						names.forEach(function(dwName) {
+							var identity = "@" + teleonomeName + ":" + nucleus + ":" + telepathon + ":" + denename + ":" + dwName;
+							var requestPayload = {
+								"Identity": identity,
+								"Range": range,
+								"RequestId": browserId
+							};
+							var message = new Paho.MQTT.Message(JSON.stringify(requestPayload));
+							message.destinationName = "Hippocampus_Request";
+							message.qos = 1;
+							mqtt.send(message);
+						});
+				});
+
 				$(document).on('click', ".telepathon-daily-valuePOSTGREQL",function(e) {
 					e.preventDefault();
 					//$('#NewRememberedWordDeneWordView').empty();

@@ -115,7 +115,127 @@ function showTelepathonGraph(data, rangeMs) {
 	 .style("font-size", "14px");
 }
 
-  
+// Combined chart for the "Power Chart" / "Solar / Light Chart" buttons (see mkMultiGraphBtns
+// in RenderingEngine.js). seriesArray: [{name, units, data: [{timeString, Value}, ...]}, ...] —
+// same per-point shape as showTelepathonGraph's single-series `data`, just one array per series.
+// Series are split across up to two Y axes grouped by units (first unit seen -> left axis,
+// second -> right axis) since voltage and current/lux readings live on very different scales
+// and would otherwise flatten one line against the other on a shared axis.
+function showTelepathonMultiGraph(seriesArray, rangeMs) {
+	const graphContainer = document.getElementById('telepathon-graph');
+	const containerWidth = graphContainer ? graphContainer.getBoundingClientRect().width : 300;
+
+	const legendRowHeight = 22;
+	const margin = {top: 20, right: 55, bottom: 50 + (seriesArray.length * legendRowHeight), left: 55};
+	const width = Math.max(containerWidth - margin.left - margin.right, 400);
+	const height = Math.min(400, window.innerHeight * 0.5) - margin.top - margin.bottom;
+
+	const parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
+
+	var unitOrder = [];
+	seriesArray.forEach(function(s) {
+		if (unitOrder.indexOf(s.units) === -1) unitOrder.push(s.units);
+	});
+	var leftUnit = unitOrder[0];
+	var rightUnit = unitOrder.length > 1 ? unitOrder[1] : null;
+
+	var series = seriesArray.map(function(s) {
+		var values = (s.data || [])
+			.filter(function(d) { return d.Value !== undefined && d.Value !== null && d.Value !== '' && !isNaN(+d.Value); })
+			.map(function(d) { return { time: parseTime(d.timeString), value: +d.Value }; })
+			.filter(function(d) { return d.time !== null; })
+			.sort(function(a, b) { return a.time - b.time; });
+		return { name: s.name, units: s.units, axis: (s.units === leftUnit ? 'left' : 'right'), values: values };
+	});
+
+	const svg = d3.select("#telepathon-graph")
+		.append("svg")
+		.attr("width", "100%")
+		.attr("height", height + margin.top + margin.bottom)
+		.attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+		.append("g")
+		.attr("transform", `translate(${margin.left},${margin.top})`);
+
+	var allValues = [];
+	series.forEach(function(s) { allValues = allValues.concat(s.values); });
+	if (allValues.length === 0) {
+		svg.append("text").attr("x", width / 2).attr("y", height / 2).attr("text-anchor", "middle").text("No data");
+		return;
+	}
+
+	const x = d3.scaleTime()
+		.domain(d3.extent(allValues, d => d.time))
+		.range([0, width]);
+
+	function domainFor(unit) {
+		var vals = [];
+		series.filter(function(s) { return s.units === unit; }).forEach(function(s) {
+			s.values.forEach(function(d) { vals.push(d.value); });
+		});
+		if (vals.length === 0) return [0, 1];
+		var mn = d3.min(vals), mx = d3.max(vals);
+		var pad = (mx - mn) * 0.1 || Math.abs(mx) * 0.1 || 1;
+		return [mn - pad, mx + pad];
+	}
+
+	const yLeft = d3.scaleLinear().domain(domainFor(leftUnit)).range([height, 0]);
+	const yRight = rightUnit ? d3.scaleLinear().domain(domainFor(rightUnit)).range([height, 0]) : null;
+
+	const colors = d3.schemeTableau10;
+
+	function lineFor(axis) {
+		var yScale = axis === 'left' ? yLeft : yRight;
+		return d3.line().x(d => x(d.time)).y(d => yScale(d.value));
+	}
+
+	series.forEach(function(s, i) {
+		if (s.values.length === 0) return;
+		svg.append("path")
+			.datum(s.values)
+			// .style(), not .attr() -- the app's global CSS has a bare `path { ... }` rule that
+			// overrides SVG presentation attributes (see drawHippocampusPieChart's comment).
+			.style("fill", "none")
+			.style("stroke", colors[i % colors.length])
+			.style("stroke-width", "2px")
+			.attr("d", lineFor(s.axis));
+	});
+
+	const axisTickFormat = rangeMs > 86400000 ? d3.timeFormat("%d %b") : d3.timeFormat("%H:%M");
+	const xAxis = svg.append("g")
+		.attr("transform", `translate(0,${height})`)
+		.call(d3.axisBottom(x)
+			.ticks(width < 600 ? 4 : 8)
+			.tickFormat(axisTickFormat));
+	xAxis.selectAll("text")
+		.style("text-anchor", "end")
+		.attr("dx", "-.8em")
+		.attr("dy", ".15em")
+		.attr("transform", "rotate(-45)");
+
+	svg.append("g").call(d3.axisLeft(yLeft).ticks(height < 400 ? 5 : 8));
+	svg.append("text")
+		.attr("text-anchor", "end").attr("x", -8).attr("y", -8)
+		.style("font-size", "12px").text(leftUnit || '');
+
+	if (rightUnit) {
+		svg.append("g")
+			.attr("transform", `translate(${width},0)`)
+			.call(d3.axisRight(yRight).ticks(height < 400 ? 5 : 8));
+		svg.append("text")
+			.attr("text-anchor", "start").attr("x", width + 8).attr("y", -8)
+			.style("font-size", "12px").text(rightUnit || '');
+	}
+
+	var legend = svg.append("g").attr("transform", `translate(0, ${height + 45})`);
+	series.forEach(function(s, i) {
+		var row = legend.append("g").attr("transform", `translate(0, ${i * legendRowHeight})`);
+		row.append("rect").attr("width", 14).attr("height", 14).style("fill", colors[i % colors.length]);
+		row.append("text").attr("x", 20).attr("y", 12).style("font-size", "13px")
+			.text(s.name + (s.units ? ' (' + s.units + ')' : ''));
+	});
+}
+
+
 function drawPieChart(id, data, title){
 
 //	var pie_data = [{
