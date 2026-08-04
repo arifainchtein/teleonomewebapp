@@ -1173,6 +1173,12 @@ var HEART_TOPIC_RESIGNAL="Resignal";
 // RenderingEngine.js for the webapp half of this contract.
 var HEART_TOPIC_EMERGENCY_CHANNEL="Emergency Channel";
 
+// Heart's own self-reported health (Metaspace/GC pressure, session-loop thread
+// health) and Hypothalamus's Heart-publish health (consecutive failures) --
+// see the Heart modal in RenderingEngine.js. See conversation 2026-08-05.
+var HEART_TOPIC_HEART_HEALTH_STATUS="HeartHealthStatus";
+var HEART_TOPIC_HYPOTHALAMUS_HEALTH_STATUS="HypothalamusHealthStatus";
+
 var PROCESS_HYPOTHALAMUS="Hypothalamus";
 var PROCESS_HEART="Heart";
 var PROCESS_WEB_SERVER="Web Server";

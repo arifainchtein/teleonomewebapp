@@ -64,6 +64,8 @@ function onConnect() {
 	mqtt.subscribe(HEART_TOPIC_HIPPOCAMPUS_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(responseChanel, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_EMERGENCY_CHANNEL, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
+	mqtt.subscribe(HEART_TOPIC_HEART_HEALTH_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:0});
+	mqtt.subscribe(HEART_TOPIC_HYPOTHALAMUS_HEALTH_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:0});
 	
 	
 }
@@ -133,5 +135,9 @@ function onMessageArrived(message) {
 		hippocampusReady=true;
 	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_STATUS){
 		if(!hippocampusReady){ hippocampusReady=true; }
+	}else if(lastMessageTopic==HEART_TOPIC_HEART_HEALTH_STATUS){
+		updateHeartHealthStatus(payload);
+	}else if(lastMessageTopic==HEART_TOPIC_HYPOTHALAMUS_HEALTH_STATUS){
+		updateHypothalamusHealthStatus(payload);
 	}
 };

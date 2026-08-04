@@ -72,6 +72,106 @@ function heartLogDownload() {
 	document.body.removeChild(a);
 	URL.revokeObjectURL(url);
 }
+
+//
+// Heart/Hypothalamus self-reported health, broadcast live (HEART_TOPIC_HEART_HEALTH_STATUS /
+// HEART_TOPIC_HYPOTHALAMUS_HEALTH_STATUS -- see conversation 2026-08-05). Independent of the
+// pulse cycle, so these update the Heart modal's stats table the moment a message arrives,
+// not just on the next full pulse refresh.
+//
+var lastHeartHealthStatus = null;
+var lastHypothalamusHealthStatus = null;
+
+function updateHeartHealthStatus(text) {
+	try { lastHeartHealthStatus = JSON.parse(text); } catch (e) { return; }
+	refreshHeartStatsView();
+}
+function updateHypothalamusHealthStatus(text) {
+	try { lastHypothalamusHealthStatus = JSON.parse(text); } catch (e) { return; }
+	refreshHeartStatsView();
+}
+function heartHealthRowHtml(label, valueHtml) {
+	return '<tr><td>' + label + '</td><td>' + valueHtml + '</td></tr>';
+}
+// Consecutive-failure threshold at which Medula itself restarts Heart --
+// kept in sync with Medula.java's check by eye, not shared code, since the
+// two are different runtimes. Update both places together if it changes.
+var HEART_PUBLISH_FAILURE_RESTART_THRESHOLD = 5;
+// Metaspace percent-used above which Medula starts logging a pathology dene
+// for trend-tracking (not yet an auto-restart trigger there either -- see
+// PATHOLOGY_HEART_METASPACE_PRESSURE in TeleonomeConstants.java).
+var HEART_METASPACE_WATCH_THRESHOLD = 90;
+
+function refreshHeartStatsView() {
+	var $view = $('#heart-stats-view');
+	if (!$view.length) return;
+
+	var heartContent = '<table class="table table-condensed table-striped" style="margin-bottom:0;">';
+	heartContent += '<tr><td>Last Pulse</td><td><strong>' + (pulseTimestamp || '—') + '</strong></td></tr>';
+	heartContent += '<tr><td>Time Since Pulse</td><td><strong>' + (timeStringSinceLastPulse || '—') + '</strong></td></tr>';
+	heartContent += '<tr><td>Operational Mode</td><td><strong>' + (operationalMode || '—') + '</strong></td></tr>';
+	if (currentPulseFrequency != undefined) heartContent += '<tr><td>Pulse Frequency</td><td><strong>' + msToTime(currentPulseFrequency) + '</strong></td></tr>';
+	if (currentPulseGenerationDuration != undefined) heartContent += '<tr><td>Generation Duration</td><td><strong>' + msToTime(currentPulseGenerationDuration) + '</strong></td></tr>';
+
+	heartContent += '<tr><td colspan="2" style="padding-top:10px;"><strong>Heart Health</strong></td></tr>';
+	if (lastHeartHealthStatus) {
+		var h = lastHeartHealthStatus;
+		var metaspace = h["Heart Metaspace Percent Used"];
+		var fullGc = h["Heart Full GC Count"];
+		var sessionLoops = h["sessionEventLoopCount"];
+		var deadLoops = h["deadSessionEventLoopCount"];
+
+		var metaspaceHtml;
+		if (metaspace == undefined || metaspace < 0) {
+			metaspaceHtml = '<strong>—</strong>';
+		} else {
+			var pct = Number(metaspace).toFixed(1);
+			if (metaspace >= HEART_METASPACE_WATCH_THRESHOLD) {
+				metaspaceHtml = '<strong style="color:#c0392b;">' + pct + '% &#9888; high — Heart may need a restart soon</strong>';
+			} else if (metaspace >= 75) {
+				metaspaceHtml = '<strong style="color:#f39c12;">' + pct + '%</strong>';
+			} else {
+				metaspaceHtml = '<strong style="color:#27ae60;">' + pct + '%</strong>';
+			}
+		}
+		heartContent += heartHealthRowHtml('Metaspace Used', metaspaceHtml);
+		heartContent += heartHealthRowHtml('Full GC Count', '<strong>' + (fullGc != undefined && fullGc >= 0 ? fullGc : '—') + '</strong>');
+
+		var loopsHtml;
+		if (sessionLoops == undefined) {
+			loopsHtml = '<strong>—</strong>';
+		} else if (deadLoops > 0) {
+			loopsHtml = '<strong style="color:#c0392b;">' + deadLoops + ' of ' + sessionLoops + ' dead &#9888; some clients permanently unresponsive</strong>';
+		} else {
+			loopsHtml = '<strong style="color:#27ae60;">' + sessionLoops + ' of ' + sessionLoops + ' alive</strong>';
+		}
+		heartContent += heartHealthRowHtml('Session Event Loops', loopsHtml);
+	} else {
+		heartContent += '<tr><td colspan="2" class="text-muted">Waiting for data…</td></tr>';
+	}
+
+	heartContent += '<tr><td colspan="2" style="padding-top:10px;"><strong>Hypothalamus &rarr; Heart Publishing</strong></td></tr>';
+	if (lastHypothalamusHealthStatus) {
+		var failures = lastHypothalamusHealthStatus["heartPublishConsecutiveFailures"];
+		var failuresHtml;
+		if (failures == undefined) {
+			failuresHtml = '<strong>—</strong>';
+		} else if (failures >= HEART_PUBLISH_FAILURE_RESTART_THRESHOLD) {
+			failuresHtml = '<strong style="color:#c0392b;">' + failures + ' consecutive failures &#9888; Heart restart imminent</strong>';
+		} else if (failures > 0) {
+			failuresHtml = '<strong style="color:#f39c12;">' + failures + ' consecutive failure' + (failures === 1 ? '' : 's') + '</strong>';
+		} else {
+			failuresHtml = '<strong style="color:#27ae60;">0 — publishing normally</strong>';
+		}
+		heartContent += heartHealthRowHtml('Publish Status', failuresHtml);
+	} else {
+		heartContent += '<tr><td colspan="2" class="text-muted">Waiting for data…</td></tr>';
+	}
+
+	heartContent += '</table>';
+	$view.html(heartContent);
+}
+
 var teleonomeName;
 var nucleiJSONArray;
 var pageToDisplay = -1;
@@ -2338,14 +2438,7 @@ function renderOrgansPanel() {
 		heartLogTopics.sort();
 		heartLogUpdateFilterOptions();
 	}
-	var heartContent = '<table class="table table-condensed table-striped" style="margin-bottom:0;">';
-	heartContent += '<tr><td>Last Pulse</td><td><strong>' + (pulseTimestamp || '—') + '</strong></td></tr>';
-	heartContent += '<tr><td>Time Since Pulse</td><td><strong>' + (timeStringSinceLastPulse || '—') + '</strong></td></tr>';
-	heartContent += '<tr><td>Operational Mode</td><td><strong>' + (operationalMode || '—') + '</strong></td></tr>';
-	if (currentPulseFrequency != undefined) heartContent += '<tr><td>Pulse Frequency</td><td><strong>' + msToTime(currentPulseFrequency) + '</strong></td></tr>';
-	if (currentPulseGenerationDuration != undefined) heartContent += '<tr><td>Generation Duration</td><td><strong>' + msToTime(currentPulseGenerationDuration) + '</strong></td></tr>';
-	heartContent += '</table>';
-	$('#heart-stats-view').html(heartContent);
+	refreshHeartStatsView();
 
 	var html = '<div class="col-lg-12" id="emergency-channel-banner">' + buildEmergencyBannerHtml() + '</div>';
 	html += '<div class="col-lg-12">';
