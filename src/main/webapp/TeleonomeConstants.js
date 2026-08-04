@@ -282,6 +282,9 @@ var NUCLEI_PURPOSE = "Purpose";
 var NUCLEI_MNEMOSYNE = "Mnemosyne";
 var NUCLEI_HUMAN_INTERFACE = "Human Interface";
 var NUCLEI_TELEPATHONS = "Telepathons";
+// Not a real telepathon device — a queue-status denechain that happens to live in the
+// Telepathons nuclei. Rendered as a "Queue Analysis" popup instead of a telepathon card.
+var DENECHAIN_ANNABELLE_QUEUE_STATUS = "Annabelle Queue Status";
 
 var VALUE_UNDEFINED = "Undefined";
 

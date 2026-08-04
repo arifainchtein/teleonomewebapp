@@ -86,6 +86,7 @@ var rowPanelCounter=0;
 var humanInterfaceDeneChainIndex = new HashMap();
 var humanInterfaceDeneChainArray;
 var telepathonCardDataCache = {};
+var annabelleQueueStatusCache = null;
 var lastKnownCerebellumValues = {};
 var telepathonDeviceTypeCache = {}; // keyed by device name, populated only from live TelepathonStatus packets
 var pulseTimestamp;
@@ -115,6 +116,44 @@ function openModal(id) {
 
 function closeModal(id) {
 	$('#' + id).modal('hide');
+}
+
+function computeQueueAnalysisStatusColor(chain) {
+	// Worst-of-any-queue: red if any queue has dropped items (data loss),
+	// yellow if any queue has a backlog of undelivered items, else green.
+	var denes = chain["Denes"] || [];
+	var hasDrops = false, hasBacklog = false;
+	for (var i = 0; i < denes.length; i++) {
+		var dws = denes[i]["DeneWords"] || [];
+		for (var j = 0; j < dws.length; j++) {
+			if (dws[j]["Name"] === "Items Dropped" && parseFloat(dws[j]["Value"]) > 0) hasDrops = true;
+			if (dws[j]["Name"] === "Items Available" && parseFloat(dws[j]["Value"]) > 0) hasBacklog = true;
+		}
+	}
+	return hasDrops ? '#e74c3c' : (hasBacklog ? '#f39c12' : '#27ae60');
+}
+
+function queueAnalysisButtonColor() {
+	return annabelleQueueStatusCache ? computeQueueAnalysisStatusColor(annabelleQueueStatusCache) : '#777';
+}
+
+function refreshQueueAnalysisModal(chain) {
+	annabelleQueueStatusCache = chain;
+	var color = computeQueueAnalysisStatusColor(chain);
+	var $btn = $('#queueAnalysisBtn');
+	if ($btn.length) {
+		$btn.css({'background-color': color, 'border-color': color, 'color': '#fff'});
+	}
+	if ($('#queue-analysis-modal-body').length) {
+		$('#queue-analysis-modal-body').html(buildTelepathonDetailContent(chain));
+	}
+}
+
+function openQueueAnalysisModal() {
+	if (annabelleQueueStatusCache) {
+		$('#queue-analysis-modal-body').html(buildTelepathonDetailContent(annabelleQueueStatusCache));
+	}
+	openModal('queue-analysis-modal');
 }
 
 var organismInfoJsonData;
@@ -1679,6 +1718,11 @@ function mergeTelepathonDenes(cached, incoming) {
 function updateTelepathonsView(text){
 	var telepathon = JSON.parse(text);
 	var telepathonName = telepathon["Name"];
+	if (telepathonName === DENECHAIN_ANNABELLE_QUEUE_STATUS) {
+		// Not a telepathon device — shown via the "Queue Analysis" popup instead.
+		refreshQueueAnalysisModal(telepathon);
+		return;
+	}
 	// TelepathonStatus is the authoritative source for Device Type Id — it comes
 	// directly from the LoRa deserializer, while the Status pulse reads the denome
 	// file which can hold a stale or garbled value.
@@ -2531,6 +2575,11 @@ function refreshTelepathonsView(){
 	var panelHTML="";
 	for(var j13=0;j13<deneChains.length;j13++){
 		var telepathonName = deneChains[j13]["Name"];
+		if (telepathonName === DENECHAIN_ANNABELLE_QUEUE_STATUS) {
+			// Not a telepathon device — shown via the "Queue Analysis" popup instead.
+			refreshQueueAnalysisModal(deneChains[j13]);
+			continue;
+		}
 		// This full-pulse snapshot of a telepathon's denes can itself be partial
 		// (e.g. missing "Configuration" on a given pulse). Merge onto the cache
 		// instead of overwriting it outright, otherwise fields like Device Type Id
