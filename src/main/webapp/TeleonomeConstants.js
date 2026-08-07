@@ -285,6 +285,9 @@ var NUCLEI_TELEPATHONS = "Telepathons";
 // Not a real telepathon device — a queue-status denechain that happens to live in the
 // Telepathons nuclei. Rendered as a "Queue Analysis" popup instead of a telepathon card.
 var DENECHAIN_ANNABELLE_QUEUE_STATUS = "Annabelle Queue Status";
+// Threshold below which a telepathon in the Registry Status popup is considered "Current"
+// rather than "Stale", based on how long ago its last stored record was received.
+var REGISTRY_STATUS_CURRENT_THRESHOLD_SECONDS = 600;
 
 var VALUE_UNDEFINED = "Undefined";
 

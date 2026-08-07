@@ -256,6 +256,69 @@ function openQueueAnalysisModal() {
 	openModal('queue-analysis-modal');
 }
 
+function formatRegistryAge(ageSeconds) {
+	if (ageSeconds < 60) return Math.floor(ageSeconds) + 's ago';
+	if (ageSeconds < 3600) return Math.floor(ageSeconds / 60) + 'm ago';
+	if (ageSeconds < 86400) return Math.floor(ageSeconds / 3600) + 'h ago';
+	return Math.floor(ageSeconds / 86400) + 'd ago';
+}
+
+function buildRegistryStatusContent(registryData) {
+	var names = Object.keys(registryData).sort();
+	if (names.length === 0) {
+		return '<p class="text-muted text-center" style="padding:20px;">No telepathon history found.</p>';
+	}
+	var html = '<table class="table table-condensed table-striped" id="registryStatusTable">';
+	html += '<thead><tr><th>Telepathon</th><th>Last Received</th><th>Age</th><th>Status</th></tr></thead><tbody>';
+	for (var i = 0; i < names.length; i++) {
+		var name = names[i];
+		var record = registryData[name];
+		var timeSeconds = record["timeSeconds"];
+		var ageSeconds = (Date.now() / 1000) - timeSeconds;
+		var isCurrent = ageSeconds <= REGISTRY_STATUS_CURRENT_THRESHOLD_SECONDS;
+		var statusLabel = isCurrent ? 'Current' : 'Stale';
+		var statusColor = isCurrent ? '#27ae60' : '#e74c3c';
+		var lastReceivedStr = getISOStringWithoutSecsAndMillisecs(new Date(timeSeconds * 1000));
+		html += '<tr data-registry-status="' + (isCurrent ? 'current' : 'stale') + '">';
+		html += '<td>' + name + '</td>';
+		html += '<td>' + lastReceivedStr + '</td>';
+		html += '<td>' + formatRegistryAge(ageSeconds) + '</td>';
+		html += '<td><span style="color:' + statusColor + ';font-weight:bold;">' + statusLabel + '</span></td>';
+		html += '</tr>';
+	}
+	html += '</tbody></table>';
+	return html;
+}
+
+function filterRegistryStatusTable(filter) {
+	if (filter === 'all') {
+		$('#registryStatusTable tbody tr').show();
+	} else {
+		$('#registryStatusTable tbody tr').hide();
+		$('#registryStatusTable tbody tr[data-registry-status="' + filter + '"]').show();
+	}
+}
+
+function openRegistryStatusModal() {
+	$('#registry-status-modal-body').html('<p class="text-muted text-center" style="padding:20px;">Loading...</p>');
+	$('input[name="registryStatusFilter"][value="all"]').prop('checked', true);
+	openModal('registry-status-modal');
+	$.ajax({
+		type: "GET",
+		url: "/TeleonomeServlet",
+		data: {formName: "GetTelepathonRegistry"},
+		success: function (data) {
+			var registryData = typeof data === 'string' ? JSON.parse(data) : data;
+			$('#registry-status-modal-body').html(buildRegistryStatusContent(registryData));
+			filterRegistryStatusTable('all');
+		},
+		error: function (data) {
+			console.log("error getting telepathon registry data:" + data.responseText);
+			$('#registry-status-modal-body').html('<p class="text-danger text-center" style="padding:20px;">Error loading registry status.</p>');
+		}
+	});
+}
+
 var organismInfoJsonData;
 var telepathonsJsonData;
 
