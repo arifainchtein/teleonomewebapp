@@ -263,27 +263,57 @@ function formatRegistryAge(ageSeconds) {
 	return Math.floor(ageSeconds / 86400) + 'd ago';
 }
 
-function buildRegistryStatusContent(registryData) {
-	var names = Object.keys(registryData).sort();
-	if (names.length === 0) {
-		return '<p class="text-muted text-center" style="padding:20px;">No telepathon history found.</p>';
+// TelepathonRegistryTask (cerebellum) already computes per-device OK/WARNING/CRITICAL
+// status server-side, using per-Device-Type lateness thresholds, and publishes the
+// whole fleet into this Dene every pulse — so this just reads it, no AJAX call needed.
+function getTelepathonRegistryDeviceList() {
+	var devicesPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM + ":" + DENE_TELEPATHON_REGISTRY + ":" + DENEWORD_TELEPATHON_REGISTRY_DEVICES;
+	var devicesJsonString = getDeneWordByIdentityPointer(devicesPointer, DENEWORD_VALUE_ATTRIBUTE);
+	if (!devicesJsonString) return null;
+	try {
+		return JSON.parse(devicesJsonString);
+	} catch (e) {
+		console.log("error parsing Telepathon Registry Devices:" + e);
+		return null;
 	}
+}
+
+function computeRegistryStatusButtonColor() {
+	var statusPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM + ":" + DENE_TELEPATHON_REGISTRY + ":" + DENEWORD_TELEPATHON_REGISTRY_STATUS;
+	var status = getDeneWordByIdentityPointer(statusPointer, DENEWORD_VALUE_ATTRIBUTE);
+	if (status === "CRITICAL") return '#e74c3c';
+	if (status === "WARNING") return '#f39c12';
+	if (status === "OK") return '#27ae60';
+	return '#777';
+}
+
+function refreshRegistryStatusButton() {
+	var $btn = $('#registryStatusBtn');
+	if (!$btn.length) return;
+	var color = computeRegistryStatusButtonColor();
+	$btn.css({'background-color': color, 'border-color': color, 'color': '#fff'});
+}
+
+function buildRegistryStatusContent(devices) {
+	if (!devices || devices.length === 0) {
+		return '<p class="text-muted text-center" style="padding:20px;">No telepathon registry data found.</p>';
+	}
+	devices = devices.slice().sort(function (a, b) {
+		return (a["Name"] || "").localeCompare(b["Name"] || "");
+	});
 	var html = '<table class="table table-condensed table-striped" id="registryStatusTable">';
-	html += '<thead><tr><th>Telepathon</th><th>Last Received</th><th>Age</th><th>Status</th></tr></thead><tbody>';
-	for (var i = 0; i < names.length; i++) {
-		var name = names[i];
-		var record = registryData[name];
-		var timeSeconds = record["timeSeconds"];
-		var ageSeconds = (Date.now() / 1000) - timeSeconds;
-		var isCurrent = ageSeconds <= REGISTRY_STATUS_CURRENT_THRESHOLD_SECONDS;
-		var statusLabel = isCurrent ? 'Current' : 'Stale';
-		var statusColor = isCurrent ? '#27ae60' : '#e74c3c';
-		var lastReceivedStr = getISOStringWithoutSecsAndMillisecs(new Date(timeSeconds * 1000));
+	html += '<thead><tr><th>Telepathon</th><th>Device Type</th><th>Serial Number</th><th>Age</th><th>Status</th></tr></thead><tbody>';
+	for (var i = 0; i < devices.length; i++) {
+		var device = devices[i];
+		var status = device["Status"];
+		var isCurrent = status === "OK";
+		var statusColor = status === "CRITICAL" ? '#e74c3c' : (status === "WARNING" ? '#f39c12' : '#27ae60');
 		html += '<tr data-registry-status="' + (isCurrent ? 'current' : 'stale') + '">';
-		html += '<td>' + name + '</td>';
-		html += '<td>' + lastReceivedStr + '</td>';
-		html += '<td>' + formatRegistryAge(ageSeconds) + '</td>';
-		html += '<td><span style="color:' + statusColor + ';font-weight:bold;">' + statusLabel + '</span></td>';
+		html += '<td>' + device["Name"] + '</td>';
+		html += '<td>' + device["Device Type"] + '</td>';
+		html += '<td>' + device["Serial Number"] + '</td>';
+		html += '<td>' + formatRegistryAge(device["Seconds Since Last Seen"]) + '</td>';
+		html += '<td><span style="color:' + statusColor + ';font-weight:bold;">' + status + '</span></td>';
 		html += '</tr>';
 	}
 	html += '</tbody></table>';
@@ -300,23 +330,15 @@ function filterRegistryStatusTable(filter) {
 }
 
 function openRegistryStatusModal() {
-	$('#registry-status-modal-body').html('<p class="text-muted text-center" style="padding:20px;">Loading...</p>');
 	$('input[name="registryStatusFilter"][value="all"]').prop('checked', true);
+	var devices = getTelepathonRegistryDeviceList();
+	if (devices === null) {
+		$('#registry-status-modal-body').html('<p class="text-danger text-center" style="padding:20px;">Error loading registry status.</p>');
+	} else {
+		$('#registry-status-modal-body').html(buildRegistryStatusContent(devices));
+		filterRegistryStatusTable('all');
+	}
 	openModal('registry-status-modal');
-	$.ajax({
-		type: "GET",
-		url: "/TeleonomeServlet",
-		data: {formName: "GetTelepathonRegistry"},
-		success: function (data) {
-			var registryData = typeof data === 'string' ? JSON.parse(data) : data;
-			$('#registry-status-modal-body').html(buildRegistryStatusContent(registryData));
-			filterRegistryStatusTable('all');
-		},
-		error: function (data) {
-			console.log("error getting telepathon registry data:" + data.responseText);
-			$('#registry-status-modal-body').html('<p class="text-danger text-center" style="padding:20px;">Error loading registry status.</p>');
-		}
-	});
 }
 
 var organismInfoJsonData;
@@ -2725,6 +2747,7 @@ function buildChinampaContent(telepathon) {
 }
 
 function refreshTelepathonsView(){
+	refreshRegistryStatusButton();
 	var telepathonsNuclei=getTelepathonsDeneChains();
 	if(!telepathonsNuclei) return "";
 	var deneChains = telepathonsNuclei['DeneChains'];

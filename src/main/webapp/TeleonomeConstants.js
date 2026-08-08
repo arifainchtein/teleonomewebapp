@@ -285,9 +285,13 @@ var NUCLEI_TELEPATHONS = "Telepathons";
 // Not a real telepathon device — a queue-status denechain that happens to live in the
 // Telepathons nuclei. Rendered as a "Queue Analysis" popup instead of a telepathon card.
 var DENECHAIN_ANNABELLE_QUEUE_STATUS = "Annabelle Queue Status";
-// Threshold below which a telepathon in the Registry Status popup is considered "Current"
-// rather than "Stale", based on how long ago its last stored record was received.
-var REGISTRY_STATUS_CURRENT_THRESHOLD_SECONDS = 600;
+// TelepathonRegistryTask (cerebellum) publishes a live device registry into
+// Purpose:Cerebellum:"Telepathon Registry" every pulse — status/lateness are
+// already computed server-side per Device Type, so the Registry Status popup
+// just reads this Dene rather than querying anything itself.
+var DENE_TELEPATHON_REGISTRY = "Telepathon Registry";
+var DENEWORD_TELEPATHON_REGISTRY_STATUS = "Telepathon Registry Status";
+var DENEWORD_TELEPATHON_REGISTRY_DEVICES = "Telepathon Registry Devices";
 
 var VALUE_UNDEFINED = "Undefined";
 
