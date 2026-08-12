@@ -39,7 +39,7 @@ import com.teleonome.framework.utils.Utils;
 public class WebAppContextListener implements ServletContextListener {
 	Logger logger ;
 	ServletContext servletContext=null;
-	public final static String BUILD_NUMBER="08/08/2026 16:31";
+	public final static String BUILD_NUMBER="10/08/2026 13:29";
 	private PostgresqlPersistenceManager aDBManager=null;
 	// Held onto (rather than left as contextInitialized() locals) so contextDestroyed() can
 	// shut each of them down -- Tomcat's own classloader-leak detector flags exactly these

@@ -70,6 +70,12 @@ class SingleValuePanel{
                 nameToDisplay =  getDeneWordAttributeByDeneWordTypeFromDene(dataDene, DENEWORD_TYPE_PANEL_DATA_DISPLAY_NAME, DENEWORD_VALUE_ATTRIBUTE)
                 console.log(" going over the rpoerties,panelDataSourcePointer=" + panelDataSourcePointer);
                 renderedDataSourceDeneWord = getDeneWordByIdentityPointer(panelDataSourcePointer, COMPLETE);
+                if(renderedDataSourceDeneWord===undefined || renderedDataSourceDeneWord===null){
+                    // Data source doesn't exist yet (e.g. a Cerebellum task that hasn't
+                    // published its first result) - show a placeholder instead of
+                    // throwing and aborting the rest of this render pass.
+                    renderedDataSourceDeneWord = {"Value":"N.A.", "Units":""};
+                }
                 var unitsText=renderedDataSourceDeneWord["Units"];
                 if(unitsText==="" || unitsText===undefined)unitsText="&nbsp;&nbsp;&nbsp;&nbsp;";
 
