@@ -933,6 +933,7 @@ var  PATHOLOGY_HEART_PULSE_LATE= "Heart Pulse Late";
 var  PATHOLOGY_HEART_SESSION_LOOP_DEAD= "Heart Session Loop Dead";
 var  PATHOLOGY_CORRUPT_PULSE_FILE= "Corrupt Pulse File";
 var PATHOLOGY_TOMCAT_PING_LATE= "Tomcat Ping Late";
+var PATHOLOGY_TOMCAT_SERVLET_ERROR= "Tomcat Servlet Error";
 var PATHOLOGY_DETAILS_LABEL= "Details";
 var MEDULA_PATHOLOGY_MNEMOSYNE_LOCATION="Medula Pathology Mnemosyne Location";
 
