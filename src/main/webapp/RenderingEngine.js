@@ -1447,6 +1447,21 @@ function buildLangleyContent(telepathon) {
 			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
 			'<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="604800000">7d</button>';
 	}
+	function mkMultiGraphBtns(tpName, deneName, dwNames, dwUnits, chartTitle) {
+		var d = 'data-telepathonname="' + tpName + '" data-denename="' + deneName + '"' +
+			' data-denewordnames="' + dwNames.join(',') + '" data-denewordunits="' + dwUnits.join(',') + '"' +
+			' data-title="' + chartTitle + '"';
+		var btnCls = 'btn btn-xs btn-primary telepathon-multi-history-value';
+		return '<button class="' + btnCls + '" ' + d + ' data-range="3600000">1h</button> ' +
+			'<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
+			'<button class="' + btnCls + ' hidden-xs" ' + d + ' data-range="604800000">7d</button>';
+	}
+	function multiChartPanel(chartTitle, dwNames, dwUnits) {
+		return '<div style="margin-bottom:8px;padding:6px 8px;background:#eef3fa;border-radius:6px;display:flex;align-items:center;flex-wrap:wrap;gap:6px;">' +
+			'<span style="font-size:12px;font-weight:bold;color:#2c3e50;margin-right:4px;">' + chartTitle + '</span>' +
+			mkMultiGraphBtns(tpName, 'Purpose', dwNames, dwUnits, chartTitle) +
+			'</div>';
+	}
 	function vitalCard(label, val, unit, color) {
 		return '<div class="col-xs-4 col-sm-2" style="margin-bottom:8px;padding:2px;">' +
 			'<div style="border-radius:10px;overflow:hidden;">' +
@@ -1501,14 +1516,22 @@ function buildLangleyContent(telepathon) {
 	if (rssiDW) { var rssiV = parseFloat(rssiDW["Value"]); html += vitalCard('Signal', rssiDW["Value"], '', rssiV > -95 ? '#27ae60' : '#f39c12'); }
 	html += '</div>';
 
+	html += multiChartPanel("Power Chart", ["Solar Voltage", "Battery Voltage", "Battery Current", "Solar Current"], ["V", "V", "mA", "mA"]);
+	html += multiChartPanel("Energizer Chart", ["Energizer Battery Voltage", "Energizer Battery Current"], ["V", "mA"]);
+
 	html += '<table class="table table-condensed table-striped" style="font-size:12px;">';
+	html += row('Fence Voltage Avg', fenceAvgDW, tpName, 'Purpose');
 	html += row('Fence Voltage Min', findDW(pw, 'Fence Voltage Min'), tpName, 'Purpose');
 	html += row('Fence Voltage Max', findDW(pw, 'Fence Voltage Max'), tpName, 'Purpose');
 	html += row('Pulse Count', findDW(pw, 'Pulse Count'), tpName, 'Purpose');
+	html += row('Battery Voltage', battDW, tpName, 'Purpose');
+	html += row('Battery Current', findDW(pw, 'Battery Current'), tpName, 'Purpose');
+	html += row('Solar Voltage', solarDW, tpName, 'Purpose');
+	html += row('Solar Current', findDW(pw, 'Solar Current'), tpName, 'Purpose');
+	html += row('Energizer Battery Voltage', energizerDW, tpName, 'Purpose');
 	html += row('Energizer Battery Current', findDW(pw, 'Energizer Battery Current'), tpName, 'Purpose');
 	html += row('External Battery Voltage', findDW(pw, 'External Battery Voltage'), tpName, 'Purpose');
-	html += row('Solar Current', findDW(pw, 'Solar Current'), tpName, 'Purpose');
-	html += row('Battery Current', findDW(pw, 'Battery Current'), tpName, 'Purpose');
+	html += row('Internal Temperature', tempDW, tpName, 'Purpose');
 	html += row('Seconds Since Last Pulse', findDW(pw, 'Seconds Since Last Pulse'), tpName, 'Purpose');
 	html += row('snr', findDW(pw, 'snr'), tpName, 'Purpose');
 	html += row('rssi', rssiDW, tpName, 'Purpose');
