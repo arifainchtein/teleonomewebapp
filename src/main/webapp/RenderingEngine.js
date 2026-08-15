@@ -1462,6 +1462,19 @@ function buildLangleyContent(telepathon) {
 			mkMultiGraphBtns(tpName, 'Purpose', dwNames, dwUnits, chartTitle) +
 			'</div>';
 	}
+	// Same blue panel as multiChartPanel, but holds several titled button-groups side by side
+	// (each with its own 1h/24h/7d combined-chart buttons) instead of a separate blue line per chart.
+	function multiChartPanelGroup(items) {
+		var groups = items.map(function(it) {
+			return '<span style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-right:22px;">' +
+				'<span style="font-size:12px;font-weight:bold;color:#2c3e50;margin-right:4px;">' + it.title + '</span>' +
+				mkMultiGraphBtns(tpName, 'Purpose', it.dwNames, it.dwUnits, it.title) +
+				'</span>';
+		}).join('');
+		return '<div style="margin-bottom:8px;padding:6px 8px;background:#eef3fa;border-radius:6px;display:flex;align-items:center;flex-wrap:wrap;">' +
+			groups +
+			'</div>';
+	}
 	function vitalCard(label, val, unit, color) {
 		return '<div class="col-xs-4 col-sm-2" style="margin-bottom:8px;padding:2px;">' +
 			'<div style="border-radius:10px;overflow:hidden;">' +
@@ -1516,7 +1529,11 @@ function buildLangleyContent(telepathon) {
 	if (rssiDW) { var rssiV = parseFloat(rssiDW["Value"]); html += vitalCard('Signal', rssiDW["Value"], '', rssiV > -95 ? '#27ae60' : '#f39c12'); }
 	html += '</div>';
 
-	html += multiChartPanel("Power Chart", ["Solar Voltage", "Battery Voltage", "Battery Current", "Solar Current"], ["V", "V", "mA", "mA"]);
+	html += multiChartPanelGroup([
+		{ title: "Power Chart",         dwNames: ["Solar Voltage", "Battery Voltage", "Battery Current", "Solar Current"], dwUnits: ["V", "V", "mA", "mA"] },
+		{ title: "Solar Power Chart",   dwNames: ["Solar Voltage", "Solar Current"], dwUnits: ["V", "mA"] },
+		{ title: "Battery Power Chart", dwNames: ["Battery Voltage", "Battery Current"], dwUnits: ["V", "mA"] }
+	]);
 	html += multiChartPanel("Energizer Chart", ["Energizer Battery Voltage", "Energizer Battery Current"], ["V", "mA"]);
 
 	html += '<table class="table table-condensed table-striped" style="font-size:12px;">';
