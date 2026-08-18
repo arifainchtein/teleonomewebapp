@@ -1883,6 +1883,14 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 			var panelVoltDW = findPW("Panel Voltage");
 			var panelCurrDW = findPW("Panel Current");
 			if (panelVoltDW) extras.push('P: ' + panelVoltDW["Value"] + 'V' + (panelCurrDW ? ' ' + panelCurrDW["Value"] + 'mA' : ''));
+		} else if (deviceType === "Langley") {
+			var battCurrDW = findPW("Battery Current");
+			if (battDW) extras.push('B: ' + battDW["Value"] + 'V' + (battCurrDW ? ' ' + battCurrDW["Value"] + 'mA' : ''));
+			var solarVoltDW = findPW("Solar Voltage");
+			var solarCurrDW = findPW("Solar Current");
+			if (solarVoltDW) extras.push('P: ' + solarVoltDW["Value"] + 'V' + (solarCurrDW ? ' ' + solarCurrDW["Value"] + 'mA' : ''));
+			var energizerVoltCardDW = findPW("Energizer Battery Voltage");
+			if (energizerVoltCardDW) extras.push('E: ' + energizerVoltCardDW["Value"] + 'V');
 		} else if (battDW) {
 			extras.push(battDW["Value"] + 'V');
 		}
