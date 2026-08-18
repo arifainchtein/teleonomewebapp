@@ -218,6 +218,20 @@ function closeModal(id) {
 	$('#' + id).modal('hide');
 }
 
+// Modal centering on this page (index.html: "body.modal-open .modal.in { display:
+// flex } body.modal-open .modal.in .modal-dialog { margin:auto }") only applies
+// while <body> carries the "modal-open" class. Bootstrap's own hide handling
+// strips that class as soon as ANY modal finishes closing, with no awareness of
+// whether another modal (e.g. the Registry Status popup, still open underneath a
+// telepathon detail modal) is still showing - so closing the inner one stranded
+// the outer one without centering, snapping it to the top-left. Delegated on
+// document so it also covers modals like tpModal_*, created at runtime.
+$(document).on('hidden.bs.modal', '.modal', function () {
+	if ($('.modal.in').length > 0) {
+		$('body').addClass('modal-open');
+	}
+});
+
 function computeQueueAnalysisStatusColor(chain) {
 	// Worst-of-any-queue: red if any queue has dropped items (data loss),
 	// yellow if any queue has a backlog of undelivered items, else green.
