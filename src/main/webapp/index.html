@@ -54,6 +54,15 @@
     margin: 0.5rem;
 }
 
+/* Registry Status shows a row of telepathon cards (see buildRegistryCard() in
+   RenderingEngine.js) - the stock .modal-lg (900px) only comfortably fits two
+   at the card grid's col-md-4 width, not three. 20% wider than modal-lg. */
+@media (min-width: 992px) {
+    #registry-status-modal .modal-dialog {
+        width: 1080px;
+    }
+}
+
 .top-buffer {
 	margin-top: 20px;
 }
