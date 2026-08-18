@@ -285,6 +285,53 @@ function getTelepathonRegistryDeviceList() {
 	}
 }
 
+// Candidate (name, device type, serial) triples not yet promoted to the official
+// registry - see TelepathonRegistryTask's "temporary list". Same DeneWord-read
+// pattern as getTelepathonRegistryDeviceList(), no AJAX needed.
+function getTelepathonRegistryPendingList() {
+	var pendingPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM + ":" + DENE_TELEPATHON_REGISTRY + ":" + DENEWORD_TELEPATHON_REGISTRY_PENDING_DEVICES;
+	var pendingJsonString = getDeneWordByIdentityPointer(pendingPointer, DENEWORD_VALUE_ATTRIBUTE);
+	if (!pendingJsonString) return null;
+	try {
+		return JSON.parse(pendingJsonString);
+	} catch (e) {
+		console.log("error parsing Telepathon Registry Pending Devices:" + e);
+		return null;
+	}
+}
+
+function formatPendingAge(ageSeconds) {
+	if (ageSeconds < 60) return Math.floor(ageSeconds) + 's ago';
+	if (ageSeconds < 3600) return Math.floor(ageSeconds / 60) + 'm ago';
+	if (ageSeconds < 86400) return Math.floor(ageSeconds / 3600) + 'h ago';
+	return Math.floor(ageSeconds / 86400) + 'd ago';
+}
+
+// A table, not cards - unlike the official registry (one row per confirmed
+// device), a pending name can have several competing serial numbers at once,
+// which is exactly the thing worth comparing side by side (occurrence count is
+// the whole point: which candidate is closest to promotion).
+function buildPendingListContent(pending) {
+	if (!pending || pending.length === 0) {
+		return '<p class="text-muted text-center" style="padding:20px;">Temporary list is empty - nothing currently unconfirmed.</p>';
+	}
+	var nowSeconds = Date.now() / 1000;
+	var html = '<table class="table table-condensed table-striped">';
+	html += '<thead><tr><th>Reported Name</th><th>Device Type</th><th>Serial Number</th><th>Occurrence Count</th><th>First Seen</th></tr></thead><tbody>';
+	for (var i = 0; i < pending.length; i++) {
+		var p = pending[i];
+		html += '<tr>';
+		html += '<td>' + p["Name"] + '</td>';
+		html += '<td>' + p["Device Type"] + '</td>';
+		html += '<td>' + p["Serial Number"] + '</td>';
+		html += '<td>' + p["Occurrence Count"] + '</td>';
+		html += '<td>' + formatPendingAge(nowSeconds - p["First Seen Epoch"]) + '</td>';
+		html += '</tr>';
+	}
+	html += '</tbody></table>';
+	return html;
+}
+
 function computeRegistryStatusButtonColor() {
 	var statusPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM + ":" + DENE_TELEPATHON_REGISTRY + ":" + DENEWORD_TELEPATHON_REGISTRY_STATUS;
 	var status = getDeneWordByIdentityPointer(statusPointer, DENEWORD_VALUE_ATTRIBUTE);
@@ -381,18 +428,31 @@ function loadRegistryCards(devices) {
 
 function openRegistryStatusModal() {
 	$('input[name="registryStatusFilter"][value="all"]').prop('checked', true);
+	// Reset to the Registry tab every time the modal is (re)opened, rather than
+	// leaving it wherever the user last clicked away from.
+	var $modal = $('#registry-status-modal');
+	$modal.find('.nav-pills > li').first().addClass('active').siblings().removeClass('active');
+	$modal.find('.tab-pane').first().addClass('active').siblings('.tab-pane').removeClass('active');
+
 	var devices = getTelepathonRegistryDeviceList();
 	if (devices === null) {
 		$('#registry-status-modal-body').html('<p class="text-danger text-center" style="padding:20px;">Error loading registry status.</p>');
-		openModal('registry-status-modal');
-		return;
+	} else {
+		$('#registry-status-modal-body').html(
+			'<div id="registry-status-cards" class="row"></div>' +
+			'<p id="registry-status-loading" class="text-muted text-center" style="padding:20px;">Loading last known data…</p>'
+		);
+		loadRegistryCards(devices);
 	}
-	$('#registry-status-modal-body').html(
-		'<div id="registry-status-cards" class="row"></div>' +
-		'<p id="registry-status-loading" class="text-muted text-center" style="padding:20px;">Loading last known data…</p>'
+
+	var pending = getTelepathonRegistryPendingList();
+	$('#registry-pending-pane').html(
+		pending === null
+			? '<p class="text-danger text-center" style="padding:20px;">Error loading temporary list.</p>'
+			: buildPendingListContent(pending)
 	);
+
 	openModal('registry-status-modal');
-	loadRegistryCards(devices);
 }
 
 var organismInfoJsonData;

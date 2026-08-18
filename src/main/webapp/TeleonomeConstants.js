@@ -292,6 +292,10 @@ var DENECHAIN_ANNABELLE_QUEUE_STATUS = "Annabelle Queue Status";
 var DENE_TELEPATHON_REGISTRY = "Telepathon Registry";
 var DENEWORD_TELEPATHON_REGISTRY_STATUS = "Telepathon Registry Status";
 var DENEWORD_TELEPATHON_REGISTRY_DEVICES = "Telepathon Registry Devices";
+// Candidate (name, device type, serial) triples not yet promoted to the official
+// registry - see TelepathonRegistryTask's "temporary list" / checkPromotion().
+// Same no-AJAX read as DEVICES above, published fresh every sweep.
+var DENEWORD_TELEPATHON_REGISTRY_PENDING_DEVICES = "Telepathon Registry Pending Devices";
 
 var VALUE_UNDEFINED = "Undefined";
 

@@ -577,12 +577,21 @@ the css for the little box on the top right f external data
 						<h4 class="modal-title">Telepathon Registry Status</h4>
 					</div>
 					<div class="modal-body">
-						<div style="margin-bottom:12px;">
-							<label style="margin-right:16px;font-weight:normal;"><input type="radio" name="registryStatusFilter" value="all" checked onchange="filterRegistryStatusTable('all')"> Show All</label>
-							<label style="margin-right:16px;font-weight:normal;"><input type="radio" name="registryStatusFilter" value="current" onchange="filterRegistryStatusTable('current')"> Show Current</label>
-							<label style="font-weight:normal;"><input type="radio" name="registryStatusFilter" value="stale" onchange="filterRegistryStatusTable('stale')"> Show Stale</label>
+						<ul class="nav nav-pills" style="margin-bottom:12px;">
+							<li class="active" onclick="return teleonomeShowTab('registry-view-pane', this)"><a href="#">Registry</a></li>
+							<li onclick="return teleonomeShowTab('registry-pending-pane', this)"><a href="#">Temporary List</a></li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active" id="registry-view-pane">
+								<div style="margin-bottom:12px;">
+									<label style="margin-right:16px;font-weight:normal;"><input type="radio" name="registryStatusFilter" value="all" checked onchange="filterRegistryStatusTable('all')"> Show All</label>
+									<label style="margin-right:16px;font-weight:normal;"><input type="radio" name="registryStatusFilter" value="current" onchange="filterRegistryStatusTable('current')"> Show Current</label>
+									<label style="font-weight:normal;"><input type="radio" name="registryStatusFilter" value="stale" onchange="filterRegistryStatusTable('stale')"> Show Stale</label>
+								</div>
+								<div id="registry-status-modal-body"></div>
+							</div>
+							<div class="tab-pane" id="registry-pending-pane"></div>
 						</div>
-						<div id="registry-status-modal-body"></div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" onclick="closeModal('registry-status-modal')">Close</button>
