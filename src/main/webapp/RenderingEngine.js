@@ -256,13 +256,6 @@ function openQueueAnalysisModal() {
 	openModal('queue-analysis-modal');
 }
 
-function formatRegistryAge(ageSeconds) {
-	if (ageSeconds < 60) return Math.floor(ageSeconds) + 's ago';
-	if (ageSeconds < 3600) return Math.floor(ageSeconds / 60) + 'm ago';
-	if (ageSeconds < 86400) return Math.floor(ageSeconds / 3600) + 'h ago';
-	return Math.floor(ageSeconds / 86400) + 'd ago';
-}
-
 // TelepathonRegistryTask (cerebellum) already computes per-device OK/WARNING/CRITICAL
 // status server-side, using per-Device-Type lateness thresholds, and publishes the
 // whole fleet into this Dene every pulse — so this just reads it, no AJAX call needed.
@@ -294,39 +287,82 @@ function refreshRegistryStatusButton() {
 	$btn.css({'background-color': color, 'border-color': color, 'color': '#fff'});
 }
 
-function buildRegistryStatusContent(devices) {
-	if (!devices || devices.length === 0) {
-		return '<p class="text-muted text-center" style="padding:20px;">No telepathon registry data found.</p>';
-	}
-	devices = devices.slice().sort(function (a, b) {
-		return (a["Name"] || "").localeCompare(b["Name"] || "");
-	});
-	var html = '<table class="table table-condensed table-striped" id="registryStatusTable">';
-	html += '<thead><tr><th>Telepathon</th><th>Device Type</th><th>Serial Number</th><th>Age</th><th>Status</th></tr></thead><tbody>';
-	for (var i = 0; i < devices.length; i++) {
-		var device = devices[i];
-		var status = device["Status"];
-		var isCurrent = status === "OK";
-		var statusColor = status === "CRITICAL" ? '#e74c3c' : (status === "WARNING" ? '#f39c12' : '#27ae60');
-		html += '<tr data-registry-status="' + (isCurrent ? 'current' : 'stale') + '">';
-		html += '<td>' + device["Name"] + '</td>';
-		html += '<td>' + device["Device Type"] + '</td>';
-		html += '<td>' + device["Serial Number"] + '</td>';
-		html += '<td>' + formatRegistryAge(device["Seconds Since Last Seen"]) + '</td>';
-		html += '<td><span style="color:' + statusColor + ';font-weight:bold;">' + status + '</span></td>';
-		html += '</tr>';
-	}
-	html += '</tbody></table>';
-	return html;
+// Renders the registry as the same card grid the main Telepathons view uses -
+// reuses buildTelepathonCardView() itself rather than a bespoke summary table,
+// so clicking a card opens the identical full Configuration/Sensors/Purpose
+// detail modal a live telepathon gets. Fed by each device's LAST KNOWN reading
+// from Postgres (GetLastTelepathonRecords), not the live denome - the whole
+// point being a device still shows up here after the live denome has pruned it
+// (anything idle over an hour disappears from the main view entirely, even
+// though the database still has its last reading).
+//
+// '_registry' idSuffix keeps this grid's DOM ids (tpModal_/tpText_/tpCardCol_)
+// distinct from the main view's, since a device can legitimately be rendered in
+// both places at once.
+function buildRegistryCard(telepathonData, isCurrent) {
+	var cardHtml = buildTelepathonCardView(telepathonData, '_registry');
+	var $card = $(cardHtml);
+	$card.attr('data-registry-status', isCurrent ? 'current' : 'stale');
+	return $card;
+}
+
+function buildRegistryNoDataCard(name, isCurrent) {
+	return $(
+		'<div class="col-xs-12 col-sm-6 col-md-4" data-registry-status="' + (isCurrent ? 'current' : 'stale') + '" ' +
+		'style="margin-bottom:16px;padding:6px;">' +
+		'<div style="border-radius:12px;border:1px dashed #ccc;padding:14px;text-align:center;color:#999;">' +
+		'<div style="font-weight:bold;">' + name + '</div>' +
+		'<div style="font-size:12px;margin-top:6px;">No stored data found</div>' +
+		'</div></div>'
+	);
 }
 
 function filterRegistryStatusTable(filter) {
 	if (filter === 'all') {
-		$('#registryStatusTable tbody tr').show();
+		$('#registry-status-cards [data-registry-status]').show();
 	} else {
-		$('#registryStatusTable tbody tr').hide();
-		$('#registryStatusTable tbody tr[data-registry-status="' + filter + '"]').show();
+		$('#registry-status-cards [data-registry-status]').hide();
+		$('#registry-status-cards [data-registry-status="' + filter + '"]').show();
 	}
+}
+
+// Fetches each registered device's last-known full reading in one round trip
+// and renders the card grid - separate from openRegistryStatusModal() so the
+// modal opens immediately (with a loading placeholder) rather than waiting on
+// the AJAX call before showing anything.
+function loadRegistryCards(devices) {
+	if (!devices.length) {
+		$('#registry-status-loading').text('No telepathon registry data found.');
+		return;
+	}
+	var names = devices.map(function (d) { return d["Name"]; });
+	$.ajax({
+		type: "GET",
+		url: "/TeleonomeServlet",
+		data: { formName: "GetLastTelepathonRecords", telepathonNames: names.join(",") },
+		dataType: "json",
+		success: function (records) {
+			$('#registry-status-loading').remove();
+			var $container = $('#registry-status-cards');
+			devices = devices.slice().sort(function (a, b) {
+				return (a["Name"] || "").localeCompare(b["Name"] || "");
+			});
+			for (var i = 0; i < devices.length; i++) {
+				var device = devices[i];
+				var name = device["Name"];
+				var record = records ? records[name] : null;
+				var isCurrent = device["Status"] === "OK";
+				var $card = (record && record["data"])
+					? buildRegistryCard(record["data"], isCurrent)
+					: buildRegistryNoDataCard(name, isCurrent);
+				$container.append($card);
+			}
+			filterRegistryStatusTable($('input[name="registryStatusFilter"]:checked').val() || 'all');
+		},
+		error: function () {
+			$('#registry-status-loading').text('Error loading last known telepathon data.');
+		}
+	});
 }
 
 function openRegistryStatusModal() {
@@ -334,11 +370,15 @@ function openRegistryStatusModal() {
 	var devices = getTelepathonRegistryDeviceList();
 	if (devices === null) {
 		$('#registry-status-modal-body').html('<p class="text-danger text-center" style="padding:20px;">Error loading registry status.</p>');
-	} else {
-		$('#registry-status-modal-body').html(buildRegistryStatusContent(devices));
-		filterRegistryStatusTable('all');
+		openModal('registry-status-modal');
+		return;
 	}
+	$('#registry-status-modal-body').html(
+		'<div id="registry-status-cards" class="row"></div>' +
+		'<p id="registry-status-loading" class="text-muted text-center" style="padding:20px;">Loading last known data…</p>'
+	);
 	openModal('registry-status-modal');
+	loadRegistryCards(devices);
 }
 
 var organismInfoJsonData;
@@ -1159,6 +1199,19 @@ function buildDaffodilContent(telepathon) {
 			mkMultiGraphBtns(tpName, 'Purpose', dwNames, dwUnits, chartTitle) +
 			'</div>';
 	}
+	// Same blue panel as multiChartPanel, but holds several titled button-groups side by side
+	// (each with its own 1h/24h/7d combined-chart buttons) instead of a separate blue line per chart.
+	function multiChartPanelGroup(items) {
+		var groups = items.map(function(it) {
+			return '<span style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-right:22px;">' +
+				'<span style="font-size:12px;font-weight:bold;color:#2c3e50;margin-right:4px;">' + it.title + '</span>' +
+				mkMultiGraphBtns(tpName, 'Purpose', it.dwNames, it.dwUnits, it.title) +
+				'</span>';
+		}).join('');
+		return '<div style="margin-bottom:8px;padding:6px 8px;background:#eef3fa;border-radius:6px;display:flex;align-items:center;flex-wrap:wrap;">' +
+			groups +
+			'</div>';
+	}
 
 	// ── LED snapshot helpers ──────────────────────────────────────────────────
 	function ledSvg(onMap) {
@@ -1318,7 +1371,11 @@ function buildDaffodilContent(telepathon) {
 		var card = cardGroups[ci];
 		html += '<div class="tab-pane' + (ci === 0 ? ' active' : '') + '" id="' + card.id + '">';
 		if (card.title === "Power") {
-			html += multiChartPanel("Power Chart", ["Panel Voltage", "Battery Voltage", "Battery Current", "Panel Current"], ["V", "V", "mA", "mA"]);
+			html += multiChartPanelGroup([
+				{ title: "Power Chart",         dwNames: ["Panel Voltage", "Battery Voltage", "Battery Current", "Panel Current"], dwUnits: ["V", "V", "mA", "mA"] },
+				{ title: "Solar Power Chart",   dwNames: ["Panel Voltage", "Panel Current"], dwUnits: ["V", "mA"] },
+				{ title: "Battery Power Chart", dwNames: ["Battery Voltage", "Battery Current"], dwUnits: ["V", "mA"] }
+			]);
 			html += multiChartPanel("Solar / Light Chart", ["Panel Current", "Light Level"], ["mA", "Lux"]);
 		}
 		html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">';
@@ -1681,9 +1738,14 @@ function computeTelepathonAgeStatus(telepathon) {
 	return { ageSeconds: ageSeconds, statusColor: statusColor };
 }
 
-function buildTelepathonCardView(telepathon) {
+// idSuffix distinguishes a second rendering of the same device's card from the
+// main Telepathons view's own (e.g. '_registry' for the Registry Status popup,
+// which can show a device that's also currently live in the main grid) - without
+// it, both would emit the same tpModal_/tpText_/tpCardCol_ ids and collide.
+function buildTelepathonCardView(telepathon, idSuffix) {
+	idSuffix = idSuffix || '';
 	var name = telepathon["Name"];
-	var safeId = name.replace(/[^a-zA-Z0-9]/g, '_');
+	var safeId = name.replace(/[^a-zA-Z0-9]/g, '_') + idSuffix;
 	var modalId = 'tpModal_' + safeId;
 
 	// Prefer the live-packet cache over the denome value which can be stale/garbled.
