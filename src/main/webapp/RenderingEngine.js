@@ -378,6 +378,22 @@ function buildRegistryNoDataCard(name, isCurrent) {
 	);
 }
 
+// Re-slices the cached full Memory-by-Sensor breakdown (hippoBreakdownAllSlices, set
+// in renderOrgansPanel()) by whether each slice's name is in the Cerebellum registry's
+// valid (official) or temporary (pending) name set, and redraws the pie chart. The
+// "Other" slice (overflow beyond MemoryBreakdown's top-15 cap) matches neither set, so
+// it only ever appears under "Show All" - its membership is ambiguous by construction.
+function filterHippoBreakdownChart(filter) {
+	if (!hippoBreakdownAllSlices) return;
+	var slices = hippoBreakdownAllSlices;
+	if (filter === 'valid') {
+		slices = slices.filter(function(s) { return hippoBreakdownValidNames && hippoBreakdownValidNames[s.name]; });
+	} else if (filter === 'temporary') {
+		slices = slices.filter(function(s) { return hippoBreakdownPendingNames && hippoBreakdownPendingNames[s.name]; });
+	}
+	drawHippocampusPieChart('hippo-breakdown-chart', slices);
+}
+
 function filterRegistryStatusTable(filter) {
 	if (filter === 'all') {
 		$('#registry-status-cards [data-registry-status]').show();
@@ -457,6 +473,14 @@ function openRegistryStatusModal() {
 
 var organismInfoJsonData;
 var telepathonsJsonData;
+
+// Full (unfiltered) Hippocampus "Memory by Sensor" pie slices, plus the Cerebellum
+// registry's valid/temporary name sets - kept across renders so the Show All/Valid/
+// Temporary radios (see filterHippoBreakdownChart()) can re-slice without re-parsing
+// the denome.
+var hippoBreakdownAllSlices = null;
+var hippoBreakdownValidNames = null;
+var hippoBreakdownPendingNames = null;
 
 var organismIPInfoJsonData;
 var pulseCreationTime="";
@@ -2411,6 +2435,20 @@ function renderOrgansPanel() {
 					hippoSpaceSlices = [{ name: "Used", value: hippoUsed }, { name: "Available", value: hippoAvail }];
 				}
 
+				// Hippocampus has no notion of "valid" vs "temporary" itself - it just tracks
+				// memory by whatever telepathon name shows up in the live pulse's Telepathons
+				// nucleus (see Hippocampus.absorbPulse()), duplicates/corrupted names included.
+				// The valid/temporary distinction lives in Cerebellum's TelepathonRegistryTask
+				// (Purpose:Cerebellum:Telepathon Registry), already read elsewhere via
+				// getTelepathonRegistryDeviceList()/getTelepathonRegistryPendingList() for the
+				// Cerebellum modal - reused here to cross-reference by name for the pie chart
+				// filter (see filterHippoBreakdownChart()).
+				hippoBreakdownAllSlices = hippoBreakdownSlices;
+				hippoBreakdownValidNames = {};
+				(getTelepathonRegistryDeviceList() || []).forEach(function(d) { hippoBreakdownValidNames[d["Name"]] = true; });
+				hippoBreakdownPendingNames = {};
+				(getTelepathonRegistryPendingList() || []).forEach(function(p) { hippoBreakdownPendingNames[p["Name"]] = true; });
+
 				// Charts
 				hippoContent += '<div class="row" style="margin-bottom:16px;margin-top:4px;">';
 				hippoContent += '<div class="col-xs-12 col-sm-6" style="padding-left:20px;padding-right:20px;">';
@@ -2418,7 +2456,13 @@ function renderOrgansPanel() {
 				hippoContent += '<div id="hippo-space-chart"></div></div>';
 				hippoContent += '<div class="col-xs-12 col-sm-6" style="padding-left:20px;padding-right:20px;">';
 				hippoContent += '<h5 class="text-center" style="font-size:13px;color:#555;margin-bottom:4px;">Memory by Sensor</h5>';
-				hippoContent += '<div id="hippo-breakdown-chart"></div></div>';
+				hippoContent += '<div id="hippo-breakdown-chart"></div>';
+				hippoContent += '<div class="text-center" style="margin-top:6px;">' +
+					'<label style="margin-right:12px;font-weight:normal;font-size:12px;"><input type="radio" name="hippoBreakdownFilter" value="all" checked onchange="filterHippoBreakdownChart(\'all\')"> Show All</label>' +
+					'<label style="margin-right:12px;font-weight:normal;font-size:12px;"><input type="radio" name="hippoBreakdownFilter" value="valid" onchange="filterHippoBreakdownChart(\'valid\')"> Show Valid</label>' +
+					'<label style="font-weight:normal;font-size:12px;"><input type="radio" name="hippoBreakdownFilter" value="temporary" onchange="filterHippoBreakdownChart(\'temporary\')"> Show Temporary</label>' +
+					'</div>';
+				hippoContent += '</div>';
 				hippoContent += '</div>';
 				if (hippoTs) hippoContent += '<p class="text-muted small" style="margin-bottom:4px;">Last update: ' + hippoTs + '</p>';
 
@@ -2535,7 +2579,7 @@ function renderOrgansPanel() {
 		drawHippocampusPieChart('hippo-space-chart', hippoSpaceSlices, ['#4e79a7', '#d9d9d9']);
 	}
 	if (hippoBreakdownSlices && hippoBreakdownSlices.length > 0) {
-		drawHippocampusPieChart('hippo-breakdown-chart', hippoBreakdownSlices);
+		filterHippoBreakdownChart('all');
 	}
 
 	// Cerebellum modal
