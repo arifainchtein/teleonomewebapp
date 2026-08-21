@@ -1019,8 +1019,15 @@ function drawTimeSeriesBartChart(id, dataSource, graphTitle, dateRange){
 }
 
 // Pie chart using D3 v7. slices: [{name, value}]. colors: optional hex array.
+// sections: optional [{label, count}] describing consecutive runs within `slices` (in
+// order) that should get a bold heading and extra breathing room in the legend, e.g.
+// [{label:'Valid', count:3}, {label:'Temporary', count:2}] - see
+// filterHippoBreakdownChart() in RenderingEngine.js, the only caller that passes it.
+// Slice-to-color mapping is unaffected by sections - a slice's color index is still
+// just its position within `slices`, same as the arcs, so wedge and legend colors stay
+// in sync regardless of grouping.
 // Uses .style() for fill/stroke so the global CSS `path { fill: none }` rule is overridden.
-function drawHippocampusPieChart(containerId, slices, colors) {
+function drawHippocampusPieChart(containerId, slices, colors, sections) {
 	var container = document.getElementById(containerId);
 	if (!container || !slices || slices.length === 0) return;
 	d3.select('#' + containerId).selectAll('*').remove();
@@ -1028,9 +1035,38 @@ function drawHippocampusPieChart(containerId, slices, colors) {
 	colors = colors || d3.schemeTableau10;
 	var total = slices.reduce(function(s, d) { return s + d.value; }, 0);
 	if (total === 0) return;
+
+	var rowH = 22, headerH = 18, groupGapH = 10, pieSlotH = 200;
+
+	// Lay out legend rows top-to-bottom, inserting a header row + extra gap at each
+	// section boundary. Falls back to one flat list (original behaviour) when no
+	// sections are given, or if they don't add up to all the slices (defensive -
+	// a caller bug here should degrade to a normal legend, not drop slices).
+	var legendRows = [];
+	var sectionsCoverAllSlices = sections && sections.reduce(function(n, s) { return n + s.count; }, 0) === slices.length;
+	if (sectionsCoverAllSlices) {
+		var y = 0, idx = 0;
+		sections.forEach(function(sec, si) {
+			if (sec.count <= 0) return;
+			if (legendRows.length > 0) y += groupGapH;
+			legendRows.push({ header: sec.label, y: y });
+			y += headerH;
+			for (var c = 0; c < sec.count; c++) {
+				legendRows.push({ slice: slices[idx], colorIndex: idx, y: y });
+				y += rowH;
+				idx++;
+			}
+		});
+	} else {
+		slices.forEach(function(s, i) {
+			legendRows.push({ slice: s, colorIndex: i, y: i * rowH });
+		});
+	}
+	var legendHeight = legendRows.length ? legendRows[legendRows.length - 1].y + rowH : 0;
+
 	var w = Math.max(container.getBoundingClientRect().width || 240, 180);
-	var h = 200;
-	var r = Math.min(w * 0.38, h / 2 - 8);
+	var h = Math.max(pieSlotH, legendHeight + 16);
+	var r = Math.min(w * 0.38, pieSlotH / 2 - 8);
 	var legendX = r * 2 + 16;
 
 	var pie = d3.pie().value(function(d) { return d.value; }).sort(null);
@@ -1041,7 +1077,7 @@ function drawHippocampusPieChart(containerId, slices, colors) {
 		.attr('height', h);
 
 	var g = svg.append('g')
-		.attr('transform', 'translate(' + r + ',' + (h / 2) + ')');
+		.attr('transform', 'translate(' + r + ',' + (pieSlotH / 2) + ')');
 
 	// Use .style() not .attr() — the global CSS `path { fill: none }` overrides SVG presentation attributes
 	g.selectAll('.harc')
@@ -1053,14 +1089,20 @@ function drawHippocampusPieChart(containerId, slices, colors) {
 		.style('stroke-width', '1px');
 
 	var legend = svg.append('g').attr('transform', 'translate(' + legendX + ',12)');
-	slices.forEach(function(s, i) {
-		var y = i * 22;
-		legend.append('rect').attr('x', 0).attr('y', y).attr('width', 13).attr('height', 13)
+	legendRows.forEach(function(row) {
+		if (row.header) {
+			legend.append('text').attr('x', 0).attr('y', row.y + 11)
+				.style('font-size', '11px').style('font-weight', 'bold').style('fill', '#555').style('stroke', 'none')
+				.text(row.header);
+			return;
+		}
+		var i = row.colorIndex;
+		legend.append('rect').attr('x', 0).attr('y', row.y).attr('width', 13).attr('height', 13)
 			.style('fill', colors[i % colors.length]);
-		var count = s.value.toLocaleString();
-		var label = s.name + ' (' + count + ')';
+		var count = row.slice.value.toLocaleString();
+		var label = row.slice.name + ' (' + count + ')';
 		if (label.length > 28) label = label.substring(0, 26) + '…';
-		legend.append('text').attr('x', 17).attr('y', y + 11)
+		legend.append('text').attr('x', 17).attr('y', row.y + 11)
 			.style('font-size', '11px').style('fill', '#333').style('stroke', 'none').text(label);
 	});
 }

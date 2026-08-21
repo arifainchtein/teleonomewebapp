@@ -380,18 +380,38 @@ function buildRegistryNoDataCard(name, isCurrent) {
 
 // Re-slices the cached full Memory-by-Sensor breakdown (hippoBreakdownAllSlices, set
 // in renderOrgansPanel()) by whether each slice's name is in the Cerebellum registry's
-// valid (official) or temporary (pending) name set, and redraws the pie chart. The
-// "Other" slice (overflow beyond MemoryBreakdown's top-15 cap) matches neither set, so
-// it only ever appears under "Show All" - its membership is ambiguous by construction.
+// valid (official) or temporary (pending) name set, and redraws the pie chart.
+//
+// "Show All" reorders the slices into Valid-then-Temporary-then-Other groups (rather
+// than leaving Hippocampus's own top-15-by-volume order, which interleaves them) and
+// passes `sections` so drawHippocampusPieChart() draws a heading + gap per group in the
+// legend. "Other" catches both MemoryBreakdown's own top-15-cap overflow bucket and any
+// name the registry hasn't classified as valid or pending yet - membership there is
+// ambiguous by construction, so it only ever shows up under "Show All".
 function filterHippoBreakdownChart(filter) {
 	if (!hippoBreakdownAllSlices) return;
-	var slices = hippoBreakdownAllSlices;
+	var isValid     = function(s) { return hippoBreakdownValidNames && hippoBreakdownValidNames[s.name]; };
+	var isTemporary = function(s) { return hippoBreakdownPendingNames && hippoBreakdownPendingNames[s.name]; };
+
 	if (filter === 'valid') {
-		slices = slices.filter(function(s) { return hippoBreakdownValidNames && hippoBreakdownValidNames[s.name]; });
-	} else if (filter === 'temporary') {
-		slices = slices.filter(function(s) { return hippoBreakdownPendingNames && hippoBreakdownPendingNames[s.name]; });
+		drawHippocampusPieChart('hippo-breakdown-chart', hippoBreakdownAllSlices.filter(isValid));
+		return;
 	}
-	drawHippocampusPieChart('hippo-breakdown-chart', slices);
+	if (filter === 'temporary') {
+		drawHippocampusPieChart('hippo-breakdown-chart', hippoBreakdownAllSlices.filter(isTemporary));
+		return;
+	}
+
+	var validSlices     = hippoBreakdownAllSlices.filter(isValid);
+	var temporarySlices  = hippoBreakdownAllSlices.filter(isTemporary);
+	var otherSlices      = hippoBreakdownAllSlices.filter(function(s) { return !isValid(s) && !isTemporary(s); });
+	var grouped = validSlices.concat(temporarySlices).concat(otherSlices);
+	var sections = [
+		{ label: 'Valid', count: validSlices.length },
+		{ label: 'Temporary', count: temporarySlices.length },
+		{ label: 'Other', count: otherSlices.length }
+	];
+	drawHippocampusPieChart('hippo-breakdown-chart', grouped, null, sections);
 }
 
 function filterRegistryStatusTable(filter) {
