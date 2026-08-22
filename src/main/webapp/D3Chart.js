@@ -1039,18 +1039,25 @@ function drawHippocampusPieChart(containerId, slices, colors, sections) {
 	var rowH = 22, headerH = 18, groupGapH = 10, pieSlotH = 200;
 
 	// Lay out legend rows top-to-bottom, inserting a header row + extra gap at each
-	// section boundary. Falls back to one flat list (original behaviour) when no
-	// sections are given, or if they don't add up to all the slices (defensive -
-	// a caller bug here should degrade to a normal legend, not drop slices).
+	// section boundary. Every section's heading is always shown, even with zero
+	// slices (rendered as a "None" placeholder row) - a Valid/Temporary split with an
+	// empty Temporary group still needs to *look* like a split, not silently collapse
+	// back into one unlabeled list.
+	// Falls back to one flat list (original behaviour) when no sections are given, or
+	// if they don't add up to all the slices (defensive - a caller bug here should
+	// degrade to a normal legend, not drop slices).
 	var legendRows = [];
 	var sectionsCoverAllSlices = sections && sections.reduce(function(n, s) { return n + s.count; }, 0) === slices.length;
 	if (sectionsCoverAllSlices) {
 		var y = 0, idx = 0;
 		sections.forEach(function(sec, si) {
-			if (sec.count <= 0) return;
-			if (legendRows.length > 0) y += groupGapH;
+			if (si > 0) y += groupGapH;
 			legendRows.push({ header: sec.label, y: y });
 			y += headerH;
+			if (sec.count === 0) {
+				legendRows.push({ empty: true, y: y });
+				y += rowH;
+			}
 			for (var c = 0; c < sec.count; c++) {
 				legendRows.push({ slice: slices[idx], colorIndex: idx, y: y });
 				y += rowH;
@@ -1094,6 +1101,12 @@ function drawHippocampusPieChart(containerId, slices, colors, sections) {
 			legend.append('text').attr('x', 0).attr('y', row.y + 11)
 				.style('font-size', '11px').style('font-weight', 'bold').style('fill', '#555').style('stroke', 'none')
 				.text(row.header);
+			return;
+		}
+		if (row.empty) {
+			legend.append('text').attr('x', 17).attr('y', row.y + 11)
+				.style('font-size', '11px').style('font-style', 'italic').style('fill', '#999').style('stroke', 'none')
+				.text('None');
 			return;
 		}
 		var i = row.colorIndex;
