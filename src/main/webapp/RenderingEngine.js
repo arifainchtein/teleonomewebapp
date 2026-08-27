@@ -285,6 +285,37 @@ function getTelepathonRegistryDeviceList() {
 	}
 }
 
+// Registry devices with Status "OK" (matches the modal's "Show Current" filter) --
+// used by the "Temperature Chart" header button so a stale/CRITICAL device (which
+// has stopped reporting and would just draw a flat/empty line) doesn't get requested.
+function getValidTelepathonRegistryNames() {
+	var devices = getTelepathonRegistryDeviceList();
+	if (!devices) return [];
+	return devices.filter(function(d) { return d["Status"] === "OK"; }).map(function(d) { return d["Name"]; });
+}
+
+// Different telepathon device types publish ambient temperature under different
+// DeneWord names (Daffodil/Chinampa: "Outdoor Temperature", Langley: "Internal
+// Temperature") and occasionally under "Sensors" rather than "Purpose" (Daffodil).
+// Try each candidate in priority order against the device's live card data
+// (telepathonCardDataCache, kept current by refreshTelepathonsView/updateTelepathonsView)
+// and use whichever is actually present.
+var TELEPATHON_TEMPERATURE_FIELD_CANDIDATES = ["Outdoor Temperature", "Internal Temperature", "Temperature"];
+var TELEPATHON_TEMPERATURE_DENE_ORDER = ["Purpose", "Sensors"];
+function findTelepathonTemperatureField(telepathonName) {
+	var record = telepathonCardDataCache[telepathonName];
+	if (!record) return null;
+	for (var ci = 0; ci < TELEPATHON_TEMPERATURE_FIELD_CANDIDATES.length; ci++) {
+		for (var di = 0; di < TELEPATHON_TEMPERATURE_DENE_ORDER.length; di++) {
+			var dw = getDeneWordFromTelepathon(record, TELEPATHON_TEMPERATURE_DENE_ORDER[di], TELEPATHON_TEMPERATURE_FIELD_CANDIDATES[ci], COMPLETE);
+			if (dw) {
+				return { deneName: TELEPATHON_TEMPERATURE_DENE_ORDER[di], deneWordName: TELEPATHON_TEMPERATURE_FIELD_CANDIDATES[ci], units: dw["Units"] || "°C" };
+			}
+		}
+	}
+	return null;
+}
+
 // Candidate (name, device type, serial) triples not yet promoted to the official
 // registry - see TelepathonRegistryTask's "temporary list". Same DeneWord-read
 // pattern as getTelepathonRegistryDeviceList(), no AJAX needed.
@@ -1142,6 +1173,17 @@ function displayHippocampusResponse(payload){
 	var deneWordName= response.deneWordName;
 
 	var multiReq = window.telepathonMultiChartRequest;
+	if (multiReq && multiReq.mode === 'multiTelepathon' && multiReq.names.indexOf(telepathonName) !== -1) {
+		// "Temperature Chart" mode: one series per telepathon (fixed deneword per-device,
+		// varies by device type) rather than one telepathon with several denewords.
+		multiReq.received[telepathonName] = data;
+		var allInT = multiReq.names.every(function(n) { return multiReq.received.hasOwnProperty(n); });
+		if (allInT) {
+			window.telepathonMultiChartRequest = null;
+			displayHippocampusMultiResponse(multiReq);
+		}
+		return;
+	}
 	if (multiReq && multiReq.telepathon === telepathonName && multiReq.names.indexOf(deneWordName) !== -1) {
 		multiReq.received[deneWordName] = data;
 		var allIn = multiReq.names.every(function(n) { return multiReq.received.hasOwnProperty(n); });
@@ -1221,7 +1263,8 @@ function displayHippocampusMultiResponse(req){
 	})
 	$('#telepathon-graph-modal').find('.nav-tabs .nav-link:first').tab('show')
 
-	$('#telepathon-graph-title').html(req.telepathon + " - " + req.title);
+	var heading = (req.mode === 'multiTelepathon') ? req.title : (req.telepathon + " - " + req.title);
+	$('#telepathon-graph-title').html(heading);
 	$('#telepathon-graph').empty();
 	showTelepathonMultiGraph(seriesArray, req.range);
 

@@ -979,6 +979,51 @@ the css for the little box on the top right f external data
 						});
 				});
 
+				$(document).on('click', '.telepathon-registry-temperature-chart', function() {
+						// "Temperature Chart" header button (see TelepathonPanel.js) — one series
+						// per currently-valid (Status "OK") registry telepathon, using whichever
+						// temperature DeneWord that device type actually publishes (see
+						// findTelepathonTemperatureField in RenderingEngine.js). Reuses the same
+						// window.telepathonMultiChartRequest buffer/dispatch as the per-telepathon
+						// combined-chart buttons, tagged with mode:'multiTelepathon' so
+						// displayHippocampusResponse matches on telepathon name instead of deneword name.
+						var range = $(this).data('range');
+						window.lastTelepathonGraphRangeMs = range;
+
+						var deviceNames = getValidTelepathonRegistryNames();
+						var resolved = [];
+						deviceNames.forEach(function(name) {
+							var field = findTelepathonTemperatureField(name);
+							if (field) resolved.push({name: name, field: field});
+						});
+						if (resolved.length === 0) {
+							alert("No temperature data available for the current telepathons.");
+							return;
+						}
+
+						window.telepathonMultiChartRequest = {
+							mode: 'multiTelepathon',
+							title: 'Temperature Chart',
+							range: range,
+							names: resolved.map(function(r) { return r.name; }),
+							units: resolved.map(function(r) { return r.field.units; }),
+							received: {}
+						};
+
+						resolved.forEach(function(r) {
+							var identity = "@" + teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + r.name + ":" + r.field.deneName + ":" + r.field.deneWordName;
+							var requestPayload = {
+								"Identity": identity,
+								"Range": range,
+								"RequestId": browserId
+							};
+							var message = new Paho.MQTT.Message(JSON.stringify(requestPayload));
+							message.destinationName = "Hippocampus_Request";
+							message.qos = 1;
+							mqtt.send(message);
+						});
+				});
+
 				$(document).on('click', ".telepathon-daily-valuePOSTGREQL",function(e) {
 					e.preventDefault();
 					//$('#NewRememberedWordDeneWordView').empty();
