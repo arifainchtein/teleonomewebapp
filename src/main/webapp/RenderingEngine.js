@@ -1523,7 +1523,7 @@ function buildDaffodilContent(telepathon) {
 
 	var noGraphFields = {"Op Mode":1,"Weather Fresh":1,"INA219 Found":1,"BH1750 Found":1,"ADS1115 Found":1,"RTC Found":1,"DS18B20 Found":1,"SHT Found":1,"Invalid Time":1,"Using Solar Power":1,"Local Time":1,"Source Original Time":1,"Operating Status":1};
 	var cardGroups = [
-		{ id: 'daff-sensors-' + safeId, title: "Sensors", fields: ["Measured Height", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature"] },
+		{ id: 'daff-sensors-' + safeId, title: "Sensors", fields: ["Measured Height", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature", "Tank 1 Pressure Psi", "Tank 1 Water Level", "Tank 2 Pressure Psi", "Tank 2 Water Level"] },
 		{ id: 'daff-power-' + safeId,   title: "Power",   fields: ["Panel Voltage", "Panel Current", "Battery Voltage", "Battery Current", "V50 Voltage", "Led Brightness", "Operating Status", "Async Data", "Wake Time Sec", "Sleep Time", "Estimated Runtime"] },
 		{ id: 'daff-comms-' + safeId,   title: "Comms",   fields: ["rssi", "snr", "Digital Stables Upload", "Lora Active", "ds Last Upload"] },
 		{ id: 'daff-diag-' + safeId,    title: "Diagnostics", fields: ["RTC Battery Volt", "Op Mode", "Weather Fresh", "INA219 Found", "BH1750 Found", "ADS1115 Found", "RTC Found", "DS18B20 Found", "SHT Found", "Invalid Time", "Using Solar Power", "Source Original Time", "Local Time"] }
@@ -2041,12 +2041,50 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 		} else if (battDW) {
 			extras.push(battDW["Value"] + 'V');
 		}
-		if (deviceType === "Langley") {
-			var fenceAvgCardDW = findPW("Fence Voltage Avg");
-			if (fenceAvgCardDW) extras.push('Fence: ' + fenceAvgCardDW["Value"] + 'kV');
-		}
 		if (extras.length) statusExtra = '<span style="font-size:11px;color:#555;margin-left:4px;">' + extras.join('  ') + '</span>';
 	}
+
+	// Sensor/actuator line — sits between the "last pulse" line and the Status
+	// line, and shows the device's currently-configured sensor(s)/actuator(s)
+	// rather than the fixed power/battery readings covered by statusExtra.
+	var sensorLineHtml = '';
+	(function() {
+		var parts = [];
+		function addPart(label, dw) {
+			if (!dw) return;
+			var unit = dw["Units"] || '';
+			parts.push((label ? label + ': ' : '') + dw["Value"] + (unit ? ' ' + unit : ''));
+		}
+		if (name === "Chinampa") {
+			addPart('Flow', findPW("Fish Tank Outflow Flow Rate"));
+			addPart('Fish Tank Ht', findPW("Fish Tank Measured Height"));
+			addPart('Sump Ht', findPW("Sump Trough Measured Height"));
+		} else if (deviceType === "Daffodil") {
+			var flow1RateDW = findPW("Flow Rate 1");
+			var flow2RateDW = findPW("Flow Rate 2");
+			var tank1LevelDW = findPW("Tank 1 Water Level");
+			var tank2LevelDW = findPW("Tank 2 Water Level");
+			if (flow1RateDW) { var f1n = findSW("Flow 1 Name"); addPart(f1n ? f1n["Value"] : 'Flow 1', flow1RateDW); }
+			if (flow2RateDW) { var f2n = findSW("Flow 2 Name"); addPart(f2n ? f2n["Value"] : 'Flow 2', flow2RateDW); }
+			if (tank1LevelDW) { var t1n = findSW("Tank 1 Name"); addPart(t1n ? t1n["Value"] : 'Tank 1', tank1LevelDW); }
+			if (tank2LevelDW) { var t2n = findSW("Tank 2 Name"); addPart(t2n ? t2n["Value"] : 'Tank 2', tank2LevelDW); }
+			if (!parts.length) {
+				// Functions without dedicated flow/tank fields (Septic Tank, Water
+				// Trough, Temp & Soil Moisture, Light Detector, ...) - fall back to
+				// whichever generic sensor reading is present.
+				var genericFields = ["Sceptic Available", "Measured Height", "Outdoor Temperature", "Outdoor Humidity", "Light Level"];
+				for (var gi = 0; gi < genericFields.length; gi++) {
+					var gdw = findPW(genericFields[gi]) || findSW(genericFields[gi]);
+					if (gdw) { addPart(genericFields[gi], gdw); break; }
+				}
+			}
+		} else if (deviceType === "Langley") {
+			addPart('Fence', findPW("Fence Voltage Avg"));
+		}
+		if (parts.length) {
+			sensorLineHtml = '<div style="font-size:13px;color:#444;margin-top:4px;text-align:center;">' + parts.join('&nbsp;&nbsp;') + '</div>';
+		}
+	})();
 
 	var detailHtml = name === "Chinampa" ? buildChinampaContent(telepathon) :
 		deviceType === "Daffodil" ? buildDaffodilContent(telepathon) :
@@ -2096,6 +2134,7 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 		html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + localTimeShort +
 			'&nbsp;<span id="tpAge_' + safeId + '" style="color:' + statusColor + ';font-weight:bold;">(' + cardAgeSec + 's ago)</span></div>';
 	}
+	if (sensorLineHtml) html += sensorLineHtml;
 	if (opModeHtml) html += opModeHtml;
 	html += '<div style="margin-top:4px;text-align:center;">';
 	html += statusExtra;

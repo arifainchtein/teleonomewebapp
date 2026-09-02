@@ -485,6 +485,12 @@ function drawTimeSeriesLineChart(id, dataSource, graphTitle, timeScale){
 	var data = dataSource.Value;
 ////	// // // console.log("dataSource=" + dataSource);
 
+	// Individual entries can be null (e.g. a row whose write failed or was skipped
+	// server-side) even though dataSource itself resolved fine -- without this filter
+	// one null entry throws inside forEach and aborts renderPageByPointer's shared loop,
+	// same failure mode as the missing-dataSource case guarded above.
+	data = data.filter(function(d) { return d != null; });
+
 	data.forEach(function(d) {
 		d.date = new Date(d["Pulse Timestamp in Milliseconds"]);
 		d.close = +d.Value;
