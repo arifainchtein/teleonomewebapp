@@ -121,8 +121,9 @@ function showTelepathonGraph(data, rangeMs) {
 // Series are split across up to two Y axes grouped by units (first unit seen -> left axis,
 // second -> right axis) since voltage and current/lux readings live on very different scales
 // and would otherwise flatten one line against the other on a shared axis.
-function showTelepathonMultiGraph(seriesArray, rangeMs) {
-	const graphContainer = document.getElementById('telepathon-graph');
+function showTelepathonMultiGraph(seriesArray, rangeMs, containerId) {
+	containerId = containerId || 'telepathon-graph';
+	const graphContainer = document.getElementById(containerId);
 	const containerWidth = graphContainer ? graphContainer.getBoundingClientRect().width : 300;
 
 	const legendRowHeight = 22;
@@ -148,7 +149,7 @@ function showTelepathonMultiGraph(seriesArray, rangeMs) {
 		return { name: s.name, units: s.units, axis: (s.units === leftUnit ? 'left' : 'right'), values: values };
 	});
 
-	const svg = d3.select("#telepathon-graph")
+	const svg = d3.select("#" + containerId)
 		.append("svg")
 		.attr("width", "100%")
 		.attr("height", height + margin.top + margin.bottom)

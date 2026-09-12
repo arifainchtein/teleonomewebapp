@@ -1172,6 +1172,14 @@ function displayHippocampusResponse(payload){
 	var telepathonName = response.telepathonName;
 	var deneWordName= response.deneWordName;
 
+	var flowReq = window.chinampaFlowChartRequest;
+	if (flowReq && flowReq.telepathon === telepathonName && flowReq.names.indexOf(deneWordName) !== -1) {
+		flowReq.received[deneWordName] = data;
+		var allInFlow = flowReq.names.every(function(n) { return flowReq.received.hasOwnProperty(n); });
+		if (allInFlow) renderChinampaFlowChart(flowReq);
+		return;
+	}
+
 	var multiReq = window.telepathonMultiChartRequest;
 	if (multiReq && multiReq.mode === 'multiTelepathon' && multiReq.names.indexOf(telepathonName) !== -1) {
 		// "Temperature Chart" mode: one series per telepathon (fixed deneword per-device,
@@ -1281,6 +1289,46 @@ function displayHippocampusMultiResponse(req){
 	}, 0);
 }
 
+// Auto-loaded (no button click needed) fixed-24h combined Water Flow chart shown inline in the
+// Chinampa detail popup, above the Fish Tank / Sump Trough cards — see buildChinampaContent.
+// Fired once per modal open (from buildTelepathonCardView's 'shown.bs.modal' handler), not on
+// every interface refresh, to avoid spamming Hippocampus_Request over MQTT. Reuses the same
+// responseChanel/displayHippocampusResponse plumbing as the button-driven combined charts
+// (window.telepathonMultiChartRequest) but keeps its own buffer/container so the two don't collide,
+// and renders into the inline containerId instead of the shared #telepathon-graph-modal.
+function loadChinampaFlowChart(tpName, containerId, names, units) {
+	$('#' + containerId).html('<div style="text-align:center;color:#999;padding:20px;">Loading water flow chart…</div>');
+
+	window.chinampaFlowChartRequest = {
+		telepathon: tpName,
+		containerId: containerId,
+		range: 86400000,
+		names: names,
+		units: units,
+		received: {}
+	};
+
+	names.forEach(function(dwName) {
+		var identity = "@" + teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + tpName + ":Purpose:" + dwName;
+		var requestPayload = { "Identity": identity, "Range": 86400000, "RequestId": browserId };
+		var message = new Paho.MQTT.Message(JSON.stringify(requestPayload));
+		message.destinationName = "Hippocampus_Request";
+		message.qos = 1;
+		mqtt.send(message);
+	});
+}
+
+function renderChinampaFlowChart(req) {
+	window.chinampaFlowChartRequest = null;
+	if (!$('#' + req.containerId).length) return; // popup closed/replaced before data arrived
+
+	var seriesArray = req.names.map(function(n, i) {
+		return { name: n, units: req.units[i], data: req.received[n] || [] };
+	});
+
+	$('#' + req.containerId).empty();
+	showTelepathonMultiGraph(seriesArray, req.range, req.containerId);
+}
 
 function updatePulseStatusInfo(text){
 	$('#PulseStatusInfo').text(text);
@@ -2086,7 +2134,7 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 		}
 	})();
 
-	var detailHtml = name === "Chinampa" ? buildChinampaContent(telepathon) :
+	var detailHtml = name === "Chinampa" ? buildChinampaContent(telepathon, safeId) :
 		deviceType === "Daffodil" ? buildDaffodilContent(telepathon) :
 		deviceType === "Langley" ? buildLangleyContent(telepathon) :
 		buildTelepathonDetailContent(telepathon);
@@ -2103,6 +2151,20 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 			'<button type="button" class="btn btn-default" onclick="closeModal(\'' + modalId + '\')">Close</button>' +
 			'</div></div></div>'
 		);
+		if (name === "Chinampa") {
+			// Fires the inline 24h Water Flow chart (see buildChinampaContent/loadChinampaFlowChart)
+			// once per modal open rather than on every RefreshInterface() rebuild of this card.
+			$('#' + modalId).on('shown.bs.modal', function() {
+				var fishFlowDW = findPW("Fish Tank Outflow Flow Rate");
+				var pumpFlowDW = findPW("Pump Flow Rate");
+				loadChinampaFlowChart(
+					name,
+					'chinampa-flow-chart-' + safeId,
+					["Fish Tank Outflow Flow Rate", "Pump Flow Rate"],
+					[fishFlowDW ? (fishFlowDW["Units"] || '') : '', pumpFlowDW ? (pumpFlowDW["Units"] || '') : '']
+				);
+			});
+		}
 	}
 	$('#' + modalId + 'Body').html(detailHtml);
 
@@ -2875,8 +2937,9 @@ function renderOrgansPanel() {
 	return html;
 }
 
-function buildChinampaContent(telepathon) {
+function buildChinampaContent(telepathon, safeId) {
 	var tpName = telepathon["Name"];
+	safeId = safeId || tpName.replace(/[^a-zA-Z0-9]/g, '_');
 	var purposeDene = null, configDene = null, sensorsDene = null;
 	var denes = telepathon["Denes"];
 	for (var i = 0; i < denes.length; i++) {
@@ -3000,6 +3063,16 @@ function buildChinampaContent(telepathon) {
 
 	// Purpose tab
 	html += '<div class="tab-pane active" id="chinampa-purpose">';
+
+	// Combined Water Flow chart (Fish Tank outflow + Sump/Pump flow), fixed to the last 24h,
+	// full width, directly above the Fish Tank / Sump Trough cards. Loaded automatically when
+	// the modal opens (see loadChinampaFlowChart, wired from buildTelepathonCardView) rather
+	// than via a button click.
+	html += '<div style="background:#f8f9fa;border-radius:8px;border-top:4px solid #3498db;padding:10px;margin-bottom:12px;">';
+	html += '<div style="font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:1px solid #eee;margin-bottom:8px;padding-bottom:4px;">Water Flow (Last 24h)</div>';
+	html += '<div id="chinampa-flow-chart-' + safeId + '"><div style="text-align:center;color:#999;padding:20px;">Loading water flow chart…</div></div>';
+	html += '</div>';
+
 	html += '<div class="row">';
 
 	// Fish Tank
