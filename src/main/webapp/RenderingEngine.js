@@ -1291,13 +1291,25 @@ function displayHippocampusMultiResponse(req){
 
 // Auto-loaded (no button click needed) fixed-24h combined Water Level chart shown inline in the
 // Chinampa detail popup, above the Fish Tank / Sump Trough cards — see buildChinampaContent.
-// Fired once per modal open (from buildTelepathonCardView's 'shown.bs.modal' handler), not on
-// every interface refresh, to avoid spamming Hippocampus_Request over MQTT. Reuses the same
-// responseChanel/displayHippocampusResponse plumbing as the button-driven combined charts
-// (window.telepathonMultiChartRequest) but keeps its own buffer/container so the two don't collide,
-// and renders into the inline containerId instead of the shared #telepathon-graph-modal.
+// Reuses the same responseChanel/displayHippocampusResponse plumbing as the button-driven
+// combined charts (window.telepathonMultiChartRequest) but keeps its own buffer/container so the
+// two don't collide, and renders into the inline containerId instead of the shared
+// #telepathon-graph-modal.
+//
+// IMPORTANT: the Chinampa detail modal's body is fully rebuilt from buildChinampaContent's HTML
+// string on *every* incoming pulse (RefreshInterface -> refreshTelepathonsView ->
+// buildTelepathonCardView -> $('#modalIdBody').html(...)), even while the modal is open — only
+// #bannerformmodal blocks that refresh, not this modal. So the rendered chart SVG cannot simply
+// be drawn into the container once; the very next pulse would wipe it back to a blank/loading
+// div before anyone could see it. window.chinampaLevelChartCache holds the last-rendered chart
+// markup per containerId so buildChinampaContent can re-inject it immediately on every rebuild
+// (see there) instead of resetting to "Loading…", while the actual data is refreshed periodically
+// (see the staleness check in buildTelepathonCardView) rather than on every single pulse.
+window.chinampaLevelChartCache = window.chinampaLevelChartCache || {};
+
 function loadChinampaLevelChart(tpName, containerId, names, units) {
-	$('#' + containerId).html('<div style="text-align:center;color:#999;padding:20px;">Loading water level chart…</div>');
+	if (!$('#' + containerId).length) return;
+	if (window.chinampaLevelChartRequest && window.chinampaLevelChartRequest.containerId === containerId) return; // already in flight
 
 	window.chinampaLevelChartRequest = {
 		telepathon: tpName,
@@ -1316,6 +1328,14 @@ function loadChinampaLevelChart(tpName, containerId, names, units) {
 		message.qos = 1;
 		mqtt.send(message);
 	});
+
+	// Safety valve: if a response never arrives (device offline, Hippocampus down, one of the
+	// two denewords never replies), don't leave the in-flight guard above stuck forever.
+	setTimeout(function() {
+		if (window.chinampaLevelChartRequest && window.chinampaLevelChartRequest.containerId === containerId) {
+			window.chinampaLevelChartRequest = null;
+		}
+	}, 20000);
 }
 
 function renderChinampaLevelChart(req) {
@@ -1328,6 +1348,8 @@ function renderChinampaLevelChart(req) {
 
 	$('#' + req.containerId).empty();
 	showTelepathonMultiGraph(seriesArray, req.range, req.containerId);
+
+	window.chinampaLevelChartCache[req.containerId] = { html: $('#' + req.containerId).html(), ts: Date.now() };
 }
 
 function updatePulseStatusInfo(text){
@@ -2103,10 +2125,20 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 			var unit = dw["Units"] || '';
 			parts.push((label ? label + ': ' : '') + dw["Value"] + (unit ? ' ' + unit : ''));
 		}
+		// 30x30 solid-color square in place of a numeric reading — same red/green/blue
+		// low/normal/high bucketing as Daffodil.ino's DAFFODIL_WATER_TROUGH LED logic
+		// (measured height vs. the Minimum/Maximum thresholds), already computed above as
+		// fishColor/fishColorHex and sumpColor/sumpColorHex via levelColor(). The exact
+		// measured value is still available on hover via the title attribute.
+		function levelSquare(hex, valueDW) {
+			var titleAttr = valueDW ? ' title="' + valueDW["Value"] + (valueDW["Units"] ? ' ' + valueDW["Units"] : '') + '"' : '';
+			return '<span style="display:inline-block;width:30px;height:30px;background:' + hex +
+				';border:1px solid #999;border-radius:3px;vertical-align:middle;"' + titleAttr + '></span>';
+		}
 		if (name === "Chinampa") {
 			addPart('Flow', findPW("Fish Tank Outflow Flow Rate"));
-			addPart('Fish Tank Ht', findPW("Fish Tank Measured Height"));
-			addPart('Sump Ht', findPW("Sump Trough Measured Height"));
+			parts.push('Fish: ' + levelSquare(fishColorHex, findPW("Fish Tank Measured Height")));
+			parts.push('Sump: ' + levelSquare(sumpColorHex, findPW("Sump Trough Measured Height")));
 		} else if (deviceType === "Daffodil") {
 			var flow1RateDW = findPW("Flow Rate 1");
 			var flow2RateDW = findPW("Flow Rate 2");
@@ -2139,6 +2171,17 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 		deviceType === "Langley" ? buildLangleyContent(telepathon) :
 		buildTelepathonDetailContent(telepathon);
 
+	function fetchChinampaLevelChart() {
+		var ftMeasuredDW = findPW("Fish Tank Measured Height");
+		var stMeasuredDW = findPW("Sump Trough Measured Height");
+		loadChinampaLevelChart(
+			name,
+			'chinampa-level-chart-' + safeId,
+			["Fish Tank Measured Height", "Sump Trough Measured Height"],
+			[ftMeasuredDW ? (ftMeasuredDW["Units"] || '') : '', stMeasuredDW ? (stMeasuredDW["Units"] || '') : '']
+		);
+	}
+
 	if (!$('#' + modalId).length) {
 		$('body').append(
 			'<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog">' +
@@ -2153,20 +2196,23 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 		);
 		if (name === "Chinampa") {
 			// Fires the inline 24h Water Level chart (see buildChinampaContent/loadChinampaLevelChart)
-			// once per modal open rather than on every RefreshInterface() rebuild of this card.
-			$('#' + modalId).on('shown.bs.modal', function() {
-				var ftMeasuredDW = findPW("Fish Tank Measured Height");
-				var stMeasuredDW = findPW("Sump Trough Measured Height");
-				loadChinampaLevelChart(
-					name,
-					'chinampa-level-chart-' + safeId,
-					["Fish Tank Measured Height", "Sump Trough Measured Height"],
-					[ftMeasuredDW ? (ftMeasuredDW["Units"] || '') : '', stMeasuredDW ? (stMeasuredDW["Units"] || '') : '']
-				);
-			});
+			// as soon as the modal opens; kept fresh afterwards by the periodic staleness check below
+			// (this handler alone would only ever fetch once, since it's bound only on first creation).
+			$('#' + modalId).on('shown.bs.modal', fetchChinampaLevelChart);
 		}
 	}
 	$('#' + modalId + 'Body').html(detailHtml);
+
+	if (name === "Chinampa") {
+		// Runs on every refresh (every incoming pulse), not just modal creation/open — but only
+		// actually re-fetches while the modal is visibly open and the cached chart (re-injected by
+		// buildChinampaContent every rebuild — see its comment) is missing or stale. Keeps the
+		// inline chart's data reasonably current without firing a Hippocampus_Request every pulse.
+		var isModalOpen = $('#' + modalId).hasClass('in');
+		var cached = window.chinampaLevelChartCache && window.chinampaLevelChartCache['chinampa-level-chart-' + safeId];
+		var isStale = !cached || (Date.now() - cached.ts) > 120000;
+		if (isModalOpen && isStale) fetchChinampaLevelChart();
+	}
 
 	var imgSrc = 'images/' + deviceType + '.svg';
 
@@ -3065,12 +3111,19 @@ function buildChinampaContent(telepathon, safeId) {
 	html += '<div class="tab-pane active" id="chinampa-purpose">';
 
 	// Combined Water Level chart (Fish Tank height + Sump Trough height), fixed to the last 24h,
-	// full width, directly above the Fish Tank / Sump Trough cards. Loaded automatically when
-	// the modal opens (see loadChinampaLevelChart, wired from buildTelepathonCardView) rather
-	// than via a button click.
+	// full width, directly above the Fish Tank / Sump Trough cards. Loaded automatically (see
+	// loadChinampaLevelChart, wired from buildTelepathonCardView) rather than via a button click.
+	// This whole HTML string gets rebuilt from scratch on every pulse (see the comment on
+	// loadChinampaLevelChart), so re-inject the last-rendered chart from the cache here instead
+	// of always resetting to the loading placeholder — otherwise the chart would flash in for a
+	// moment and then be wiped back to "Loading…" on the very next refresh.
+	var levelContainerId = 'chinampa-level-chart-' + safeId;
+	var cachedLevelChart = window.chinampaLevelChartCache && window.chinampaLevelChartCache[levelContainerId];
+	var levelChartInnerHtml = cachedLevelChart ? cachedLevelChart.html :
+		'<div style="text-align:center;color:#999;padding:20px;">Loading water level chart…</div>';
 	html += '<div style="background:#f8f9fa;border-radius:8px;border-top:4px solid #3498db;padding:10px;margin-bottom:12px;">';
 	html += '<div style="font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:1px solid #eee;margin-bottom:8px;padding-bottom:4px;">Water Level (Last 24h)</div>';
-	html += '<div id="chinampa-level-chart-' + safeId + '"><div style="text-align:center;color:#999;padding:20px;">Loading water level chart…</div></div>';
+	html += '<div id="' + levelContainerId + '">' + levelChartInnerHtml + '</div>';
 	html += '</div>';
 
 	html += '<div class="row">';
