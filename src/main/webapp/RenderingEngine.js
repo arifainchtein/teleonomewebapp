@@ -2012,10 +2012,17 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 		for (var fi = 0; fi < sensorWords.length; fi++) if (sensorWords[fi]["Name"] === n) return sensorWords[fi];
 		return null;
 	}
-	function levelColor(heightDW, measuredDW) {
-		if (!heightDW || !measuredDW) return null;
-		var min = parseFloat(heightDW["Minimum"]);
-		var max = parseFloat(heightDW["Maximum"]);
+	// heightDW is the sensor-mount height (Sensors dene, e.g. "Fish Tank Height"), measuredDW the
+	// live air-gap reading (Purpose dene, e.g. "Fish Tank Measured Height") — level = heightDW -
+	// measuredDW. minDW/maxDW are the acceptable-level thresholds, which live as their own
+	// separate Sensors-dene DeneWords ("Minimum/Maximum Fish Tank Level", "Minimum/Maximum Sump
+	// Trough Level") rather than as Minimum/Maximum attributes on heightDW itself — an earlier
+	// version assumed the latter, which meant min/max were always NaN and this always fell back
+	// to the caller's default color (masking real low-level alerts as green).
+	function levelColor(heightDW, minDW, maxDW, measuredDW) {
+		if (!heightDW || !minDW || !maxDW || !measuredDW) return null;
+		var min = parseFloat(minDW["Value"]);
+		var max = parseFloat(maxDW["Value"]);
 		if (isNaN(min) || isNaN(max)) return null;
 		var level = parseFloat(heightDW["Value"]) - parseFloat(measuredDW["Value"]);
 		if (level < min) return 'Red';
@@ -2067,9 +2074,9 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 			opModeHtml = '<div style="background:#d5f5e3;color:#000;font-size:11px;font-weight:bold;padding:0 6px;margin-top:2px;border-radius:4px;width:100%;box-sizing:border-box;">&nbsp;</div>';
 		}
 
-		var fishColor = levelColor(findSW("Fish Tank Height"), findPW("Fish Tank Measured Height")) || 'Green';
-		var sumpColor = levelColor(findSW("Sump TroughHeight"), findPW("Sump Trough Measured Height")) || 'Green';
-		var levelColorHexMap = {Red:'#e74c3c', Green:'#27ae60', Blue:'#2060ff'};
+		var fishColor = levelColor(findSW("Fish Tank Height"), findSW("Minimum Fish Tank Level"), findSW("Maximum Fish Tank Level"), findPW("Fish Tank Measured Height")) || 'Gray';
+		var sumpColor = levelColor(findSW("Sump Trough Height"), findSW("Minimum Sump Trough Level"), findSW("Maximum Sump Trough Level"), findPW("Sump Trough Measured Height")) || 'Gray';
+		var levelColorHexMap = {Red:'#e74c3c', Green:'#27ae60', Blue:'#2060ff', Gray:'#95a5a6'};
 		var fishColorHex = levelColorHexMap[fishColor];
 		var sumpColorHex = levelColorHexMap[sumpColor];
 
@@ -3058,7 +3065,7 @@ function buildChinampaContent(telepathon, safeId) {
 
 	var ftH = findDW(sw, "Fish Tank Height");
 	var ftM = findDW(pw, "Fish Tank Measured Height");
-	var stH = findDW(sw, "Sump TroughHeight");
+	var stH = findDW(sw, "Sump Trough Height");
 	var stM = findDW(pw, "Sump Trough Measured Height");
 	var maxPCBdw = findDW(sw, "u Temperature Maximum");
 	var maxPCB = maxPCBdw ? parseFloat(maxPCBdw["Value"]) : 75;
