@@ -1172,11 +1172,11 @@ function displayHippocampusResponse(payload){
 	var telepathonName = response.telepathonName;
 	var deneWordName= response.deneWordName;
 
-	var flowReq = window.chinampaFlowChartRequest;
-	if (flowReq && flowReq.telepathon === telepathonName && flowReq.names.indexOf(deneWordName) !== -1) {
-		flowReq.received[deneWordName] = data;
-		var allInFlow = flowReq.names.every(function(n) { return flowReq.received.hasOwnProperty(n); });
-		if (allInFlow) renderChinampaFlowChart(flowReq);
+	var levelReq = window.chinampaLevelChartRequest;
+	if (levelReq && levelReq.telepathon === telepathonName && levelReq.names.indexOf(deneWordName) !== -1) {
+		levelReq.received[deneWordName] = data;
+		var allInLevel = levelReq.names.every(function(n) { return levelReq.received.hasOwnProperty(n); });
+		if (allInLevel) renderChinampaLevelChart(levelReq);
 		return;
 	}
 
@@ -1289,17 +1289,17 @@ function displayHippocampusMultiResponse(req){
 	}, 0);
 }
 
-// Auto-loaded (no button click needed) fixed-24h combined Water Flow chart shown inline in the
+// Auto-loaded (no button click needed) fixed-24h combined Water Level chart shown inline in the
 // Chinampa detail popup, above the Fish Tank / Sump Trough cards — see buildChinampaContent.
 // Fired once per modal open (from buildTelepathonCardView's 'shown.bs.modal' handler), not on
 // every interface refresh, to avoid spamming Hippocampus_Request over MQTT. Reuses the same
 // responseChanel/displayHippocampusResponse plumbing as the button-driven combined charts
 // (window.telepathonMultiChartRequest) but keeps its own buffer/container so the two don't collide,
 // and renders into the inline containerId instead of the shared #telepathon-graph-modal.
-function loadChinampaFlowChart(tpName, containerId, names, units) {
-	$('#' + containerId).html('<div style="text-align:center;color:#999;padding:20px;">Loading water flow chart…</div>');
+function loadChinampaLevelChart(tpName, containerId, names, units) {
+	$('#' + containerId).html('<div style="text-align:center;color:#999;padding:20px;">Loading water level chart…</div>');
 
-	window.chinampaFlowChartRequest = {
+	window.chinampaLevelChartRequest = {
 		telepathon: tpName,
 		containerId: containerId,
 		range: 86400000,
@@ -1318,8 +1318,8 @@ function loadChinampaFlowChart(tpName, containerId, names, units) {
 	});
 }
 
-function renderChinampaFlowChart(req) {
-	window.chinampaFlowChartRequest = null;
+function renderChinampaLevelChart(req) {
+	window.chinampaLevelChartRequest = null;
 	if (!$('#' + req.containerId).length) return; // popup closed/replaced before data arrived
 
 	var seriesArray = req.names.map(function(n, i) {
@@ -2152,16 +2152,16 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 			'</div></div></div>'
 		);
 		if (name === "Chinampa") {
-			// Fires the inline 24h Water Flow chart (see buildChinampaContent/loadChinampaFlowChart)
+			// Fires the inline 24h Water Level chart (see buildChinampaContent/loadChinampaLevelChart)
 			// once per modal open rather than on every RefreshInterface() rebuild of this card.
 			$('#' + modalId).on('shown.bs.modal', function() {
-				var fishFlowDW = findPW("Fish Tank Outflow Flow Rate");
-				var pumpFlowDW = findPW("Pump Flow Rate");
-				loadChinampaFlowChart(
+				var ftMeasuredDW = findPW("Fish Tank Measured Height");
+				var stMeasuredDW = findPW("Sump Trough Measured Height");
+				loadChinampaLevelChart(
 					name,
-					'chinampa-flow-chart-' + safeId,
-					["Fish Tank Outflow Flow Rate", "Pump Flow Rate"],
-					[fishFlowDW ? (fishFlowDW["Units"] || '') : '', pumpFlowDW ? (pumpFlowDW["Units"] || '') : '']
+					'chinampa-level-chart-' + safeId,
+					["Fish Tank Measured Height", "Sump Trough Measured Height"],
+					[ftMeasuredDW ? (ftMeasuredDW["Units"] || '') : '', stMeasuredDW ? (stMeasuredDW["Units"] || '') : '']
 				);
 			});
 		}
@@ -3064,13 +3064,13 @@ function buildChinampaContent(telepathon, safeId) {
 	// Purpose tab
 	html += '<div class="tab-pane active" id="chinampa-purpose">';
 
-	// Combined Water Flow chart (Fish Tank outflow + Sump/Pump flow), fixed to the last 24h,
+	// Combined Water Level chart (Fish Tank height + Sump Trough height), fixed to the last 24h,
 	// full width, directly above the Fish Tank / Sump Trough cards. Loaded automatically when
-	// the modal opens (see loadChinampaFlowChart, wired from buildTelepathonCardView) rather
+	// the modal opens (see loadChinampaLevelChart, wired from buildTelepathonCardView) rather
 	// than via a button click.
 	html += '<div style="background:#f8f9fa;border-radius:8px;border-top:4px solid #3498db;padding:10px;margin-bottom:12px;">';
-	html += '<div style="font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:1px solid #eee;margin-bottom:8px;padding-bottom:4px;">Water Flow (Last 24h)</div>';
-	html += '<div id="chinampa-flow-chart-' + safeId + '"><div style="text-align:center;color:#999;padding:20px;">Loading water flow chart…</div></div>';
+	html += '<div style="font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:1px solid #eee;margin-bottom:8px;padding-bottom:4px;">Water Level (Last 24h)</div>';
+	html += '<div id="chinampa-level-chart-' + safeId + '"><div style="text-align:center;color:#999;padding:20px;">Loading water level chart…</div></div>';
 	html += '</div>';
 
 	html += '<div class="row">';
