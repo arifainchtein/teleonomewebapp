@@ -2125,19 +2125,20 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 			var unit = dw["Units"] || '';
 			parts.push((label ? label + ': ' : '') + dw["Value"] + (unit ? ' ' + unit : ''));
 		}
-		// 30x30 solid-color square in place of a numeric reading — same red/green/blue
+		// 25x25 solid-color square in place of a numeric reading — same red/green/blue
 		// low/normal/high bucketing as Daffodil.ino's DAFFODIL_WATER_TROUGH LED logic
 		// (measured height vs. the Minimum/Maximum thresholds), already computed above as
 		// fishColor/fishColorHex and sumpColor/sumpColorHex via levelColor(). The exact
 		// measured value is still available on hover via the title attribute.
 		function levelSquare(hex, valueDW) {
 			var titleAttr = valueDW ? ' title="' + valueDW["Value"] + (valueDW["Units"] ? ' ' + valueDW["Units"] : '') + '"' : '';
-			return '<span style="display:inline-block;width:30px;height:30px;background:' + hex +
+			return '<span style="display:inline-block;width:25px;height:25px;background:' + hex +
 				';border:1px solid #999;border-radius:3px;vertical-align:middle;"' + titleAttr + '></span>';
 		}
 		if (name === "Chinampa") {
-			addPart('Flow', findPW("Fish Tank Outflow Flow Rate"));
-			parts.push('Fish: ' + levelSquare(fishColorHex, findPW("Fish Tank Measured Height")));
+			var fishFlowValDW = findPW("Fish Tank Outflow Flow Rate");
+			var fishFlowValStr = fishFlowValDW ? (fishFlowValDW["Value"] + (fishFlowValDW["Units"] ? ' ' + fishFlowValDW["Units"] : '')) : '';
+			parts.push('Fish: ' + (fishFlowValStr ? fishFlowValStr + ' ' : '') + levelSquare(fishColorHex, findPW("Fish Tank Measured Height")));
 			parts.push('Sump: ' + levelSquare(sumpColorHex, findPW("Sump Trough Measured Height")));
 		} else if (deviceType === "Daffodil") {
 			var flow1RateDW = findPW("Flow Rate 1");
