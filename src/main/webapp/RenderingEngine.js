@@ -1307,7 +1307,13 @@ function displayHippocampusMultiResponse(req){
 // (see the staleness check in buildTelepathonCardView) rather than on every single pulse.
 window.chinampaLevelChartCache = window.chinampaLevelChartCache || {};
 
-function loadChinampaLevelChart(tpName, containerId, names, units) {
+// seriesDefs: [{dwName, units, dash, heightValue, minValue, maxValue}, ...] — dash distinguishes
+// which tank a line belongs to (solid Fish / dashed Sump), while heightValue/minValue/maxValue
+// (the *current* sensor-mount height and Minimum/Maximum Level thresholds — see levelColor() and
+// its comment) let showChinampaLevelGraph recolor each historical point red/green/blue by the
+// same low/normal/high state as the summary card's squares, applying today's thresholds back
+// across the 24h history since per-point historical thresholds aren't stored.
+function loadChinampaLevelChart(tpName, containerId, seriesDefs) {
 	if (!$('#' + containerId).length) return;
 	if (window.chinampaLevelChartRequest && window.chinampaLevelChartRequest.containerId === containerId) return; // already in flight
 
@@ -1315,13 +1321,13 @@ function loadChinampaLevelChart(tpName, containerId, names, units) {
 		telepathon: tpName,
 		containerId: containerId,
 		range: 86400000,
-		names: names,
-		units: units,
+		names: seriesDefs.map(function(s) { return s.dwName; }),
+		seriesDefs: seriesDefs,
 		received: {}
 	};
 
-	names.forEach(function(dwName) {
-		var identity = "@" + teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + tpName + ":Purpose:" + dwName;
+	seriesDefs.forEach(function(s) {
+		var identity = "@" + teleonomeName + ":" + NUCLEI_TELEPATHONS + ":" + tpName + ":Purpose:" + s.dwName;
 		var requestPayload = { "Identity": identity, "Range": 86400000, "RequestId": browserId };
 		var message = new Paho.MQTT.Message(JSON.stringify(requestPayload));
 		message.destinationName = "Hippocampus_Request";
@@ -1342,12 +1348,16 @@ function renderChinampaLevelChart(req) {
 	window.chinampaLevelChartRequest = null;
 	if (!$('#' + req.containerId).length) return; // popup closed/replaced before data arrived
 
-	var seriesArray = req.names.map(function(n, i) {
-		return { name: n, units: req.units[i], data: req.received[n] || [] };
+	var seriesArray = req.seriesDefs.map(function(s) {
+		return {
+			name: s.dwName, units: s.units, dash: s.dash,
+			heightValue: s.heightValue, minValue: s.minValue, maxValue: s.maxValue,
+			data: req.received[s.dwName] || []
+		};
 	});
 
 	$('#' + req.containerId).empty();
-	showTelepathonMultiGraph(seriesArray, req.range, req.containerId);
+	showChinampaLevelGraph(seriesArray, req.range, req.containerId);
 
 	window.chinampaLevelChartCache[req.containerId] = { html: $('#' + req.containerId).html(), ts: Date.now() };
 }
@@ -2180,14 +2190,27 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 		buildTelepathonDetailContent(telepathon);
 
 	function fetchChinampaLevelChart() {
+		function numOrNaN(dw) { return dw ? parseFloat(dw["Value"]) : NaN; }
 		var ftMeasuredDW = findPW("Fish Tank Measured Height");
 		var stMeasuredDW = findPW("Sump Trough Measured Height");
-		loadChinampaLevelChart(
-			name,
-			'chinampa-level-chart-' + safeId,
-			["Fish Tank Measured Height", "Sump Trough Measured Height"],
-			[ftMeasuredDW ? (ftMeasuredDW["Units"] || '') : '', stMeasuredDW ? (stMeasuredDW["Units"] || '') : '']
-		);
+		loadChinampaLevelChart(name, 'chinampa-level-chart-' + safeId, [
+			{
+				dwName: "Fish Tank Measured Height",
+				units: ftMeasuredDW ? (ftMeasuredDW["Units"] || '') : '',
+				dash: '', // solid = Fish
+				heightValue: numOrNaN(findSW("Fish Tank Height")),
+				minValue: numOrNaN(findSW("Minimum Fish Tank Level")),
+				maxValue: numOrNaN(findSW("Maximum Fish Tank Level"))
+			},
+			{
+				dwName: "Sump Trough Measured Height",
+				units: stMeasuredDW ? (stMeasuredDW["Units"] || '') : '',
+				dash: '6,4', // dashed = Sump
+				heightValue: numOrNaN(findSW("Sump Trough Height")),
+				minValue: numOrNaN(findSW("Minimum Sump Trough Level")),
+				maxValue: numOrNaN(findSW("Maximum Sump Trough Level"))
+			}
+		]);
 	}
 
 	if (!$('#' + modalId).length) {
