@@ -22,7 +22,8 @@ var HYPNOGRAM_LEVELS = [
 	{ key: 'asleep', label: 'Asleep', color: '#2980b9' },
 	{ key: 'comma', label: 'Low-battery sleep', color: '#8e44ad' }
 ];
-var HYPNOGRAM_SEND_GAP_SECONDS = 1;  // VITAL_SIGNS_GAP_MS - the record goes out ~1s after the data pulse
+var HYPNOGRAM_SEND_GAP_SECONDS = 1;
+var HYPNOGRAM_LEGACY_OFFSET_SECONDS = 10 * 3600;  // AEST, see buildHypnogramModel  // VITAL_SIGNS_GAP_MS - the record goes out ~1s after the data pulse
 
 // rows: the JSONArray from GetTelepathonRecordsForLastHours ([{timeSeconds, data:{Denes:[...]}}]).
 // Returns { records, segments, earlyWakes, resets, stats } - pure, no DOM, so it can be tested
@@ -33,8 +34,8 @@ function buildHypnogramModel(rows, startSeconds, endSeconds) {
 		var denes = (row.data && row.data.Denes) || [];
 		for (var i = 0; i < denes.length; i++) {
 			if (denes[i].Name !== TELEPATHON_DENE_VITAL_SIGNS) continue;
-			var w = {};
-			(denes[i].DeneWords || []).forEach(function(dw) { w[dw.Name] = dw.Value; });
+			var w = {}, units = {};
+			(denes[i].DeneWords || []).forEach(function(dw) { w[dw.Name] = dw.Value; units[dw.Name] = dw.Units; });
 			var rec = {
 				received: parseInt(w["Vital Signs Received Time"]) || 0,
 				seq: parseInt(w["Sequence"]) || 0,
@@ -46,15 +47,24 @@ function buildHypnogramModel(rows, startSeconds, endSeconds) {
 				commaWakeCount: parseInt(w["Aborted Wake Count"]) || 0,
 				sleptTotal: parseInt(w["Slept Seconds Total"]) || 0,
 				awakeTotal: parseInt(w["Awake Seconds Total"]) || 0,
-				awakeMs: parseInt(w["Last Awake Duration"]) || 0,
+				// Stored in ms by framework builds before 2026-10-05 (VitalSigns version 1), in s since.
+				awakeMs: (parseFloat(w["Last Awake Duration"]) || 0) * (units["Last Awake Duration"] === 'ms' ? 1 : 1000),
 				wakeCause: w["Last Wake Cause"] || '',
 				drift: parseInt(w["Last Wake Drift"]) || 0,
 				wakeVoltage: w["Wake Voltage"] !== undefined ? parseFloat(w["Wake Voltage"]) : null,
 				minVoltage: w["TX Min Voltage"] !== undefined ? parseFloat(w["TX Min Voltage"]) : null
 			};
-			// Records relayed by Annabelle firmware before 2026-10-05 carry its RTC wall time
-			// misread as UTC (hours in the future) - skip anything dated after the window.
-			if (rec.received > 0 && rec.received <= endSeconds + 300) byKey[rec.resetCount + ':' + rec.seq] = rec;
+			// Annabelle firmware before 2026-10-05 stamped records with its RTC's local standard
+			// time read as UTC: 10 h in the future. Undo that; if the result still isn't near the
+			// first data row carrying the record (the RTC may also be off), use that row's time.
+			var rowTime = parseInt(row.timeSeconds) || 0;
+			if (rec.received > endSeconds + 300) {
+				var corrected = rec.received - HYPNOGRAM_LEGACY_OFFSET_SECONDS;
+				rec.received = (rowTime && Math.abs(corrected - rowTime) > 1800) ? rowTime : corrected;
+				rec.timeApproximate = true;
+			}
+			var key = rec.resetCount + ':' + rec.seq;
+			if (rec.received > 0 && rec.received <= endSeconds + 300 && !(byKey[key] && byKey[key].received <= rec.received)) byKey[key] = rec;
 		}
 	});
 	var records = Object.keys(byKey).map(function(k) { return byKey[k]; })
