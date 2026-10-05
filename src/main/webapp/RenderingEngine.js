@@ -1398,6 +1398,21 @@ var daffodilOperatingStatusNames = {"0": "Unknown", "1": "Pulse Sleep", "2": "No
 // Daffodil, Langley and Chinampa Diagnostics tabs. i2cBitNames decodes the device-specific
 // "sensor found" mask (null = don't show it). Counters are running totals since the last reset.
 var VITAL_SIGNS_BAD_RESETS = { "BROWNOUT": 1, "PANIC": 1, "INT_WDT": 1, "TASK_WDT": 1, "WDT": 1, "CPU_LOCKUP": 1, "PWR_GLITCH": 1 };
+// Diagnostics tab split into sub-tabs: "Vital Signs" (first, from buildVitalSignsPanel) and
+// "Hardware" (the device's own diagnostic DeneWords that used to sit above the vital signs).
+function buildDiagnosticsSubTabs(idPrefix, vitalSignsHtml, hardwareHtml) {
+	var subPillStyle = 'font-size:12px;padding:3px 9px;';
+	var html = '<ul class="nav nav-pills" style="margin-bottom:8px;flex-wrap:wrap;">';
+	html += '<li class="active" onclick="return teleonomeShowTab(\'' + idPrefix + '-vital\', this)"><a href="#" style="' + subPillStyle + '">Vital Signs</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'' + idPrefix + '-hardware\', this)"><a href="#" style="' + subPillStyle + '">Hardware</a></li>';
+	html += '</ul>';
+	html += '<div class="tab-content">';
+	html += '<div class="tab-pane active" id="' + idPrefix + '-vital">' + vitalSignsHtml + '</div>';
+	html += '<div class="tab-pane" id="' + idPrefix + '-hardware">' + hardwareHtml + '</div>';
+	html += '</div>';
+	return html;
+}
+
 function buildVitalSignsPanel(telepathon, tpName, i2cBitNames) {
 	var denes = telepathon["Denes"] || [];
 	var vitalDene = null;
@@ -1711,6 +1726,9 @@ function buildDaffodilContent(telepathon) {
 	for (var ci = 0; ci < cardGroups.length; ci++) {
 		var card = cardGroups[ci];
 		html += '<div class="tab-pane' + (ci === 0 ? ' active' : '') + '" id="' + card.id + '">';
+		// The Diagnostics card's table becomes its "Hardware" sub-tab (see buildDiagnosticsSubTabs).
+		var cardOuterHtml = null;
+		if (card.title === "Diagnostics") { cardOuterHtml = html; html = ''; }
 		if (card.title === "Power") {
 			html += multiChartPanelGroup([
 				{ title: "Power Chart",         dwNames: ["Panel Voltage", "Battery Voltage", "Battery Current", "Panel Current"], dwUnits: ["V", "V", "mA", "mA"] },
@@ -1745,7 +1763,9 @@ function buildDaffodilContent(telepathon) {
 		}
 		html += '</table>';
 		if (card.title === "Diagnostics") {
-			html += buildVitalSignsPanel(telepathon, tpName, ["LCD", "Temp/Humidity (0x40)", "ADS1115", "BH1750 Light", "INA219 Battery", "PCF8563 RTC", "INA219 Solar"]);
+			html = cardOuterHtml + buildDiagnosticsSubTabs(card.id,
+				buildVitalSignsPanel(telepathon, tpName, ["LCD", "Temp/Humidity (0x40)", "ADS1115", "BH1750 Light", "INA219 Battery", "PCF8563 RTC", "INA219 Solar"]),
+				html);
 		}
 		html += '</div>';
 	}
@@ -2341,7 +2361,20 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 			$('#' + modalId).on('shown.bs.modal', fetchChinampaLevelChart);
 		}
 	}
+	// The body is rebuilt on every pulse - remember which tab panes were open (top-level and
+	// sub-tabs) and re-open them afterwards, so the view doesn't jump back to the first tab.
+	var openPaneIds = $('#' + modalId + 'Body .tab-pane.active').map(function() { return this.id; }).get();
 	$('#' + modalId + 'Body').html(detailHtml);
+	openPaneIds.forEach(function(paneId) {
+		if (!paneId) return;
+		var pane = document.getElementById(paneId);
+		if (!pane || !$(pane).closest('#' + modalId + 'Body').length) return;
+		$(pane).addClass('active').siblings('.tab-pane').removeClass('active');
+		$('#' + modalId + 'Body li').filter(function() {
+			var oc = this.getAttribute('onclick') || '';
+			return oc.indexOf("'" + paneId + "'") >= 0;
+		}).addClass('active').siblings('li').removeClass('active');
+	});
 
 	if (name === "Chinampa") {
 		// Runs on every refresh (every incoming pulse), not just modal creation/open — but only
@@ -3312,12 +3345,10 @@ function buildChinampaContent(telepathon, safeId) {
 	// Diagnostics tab (remaining purpose fields)
 	var remainingPw = pw.filter(function(d) { return usedKeys.indexOf(d["Name"]) < 0; });
 	html += '<div class="tab-pane" id="chinampa-diag">';
-	if (remainingPw.length > 0) {
-		html += denewordGrid(remainingPw, '#3498db');
-	} else {
-		html += '<p class="text-muted">No additional diagnostics.</p>';
-	}
-	html += buildVitalSignsPanel(telepathon, tpName, null);  // wall powered: sleep/power groups stay empty
+	var chinampaHardwareHtml = remainingPw.length > 0 ? denewordGrid(remainingPw, '#3498db') : '<p class="text-muted">No additional diagnostics.</p>';
+	html += buildDiagnosticsSubTabs('chinampa-diag',
+		buildVitalSignsPanel(telepathon, tpName, null),  // wall powered: sleep/power groups stay empty
+		chinampaHardwareHtml);
 	html += '</div>';
 
 	// Sensors tab

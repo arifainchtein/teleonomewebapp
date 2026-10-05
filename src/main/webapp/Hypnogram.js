@@ -52,7 +52,9 @@ function buildHypnogramModel(rows, startSeconds, endSeconds) {
 				wakeVoltage: w["Wake Voltage"] !== undefined ? parseFloat(w["Wake Voltage"]) : null,
 				minVoltage: w["TX Min Voltage"] !== undefined ? parseFloat(w["TX Min Voltage"]) : null
 			};
-			if (rec.received > 0) byKey[rec.resetCount + ':' + rec.seq] = rec;
+			// Records relayed by Annabelle firmware before 2026-10-05 carry its RTC wall time
+			// misread as UTC (hours in the future) - skip anything dated after the window.
+			if (rec.received > 0 && rec.received <= endSeconds + 300) byKey[rec.resetCount + ':' + rec.seq] = rec;
 		}
 	});
 	var records = Object.keys(byKey).map(function(k) { return byKey[k]; })
