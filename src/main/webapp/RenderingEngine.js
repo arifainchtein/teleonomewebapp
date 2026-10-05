@@ -1440,6 +1440,9 @@ function buildVitalSignsPanel(telepathon, tpName, i2cBitNames) {
 	var reasonDW = dw("Last Reset Reason");
 	var reasonColor = reasonDW && VITAL_SIGNS_BAD_RESETS[reasonDW["Value"]] ? '#e74c3c' : (reasonDW && reasonDW["Value"] === "POWERON" ? '#e67e22' : null);
 
+	html += '<div style="margin-bottom:6px;font-size:12px;">Hypnogram: ' +
+		'<button class="btn btn-xs btn-primary vital-signs-hypnogram" data-telepathonname="' + tpName + '" data-hours="24">24h</button> ' +
+		'<button class="btn btn-xs btn-primary vital-signs-hypnogram" data-telepathonname="' + tpName + '" data-hours="168">7d</button></div>';
 	html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">';
 	html += group('Resets',
 		row('Last Reset Reason', 'Last Reset Reason', { noGraph: true, color: reasonColor }) +
