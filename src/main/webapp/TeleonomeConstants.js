@@ -923,6 +923,12 @@ var PATHOLOGY_CAUSE = "Cause";
 var PATHOLOGY_LOCATION = "Location";
 var PATHOLOGY_DENEWORD_TYPE= "Pathology Dene Word Type";
 var PATHOLOGY_LOCATION_MICROCONTROLLER= "Microcontroller";
+// Reset / vital-signs diagnostics, added 2026-10-05 - mirror of TeleonomeConstants.java
+var PATHOLOGY_LOCATION_TELEPATHON = "Telepathon";
+var PATHOLOGY_MICROCONTROLLER_RESET = "Microcontroller Reset";
+var PATHOLOGY_TELEPATHON_RESET = "Telepathon Reset";
+var DENECHAIN_MICROCONTROLLER_RESET_INFO = "Microcontroller Reset Info";
+var TELEPATHON_DENE_VITAL_SIGNS = "Vital Signs";
 var PATHOLOGY_LOCATION_NETWORK= "Network";
 var PATHOLOGY_LOCATION_MEDULA= "Medula";
 var PATHOLOGY_PULSE_LATE= "Pulse Late";

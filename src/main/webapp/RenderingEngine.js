@@ -1387,9 +1387,106 @@ function updateOrganismView(text){
 var daffodilFunctionNames = {
 	"1": "1 Flow Sensor", "2": "2 Flow Sensors", "3": "1 Flow + 1 Tank",
 	"4": "1 Tank", "5": "2 Tanks", "6": "Septic Tank",
-	"7": "Water Trough", "8": "Temp & Soil Moisture", "9": "Light Detector"
+	"7": "Water Trough", "8": "Temp & Soil Moisture", "9": "Light Detector",
+	"10": "Voltage Monitor", "11": "Water Trough + Tank", "12": "2 Water Troughs",
+	"13": "Water Trough + Water Temperature"
 };
 var daffodilOperatingStatusNames = {"0": "Unknown", "1": "Pulse Sleep", "2": "No LED", "3": "Full", "4": "Cloudy", "5": "Comma"};
+
+// Vital signs (reset / sleep / power / LoRa-TX telemetry) - the "Vital Signs" Dene each LoRa
+// device's telepathon chain carries since 2026-10-05 (VitalSignsDeserializer.java). Shared by the
+// Daffodil, Langley and Chinampa Diagnostics tabs. i2cBitNames decodes the device-specific
+// "sensor found" mask (null = don't show it). Counters are running totals since the last reset.
+var VITAL_SIGNS_BAD_RESETS = { "BROWNOUT": 1, "PANIC": 1, "INT_WDT": 1, "TASK_WDT": 1, "WDT": 1, "CPU_LOCKUP": 1, "PWR_GLITCH": 1 };
+function buildVitalSignsPanel(telepathon, tpName, i2cBitNames) {
+	var denes = telepathon["Denes"] || [];
+	var vitalDene = null;
+	for (var i = 0; i < denes.length; i++) {
+		if (denes[i]["Name"] === TELEPATHON_DENE_VITAL_SIGNS) vitalDene = denes[i];
+	}
+	var html = '<div style="margin-top:12px;font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:1px solid #eee;margin-bottom:6px;padding-bottom:4px;">Vital Signs</div>';
+	if (!vitalDene) {
+		return html + '<p class="text-muted" style="font-size:12px;">No vital signs received yet (needs firmware that sends them).</p>';
+	}
+	var words = vitalDene["DeneWords"] || [];
+	function dw(name) {
+		for (var wi = 0; wi < words.length; wi++) if (words[wi]["Name"] === name) return words[wi];
+		return null;
+	}
+	function graphBtns(dwName) {
+		var d = 'data-telepathonname="' + tpName + '" data-denename="' + TELEPATHON_DENE_VITAL_SIGNS + '" data-denewordname="' + dwName + '"';
+		var btnCls = 'btn btn-xs btn-default telepathon-history-value';
+		return '<button class="' + btnCls + '" ' + d + ' data-range="86400000">24h</button> ' +
+			'<button class="' + btnCls + '" ' + d + ' data-range="604800000">7d</button>';
+	}
+	function row(label, dwName, opts) {
+		var w = dw(dwName);
+		if (!w) return '';
+		opts = opts || {};
+		var val = opts.format ? opts.format(w["Value"]) : w["Value"];
+		var units = w["Units"] ? ' ' + w["Units"] : '';
+		var style = opts.color ? ' style="color:' + opts.color + ';"' : '';
+		return '<tr><td style="width:40%;">' + label + '</td><td><strong' + style + '>' + val + units + '</strong></td>' +
+			'<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + (opts.noGraph ? '' : graphBtns(dwName)) + '</td></tr>';
+	}
+	function group(title, rowsHtml) {
+		if (!rowsHtml) return '';
+		return '<tr><td colspan="3" style="background:#f4f6f8;font-weight:bold;font-size:11px;">' + title + '</td></tr>' + rowsHtml;
+	}
+	function epochToLocal(v) {
+		var n = parseInt(v);
+		return n > 0 ? new Date(n * 1000).toLocaleString() : '—';
+	}
+	var reasonDW = dw("Last Reset Reason");
+	var reasonColor = reasonDW && VITAL_SIGNS_BAD_RESETS[reasonDW["Value"]] ? '#e74c3c' : (reasonDW && reasonDW["Value"] === "POWERON" ? '#e67e22' : null);
+
+	html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">';
+	html += group('Resets',
+		row('Last Reset Reason', 'Last Reset Reason', { noGraph: true, color: reasonColor }) +
+		row('Last Reset Time', 'Last Reset Time', { noGraph: true, format: epochToLocal }) +
+		row('Reset Count', 'Reset Count'));
+	html += group('Sleep',
+		row('Wakes', 'Wake Count') +
+		row('Aborted Wakes (low battery)', 'Aborted Wake Count') +
+		row('Early Wakes (watchdog)', 'Early Wake Count') +
+		row('Awake', 'Awake Percent') +
+		row('Last Wake Cause', 'Last Wake Cause', { noGraph: true }) +
+		row('Last Wake Drift', 'Last Wake Drift') +
+		row('Last Awake Duration', 'Last Awake Duration'));
+	html += group('Power',
+		row('Wake Voltage', 'Wake Voltage') +
+		row('Lowest TX Voltage', 'TX Min Voltage') +
+		row('Battery Sag', 'Battery Sag') +
+		row('Min Voltage Since Report', 'Min Voltage Since Report'));
+	html += group('Last LoRa Transmit',
+		row('Duration', 'TX Duration') +
+		row('Battery Before', 'TX Battery Pre') +
+		row('Battery Peak', 'TX Battery Peak') +
+		row('Battery After', 'TX Battery Post') +
+		row('Panel Current', 'TX Panel Current') +
+		row('V50_I', 'TX V50I'));
+	html += group('Radio',
+		row('Delivery', 'Delivery Percent') +
+		row('Records Missed', 'Records Missed') +
+		row('TX Failures', 'LoRa TX Fail Count') +
+		row('RSSI', 'Vital Signs RSSI') +
+		row('SNR', 'Vital Signs SNR'));
+	var maskDW = dw("I2C Device Mask");
+	if (i2cBitNames && maskDW) {
+		var mask = parseInt(maskDW["Value"]);
+		var sensors = '';
+		for (var bi = 0; bi < i2cBitNames.length; bi++) {
+			var found = (mask >> bi) & 1;
+			sensors += '<tr><td style="width:40%;">' + i2cBitNames[bi] + '</td><td colspan="2"><strong style="color:' + (found ? '#27ae60' : '#e74c3c') + ';">' + (found ? 'Found' : 'Missing') + '</strong></td></tr>';
+		}
+		html += group('Sensors', sensors);
+	}
+	html += group('Firmware',
+		row('Build', 'Firmware Build', { noGraph: true }) +
+		row('Last Record', 'Vital Signs Received Time', { noGraph: true, format: epochToLocal }));
+	html += '</table>';
+	return html;
+}
 
 function buildDaffodilContent(telepathon) {
 	var denes = telepathon["Denes"] || [];
@@ -1603,7 +1700,7 @@ function buildDaffodilContent(telepathon) {
 
 	var noGraphFields = {"Op Mode":1,"Weather Fresh":1,"INA219 Found":1,"BH1750 Found":1,"ADS1115 Found":1,"RTC Found":1,"DS18B20 Found":1,"SHT Found":1,"Invalid Time":1,"Using Solar Power":1,"Local Time":1,"Source Original Time":1,"Operating Status":1};
 	var cardGroups = [
-		{ id: 'daff-sensors-' + safeId, title: "Sensors", fields: ["Measured Height", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature", "Tank 1 Pressure Psi", "Tank 1 Water Level", "Tank 2 Pressure Psi", "Tank 2 Water Level"] },
+		{ id: 'daff-sensors-' + safeId, title: "Sensors", fields: ["Measured Height", "Measured Height 2", "Water Temperature", "Sceptic Available", "Light Level", "Outdoor Temperature", "Outdoor Humidity", "Internal Temperature", "Tank 1 Pressure Psi", "Tank 1 Water Level", "Tank 2 Pressure Psi", "Tank 2 Water Level"] },
 		{ id: 'daff-power-' + safeId,   title: "Power",   fields: ["Panel Voltage", "Panel Current", "Battery Voltage", "Battery Current", "V50 Voltage", "Led Brightness", "Operating Status", "Async Data", "Wake Time Sec", "Sleep Time", "Estimated Runtime"] },
 		{ id: 'daff-comms-' + safeId,   title: "Comms",   fields: ["rssi", "snr", "Digital Stables Upload", "Lora Active", "ds Last Upload"] },
 		{ id: 'daff-diag-' + safeId,    title: "Diagnostics", fields: ["RTC Battery Volt", "Op Mode", "Weather Fresh", "INA219 Found", "BH1750 Found", "ADS1115 Found", "RTC Found", "DS18B20 Found", "SHT Found", "Invalid Time", "Using Solar Power", "Source Original Time", "Local Time"] }
@@ -1643,7 +1740,11 @@ function buildDaffodilContent(telepathon) {
 				}
 			}
 		}
-		html += '</table></div>';
+		html += '</table>';
+		if (card.title === "Diagnostics") {
+			html += buildVitalSignsPanel(telepathon, tpName, ["LCD", "Temp/Humidity (0x40)", "ADS1115", "BH1750 Light", "INA219 Battery", "PCF8563 RTC", "INA219 Solar"]);
+		}
+		html += '</div>';
 	}
 
 	// Help sub-tab — LED panel descriptions
@@ -1815,6 +1916,7 @@ function buildLangleyContent(telepathon) {
 	html += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
 	html += '<li class="active" onclick="return teleonomeShowTab(\'lang-status-' + safeId + '\', this)"><a href="#">Status</a></li>';
 	html += '<li onclick="return teleonomeShowTab(\'lang-config-' + safeId + '\', this)"><a href="#">Config</a></li>';
+	html += '<li onclick="return teleonomeShowTab(\'lang-diag-' + safeId + '\', this)"><a href="#">Diagnostics</a></li>';
 	html += '</ul><div class="tab-content">';
 
 	html += '<div class="tab-pane active" id="lang-status-' + safeId + '">';
@@ -1860,6 +1962,10 @@ function buildLangleyContent(telepathon) {
 		html += '<tr><td style="width:50%;">' + cw[ci]["Name"] + '</td><td><strong>' + cw[ci]["Value"] + (cw[ci]["Units"] ? ' ' + cw[ci]["Units"] : '') + '</strong></td></tr>';
 	}
 	html += '</table></div>';
+
+	html += '<div class="tab-pane" id="lang-diag-' + safeId + '">';
+	html += buildVitalSignsPanel(telepathon, tpName, ["INA219 Solar", "INA219 Battery", "INA219 Energizer", "ADS1115 Fence", "DS18B20 Board"]);
+	html += '</div>';
 
 	html += '</div>'; // tab-content
 	html += '</div>';
@@ -3208,6 +3314,7 @@ function buildChinampaContent(telepathon, safeId) {
 	} else {
 		html += '<p class="text-muted">No additional diagnostics.</p>';
 	}
+	html += buildVitalSignsPanel(telepathon, tpName, null);  // wall powered: sleep/power groups stay empty
 	html += '</div>';
 
 	// Sensors tab
