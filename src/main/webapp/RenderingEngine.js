@@ -1398,22 +1398,113 @@ var daffodilOperatingStatusNames = {"0": "Unknown", "1": "Pulse Sleep", "2": "No
 // Daffodil, Langley and Chinampa Diagnostics tabs. i2cBitNames decodes the device-specific
 // "sensor found" mask (null = don't show it). Counters are running totals since the last reset.
 var VITAL_SIGNS_BAD_RESETS = { "BROWNOUT": 1, "PANIC": 1, "INT_WDT": 1, "TASK_WDT": 1, "WDT": 1, "CPU_LOCKUP": 1, "PWR_GLITCH": 1 };
-// Diagnostics tab split into sub-tabs: "Vital Signs" (first, from buildVitalSignsPanel) and
-// "Hardware" (the device's own diagnostic DeneWords that used to sit above the vital signs).
-function buildDiagnosticsSubTabs(idPrefix, vitalSignsHtml, hardwareHtml) {
+// Diagnostics tab split into sub-tabs: "Vital Signs" (first, from buildVitalSignsPanel),
+// "Hardware" (the device's own diagnostic DeneWords that used to sit above the vital signs) and,
+// when given, "Identity" (buildDeviceIdentityPanel).
+function buildDiagnosticsSubTabs(idPrefix, vitalSignsHtml, hardwareHtml, identityHtml) {
 	var subPillStyle = 'font-size:12px;padding:3px 9px;';
 	var html = '<ul class="nav nav-pills" style="margin-bottom:8px;flex-wrap:wrap;">';
 	html += '<li class="active" onclick="return teleonomeShowTab(\'' + idPrefix + '-vital\', this)"><a href="#" style="' + subPillStyle + '">Vital Signs</a></li>';
 	html += '<li onclick="return teleonomeShowTab(\'' + idPrefix + '-hardware\', this)"><a href="#" style="' + subPillStyle + '">Hardware</a></li>';
+	if (identityHtml) html += '<li onclick="return teleonomeShowTab(\'' + idPrefix + '-identity\', this)"><a href="#" style="' + subPillStyle + '">Identity</a></li>';
 	html += '</ul>';
 	html += '<div class="tab-content">';
 	html += '<div class="tab-pane active" id="' + idPrefix + '-vital">' + vitalSignsHtml + '</div>';
 	html += '<div class="tab-pane" id="' + idPrefix + '-hardware">' + hardwareHtml + '</div>';
+	if (identityHtml) html += '<div class="tab-pane" id="' + idPrefix + '-identity">' + identityHtml + '</div>';
 	html += '</div>';
 	return html;
 }
 
-function buildVitalSignsPanel(telepathon, tpName, i2cBitNames) {
+// Firmware source links (2026-10-07). Export Compiled Binary (DigitalStablesWatchDir) commits the
+// sketch, pushes it and cuts a GitHub release tagged with the bare release number ("51") on
+// github.com/arifainchtein/<repo>, so a firmware label "<repo> v<N>" maps to .../tree/<N>.
+// The build stamp (YYMMDDhh, compile time) has no exact mapping - it links to the repo's commits
+// up to the end of that day; the "Release vN" commit just after the build time is the one.
+var GITHUB_FIRMWARE_OWNER = "arifainchtein";
+function firmwareBuildDate(stamp) {
+	var s = String(stamp || "");
+	if (!/^\d{8}$/.test(s)) return null;
+	return new Date(2000 + parseInt(s.substr(0, 2), 10), parseInt(s.substr(2, 2), 10) - 1,
+		parseInt(s.substr(4, 2), 10), parseInt(s.substr(6, 2), 10), 0, 0);
+}
+function firmwareBuildText(stamp) {
+	var d = firmwareBuildDate(stamp);
+	if (!d) return String(stamp);
+	function p2(n) { return (n < 10 ? '0' : '') + n; }
+	return stamp + ' (' + p2(d.getDate()) + '/' + p2(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + p2(d.getHours()) + ':00)';
+}
+function firmwareCommitsUrl(repo, stamp, branch) {
+	var d = firmwareBuildDate(stamp);
+	if (!repo || !d) return null;
+	d.setDate(d.getDate() + 1);  // "until" = end of the build day
+	function p2(n) { return (n < 10 ? '0' : '') + n; }
+	return 'https://github.com/' + GITHUB_FIRMWARE_OWNER + '/' + repo + '/commits/' + (branch || 'main') +
+		'/?until=' + d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate());
+}
+// "Daffodil v51" -> {repo: "Daffodil", release: "51", url: ".../Daffodil/tree/51"}, else null
+function firmwareReleaseFromLabel(label) {
+	var m = /^\s*(\S+)\s+v(\d+)\s*$/i.exec(String(label || ""));
+	if (!m) return null;
+	return { repo: m[1], release: m[2], url: 'https://github.com/' + GITHUB_FIRMWARE_OWNER + '/' + m[1] + '/tree/' + m[2] };
+}
+function externalLink(url, text) {
+	return '<a href="' + url + '" target="_blank" rel="noopener">' + text + ' <span class="glyphicon glyphicon-new-window" style="font-size:10px;"></span></a>';
+}
+
+// Device identity - the "Device Identity" Dene (DeviceIdentityDeserializer.java, 2026-10-07):
+// product definition + firmware label, and whether that label describes the running build.
+// repo/branch: GitHub repo for the build-stamp link when the label can't be used.
+function buildDeviceIdentityPanel(telepathon, repo, branch) {
+	var denes = telepathon["Denes"] || [];
+	var idDene = null;
+	for (var i = 0; i < denes.length; i++) {
+		if (denes[i]["Name"] === "Device Identity") idDene = denes[i];
+	}
+	var html = '<div style="margin-top:12px;font-size:11px;text-transform:uppercase;font-weight:bold;color:#2c3e50;border-bottom:1px solid #eee;margin-bottom:6px;padding-bottom:4px;">Device Identity</div>';
+	if (!idDene) {
+		return html + '<p class="text-muted" style="font-size:12px;">No device identity received yet (needs firmware that sends it - after a reset, after a deploy, and once a day).</p>';
+	}
+	var words = idDene["DeneWords"] || [];
+	function val(name) {
+		for (var wi = 0; wi < words.length; wi++) if (words[wi]["Name"] === name) return words[wi]["Value"];
+		return null;
+	}
+	function row(label, valueHtml) {
+		return '<tr><td style="width:40%;">' + label + '</td><td><strong>' + (valueHtml === null || valueHtml === '' ? '—' : valueHtml) + '</strong></td></tr>';
+	}
+	function epochToLocal(v) {
+		var n = parseInt(v);
+		return n > 0 ? new Date(n * 1000).toLocaleString() : '—';
+	}
+	var label = val("Firmware Label");
+	var build = val("Firmware Build");
+	var current = String(val("Firmware Label Current")) === "true";
+	var release = firmwareReleaseFromLabel(label);
+	var firmwareHtml = label || '';
+	if (current && release) {
+		firmwareHtml = externalLink(release.url, label) + ' <span style="color:#27ae60;font-weight:normal;">(current)</span>';
+	} else if (label) {
+		firmwareHtml = '<span style="color:#e67e22;">' + label + '</span> <span style="color:#e67e22;font-weight:normal;">(not confirmed - flashed without updating the label)</span>';
+	}
+	var commitsUrl = firmwareCommitsUrl(release ? release.repo : repo, build, branch);
+	var buildHtml = commitsUrl ? externalLink(commitsUrl, firmwareBuildText(build)) : firmwareBuildText(build);
+
+	html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">';
+	html += row('Product Definition', val("Product Definition"));
+	html += row('Firmware', firmwareHtml);
+	html += row('Running Build', buildHtml);
+	html += row('PCBs', val("PCBs"));
+	html += row('Power Source', val("Power Source"));
+	html += row('Battery', val("Battery"));
+	html += row('Commissioned', epochToLocal(val("Commission Date")));
+	html += row('Last Reported', epochToLocal(val("Device Identity Received Time")) + ' <span class="text-muted" style="font-weight:normal;">(' + (val("Identity Reason") || '') + ')</span>');
+	html += '</table>';
+	return html;
+}
+
+// repo/branch (optional): GitHub repo of the device's firmware, to link the build stamp.
+function buildVitalSignsPanel(telepathon, tpName, i2cBitNames, repo, branch) {
 	var denes = telepathon["Denes"] || [];
 	var vitalDene = null;
 	for (var i = 0; i < denes.length; i++) {
@@ -1500,7 +1591,10 @@ function buildVitalSignsPanel(telepathon, tpName, i2cBitNames) {
 		html += group('Sensors', sensors);
 	}
 	html += group('Firmware',
-		row('Build', 'Firmware Build', { noGraph: true }) +
+		row('Build', 'Firmware Build', { noGraph: true, format: function(v) {
+			var url = firmwareCommitsUrl(repo, v, branch);
+			return url ? externalLink(url, firmwareBuildText(v)) : firmwareBuildText(v);
+		} }) +
 		row('Last Record', 'Vital Signs Received Time', { noGraph: true, format: epochToLocal }));
 	html += '</table>';
 	return html;
@@ -1747,6 +1841,12 @@ function buildDaffodilContent(telepathon) {
 			if (fieldName === "Operating Status") {
 				displayVal = daffodilOperatingStatusNames[String(parseInt(r.value))] || r.value;
 			}
+			if (fieldName === "Source Original Time") {
+				// The device's own clock reading (epoch seconds) as sent, before the deserializer's
+				// correction - shown as a timestamp, same formatting as the vital signs' reset times.
+				var srcEpoch = parseInt(r.value);
+				if (srcEpoch > 0) displayVal = new Date(srcEpoch * 1000).toLocaleString() + ' <span style="color:#999;font-weight:normal;">(' + srcEpoch + ')</span>';
+			}
 			if (fieldName === "Light Level" && displayUnits && displayUnits.toLowerCase() === 'meter') {
 				displayUnits = 'Lux';
 			}
@@ -1764,8 +1864,9 @@ function buildDaffodilContent(telepathon) {
 		html += '</table>';
 		if (card.title === "Diagnostics") {
 			html = cardOuterHtml + buildDiagnosticsSubTabs(card.id,
-				buildVitalSignsPanel(telepathon, tpName, ["LCD", "Temp/Humidity (0x40)", "ADS1115", "BH1750 Light", "INA219 Battery", "PCF8563 RTC", "INA219 Solar"]),
-				html);
+				buildVitalSignsPanel(telepathon, tpName, ["LCD", "Temp/Humidity (0x40)", "ADS1115", "BH1750 Light", "INA219 Battery", "PCF8563 RTC", "INA219 Solar"], "Daffodil"),
+				html,
+				buildDeviceIdentityPanel(telepathon, "Daffodil"));
 		}
 		html += '</div>';
 	}
@@ -1987,7 +2088,7 @@ function buildLangleyContent(telepathon) {
 	html += '</table></div>';
 
 	html += '<div class="tab-pane" id="lang-diag-' + safeId + '">';
-	html += buildVitalSignsPanel(telepathon, tpName, ["INA219 Solar", "INA219 Battery", "INA219 Energizer", "ADS1115 Fence", "DS18B20 Board"]);
+	html += buildVitalSignsPanel(telepathon, tpName, ["INA219 Solar", "INA219 Battery", "INA219 Energizer", "ADS1115 Fence", "DS18B20 Board"], "Langley");
 	html += '</div>';
 
 	html += '</div>'; // tab-content
@@ -3347,7 +3448,7 @@ function buildChinampaContent(telepathon, safeId) {
 	html += '<div class="tab-pane" id="chinampa-diag">';
 	var chinampaHardwareHtml = remainingPw.length > 0 ? denewordGrid(remainingPw, '#3498db') : '<p class="text-muted">No additional diagnostics.</p>';
 	html += buildDiagnosticsSubTabs('chinampa-diag',
-		buildVitalSignsPanel(telepathon, tpName, null),  // wall powered: sleep/power groups stay empty
+		buildVitalSignsPanel(telepathon, tpName, null, "chinampa", "v1.0-legacy"),  // wall powered: sleep/power groups stay empty
 		chinampaHardwareHtml);
 	html += '</div>';
 
