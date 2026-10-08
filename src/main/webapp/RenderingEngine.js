@@ -1448,6 +1448,31 @@ function firmwareReleaseFromLabel(label) {
 	if (!m) return null;
 	return { repo: m[1], release: m[2], url: 'https://github.com/' + GITHUB_FIRMWARE_OWNER + '/' + m[1] + '/tree/' + m[2] };
 }
+// The release a build stamp belongs to, from the telepathon's Device Identity: only when that
+// identity's label is current AND describes this exact build. Else null (caller falls back to the
+// commits-by-day link). Release tags can share a commit (an export with no changes), so the commits
+// list can't name the release - the label can.
+function firmwareReleaseForBuild(telepathon, stamp) {
+	var denes = (telepathon && telepathon["Denes"]) || [];
+	for (var i = 0; i < denes.length; i++) {
+		if (denes[i]["Name"] !== "Device Identity") continue;
+		var words = denes[i]["DeneWords"] || [], w = {};
+		for (var wi = 0; wi < words.length; wi++) w[words[wi]["Name"]] = words[wi]["Value"];
+		if (String(w["Firmware Label Current"]) !== "true" || String(w["Firmware Build"]) !== String(stamp)) return null;
+		return firmwareReleaseFromLabel(w["Firmware Label"]);
+	}
+	return null;
+}
+// "Build 55" linking to the release's code when known, else the stamp linking to commits by day.
+function firmwareBuildHtml(telepathon, stamp, repo, branch) {
+	var release = firmwareReleaseForBuild(telepathon, stamp);
+	if (release) {
+		return externalLink(release.url, 'Build ' + release.release) +
+			' <span class="text-muted" style="font-weight:normal;">(' + firmwareBuildText(stamp).replace(/^\d+ \((.*)\)$/, '$1') + ')</span>';
+	}
+	var url = firmwareCommitsUrl(repo, stamp, branch);
+	return url ? externalLink(url, firmwareBuildText(stamp)) : firmwareBuildText(stamp);
+}
 function externalLink(url, text) {
 	return '<a href="' + url + '" target="_blank" rel="noopener">' + text + ' <span class="glyphicon glyphicon-new-window" style="font-size:10px;"></span></a>';
 }
@@ -1487,8 +1512,7 @@ function buildDeviceIdentityPanel(telepathon, repo, branch) {
 	} else if (label) {
 		firmwareHtml = '<span style="color:#e67e22;">' + label + '</span> <span style="color:#e67e22;font-weight:normal;">(not confirmed - flashed without updating the label)</span>';
 	}
-	var commitsUrl = firmwareCommitsUrl(release ? release.repo : repo, build, branch);
-	var buildHtml = commitsUrl ? externalLink(commitsUrl, firmwareBuildText(build)) : firmwareBuildText(build);
+	var buildHtml = firmwareBuildHtml(telepathon, build, release ? release.repo : repo, branch);
 
 	html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">';
 	html += row('Product Definition', val("Product Definition"));
@@ -1592,8 +1616,7 @@ function buildVitalSignsPanel(telepathon, tpName, i2cBitNames, repo, branch) {
 	}
 	html += group('Firmware',
 		row('Build', 'Firmware Build', { noGraph: true, format: function(v) {
-			var url = firmwareCommitsUrl(repo, v, branch);
-			return url ? externalLink(url, firmwareBuildText(v)) : firmwareBuildText(v);
+			return firmwareBuildHtml(telepathon, v, repo, branch);
 		} }) +
 		row('Last Record', 'Vital Signs Received Time', { noGraph: true, format: epochToLocal }));
 	html += '</table>';
