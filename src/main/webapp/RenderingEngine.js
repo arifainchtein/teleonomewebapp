@@ -1559,9 +1559,12 @@ function buildVitalSignsPanel(telepathon, tpName, i2cBitNames, repo, branch) {
 		return '<tr><td style="width:40%;">' + label + '</td><td><strong' + style + '>' + val + units + '</strong></td>' +
 			'<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + (opts.noGraph ? '' : graphBtns(dwName)) + '</td></tr>';
 	}
+	// Each group is its own small table in an auto-fill grid (2026-10-08): side by side on a wide
+	// screen instead of one long full-width table, stacked on a phone.
 	function group(title, rowsHtml) {
 		if (!rowsHtml) return '';
-		return '<tr><td colspan="3" style="background:#f4f6f8;font-weight:bold;font-size:11px;">' + title + '</td></tr>' + rowsHtml;
+		return '<div style="min-width:0;"><table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">' +
+			'<tr><td colspan="3" style="background:#f4f6f8;font-weight:bold;font-size:11px;">' + title + '</td></tr>' + rowsHtml + '</table></div>';
 	}
 	function epochToLocal(v) {
 		var n = parseInt(v);
@@ -1570,10 +1573,12 @@ function buildVitalSignsPanel(telepathon, tpName, i2cBitNames, repo, branch) {
 	var reasonDW = dw("Last Reset Reason");
 	var reasonColor = reasonDW && VITAL_SIGNS_BAD_RESETS[reasonDW["Value"]] ? '#e74c3c' : (reasonDW && reasonDW["Value"] === "POWERON" ? '#e67e22' : null);
 
+	var receivedDW = dw("Vital Signs Received Time");
 	html += '<div style="margin-bottom:6px;font-size:12px;">Hypnogram: ' +
 		'<button class="btn btn-xs btn-primary vital-signs-hypnogram" data-telepathonname="' + tpName + '" data-hours="24">24h</button> ' +
-		'<button class="btn btn-xs btn-primary vital-signs-hypnogram" data-telepathonname="' + tpName + '" data-hours="168">7d</button></div>';
-	html += '<table class="table table-condensed table-striped" style="margin-bottom:0;font-size:12px;">';
+		'<button class="btn btn-xs btn-primary vital-signs-hypnogram" data-telepathonname="' + tpName + '" data-hours="168">7d</button>' +
+		(receivedDW ? ' <span class="text-muted" style="margin-left:8px;">Last record: ' + epochToLocal(receivedDW["Value"]) + '</span>' : '') + '</div>';
+	html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0 12px;align-items:start;">';
 	html += group('Resets',
 		row('Last Reset Reason', 'Last Reset Reason', { noGraph: true, color: reasonColor }) +
 		row('Last Reset Time', 'Last Reset Time', { noGraph: true, format: epochToLocal }) +
@@ -1614,12 +1619,17 @@ function buildVitalSignsPanel(telepathon, tpName, i2cBitNames, repo, branch) {
 		}
 		html += group('Sensors', sensors);
 	}
-	html += group('Firmware',
-		row('Build', 'Firmware Build', { noGraph: true, format: function(v) {
-			return firmwareBuildHtml(telepathon, v, repo, branch);
-		} }) +
-		row('Last Record', 'Vital Signs Received Time', { noGraph: true, format: epochToLocal }));
-	html += '</table>';
+	// Firmware: shown only when there's no Device Identity - the Identity sub-tab already has the
+	// label, build and link. "Last record" moved up next to the hypnogram buttons.
+	var hasIdentity = false;
+	for (var di = 0; di < denes.length; di++) if (denes[di]["Name"] === "Device Identity") hasIdentity = true;
+	if (!hasIdentity) {
+		html += group('Firmware',
+			row('Build', 'Firmware Build', { noGraph: true, format: function(v) {
+				return firmwareBuildHtml(telepathon, v, repo, branch);
+			} }));
+	}
+	html += '</div>';
 	return html;
 }
 
@@ -1887,7 +1897,8 @@ function buildDaffodilContent(telepathon) {
 		html += '</table>';
 		if (card.title === "Diagnostics") {
 			html = cardOuterHtml + buildDiagnosticsSubTabs(card.id,
-				buildVitalSignsPanel(telepathon, tpName, ["LCD", "Temp/Humidity (0x40)", "ADS1115", "BH1750 Light", "INA219 Battery", "PCF8563 RTC", "INA219 Solar"], "Daffodil"),
+				// null: no Sensors group - the Hardware sub-tab's "... Found" rows cover it
+				buildVitalSignsPanel(telepathon, tpName, null, "Daffodil"),
 				html,
 				buildDeviceIdentityPanel(telepathon, "Daffodil"));
 		}
