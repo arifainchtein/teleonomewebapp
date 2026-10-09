@@ -296,6 +296,12 @@ var DENEWORD_TELEPATHON_REGISTRY_DEVICES = "Telepathon Registry Devices";
 // registry - see TelepathonRegistryTask's "temporary list" / checkPromotion().
 // Same no-AJAX read as DEVICES above, published fresh every sweep.
 var DENEWORD_TELEPATHON_REGISTRY_PENDING_DEVICES = "Telepathon Registry Pending Devices";
+// Internal:Cerebellum:Configuration - how long an official device may go silent
+// before it counts as "Stale" rather than just "Late" (CerebellumConfigClient,
+// default 2 days). The Registry Status popup's Current/Stale split uses this.
+var DENE_CEREBELLUM_CONFIGURATION = "Configuration";
+var DENEWORD_CEREBELLUM_DAYS_BEFORE_STALE = "Days Before Stale";
+var DEFAULT_CEREBELLUM_DAYS_BEFORE_STALE = 2;
 
 var VALUE_UNDEFINED = "Undefined";
 

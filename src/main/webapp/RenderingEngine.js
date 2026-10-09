@@ -285,13 +285,31 @@ function getTelepathonRegistryDeviceList() {
 	}
 }
 
-// Registry devices with Status "OK" (matches the modal's "Show Current" filter) --
-// used by the "Temperature Chart" header button so a stale/CRITICAL device (which
-// has stopped reporting and would just draw a flat/empty line) doesn't get requested.
+function getCerebellumDaysBeforeStale() {
+	var pointer = "@" + teleonomeName + ":" + NUCLEI_INTERNAL + ":" + DENECHAIN_INTERNAL_CEREBELLUM + ":" + DENE_CEREBELLUM_CONFIGURATION + ":" + DENEWORD_CEREBELLUM_DAYS_BEFORE_STALE;
+	var days = parseFloat(getDeneWordByIdentityPointer(pointer, DENEWORD_VALUE_ATTRIBUTE));
+	return (isNaN(days) || days <= 0) ? DEFAULT_CEREBELLUM_DAYS_BEFORE_STALE : days;
+}
+
+// "Current" = heard from within "Days Before Stale", not Status === "OK". "OK" only
+// means "within the per-device-type Late threshold" (30 min for a Daffodil), so a
+// device that pulsed all day and is simply asleep tonight (TopTank) was dropping
+// out of Show Current. Decided here from "Seconds Since Last Seen" rather than
+// from Status === "CRITICAL", so it's right even on a Cerebellum whose CRITICAL
+// cutoff predates "Days Before Stale" (the old fixed 60 min).
+function isRegistryDeviceCurrent(device) {
+	var ageSec = device["Seconds Since Last Seen"];
+	if (typeof ageSec !== 'number') return device["Status"] !== "CRITICAL";
+	return ageSec < getCerebellumDaysBeforeStale() * 86400;
+}
+
+// Registry devices that are "current" (matches the modal's "Show Current" filter) --
+// used by the "Temperature Chart" header button so a stale device (which has
+// stopped reporting and would just draw a flat/empty line) doesn't get requested.
 function getValidTelepathonRegistryNames() {
 	var devices = getTelepathonRegistryDeviceList();
 	if (!devices) return [];
-	return devices.filter(function(d) { return d["Status"] === "OK"; }).map(function(d) { return d["Name"]; });
+	return devices.filter(isRegistryDeviceCurrent).map(function(d) { return d["Name"]; });
 }
 
 // Different telepathon device types publish ambient temperature under different
@@ -479,13 +497,13 @@ function loadRegistryCards(devices) {
 				var device = devices[i];
 				var name = device["Name"];
 				var record = records ? records[name] : null;
-				var isCurrent = device["Status"] === "OK";
+				var isCurrent = isRegistryDeviceCurrent(device);
 				var $card = (record && record["data"])
 					? buildRegistryCard(record["data"], isCurrent)
 					: buildRegistryNoDataCard(name, isCurrent);
 				$container.append($card);
 			}
-			filterRegistryStatusTable($('input[name="registryStatusFilter"]:checked').val() || 'all');
+			filterRegistryStatusTable($('input[name="registryStatusFilter"]:checked').val() || 'current');
 		},
 		error: function () {
 			$('#registry-status-loading').text('Error loading last known telepathon data.');
@@ -494,7 +512,7 @@ function loadRegistryCards(devices) {
 }
 
 function openRegistryStatusModal() {
-	$('input[name="registryStatusFilter"][value="all"]').prop('checked', true);
+	$('input[name="registryStatusFilter"][value="current"]').prop('checked', true);
 	// Reset to the Registry tab every time the modal is (re)opened, rather than
 	// leaving it wherever the user last clicked away from.
 	var $modal = $('#registry-status-modal');
