@@ -1831,6 +1831,15 @@ function buildDaffodilContent(telepathon) {
 	html += '<span><strong>Function:</strong> ' + functionLabel + '</span>';
 	html += '</div>';
 
+	// "Op Mode" = opMode bit0 = USB programming jumper fitted (Daffodil usbJumperFitted()). Left on,
+	// the CP2104 USB chip drains the battery in deep sleep and the TPL5010 watchdog is disconnected
+	// (TopTank went flat overnight 2026-10-09 that way).
+	var usbJumperDW = getDW(purposeDene, "Op Mode");
+	if (usbJumperDW && (String(usbJumperDW.value).toLowerCase() === 'true' || String(usbJumperDW.value) === '1')) {
+		html += '<div style="background:#c62828;color:#fff;font-weight:bold;padding:6px 10px;border-radius:4px;margin-bottom:10px;font-size:13px;">'
+			+ '&#9888; USB programming jumper is fitted - the USB chip is draining the battery and the watchdog is disconnected. Move the jumper back to the watchdog header.</div>';
+	}
+
 	html += '<ul class="nav nav-pills" style="margin-bottom:10px;">';
 	html += '<li class="active" onclick="return teleonomeShowTab(\'daff-results-' + safeId + '\', this)"><a href="#">Status</a></li>';
 	html += '<li onclick="return teleonomeShowTab(\'daff-config-' + safeId + '\', this)"><a href="#">Config</a></li>';
@@ -1901,9 +1910,16 @@ function buildDaffodilContent(telepathon) {
 			if (fieldName === "Light Level" && displayUnits && displayUnits.toLowerCase() === 'meter') {
 				displayUnits = 'Lux';
 			}
+			var fieldLabel = fieldName;
+			if (fieldName === "Op Mode") {
+				// opMode bit0 = USB programming jumper (see the banner above the tabs)
+				fieldLabel = "USB Jumper";
+				var jumperOn = String(r.value).toLowerCase() === 'true' || String(r.value) === '1';
+				displayVal = jumperOn ? '<span style="color:#c62828;">FITTED</span>' : 'off';
+			}
 			var valCell = '<strong>' + displayVal + (displayUnits ? ' ' + displayUnits : '') + '</strong>';
 			var btnCell = noGraphFields[fieldName] ? '' : '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, r.deneName, fieldName) + '</td>';
-			html += '<tr><td style="width:40%;">' + fieldName + '</td><td>' + valCell + '</td>' + btnCell + '</tr>';
+			html += '<tr><td style="width:40%;">' + fieldLabel + '</td><td>' + valCell + '</td>' + btnCell + '</tr>';
 			if (card.title === "Power" && fieldName === "Battery Current") {
 				var socVal = getCerebellumDeneWordValue(tpName, DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE);
 				if (socVal !== null) {
