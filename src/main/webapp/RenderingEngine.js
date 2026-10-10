@@ -2568,7 +2568,17 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 	html += '</div>';
 	var cardAgeSec = Math.floor(ageSeconds);
 	html += '<div id="tpText_' + safeId + '" style="flex:1;padding:14px;background:#fafafa;display:flex;flex-direction:column;justify-content:center;">';
-	html += '<div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + name + '</div>';
+	// Daffodil "Op Mode" = opMode bit0 = USB programming jumper fitted - flag it on the card itself
+	// (not just the detail popup) since left on it drains the battery overnight.
+	var usbJumperCardDW = deviceType === "Daffodil" ? findPW("Op Mode") : null;
+	var usbJumperOn = usbJumperCardDW && (String(usbJumperCardDW["Value"]).toLowerCase() === 'true' || String(usbJumperCardDW["Value"]) === '1');
+	if (usbJumperOn) {
+		html += '<div style="background:#c62828;color:#fff;border-radius:4px;padding:2px 6px;">' +
+			'<div style="font-weight:bold;font-size:16px;">' + name + '</div>' +
+			'<div style="font-size:11px;">USB header connected</div></div>';
+	} else {
+		html += '<div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + name + '</div>';
+	}
 	if (localTime) {
 		var localTimeRaw = String(localTime);
 		var localTimeShort = localTimeRaw.replace(/^\d{4}\//, '');
