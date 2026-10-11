@@ -1614,6 +1614,29 @@ function buildVitalSignsPanel(telepathon, tpName, i2cBitNames, repo, branch) {
 		row('Lowest TX Voltage', 'TX Min Voltage') +
 		row('Battery Sag', 'Battery Sag') +
 		row('Min Voltage Since Report', 'Min Voltage Since Report'));
+	// Vital Signs v3 (2026-10-12): running totals since the last reset, integrated on the device
+	// while awake. Only present for firmware that sends version 3 - group() hides it otherwise.
+	html += group('Battery Ledger (since reset)',
+		row('Charge In', 'Charge In Total') +
+		row('Discharge Out', 'Discharge Out Total') +
+		row('Panel Energy', 'Panel Energy Total') +
+		row('Coverage of Awake Time', 'Ledger Coverage') +
+		row('Longest Sample Gap', 'Ledger Max Gap') +
+		row('Battery Temperature', 'Battery Temperature'));
+	// Power Profile Dene (sent with Device Identity): the battery/sensor facts the SOC uses.
+	var ppWords = [];
+	for (var pi2 = 0; pi2 < denes.length; pi2++) if (denes[pi2]["Name"] === "Power Profile") ppWords = denes[pi2]["DeneWords"] || [];
+	if (ppWords.length) {
+		var ppRows = '';
+		["Battery Chemistry", "Cells In Series", "Battery Capacity", "Absorption Voltage", "Cutoff Voltage",
+		 "Battery Current Resolution", "Panel Current Resolution", "Sleep Current", "Battery Temperature Source"].forEach(function(n) {
+			for (var pw = 0; pw < ppWords.length; pw++) if (ppWords[pw]["Name"] === n) {
+				ppRows += '<tr><td style="width:40%;">' + n + '</td><td colspan="2"><strong>' + ppWords[pw]["Value"] +
+					(ppWords[pw]["Units"] ? ' ' + ppWords[pw]["Units"] : '') + '</strong></td></tr>';
+			}
+		});
+		html += group('Power Profile', ppRows);
+	}
 	html += group('Last LoRa Transmit',
 		row('Duration', 'TX Duration') +
 		row('Battery Before', 'TX Battery Pre') +
@@ -2578,6 +2601,35 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 			'<div style="font-size:11px;">USB header connected</div></div>';
 	} else {
 		html += '<div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + name + '</div>';
+	}
+	// Vital Signs warnings - shown only while something is wrong (2026-10-12):
+	//  - a real reset in the last 24 h (red for faults like BROWNOUT/PANIC/WDT, orange for a plain
+	//    power-on such as a flash or replug);
+	//  - radio delivery under 80 % (once enough records have arrived to make the % meaningful).
+	if (deviceType === "Daffodil" || deviceType === "Langley") {
+		var vsWords = [];
+		for (var vdi = 0; vdi < denes.length; vdi++) if (denes[vdi]["Name"] === TELEPATHON_DENE_VITAL_SIGNS) vsWords = denes[vdi]["DeneWords"] || [];
+		var vsVal = function(n) {
+			for (var vwi = 0; vwi < vsWords.length; vwi++) if (vsWords[vwi]["Name"] === n) return vsWords[vwi]["Value"];
+			return null;
+		};
+		var vsBadges = [];
+		var resetReason = vsVal("Last Reset Reason");
+		var resetTime = parseInt(vsVal("Last Reset Time"));
+		if (resetReason && resetTime > 0) {
+			var resetAgeSec = Date.now() / 1000 - resetTime;
+			if (resetAgeSec >= 0 && resetAgeSec < 86400) {
+				var resetAgeStr = resetAgeSec < 3600 ? Math.round(resetAgeSec / 60) + ' min' : Math.round(resetAgeSec / 3600) + ' h';
+				var resetBg = VITAL_SIGNS_BAD_RESETS[resetReason] ? '#c62828' : '#e67e22';
+				vsBadges.push('<span style="background:' + resetBg + ';color:#fff;border-radius:4px;padding:0 6px;">&#9888; Reset ' + resetAgeStr + ' ago (' + resetReason + ')</span>');
+			}
+		}
+		var deliveryPct = parseFloat(vsVal("Delivery Percent"));
+		var recordsReceived = parseInt(vsVal("Records Received"));
+		if (!isNaN(deliveryPct) && recordsReceived >= 10 && deliveryPct < 80) {
+			vsBadges.push('<span style="background:#ef6c00;color:#fff;border-radius:4px;padding:0 6px;">&#128246; ' + Math.round(deliveryPct) + '% delivered</span>');
+		}
+		if (vsBadges.length) html += '<div style="font-size:11px;font-weight:bold;margin-top:3px;display:flex;flex-wrap:wrap;gap:4px;">' + vsBadges.join('') + '</div>';
 	}
 	if (localTime) {
 		var localTimeRaw = String(localTime);
