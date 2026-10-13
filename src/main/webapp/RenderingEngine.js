@@ -1949,6 +1949,19 @@ function buildDaffodilContent(telepathon) {
 					html += '<tr><td style="width:40%;">Battery SOC</td><td><strong>' + parseFloat(socVal).toFixed(1) + '%</strong></td>'
 						+ '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, "Purpose", DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE) + '</td></tr>';
 				}
+				// LedgerSoc next to it (2026-10-14), while the two are compared - only once the device sends a v3 ledger
+				var ledgerSoc = getCerebellumDeneWordValue(tpName, DENEWORD_LEDGER_SOC);
+				if (ledgerSoc !== null) {
+					var ledgerMah = getCerebellumDeneWordValue(tpName, DENEWORD_LEDGER_CHARGE_MAH);
+					var ledgerAnchor = parseInt(getCerebellumDeneWordValue(tpName, DENEWORD_LEDGER_LAST_ANCHOR));
+					html += '<tr><td style="width:40%;">Battery SOC (ledger)</td><td><strong>' + parseFloat(ledgerSoc).toFixed(1) + '%</strong>'
+						+ (ledgerMah !== null ? ' <span style="color:#999;">' + Math.round(parseFloat(ledgerMah)) + ' mAh</span>' : '') + '</td>'
+						+ '<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + mkGraphBtns(tpName, "Purpose", DENEWORD_LEDGER_SOC) + '</td></tr>';
+					if (ledgerAnchor > 0) {
+						html += '<tr><td style="width:40%;">Ledger last anchor</td><td><strong>' + new Date(ledgerAnchor * 1000).toLocaleString()
+							+ '</strong> <span style="color:#999;">(' + formatPendingAge(Date.now() / 1000 - ledgerAnchor) + ')</span></td><td></td></tr>';
+					}
+				}
 			}
 		}
 		html += '</table>';

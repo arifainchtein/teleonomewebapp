@@ -236,6 +236,10 @@ var DENEWORD_CEREBELLUM_PATHOLOGY_MNEMOSYNE_LOCATION = "Cerebellum Pathology Mne
 
 // ── PulseTask output DeneWords (Purpose → Cerebellum → Daffodil) ─────────
 var DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE = "Battery SOC Live %";
+// Cerebellum LedgerSoc (2026-10-12): SOC from the device's own battery ledger, published next to the above
+var DENEWORD_LEDGER_SOC = "Battery SOC Ledger %";
+var DENEWORD_LEDGER_CHARGE_MAH = "Battery Ledger Charge mAh";
+var DENEWORD_LEDGER_LAST_ANCHOR = "Battery Ledger Last Anchor";
 
 // ── Cerebellum → Annabelle action activation (generic) ───────────────────
 var COMMAND_SEND_GRAVEYARD_SHIFT                 = "SendGraveyardShift";
