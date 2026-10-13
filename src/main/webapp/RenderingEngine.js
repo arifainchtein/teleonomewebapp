@@ -2603,8 +2603,8 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 		html += '<div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + name + '</div>';
 	}
 	// Vital Signs warnings - shown only while something is wrong (2026-10-12):
-	//  - a real reset in the last 24 h (red for faults like BROWNOUT/PANIC/WDT, orange for a plain
-	//    power-on such as a flash or replug);
+	//  - a real reset: red for 24 h for faults like BROWNOUT/PANIC/WDT, orange for only 1 h for a plain
+	//    power-on such as a flash or replug (expected, and still listed in the Vital Signs popup);
 	//  - radio delivery under 80 % (once enough records have arrived to make the % meaningful).
 	if (deviceType === "Daffodil" || deviceType === "Langley") {
 		var vsWords = [];
@@ -2618,7 +2618,8 @@ function buildTelepathonCardView(telepathon, idSuffix) {
 		var resetTime = parseInt(vsVal("Last Reset Time"));
 		if (resetReason && resetTime > 0) {
 			var resetAgeSec = Date.now() / 1000 - resetTime;
-			if (resetAgeSec >= 0 && resetAgeSec < 86400) {
+			var resetBadgeSec = VITAL_SIGNS_BAD_RESETS[resetReason] ? 86400 : 3600;
+			if (resetAgeSec >= 0 && resetAgeSec < resetBadgeSec) {
 				var resetAgeStr = resetAgeSec < 3600 ? Math.round(resetAgeSec / 60) + ' min' : Math.round(resetAgeSec / 3600) + ' h';
 				var resetBg = VITAL_SIGNS_BAD_RESETS[resetReason] ? '#c62828' : '#e67e22';
 				vsBadges.push('<span style="background:' + resetBg + ';color:#fff;border-radius:4px;padding:0 6px;">&#9888; Reset ' + resetAgeStr + ' ago (' + resetReason + ')</span>');
