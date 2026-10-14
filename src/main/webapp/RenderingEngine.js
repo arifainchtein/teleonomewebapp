@@ -1572,7 +1572,7 @@ function buildVitalSignsPanel(telepathon, tpName, i2cBitNames, repo, branch) {
 		if (!w) return '';
 		opts = opts || {};
 		var val = opts.format ? opts.format(w["Value"]) : w["Value"];
-		var units = w["Units"] ? ' ' + w["Units"] : '';
+		var units = w["Units"] && !opts.noUnits ? ' ' + w["Units"] : '';
 		var style = opts.color ? ' style="color:' + opts.color + ';"' : '';
 		return '<tr><td style="width:40%;">' + label + '</td><td><strong' + style + '>' + val + units + '</strong></td>' +
 			'<td style="text-align:right;white-space:nowrap;padding:2px 4px;">' + (opts.noGraph ? '' : graphBtns(dwName)) + '</td></tr>';
@@ -1623,6 +1623,14 @@ function buildVitalSignsPanel(telepathon, tpName, i2cBitNames, repo, branch) {
 		row('Coverage of Awake Time', 'Ledger Coverage') +
 		row('Longest Sample Gap', 'Ledger Max Gap') +
 		row('Battery Temperature', 'Battery Temperature'));
+	// Vital Signs v4 (2026-10-14): what WiFi costs - the same ledger, counted only while WiFi was on.
+	html += group('WiFi (since reset)',
+		row('Time On', 'WiFi On Seconds', { noUnits: true, format: function(v) {
+			var s = parseInt(v);
+			return isNaN(s) ? v : (s >= 3600 ? Math.floor(s / 3600) + ' h ' : '') + Math.floor((s % 3600) / 60) + ' min';
+		} }) +
+		row('Battery Charge Out', 'WiFi Charge Out') +
+		row('Average Draw While On', 'WiFi Average Current'));
 	// Power Profile Dene (sent with Device Identity): the battery/sensor facts the SOC uses.
 	var ppWords = [];
 	for (var pi2 = 0; pi2 < denes.length; pi2++) if (denes[pi2]["Name"] === "Power Profile") ppWords = denes[pi2]["DeneWords"] || [];
