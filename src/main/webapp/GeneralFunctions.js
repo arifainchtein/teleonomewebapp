@@ -146,3 +146,45 @@ function sortHashMap(o) {
 	}
 	return sorted;
 }
+
+//
+// Contextual colour for a panel value (added 2026-10-17 for Cleotilde). A panel dene may carry
+// these optional denewords; with none of them nothing changes:
+//   "Rule Source Pointer"          value to test (default: the dene's Panel Data Source Pointer)
+//   "Warning Above", "Warning Below", "Alarm Above", "Alarm Below"   numeric thresholds
+//   "Warning If", "Alarm If"       exact value, e.g. false or none
+// Returns "danger", "warning" or "" - the suffixes of the panel-heading-* classes in index.html.
+//
+function panelRuleLevel(dene){
+	var sourcePointer = deneHasDeneWordProperty(dene, "Rule Source Pointer")
+		? getDeneWordAttributeByDeneWordNameFromDene(dene, "Rule Source Pointer", DENEWORD_VALUE_ATTRIBUTE)
+		: getDeneWordAttributeByDeneWordTypeFromDene(dene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE);
+	if(sourcePointer===undefined || sourcePointer===null) return "";
+	var value = getDeneWordByIdentityPointer(sourcePointer, DENEWORD_VALUE_ATTRIBUTE);
+	if(value===undefined || value===null) return "";
+	var rule = function(name){
+		return deneHasDeneWordProperty(dene, name) ? getDeneWordAttributeByDeneWordNameFromDene(dene, name, DENEWORD_VALUE_ATTRIBUTE) : undefined;
+	};
+	var number = parseFloat(value);
+	var test = function(prefix){
+		var above = rule(prefix + " Above"), below = rule(prefix + " Below"), equals = rule(prefix + " If");
+		if(equals!==undefined && String(value)===String(equals)) return true;
+		if(!isNaN(number) && above!==undefined && number > parseFloat(above)) return true;
+		if(!isNaN(number) && below!==undefined && number < parseFloat(below)) return true;
+		return false;
+	};
+	if(test("Alarm")) return "danger";
+	if(test("Warning")) return "warning";
+	return "";
+}
+
+// The worst level of several rule denes (e.g. all the denes of a Well panel's chain).
+function worstPanelLevel(denes){
+	var worst = "";
+	for(var i=0;i<denes.length;i++){
+		var level = panelRuleLevel(denes[i]);
+		if(level==="danger") return "danger";
+		if(level==="warning") worst = "warning";
+	}
+	return worst;
+}

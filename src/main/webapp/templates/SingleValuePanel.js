@@ -97,7 +97,8 @@ class SingleValuePanel{
                      
                      
                 }else{
-                	panelHTML += "<div class=\"panel-heading\"><h6>"+nameToDisplay+"</h6></div>";
+                	var ruleLevel = panelRuleLevel(dataDene);  // optional Warning/Alarm denewords, see GeneralFunctions.js
+                	panelHTML += "<div class=\"panel-heading" + (ruleLevel ? " panel-heading-" + ruleLevel : "") + "\"><h6>"+nameToDisplay+"</h6></div>";
                 }
                 
                

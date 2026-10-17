@@ -4228,7 +4228,7 @@ function renderPageByPointer(pagePointer, locationId){
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_WELL_SINGLE_VALUE_PANEL){
 			var sourceDataPointer = denes[0].DeneWords[0].Value;
 			var aWellSingleValuePanel = new WellSingleValuePanel();
-			panelHTML += aWellSingleValuePanel.process(sourceDataPointer);
+			panelHTML += aWellSingleValuePanel.process(sourceDataPointer, denes);
 
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_SINGLE_VALUE_PANEL_EXTERNAL_TIMESTAMP){
