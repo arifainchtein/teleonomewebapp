@@ -1,6 +1,7 @@
 // Device list for whitelist cleanup, phone first (rewritten 2026-10-18 for Cleotilde).
-// One card per device: unknown present devices first (with a checkbox for "Add selected"),
-// then known present devices, then the ones not seen in the last scan, collapsed.
+// One card per device, laid out as a deck (a grid that fills the width, one column on a phone):
+// known present devices first, then unknown ones (with a checkbox for "Add selected"),
+// then the ones not seen in the last scan, collapsed.
 // Vendor / Connection / Private MAC come from CleotildeMicroController; older Network
 // Inspector denomes don't have them and the cards just leave them out.
 // The selection lives in whiteListSelection (index.html) so it survives the re-render
@@ -17,11 +18,21 @@ class NetworkSensorDeviceStatusReport{
 			.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 	}
 
+	// names saved before the framework stripped the router's ".lan" domain still carry it;
+	// only the display drops it, data-name keeps the stored name so Add/Remove still match
+	displayName(name){
+		return String(name === undefined || name === null ? "" : name).replace(/\.lan$/i, "");
+	}
+
 	teleonomeAt(ip, organismIPInfoJsonData){
 		for(var name in organismIPInfoJsonData){
 			if(ip !== "" && organismIPInfoJsonData[name] == ip) return name;
 		}
 		return "";
+	}
+
+	deck(){
+		return "<div style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin-bottom:14px\">";
 	}
 
 	card(device, organismIPInfoJsonData, selectable){
@@ -37,28 +48,29 @@ class NetworkSensorDeviceStatusReport{
 		var teleonome = this.teleonomeAt(ip, organismIPInfoJsonData);
 
 		var border = known ? "#4caf50" : (present ? "#f9a825" : "#bbb");
-		var html = "<div class=\"wl-card\" style=\"border-left:6px solid " + border + ";background:#fff;border-radius:4px;"
-			+ "box-shadow:0 1px 2px rgba(0,0,0,.15);padding:10px 12px;margin-bottom:8px\">";
-		html += "<div style=\"display:flex;align-items:center;gap:10px\">";
+		var html = "<div class=\"wl-card\" style=\"border-left:8px solid " + border + ";background:#fff;border-radius:6px;"
+			+ "box-shadow:0 1px 3px rgba(0,0,0,.2);padding:12px 14px\">";
+		html += "<div style=\"display:flex;align-items:center;gap:12px\">";
 		if(selectable && mac){
 			var checked = whiteListSelection[mac] ? " checked" : "";
-			html += "<input type=\"checkbox\" class=\"wlSelect\" style=\"width:22px;height:22px;flex:none\""
+			html += "<input type=\"checkbox\" class=\"wlSelect\" style=\"width:26px;height:26px;flex:none\""
 				+ " data-name=\"" + this.escape(name) + "\" data-mac=\"" + this.escape(mac) + "\"" + checked + ">";
 		}
 		html += "<div style=\"flex:1;min-width:0\">";
-		html += "<div style=\"font-size:16px;font-weight:bold;overflow-wrap:anywhere\">" + this.escape(name);
-		if(teleonome) html += " <a href=\"http://" + this.escape(teleonome) + ".local\" target=\"_new\" class=\"label label-info\">" + this.escape(teleonome) + "</a>";
+		html += "<div style=\"font-size:21px;font-weight:bold;overflow-wrap:anywhere\">" + this.escape(this.displayName(name));
+		if(teleonome) html += " <a href=\"http://" + this.escape(teleonome) + ".local\" target=\"_new\" class=\"label label-info\""
+			+ " style=\"font-size:15px;vertical-align:middle\">" + this.escape(teleonome) + "</a>";
 		html += "</div>";
-		if(details.length > 0) html += "<div style=\"color:#555;font-size:13px\">" + details.join(" &middot; ") + "</div>";
-		if(mac && mac !== name) html += "<div style=\"color:#999;font-size:12px;font-family:monospace\">" + this.escape(mac) + "</div>";
+		if(details.length > 0) html += "<div style=\"color:#555;font-size:17px\">" + details.join(" &middot; ") + "</div>";
+		if(mac && mac !== name) html += "<div style=\"color:#888;font-size:15px;font-family:monospace\">" + this.escape(mac) + "</div>";
 		html += "</div>";
 
 		var data = " data-name=\"" + this.escape(name) + "\" data-mac=\"" + this.escape(mac) + "\"";
 		if(known){
-			html += "<a href=\"#\" class=\"btn btn-danger btn-sm wlRemoveBtn\" style=\"flex:none\"" + data + ">"
+			html += "<a href=\"#\" class=\"btn btn-danger wlRemoveBtn\" style=\"flex:none\"" + data + ">"
 				+ "<span class=\"glyphicon glyphicon-minus-sign\"></span> Remove</a>";
 		}else if(mac){
-			html += "<a href=\"#\" class=\"btn btn-success btn-sm wlAddBtn\" style=\"flex:none\"" + data + ">"
+			html += "<a href=\"#\" class=\"btn btn-success wlAddBtn\" style=\"flex:none\"" + data + ">"
 				+ "<span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>";
 		}
 		html += "</div></div>";
@@ -79,7 +91,8 @@ class NetworkSensorDeviceStatusReport{
 			else if(d[WHITE_LIST_STATUS]) known.push(d);
 			else unknown.push(d);
 		}
-		var byName = function(a, b){ return String(a[DEVICE_NAME]).localeCompare(String(b[DEVICE_NAME])); };
+		var self = this;
+		var byName = function(a, b){ return self.displayName(a[DEVICE_NAME]).localeCompare(self.displayName(b[DEVICE_NAME])); };
 		unknown.sort(byName); known.sort(byName); gone.sort(byName);
 
 		// forget selections for devices that are no longer unknown (added, or gone)
@@ -89,31 +102,36 @@ class NetworkSensorDeviceStatusReport{
 		var selectedCount = Object.keys(whiteListSelection).length;
 
 		var html = "<div class=\"col-lg-12\">";
-		html += "<div class=\"well well-sm\"><h4 style=\"margin:0 0 4px\">Devices</h4>";
-		html += "<div>Scan " + this.escape(scanTimeString) + "</div>";
-		html += "<div><span class=\"label label-warning\">" + unknown.length + " unknown</span> "
-			+ "<span class=\"label label-success\">" + known.length + " known</span> "
+		html += "<div class=\"well well-sm\"><h3 style=\"margin:0 0 6px\">Devices</h3>";
+		html += "<div style=\"font-size:17px\">Scan " + this.escape(scanTimeString) + "</div>";
+		html += "<div style=\"font-size:18px;margin-top:4px\"><span class=\"label label-success\">" + known.length + " known</span> "
+			+ "<span class=\"label label-warning\">" + unknown.length + " unknown</span> "
 			+ "<span class=\"label label-default\">" + gone.length + " not seen</span></div></div>";
 
+		html += "<h4 style=\"color:#2e7d32\">Known (" + known.length + ")</h4>";
+		html += this.deck();
+		for(var k = 0; k < known.length; k++) html += this.card(known[k], organismIPInfoJsonData, false);
+		html += "</div>";
+
 		if(unknown.length > 0){
+			html += "<h4 style=\"color:#b26a00\">Unknown (" + unknown.length + ")</h4>";
 			html += "<div style=\"display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px\">";
 			html += "<a href=\"#\" class=\"btn btn-success wlAddSelectedBtn\"" + (selectedCount == 0 ? " disabled" : "") + ">"
 				+ "<span class=\"glyphicon glyphicon-ok\"></span> Add selected (<span id=\"wlSelectedCount\">" + selectedCount + "</span>)</a>";
 			html += "<a href=\"#\" class=\"btn btn-default wlSelectAllBtn\">Select all</a>";
 			html += "<a href=\"#\" class=\"btn btn-default wlSelectNoneBtn\">Clear</a>";
 			html += "</div>";
-			html += "<h5 style=\"color:#b26a00\">Unknown (" + unknown.length + ")</h5>";
+			html += this.deck();
 			for(var a = 0; a < unknown.length; a++) html += this.card(unknown[a], organismIPInfoJsonData, true);
+			html += "</div>";
 		}
 
-		html += "<h5 style=\"color:#2e7d32\">Known (" + known.length + ")</h5>";
-		for(var k = 0; k < known.length; k++) html += this.card(known[k], organismIPInfoJsonData, false);
-
 		if(gone.length > 0){
-			html += "<details style=\"margin-top:10px\"><summary style=\"cursor:pointer;font-weight:bold;color:#777\">"
+			html += "<details style=\"margin-top:10px\"><summary style=\"cursor:pointer;font-size:18px;font-weight:bold;color:#777\">"
 				+ "Not seen in the last scan (" + gone.length + ")</summary><div style=\"margin-top:8px\">";
+			html += this.deck();
 			for(var g = 0; g < gone.length; g++) html += this.card(gone[g], organismIPInfoJsonData, false);
-			html += "</div></details>";
+			html += "</div></div></details>";
 		}
 		html += "</div>";
 		return html;
