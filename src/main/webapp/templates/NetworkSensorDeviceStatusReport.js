@@ -1,7 +1,9 @@
 // Device list for whitelist cleanup, phone first (rewritten 2026-10-18 for Cleotilde).
 // One card per device, laid out as a deck (a grid that fills the width, one column on a phone):
 // known present devices first, then unknown ones (with a checkbox for "Add selected"),
-// then the ones not seen in the last scan, collapsed.
+// then the ones not seen in the last scan, collapsed (every device seen in the last 30 days, with
+// when it was last here and a Forget button that deletes its history).
+// IPs of present devices link to http://<ip>, in case the device has a web page.
 // Vendor / Connection / Private MAC come from CleotildeMicroController; older Network
 // Inspector denomes don't have them and the cards just leave them out.
 // The selection lives in whiteListSelection (index.html) so it survives the re-render
@@ -31,6 +33,16 @@ class NetworkSensorDeviceStatusReport{
 		return "";
 	}
 
+	// "First Seen" / "Last Seen" (millis) from CleotildeMicroController's device history
+	seen(millis){
+		var d = new Date(millis);
+		var pad = function(n){ return (n < 10 ? "0" : "") + n; };
+		var when = pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+		var minutes = Math.round((Date.now() - millis) / 60000);
+		var ago = minutes < 60 ? minutes + " min ago" : (minutes < 2880 ? Math.round(minutes / 60) + " h ago" : Math.round(minutes / 1440) + " days ago");
+		return ago + " (" + when + ")";
+	}
+
 	deck(){
 		return "<div style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin-bottom:14px\">";
 	}
@@ -43,8 +55,11 @@ class NetworkSensorDeviceStatusReport{
 		var present = device[IS_DEVICE_PRESENT];
 		var details = [];
 		if(device["Vendor"]) details.push(this.escape(device["Vendor"]));
-		if(device["Connection"]) details.push(this.escape(device["Connection"]));
-		if(ip) details.push(this.escape(ip));
+		// "sweep only": found by the Pi's ARP sweep, the router has no trace of it
+		if(device["Connection"] == "sweep only") details.push("<span class=\"label label-danger\" title=\"Found by Cleotilde's sweep; the router can't see it\">sweep only</span>");
+		else if(device["Connection"]) details.push(this.escape(device["Connection"]));
+		if(ip && present) details.push("<a href=\"http://" + this.escape(ip) + "\" target=\"_blank\">" + this.escape(ip) + "</a>");
+		else if(ip) details.push(this.escape(ip));
 		var teleonome = this.teleonomeAt(ip, organismIPInfoJsonData);
 
 		var border = known ? "#4caf50" : (present ? "#f9a825" : "#bbb");
@@ -63,9 +78,12 @@ class NetworkSensorDeviceStatusReport{
 		html += "</div>";
 		if(details.length > 0) html += "<div style=\"color:#555;font-size:17px\">" + details.join(" &middot; ") + "</div>";
 		if(mac && mac !== name) html += "<div style=\"color:#888;font-size:15px;font-family:monospace\">" + this.escape(mac) + "</div>";
+		if(!present && device["Last Seen"]) html += "<div style=\"color:#555;font-size:16px\">Last seen " + this.seen(device["Last Seen"]) + "</div>";
+		else if(present && device["First Seen"]) html += "<div style=\"color:#888;font-size:15px\">First seen " + this.seen(device["First Seen"]) + "</div>";
 		html += "</div>";
 
 		var data = " data-name=\"" + this.escape(name) + "\" data-mac=\"" + this.escape(mac) + "\"";
+		html += "<div style=\"display:flex;flex-direction:column;gap:6px;flex:none\">";
 		if(known){
 			html += "<a href=\"#\" class=\"btn btn-danger wlRemoveBtn\" style=\"flex:none\"" + data + ">"
 				+ "<span class=\"glyphicon glyphicon-minus-sign\"></span> Remove</a>";
@@ -73,7 +91,11 @@ class NetworkSensorDeviceStatusReport{
 			html += "<a href=\"#\" class=\"btn btn-success wlAddBtn\" style=\"flex:none\"" + data + ">"
 				+ "<span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>";
 		}
-		html += "</div></div>";
+		if(!present){
+			html += "<a href=\"#\" class=\"btn btn-default wlForgetBtn\" style=\"flex:none\"" + data + ">"
+				+ "<span class=\"glyphicon glyphicon-trash\"></span> Forget</a>";
+		}
+		html += "</div></div></div>";
 		return html;
 	}
 
@@ -93,7 +115,8 @@ class NetworkSensorDeviceStatusReport{
 		}
 		var self = this;
 		var byName = function(a, b){ return self.displayName(a[DEVICE_NAME]).localeCompare(self.displayName(b[DEVICE_NAME])); };
-		unknown.sort(byName); known.sort(byName); gone.sort(byName);
+		unknown.sort(byName); known.sort(byName);
+		gone.sort(function(a, b){ return (b["Last Seen"] || 0) - (a["Last Seen"] || 0); });
 
 		// forget selections for devices that are no longer unknown (added, or gone)
 		var stillUnknown = {};
@@ -128,7 +151,7 @@ class NetworkSensorDeviceStatusReport{
 
 		if(gone.length > 0){
 			html += "<details style=\"margin-top:10px\"><summary style=\"cursor:pointer;font-size:18px;font-weight:bold;color:#777\">"
-				+ "Not seen in the last scan (" + gone.length + ")</summary><div style=\"margin-top:8px\">";
+				+ "Not seen now (" + gone.length + ")</summary><div style=\"margin-top:8px\">";
 			html += this.deck();
 			for(var g = 0; g < gone.length; g++) html += this.card(gone[g], organismIPInfoJsonData, false);
 			html += "</div></div></details>";

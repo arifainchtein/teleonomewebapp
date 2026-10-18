@@ -156,26 +156,45 @@ function sortHashMap(o) {
 // Returns "danger", "warning" or "" - the suffixes of the panel-heading-* classes in index.html.
 //
 function panelRuleLevel(dene){
+	return panelRuleResult(dene).level;
+}
+
+// Same test as panelRuleLevel, plus why: {level, reason}, e.g. reason "Packet Loss 33 above 20".
+function panelRuleResult(dene){
+	var none = {level:"", reason:""};
 	var sourcePointer = deneHasDeneWordProperty(dene, "Rule Source Pointer")
 		? getDeneWordAttributeByDeneWordNameFromDene(dene, "Rule Source Pointer", DENEWORD_VALUE_ATTRIBUTE)
 		: getDeneWordAttributeByDeneWordTypeFromDene(dene, DENEWORD_TYPE_PANEL_DATA_SOURCE_POINTER, DENEWORD_VALUE_ATTRIBUTE);
-	if(sourcePointer===undefined || sourcePointer===null) return "";
+	if(sourcePointer===undefined || sourcePointer===null) return none;
 	var value = getDeneWordByIdentityPointer(sourcePointer, DENEWORD_VALUE_ATTRIBUTE);
-	if(value===undefined || value===null) return "";
+	if(value===undefined || value===null) return none;
 	var rule = function(name){
 		return deneHasDeneWordProperty(dene, name) ? getDeneWordAttributeByDeneWordNameFromDene(dene, name, DENEWORD_VALUE_ATTRIBUTE) : undefined;
 	};
+	var label = String(dene["Name"] || "").replace(/ Rule$/, "");
 	var number = parseFloat(value);
 	var test = function(prefix){
 		var above = rule(prefix + " Above"), below = rule(prefix + " Below"), equals = rule(prefix + " If");
-		if(equals!==undefined && String(value)===String(equals)) return true;
-		if(!isNaN(number) && above!==undefined && number > parseFloat(above)) return true;
-		if(!isNaN(number) && below!==undefined && number < parseFloat(below)) return true;
-		return false;
+		if(equals!==undefined && String(value)===String(equals)) return label + " is " + value;
+		if(!isNaN(number) && above!==undefined && number > parseFloat(above)) return label + " " + value + " above " + above;
+		if(!isNaN(number) && below!==undefined && number < parseFloat(below)) return label + " " + value + " below " + below;
+		return "";
 	};
-	if(test("Alarm")) return "danger";
-	if(test("Warning")) return "warning";
-	return "";
+	var reason = test("Alarm");
+	if(reason) return {level:"danger", reason:reason};
+	reason = test("Warning");
+	if(reason) return {level:"warning", reason:reason};
+	return none;
+}
+
+// Why a Well panel is coloured: the reasons of every rule dene at the worst level.
+function worstPanelReasons(denes){
+	var level = worstPanelLevel(denes), reasons = [];
+	for(var i=0;i<denes.length;i++){
+		var r = panelRuleResult(denes[i]);
+		if(r.level===level && r.reason) reasons.push(r.reason);
+	}
+	return reasons;
 }
 
 // The worst level of several rule denes (e.g. all the denes of a Well panel's chain).

@@ -1845,12 +1845,13 @@ the css for the little box on the top right f external data
 					});
 				}
 
-				$(document).on('click', '.wlAddBtn, .wlRemoveBtn', function(e){
+				$(document).on('click', '.wlAddBtn, .wlRemoveBtn, .wlForgetBtn', function(e){
 					e.preventDefault();
 					var button = $(this);
+					if(button.hasClass('wlForgetBtn') && !confirm("Forget " + button.attr('data-name') + "? Its history is deleted.")) return false;
 					var passwd = askCommandCode();
 					if(passwd === null) return false;
-					var formName = button.hasClass('wlAddBtn') ? "AddToWhiteList" : "RemoveFromWhiteList";
+					var formName = button.hasClass('wlAddBtn') ? "AddToWhiteList" : (button.hasClass('wlForgetBtn') ? "ForgetDevice" : "RemoveFromWhiteList");
 					button.addClass('disabled').text('Pending');
 					whiteListRequest(formName, button.attr('data-name'), button.attr('data-mac'), passwd)
 						.fail(function(data){ alert("Whitelist request failed: " + JSON.stringify(data)); });
