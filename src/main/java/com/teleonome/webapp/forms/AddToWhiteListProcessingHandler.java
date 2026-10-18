@@ -50,7 +50,8 @@ public class AddToWhiteListProcessingHandler extends ProcessingFormHandler {
 
 		JSONObject updateJSONObject =  new JSONObject();
 		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_UPDATE_TARGET,"@On Load:Update DeneWord:Set DeneWord");
-		String value = "AddDeviceToWhiteList#"+deviceName + "#"+ deviceMacAddress;
+		// '#' separates the command's fields, so it can't be part of a name (names are DHCP hostnames)
+		String value = "AddDeviceToWhiteList#" + deviceName.replace("#", "") + "#" + (deviceMacAddress == null ? "" : deviceMacAddress.replace("#", ""));
 		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_VALUE,value);
 		
 		updatesArray.put(updateJSONObject);

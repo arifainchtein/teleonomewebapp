@@ -711,6 +711,7 @@ the css for the little box on the top right f external data
 		 var newRememberedDeneWordDene="";
 		 var newRememberedDeneWordDeneWord="";
 		 var refreshActive=true;
+		 var whiteListSelection={};   // mac -> name, the devices ticked on the device page (NetworkSensorDeviceStatusReport)
 		 var systemDiagnosticsPanelPointer;
 		 
 			$(document).ready(function() {
@@ -1817,10 +1818,91 @@ the css for the little box on the top right f external data
 							alert("Error adding to whitelist:" + JSON.stringify(data));
 							return false;
 						}
-					});	
+					});
 				});
-				
-				
+
+				//
+				// whitelist buttons of the device cards (NetworkSensorDeviceStatusReport, 2026-10-18):
+				// Add / Remove per device, and ticking several unknown devices to add them with one
+				// command code (the code is a TOTP and stays valid for its time window, so the
+				// requests can share it).
+				//
+				function askCommandCode(){
+					var passwd = prompt("Please enter the password", "");
+					if(passwd === null) return null;
+					if(isNaN(passwd) || passwd.length != 6){
+						alert("Password must be 6 numbers");
+						return null;
+					}
+					return passwd;
+				}
+
+				function whiteListRequest(formName, deviceName, deviceMacAddress, passwd){
+					return $.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:formName, DeviceName:deviceName, DeviceMacAddress:deviceMacAddress, CommandCode:passwd }
+					});
+				}
+
+				$(document).on('click', '.wlAddBtn, .wlRemoveBtn', function(e){
+					e.preventDefault();
+					var button = $(this);
+					var passwd = askCommandCode();
+					if(passwd === null) return false;
+					var formName = button.hasClass('wlAddBtn') ? "AddToWhiteList" : "RemoveFromWhiteList";
+					button.addClass('disabled').text('Pending');
+					whiteListRequest(formName, button.attr('data-name'), button.attr('data-mac'), passwd)
+						.fail(function(data){ alert("Whitelist request failed: " + JSON.stringify(data)); });
+					return false;
+				});
+
+				$(document).on('change', '.wlSelect', function(e){
+					var mac = $(this).attr('data-mac');
+					if(this.checked) whiteListSelection[mac] = $(this).attr('data-name');
+					else delete whiteListSelection[mac];
+					var n = Object.keys(whiteListSelection).length;
+					$('#wlSelectedCount').text(n);
+					$('.wlAddSelectedBtn').attr('disabled', n == 0);
+				});
+
+				$(document).on('click', '.wlSelectAllBtn, .wlSelectNoneBtn', function(e){
+					e.preventDefault();
+					var select = $(this).hasClass('wlSelectAllBtn');
+					$('.wlSelect').each(function(){
+						this.checked = select;
+						$(this).trigger('change');
+					});
+					return false;
+				});
+
+				$(document).on('click', '.wlAddSelectedBtn', function(e){
+					e.preventDefault();
+					var macs = Object.keys(whiteListSelection);
+					if(macs.length == 0) return false;
+					var passwd = askCommandCode();
+					if(passwd === null) return false;
+					var button = $(this);
+					button.attr('disabled', true).text('Adding ' + macs.length + '...');
+					// one after the other, so the Hypothalamus gets them in order and the page isn't flooded
+					var failed = [];
+					var next = function(i){
+						if(i >= macs.length){
+							whiteListSelection = {};
+							button.text(failed.length == 0 ? 'Sent, updates on the next scan' : failed.length + ' failed');
+							if(failed.length > 0) alert("These could not be sent: " + failed.join(", "));
+							return;
+						}
+						var mac = macs[i];
+						whiteListRequest("AddToWhiteList", whiteListSelection[mac], mac, passwd)
+							.fail(function(){ failed.push(whiteListSelection[mac]); })
+							.always(function(){ next(i + 1); });
+					};
+					next(0);
+					return false;
+				});
+
+
 				//
 				// the functions related to the Settings Page
 				//

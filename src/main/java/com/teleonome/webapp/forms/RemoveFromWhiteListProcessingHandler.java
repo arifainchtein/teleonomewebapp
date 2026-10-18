@@ -47,7 +47,11 @@ public class RemoveFromWhiteListProcessingHandler extends ProcessingFormHandler 
 
 		JSONObject updateJSONObject =  new JSONObject();
 		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_UPDATE_TARGET,"@On Load:Update DeneWord:Set DeneWord");
-		String value = "RemoveDeviceFromWhiteList#"+deviceName;
+		// '#' separates the command's fields, so it can't be part of a name; the MAC (sent by the
+		// device cards since 2026-10-18, optional) also removes rows saved under an older name
+		String deviceMacAddress = request.getParameter("DeviceMacAddress");
+		String value = "RemoveDeviceFromWhiteList#" + deviceName.replace("#", "")
+				+ (deviceMacAddress == null || deviceMacAddress.isEmpty() ? "" : "#" + deviceMacAddress.replace("#", ""));
 		updateJSONObject.put(TeleonomeConstants.MUTATION_PAYLOAD_VALUE,value);
 		updatesArray.put(updateJSONObject);
 
