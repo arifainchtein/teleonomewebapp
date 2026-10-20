@@ -4389,6 +4389,10 @@ function renderPageByPointer(pagePointer, locationId){
 			var aPathologyPanel = new PathologyPanel();
 			panelHTML += aPathologyPanel.process();
 
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_DOORBELL){
+			var aDoorbellPanel = new DoorbellPanel();
+			panelHTML += aDoorbellPanel.process();
+
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MANUAL_ACTION_WITH_TIMER){
 
