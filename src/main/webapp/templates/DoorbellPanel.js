@@ -53,15 +53,26 @@ function doorbellBodyHTML() {
 	var rings = (doorbellStatus.Messages || []).slice().reverse();
 	h += "<h5 style=\"padding-top:15px\">Recent rings</h5>";
 	if (rings.length == 0) return h + "<p class=\"text-muted\">None yet.</p>";
-	h += "<table class=\"table table-condensed\"><tr><th>Received</th><th>Services</th><th>Hours</th><th>Result</th></tr>";
+	h += "<table class=\"table table-condensed\"><tr><th>Received</th><th>Services</th><th>Hours</th><th>Result</th><th>Open until</th><th>Left</th></tr>";
 	for (var i = 0; i < rings.length && i < 10; i++) {
 		var r = rings[i];
 		var label = r.Result == "valid" ? "label-success" : r.Result == "expired" ? "label-warning" : "label-danger";
 		var services = (r.Services || []).join(", ");
+		// a valid ring opens its services for Minutes from when it was accepted
+		var expiry = r.Result == "valid" && r.Received ? r.Received + (r.Minutes || 0) * 60000 : null;
 		h += "<tr><td>" + new Date(r.Received).toLocaleString() + "</td><td>" + doorbellEscape(services == "" ? "(code test)" : services)
-			+ "</td><td>" + Math.round((r.Minutes || 0) / 60 * 10) / 10 + "</td><td><span class=\"label " + label + "\">" + doorbellEscape(r.Result) + "</span></td></tr>";
+			+ "</td><td>" + Math.round((r.Minutes || 0) / 60 * 10) / 10 + "</td><td><span class=\"label " + label + "\">" + doorbellEscape(r.Result) + "</span>"
+			+ "</td><td>" + (expiry == null ? "" : new Date(expiry).toLocaleString())
+			+ "</td><td>" + (expiry == null ? "" : doorbellRemaining(expiry)) + "</td></tr>";
 	}
 	return h + "</table>";
+}
+
+function doorbellRemaining(expiry) {
+	var left = expiry - Date.now();
+	if (left <= 0) return "ended";
+	var minutes = Math.ceil(left / 60000);
+	return (minutes >= 60 ? Math.floor(minutes / 60) + " h " : "") + (minutes % 60) + " min left";
 }
 
 function doorbellRefresh() {
