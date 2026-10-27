@@ -4393,6 +4393,10 @@ function renderPageByPointer(pagePointer, locationId){
 			var aDoorbellPanel = new DoorbellPanel();
 			panelHTML += aDoorbellPanel.process();
 
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_NETWORK_RULES){
+			var aNetworkRulesPanel = new NetworkRulesPanel();
+			panelHTML += aNetworkRulesPanel.process();
+
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MANUAL_ACTION_WITH_TIMER){
 
