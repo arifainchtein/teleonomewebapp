@@ -222,8 +222,11 @@
         </includes>
         <replacements>
             <replacement>
-                <token>host=.*</token> 
-                <value>host="${teleonome.name}.local";</value>
+                <token>host=.*</token>
+                <!-- 2026-10-30: the host the page was loaded from (the Heart runs on the same Pi), not
+                     ${teleonome.name}.local: Annabelle's Pi is annabelle-teleonome.local, because annabelle.local
+                     is Annabelle's ESP32 -->
+                <value>host=location.hostname;</value>
             </replacement>
         </replacements>
     </configuration>

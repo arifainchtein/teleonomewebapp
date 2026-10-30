@@ -29,7 +29,7 @@ function HeartConnect() {
 	localStorage.clear();
 	
 	console.log('invoking mqttconnect');
-	host="Egg.local";
+	host=location.hostname;
 	port=9999; 
 	mqtt = new Paho.MQTT.Client( host, port, "web_" + parseInt(Math.random() * 100));
 	mqtt.onConnect = onConnect;
