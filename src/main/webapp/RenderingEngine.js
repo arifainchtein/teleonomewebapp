@@ -1236,7 +1236,10 @@ function displayHippocampusResponse(payload){
 	statsPanel +='<table>';
 
 	var dataPanel = '';
-	dataPanel += '<div style="font-size:13px;margin-bottom:6px;color:#555;">There are ' + data.length + ' samples</div>';
+	window.telepathonCsvExport = { name: telepathonName + "-" + deneWordName, data: data };
+	dataPanel += '<div style="font-size:13px;margin-bottom:6px;color:#555;">There are ' + data.length + ' samples' +
+		' <button type="button" class="btn btn-xs btn-primary telepathon-data-csv" style="margin-left:10px;">' +
+		'<i class="glyphicon glyphicon-download-alt"></i> Download CSV</button></div>';
 	dataPanel += '<table class="table table-striped table-condensed text-center" style="font-size:12px;">';
 	dataPanel += '<tr><th>Time</th><th>Value</th><th>Time</th><th>Value</th></tr>';
 	for (var dpi = 0; dpi < data.length; dpi += 2) {
@@ -1272,6 +1275,29 @@ function displayHippocampusResponse(payload){
 	}, 0);
 
 }
+
+// "Download CSV" button in the Data tab of #telepathon-graph-modal. Exports the series last shown by
+// displayHippocampusResponse (stashed in window.telepathonCsvExport), oldest-first as received.
+$(document).on('click', '.telepathon-data-csv', function() {
+	var exp = window.telepathonCsvExport;
+	if (!exp || !exp.data) return;
+	var esc = function(v) {
+		var s = (v === null || v === undefined) ? '' : String(v);
+		return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+	};
+	var csv = 'Time,Value\r\n';
+	exp.data.forEach(function(d) {
+		csv += esc(d.timeString) + ',' + esc(d.Value) + '\r\n';
+	});
+	var blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+	var a = document.createElement('a');
+	a.href = URL.createObjectURL(blob);
+	a.download = exp.name.replace(/[^A-Za-z0-9_-]+/g, '_') + '_' + new Date().toISOString().slice(0, 10) + '.csv';
+	document.body.appendChild(a);
+	a.click();
+	document.body.removeChild(a);
+	setTimeout(function() { URL.revokeObjectURL(a.href); }, 1000);
+});
 
 // Renders a combined chart from a fully-collected window.telepathonMultiChartRequest buffer
 // (see displayHippocampusResponse). Reuses the same #telepathon-graph-modal as the single-series
