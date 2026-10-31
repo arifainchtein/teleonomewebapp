@@ -629,6 +629,14 @@ the css for the little box on the top right f external data
 		<script type="text/javascript" src="mqttws31.min.js"></script>
 
 
+		<!-- deviceviews (2026-10-31): the device cards, detail popups and charts, shared with
+		     devices.digitalstables.com; served from the deviceviews jar. DeviceViewsTeleonomeHost.js below
+		     connects it to this Teleonome. -->
+		<script type="text/javascript" src="/deviceviews/deviceviews-base.js"></script>
+		<script type="text/javascript" src="/deviceviews/deviceviews-charts.js"></script>
+		<script type="text/javascript" src="/deviceviews/deviceviews-history.js"></script>
+		<script type="text/javascript" src="/deviceviews/deviceviews-detail.js"></script>
+		<script type="text/javascript" src="/deviceviews/deviceviews-card.js"></script>
 		<script type="text/javascript" src="TeleonomeConstants.js"></script>
 		<script type="text/javascript" src="bs/js/bootstrap-switch.js"></script>
 
@@ -691,6 +699,7 @@ the css for the little box on the top right f external data
 		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
 		<script type="text/javascript" src="RenderingEngine.js"></script>
 		<!-- The Heart Communication is tbe the last one to be loaded -->
+		<script type="text/javascript" src="DeviceViewsTeleonomeHost.js"></script>
 		<script type="text/javascript" src="HeartComms.js"></script>
 
 		<script>
@@ -911,77 +920,7 @@ the css for the little box on the top right f external data
 
 				
 
-				$(document).on('click', '.telepathon-history-value', function() {
-				        // 1. Extract data from the clicked image attributes
-				        var telepathon = $(this).data('telepathonname');
-				        var denename = $(this).data('denename');
-				        var denewordname = $(this).data('denewordname');
-						var range = $(this).data('range');
-						window.lastTelepathonGraphRangeMs = range;
-						 
-				        var nucleus = $(this).data('nucleus') || NUCLEI_TELEPATHONS;
-				        var identity = "@" + teleonomeName + ":" + nucleus + ":"+ telepathon + ":" + denename + ":" + denewordname;
-				
-				        // 3. Create the Request Payload
-				        var requestPayload = {
-				            "Identity": identity,
-				            "Range": range ,
-							"RequestId": browserId 
-				        };
-				
-						
-
-				        // 4. Wrap in a Paho MQTT Message
-				        var message = new Paho.MQTT.Message(JSON.stringify(requestPayload));
-				        message.destinationName = "Hippocampus_Request";
-				        message.qos = 1;
-				
-				        // 5. Publish to the Heart
-				        console.log("Requesting 24h memory for: " + identity);
-				        mqtt.send(message);
-				        
-				        // // Optional: Provide visual feedback that the request was sent
-				        // $(this).css("opacity", "0.5");
-				});	 
- 				 
-				$(document).on('click', '.telepathon-multi-history-value', function() {
-				        // Combined-chart button (see mkMultiGraphBtns in RenderingEngine.js) — fires one
-				        // Hippocampus_Request per DeneWord in data-denewordnames, all on the same
-				        // responseChanel/RequestId. displayHippocampusResponse buffers them in
-				        // window.telepathonMultiChartRequest until all have arrived, then draws them
-				        // together via displayHippocampusMultiResponse instead of one at a time.
-				        var telepathon = $(this).data('telepathonname');
-				        var denename = $(this).data('denename');
-				        var names = String($(this).data('denewordnames')).split(',');
-				        var units = String($(this).data('denewordunits')).split(',');
-				        var chartTitle = $(this).data('title') || 'Combined Chart';
-				        var range = $(this).data('range');
-						window.lastTelepathonGraphRangeMs = range;
-
-				        var nucleus = $(this).data('nucleus') || NUCLEI_TELEPATHONS;
-
-						window.telepathonMultiChartRequest = {
-							telepathon: telepathon,
-							title: chartTitle,
-							range: range,
-							names: names,
-							units: units,
-							received: {}
-						};
-
-						names.forEach(function(dwName) {
-							var identity = "@" + teleonomeName + ":" + nucleus + ":" + telepathon + ":" + denename + ":" + dwName;
-							var requestPayload = {
-								"Identity": identity,
-								"Range": range,
-								"RequestId": browserId
-							};
-							var message = new Paho.MQTT.Message(JSON.stringify(requestPayload));
-							message.destinationName = "Hippocampus_Request";
-							message.qos = 1;
-							mqtt.send(message);
-						});
-				});
+				// The 1h/24h/7d chart buttons' handlers moved to deviceviews (deviceviews-history.js, 2026-10-31).
 
 				$(document).on('click', '.telepathon-registry-temperature-chart', function() {
 						// "Temperature Chart" header button (see TelepathonPanel.js) — one series

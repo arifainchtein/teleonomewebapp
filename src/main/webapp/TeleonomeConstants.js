@@ -234,12 +234,7 @@ var DENEWORD_CEREBELLUM_EXECUTION_FREQUENCY_HOURS_IN_A_DAY   = "Hours In A Day";
 var DENEWORD_CEREBELLUM_EXECUTION_FREQUENCY_EVERY_PULSE      = "Every Pulse";
 var DENEWORD_CEREBELLUM_PATHOLOGY_MNEMOSYNE_LOCATION = "Cerebellum Pathology Mnemosyne Location";
 
-// ── PulseTask output DeneWords (Purpose → Cerebellum → Daffodil) ─────────
-var DENEWORD_PULSE_TASK_BATTERY_SOC_LIVE = "Battery SOC Live %";
-// Cerebellum LedgerSoc (2026-10-12): SOC from the device's own battery ledger, published next to the above
-var DENEWORD_LEDGER_SOC = "Battery SOC Ledger %";
-var DENEWORD_LEDGER_CHARGE_MAH = "Battery Ledger Charge mAh";
-var DENEWORD_LEDGER_LAST_ANCHOR = "Battery Ledger Last Anchor";
+// (moved to deviceviews/deviceviews-base.js, 2026-10-31)
 
 // ── Cerebellum → Annabelle action activation (generic) ───────────────────
 var COMMAND_SEND_GRAVEYARD_SHIFT                 = "SendGraveyardShift";
@@ -938,7 +933,6 @@ var PATHOLOGY_LOCATION_TELEPATHON = "Telepathon";
 var PATHOLOGY_MICROCONTROLLER_RESET = "Microcontroller Reset";
 var PATHOLOGY_TELEPATHON_RESET = "Telepathon Reset";
 var DENECHAIN_MICROCONTROLLER_RESET_INFO = "Microcontroller Reset Info";
-var TELEPATHON_DENE_VITAL_SIGNS = "Vital Signs";
 var PATHOLOGY_LOCATION_NETWORK= "Network";
 var PATHOLOGY_LOCATION_MEDULA= "Medula";
 var PATHOLOGY_PULSE_LATE= "Pulse Late";

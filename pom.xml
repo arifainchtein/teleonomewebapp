@@ -32,6 +32,13 @@
     <artifactId>framework</artifactId>
     <version>1</version>
 </dependency>
+<!-- 2026-10-31: the device cards, detail popups and charts, shared with devices.digitalstables.com;
+     served at /deviceviews/ from the jar (DigitalStables/deviceviews, mvn install first) -->
+<dependency>
+    <groupId>com.digitalstables</groupId>
+    <artifactId>deviceviews</artifactId>
+    <version>1.0.0</version>
+</dependency>
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
