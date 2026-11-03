@@ -4,6 +4,7 @@
 // then the ones not seen in the last scan, collapsed (every device seen in the last 30 days, with
 // when it was last here and a Forget button that deletes its history).
 // IPs of present devices link to http://<ip>, in case the device has a web page.
+// Rename (2026-11-04) gives a device a nickname, kept on the Pi; the router's name shows underneath.
 // Vendor / Connection / Private MAC come from CleotildeMicroController; older Network
 // Inspector denomes don't have them and the cards just leave them out.
 // The selection lives in whiteListSelection (index.html) so it survives the re-render
@@ -77,6 +78,8 @@ class NetworkSensorDeviceStatusReport{
 			+ " style=\"font-size:15px;vertical-align:middle\">" + this.escape(teleonome) + "</a>";
 		html += "</div>";
 		if(details.length > 0) html += "<div style=\"color:#555;font-size:17px\">" + details.join(" &middot; ") + "</div>";
+		// a nickname (Rename button): the router's own name stays visible underneath
+		if(device["Original Name"]) html += "<div style=\"color:#888;font-size:15px\">router name: " + this.escape(this.displayName(device["Original Name"])) + "</div>";
 		if(mac && mac !== name) html += "<div style=\"color:#888;font-size:15px;font-family:monospace\">" + this.escape(mac) + "</div>";
 		if(!present && device["Last Seen"]) html += "<div style=\"color:#555;font-size:16px\">Last seen " + this.seen(device["Last Seen"]) + "</div>";
 		else if(present && device["First Seen"]) html += "<div style=\"color:#888;font-size:15px\">First seen " + this.seen(device["First Seen"]) + "</div>";
@@ -90,6 +93,11 @@ class NetworkSensorDeviceStatusReport{
 		}else if(mac){
 			html += "<a href=\"#\" class=\"btn btn-success wlAddBtn\" style=\"flex:none\"" + data + ">"
 				+ "<span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>";
+		}
+		if(mac){
+			html += "<a href=\"#\" class=\"btn btn-default wlRenameBtn\" style=\"flex:none\"" + data
+				+ " data-nickname=\"" + this.escape(device["Original Name"] ? this.displayName(name) : "") + "\">"
+				+ "<span class=\"glyphicon glyphicon-pencil\"></span> Rename</a>";
 		}
 		if(!present){
 			html += "<a href=\"#\" class=\"btn btn-default wlForgetBtn\" style=\"flex:none\"" + data + ">"

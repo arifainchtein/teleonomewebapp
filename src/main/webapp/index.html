@@ -681,6 +681,7 @@ the css for the little box on the top right f external data
 		<script type="text/javascript" src="templates/PathologyPanel.js"></script>
 		<script type="text/javascript" src="templates/DoorbellPanel.js"></script>
 		<script type="text/javascript" src="templates/NetworkRulesPanel.js"></script>
+		<script type="text/javascript" src="templates/TrafficPanel.js"></script>
 		<script type="text/javascript"
 			src="templates/CompleteDeneSingleValuePanel.js"></script>
 		<script type="text/javascript"
@@ -1796,6 +1797,26 @@ the css for the little box on the top right f external data
 					button.addClass('disabled').text('Pending');
 					whiteListRequest(formName, button.attr('data-name'), button.attr('data-mac'), passwd)
 						.fail(function(data){ alert("Whitelist request failed: " + JSON.stringify(data)); });
+					return false;
+				});
+
+				// Rename: a nickname for the device (empty = back to the router's name), code-protected
+				$(document).on('click', '.wlRenameBtn', function(e){
+					e.preventDefault();
+					var button = $(this);
+					var current = button.attr('data-nickname') || "";
+					var nickname = prompt("Nickname for " + button.attr('data-mac') + " (empty = the router's name):", current || button.attr('data-name'));
+					if(nickname === null) return false;
+					nickname = nickname.replace(/#/g, "").trim();
+					if(nickname === current) return false;
+					var passwd = askCommandCode();
+					if(passwd === null) return false;
+					button.addClass('disabled').text('Pending');
+					$.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:"RenameDevice", DeviceMacAddress:button.attr('data-mac'), Nickname:nickname, CommandCode:passwd }
+					}).fail(function(data){ alert("Rename request failed: " + JSON.stringify(data)); });
 					return false;
 				});
 

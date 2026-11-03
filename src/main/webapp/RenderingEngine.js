@@ -2770,6 +2770,10 @@ function renderPageByPointer(pagePointer, locationId){
 			var aNetworkRulesPanel = new NetworkRulesPanel();
 			panelHTML += aNetworkRulesPanel.process();
 
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_TRAFFIC){
+			var aTrafficPanel = new TrafficPanel();
+			panelHTML += aTrafficPanel.process();
+
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MANUAL_ACTION_WITH_TIMER){
 
