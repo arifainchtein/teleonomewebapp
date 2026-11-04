@@ -101,7 +101,11 @@ function trafficBodyHTML() {
 	var devices = trafficData.Devices || [], events = trafficData.Events || [];
 	var up = 0, down = 0;
 	devices.forEach(function (d) { up += d.Up; down += d.Down; });
+	// the events list stops at 100, so for today use the Traffic Status count (the same one as the footer badge)
 	var since = trafficData.Since || 0, inPeriod = events.filter(function (e) { return e.Time >= since; }).length;
+	var today = parseInt(trafficStatusWord("Suspicious Events Today"));
+	if (trafficDays == 1 && !isNaN(today)) inPeriod = today;
+	else if (inPeriod >= 100) inPeriod = "100+";
 	var night = parseFloat(trafficStatusWord("Night Upload MB")) || 0;
 	var period = trafficDays == 1 ? "today" : trafficDays + " days";
 	h += "<div class=\"ds-kpis\">"

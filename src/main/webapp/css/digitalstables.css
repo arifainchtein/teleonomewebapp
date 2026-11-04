@@ -104,9 +104,10 @@ body.ds-theme #EntryPoint > .row.top-buffer > [class*="col-"] { float:none; marg
 body.ds-theme #footer .navbar-fixed-bottom { background:#222; border:0; padding:0 0 calc(6px + env(safe-area-inset-bottom)); }
 body.ds-theme #bottomNav { display:flex; margin:0; }
 body.ds-theme #bottomNav .LowerNavFunction { flex:1 1 0; min-width:0; width:auto; float:none; padding:0; }
-body.ds-theme #bottomNav .LowerNavFunction.active { box-shadow:inset 0 3px 0 #2da040; }
+
 body.ds-theme #bottomNav a { color:#bbb; font-size:12px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-decoration:none; padding-top:10px; }
-body.ds-theme #bottomNav .active a { color:#fff; }
+/* the open page: green icon and label, no line */
+body.ds-theme #bottomNav .active a { color:#4cc35e; font-weight:bold; }
 body.ds-theme #bottomNav .glyphicon { font-size:18px; }
 .ds-nb { position:relative; display:inline-block; height:20px; line-height:20px; }
 .ds-nb .badge { position:absolute; top:-8px; left:14px; font-size:10px; padding:2px 5px; background:#f9a825; color:#fff; }
