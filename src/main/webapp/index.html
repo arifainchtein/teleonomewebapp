@@ -1853,6 +1853,45 @@ the css for the little box on the top right f external data
 					return false;
 				});
 
+				// Doors (2026-11-05): let the VPN reach a device. data-action open|close|remove, data-mac, and to open:
+				// data-ip, data-label, data-ports / data-minutes / data-source, or data-form = the id of the inputs to read them
+				// from (the device page). Opening is refused by Cleotilde unless this browser is on the home network.
+				$(document).on('click', '.doorBtn', function(e){
+					e.preventDefault();
+					var b = $(this), action = b.attr('data-action');
+					var data = {formName:"SetDoor", Action:action, Mac:b.attr('data-mac')};
+					if(action === "open"){
+						var form = b.attr('data-form') ? $('#' + b.attr('data-form')) : null;
+						data.IP = b.attr('data-ip');
+						data.Label = b.attr('data-label');
+						data.Ports = form ? form.find('[name=Ports]').val() : b.attr('data-ports');
+						data.Source = form ? form.find('[name=Source]').val() : (b.attr('data-source') || "any");
+						data.Minutes = form ? form.find('[name=Minutes]').val() : b.attr('data-minutes');
+						if(data.Minutes === undefined || data.Minutes === ""){
+							var m = prompt("Open the door to " + data.Label + " for how many minutes? (0 = until you close it)", "120");
+							if(m === null) return false;
+							data.Minutes = m.trim();
+						}
+						if(!confirm("Let the VPN (" + (data.Source === "any" ? "every tunnel peer" : data.Source) + ") reach " + data.Label + " (" + data.IP + ") on port " + data.Ports
+							+ (data.Minutes === "0" ? " until you close it" : " for " + data.Minutes + " minutes") + "?")) return false;
+					}else if(!confirm((action === "close" ? "Close" : "Remove") + " the door to " + b.attr('data-label') + "?")) return false;
+					var passwd = askCommandCode();
+					if(passwd === null) return false;
+					data.CommandCode = passwd;
+					b.addClass('disabled').text('Pending');
+					$.ajax({ type: "GET", url: "/TeleonomeServlet", data: data, dataType: "json" })
+						.done(function(r){
+							if(r && r.error){ alert(r.error); b.removeClass('disabled').text('Try again'); return; }
+							// the heart runs it with the next pulse
+							[15000, 45000, 90000].forEach(function(t){ setTimeout(function(){
+								if(typeof networkRulesRefresh === "function") networkRulesRefresh();
+								if(typeof dsDoorsRefresh === "function") dsDoorsRefresh();
+							}, t); });
+						})
+						.fail(function(x){ alert("Door request failed: " + x.status); b.removeClass('disabled').text('Try again'); });
+					return false;
+				});
+
 				// Rename: a nickname for the device (empty = back to the router's name), code-protected
 				$(document).on('click', '.wlRenameBtn', function(e){
 					e.preventDefault();

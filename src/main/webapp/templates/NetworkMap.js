@@ -245,8 +245,9 @@ function dsMapSelect(mac) {
 	dsDevTraffic = null;
 	dsDevEvents = null;
 	dsDevCountry = null;
+	dsDoors = null;
 	dsMapRender();
-	if (dsMapSelected) dsDevLoad();
+	if (dsMapSelected) { dsDevLoad(); dsDoorsRefresh(); }
 	var el = document.getElementById(dsMapSelected ? "DSMapDetail" : "DSMap");
 	if (el) setTimeout(function () { el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 0);
 }
@@ -258,6 +259,54 @@ var dsDevTraffic = null;	// GetTraffic View=device for dsMapSelected
 var dsDevEvents = null;		// its suspicious events (GetTraffic overview, filtered)
 var dsDevSummary = null;	// its up/down totals
 var dsDevCountry = null;
+var dsDoors = null;			// GetNetworkRules (the router's gate and doors, and whether this browser is at home)
+var dsDoorForm = {};		// what was typed in the "Reach from outside" form, kept across redraws
+
+// the router's doors, for the selected device's "Reach from outside"; also called after a door command
+function dsDoorsRefresh() {
+	if (!dsMapSelected) return;
+	$.ajax({ type: "GET", url: "/TeleonomeServlet", dataType: "json", data: { formName: "GetNetworkRules" },
+		success: function (data) { dsDoors = data; if (dsMapSelected) $("#DSMapDetail").html(dsMapDetailHTML()); } });
+}
+
+// Reach from outside (VPN): the doors to this device, or a form to open one (from the home network)
+function dsDoorSectionHTML(n) {
+	var e = dsEsc, ip = n.d[IP_ADDRESS] || "", h = '<div class="ds-devsec"><h6>Reach from outside <span class="ds-sub">through the VPN, never the open internet</span></h6>';
+	if (!dsDoors) return h + '<span class="ds-sub">Loading…</span></div>';
+	if (dsDoors.Error) return h + '<span class="ds-sub">' + e(dsDoors.Error) + '</span></div>';
+	var rules = dsDoors.Rules || [];
+	var mine = rules.filter(function (r) { return r.Kind === "Door" && (r.Mac === n.mac || (ip && r.To === ip)); });
+	var managed = mine.find(function (r) { return r.Managed && r.Mac === n.mac; });
+	mine.forEach(function (r) {
+		var state = r.Enabled ? '<span class="label label-success">open</span>' : '<span class="label label-default">closed</span>';
+		var moved = r.Managed && ip && r.To !== ip ? ' <span class="label label-warning" title="the door points at the old address">IP changed: door is for ' + e(r.To) + '</span>' : '';
+		h += '<div class="ds-door">' + state + ' <b>' + e(r.Name || "door") + '</b> <span class="ds-sub">port ' + e(r.Ports) + ' · from ' + e(r.FromName || r.From || "every tunnel peer") + '</span>'
+			+ doorTimeLeft(r) + moved + ' <span class="ds-doorbtns">' + (r.Managed ? doorButtons(r, dsDoors.Home) : '<span class="ds-sub">made by hand on the router</span>') + '</span></div>';
+	});
+	if (managed || !ip || n.sector === "gone") {
+		if (!mine.length) h += '<span class="ds-sub">' + (n.sector === "gone" ? "It isn't here now." : "It has no address.") + '</span>';
+		if (managed && managed.Enabled) h += '<p class="ds-sub" style="margin:6px 0 0">From the VPN: <a href="http://' + e(ip) + (/(^|,| )80( |,|$)/.test(managed.Ports) || !managed.Ports ? '' : ':' + e(String(managed.Ports).split(/[ ,]/)[0])) + '" target="_blank">http://' + e(ip) + '</a></p>';
+		return h + '</div>';
+	}
+	if (!dsDoors.Home) return h + '<span class="ds-sub">' + (mine.length ? '' : 'No door. ') + 'A door can only be opened from the home network (you are on ' + e(dsDoors.ClientIp) + ').</span></div>';
+	// the form
+	var defaults = { teleonome: "80", nas: "5000,5001", printer: "80", telepathon: "80" };
+	var f = dsDoorForm[n.mac] || (dsDoorForm[n.mac] = { Ports: defaults[n.kind] || "80,443", Minutes: "120", Source: "" });
+	var peers = {};
+	rules.forEach(function (r) { if (r.Kind === "Door" && r.From) peers[r.From] = r.FromName || r.From; });
+	if (!f.Source) f.Source = peers["10.98.0.2"] ? "10.98.0.2" : "any";
+	var set = function (k) { return 'onchange="dsDoorForm[\'' + n.mac + '\'].' + k + '=this.value"'; };
+	var opt = function (v, label, cur) { return '<option value="' + e(v) + '"' + (String(cur) === String(v) ? ' selected' : '') + '>' + e(label) + '</option>'; };
+	h += '<form class="ds-doorform" id="DSDoorForm" onsubmit="return false">'
+		+ '<label>Ports <input class="form-control input-sm" name="Ports" value="' + e(f.Ports) + '" ' + set("Ports") + ' style="width:110px"></label>'
+		+ '<label>For <select class="form-control input-sm" name="Minutes" ' + set("Minutes") + '>'
+		+ opt(60, "1 hour", f.Minutes) + opt(120, "2 hours", f.Minutes) + opt(480, "8 hours", f.Minutes) + opt(1440, "1 day", f.Minutes) + opt(10080, "7 days", f.Minutes) + opt(0, "until I close it", f.Minutes) + '</select></label>'
+		+ '<label>Who <select class="form-control input-sm" name="Source" ' + set("Source") + '>'
+		+ Object.keys(peers).map(function (k) { return opt(k, peers[k] + " (" + k + ")", f.Source); }).join("") + opt("any", "every tunnel peer", f.Source) + '</select></label>'
+		+ '<a href="#" class="btn btn-sm btn-success doorBtn" data-action="open" data-form="DSDoorForm" data-mac="' + e(n.mac) + '" data-ip="' + e(ip) + '" data-label="' + e(n.name.replace(/[^A-Za-z0-9 ._-]/g, "")) + '"><i class="glyphicon glyphicon-log-in"></i> Open door</a>'
+		+ '</form><p class="ds-sub" style="margin:4px 0 0">Then on 3G: turn the VPN on and open http://' + e(ip) + '. The door closes by itself when the time is up; you can close it from anywhere.</p>';
+	return h + '</div>';
+}
 
 function dsDevLoad() {
 	var mac = dsMapSelected;
@@ -335,6 +384,9 @@ function dsMapDetailHTML() {
 		["Down after", crit && c.OfflineMinutes ? c.OfflineMinutes + " min unseen" : ""]
 	].filter(function (r) { return r[1]; });
 	h += '<div class="ds-facts">' + facts.map(function (r) { return '<div><span class="k">' + r[0] + '</span>' + r[1] + '</div>'; }).join("") + '</div>';
+
+	// doors
+	if (n.mac && n.kind !== "router") h += dsDoorSectionHTML(n);
 
 	// presence
 	h += '<div class="ds-devsec"><h6>Here in the last 24 h</h6>' + dsDevicePresenceHTML(n.mac) + '</div>';

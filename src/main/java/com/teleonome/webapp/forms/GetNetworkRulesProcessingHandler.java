@@ -34,7 +34,10 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
  * {"10.98.0.2": "Ari phone", "10.98.0.3": "Paula3"}, which also stays out of the denome.
  *
  * Answer: {"Rules": [{"Section", "Name", "Kind" (Gate/Door), "Enabled", "From", "FromName", "To", "Ports",
- * "Protocol", "Target"}], "Error": ""}.
+ * "Protocol", "Target", "Managed", "Mac", "Expires"}], "Home", "ClientIp", "Error": ""}.
+ * Doors made by Cleotilde (2026-11-05, SetDoor form; sections cleotilde_<mac without colons>) are "Managed": the page
+ * can close, reopen and remove them; "Expires" (millis, 0 = until closed) comes from the router's cleotilde-doors.
+ * "Home" says whether this browser is on the home network: only from there can a door be opened.
  */
 public class GetNetworkRulesProcessingHandler extends ProcessingFormHandler {
 
@@ -59,20 +62,47 @@ public class GetNetworkRulesProcessingHandler extends ProcessingFormHandler {
 			OpenWrtUbusClient ubus = new OpenWrtUbusClient(ROUTER_ADDRESS, ROUTER_USER, password);
 			JSONObject sections = ubus.call("uci", "get", new JSONObject().put("config", "firewall")).optJSONObject("values");
 			JSONObject peers = readPeers();
+			JSONObject expiries = doorExpiries(ubus);
 			for (JSONObject rule : tunnelRulesInRouterOrder(sections)) {
-				rules.put(summary(rule, peers));
+				JSONObject r = summary(rule, peers);
+				String section = rule.optString(".name");
+				if (section.matches("cleotilde_[0-9a-f]{12}")) {
+					String hex = section.substring("cleotilde_".length());
+					r.put("Managed", true);
+					r.put("Mac", hex.replaceAll("(..)(?!$)", "$1:"));
+					r.put("Expires", expiries.optLong(hex, 0) * 1000L);
+					r.put("Name", r.getString("Name").replaceFirst("^Cleotilde-Door-", ""));
+				}
+				rules.put(r);
 			}
 		} catch (IOException | JSONException e) {
 			error = "Could not read the router's firewall rules: " + e.getMessage();
 			logger.warn(error);
 		}
 		answer.put("Rules", rules);
+		answer.put("Home", SetDoorProcessingHandler.fromHome(request));
+		answer.put("ClientIp", request.getRemoteAddr());
 		answer.put("Error", error);
 		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.print(answer.toString());
 		out.flush();
 		out.close();
+	}
+
+	/** door name -> expiry (epoch seconds) from "cleotilde-doors list"; empty if the router doesn't have it yet */
+	private JSONObject doorExpiries(OpenWrtUbusClient ubus) {
+		JSONObject toReturn = new JSONObject();
+		try {
+			JSONObject r = ubus.call("file", "exec", new JSONObject().put("command", "/usr/libexec/cleotilde-doors").put("params", new JSONArray().put("list")));
+			for (String line : r.optString("stdout", "").split("\n")) {
+				String[] f = line.trim().split("\\s+");
+				if (f.length >= 3 && f[2].matches("\\d+")) toReturn.put(f[0], Long.parseLong(f[2]));
+			}
+		} catch (IOException | JSONException e) {
+			// no doors helper on the router yet
+		}
+		return toReturn;
 	}
 
 	private List<JSONObject> tunnelRulesInRouterOrder(JSONObject sections) {
