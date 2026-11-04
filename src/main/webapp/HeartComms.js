@@ -125,7 +125,7 @@ function onMessageArrived(message) {
 		setAvailableSSIDs(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_ASYNC_CYCLE_UPDATE && pageToDisplay==1){
 		asyncUpdate(payload);
-	}else if(lastMessageTopic==HEART_TOPIC_UPDATE_FORM_RESPONSE  && (pageToDisplay==1 || pageToDisplay==5)) {
+	}else if(lastMessageTopic==HEART_TOPIC_UPDATE_FORM_RESPONSE) {	// every page: the Devices page sends commands too (was pages 1 and 5 only)
 		receivedCommandResponse(payload);
 	}else if(lastMessageTopic==responseChanel){
 		displayHippocampusResponse(payload);

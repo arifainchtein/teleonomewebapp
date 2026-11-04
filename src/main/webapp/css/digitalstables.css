@@ -1,0 +1,126 @@
+/*
+ * Compact Digital Stables layout (Cleotilde redesign, 2026-11-04). Everything is scoped to body.ds-theme,
+ * which DSLayout.js sets only when the denome's Human Interface Control Parameters has a "Header" dene,
+ * so every other Teleonome keeps its current look.
+ * Colours: Digital Stables dark green #2DA040 (darker steps for hover), page white.
+ */
+
+body.ds-theme { background:#fff; padding-bottom:calc(76px + env(safe-area-inset-bottom)); overflow-x:hidden; }
+body.ds-theme a:not(.btn):not(.label) { color:#2da040; }
+body.ds-theme a:not(.btn):not(.label):hover, body.ds-theme a:not(.btn):not(.label):focus { color:#217b30; }
+body.ds-theme .btn-primary, body.ds-theme .btn-success, body.ds-theme .label-success, body.ds-theme .label-primary,
+body.ds-theme .progress-bar { background-color:#2da040; border-color:#2da040; }
+body.ds-theme .btn-primary:hover, body.ds-theme .btn-primary:focus, body.ds-theme .btn-primary:active, body.ds-theme .btn-primary.active,
+body.ds-theme .btn-success:hover, body.ds-theme .btn-success:focus, body.ds-theme .btn-success:active { background-color:#258a36; border-color:#217b30; }
+body.ds-theme .text-primary, body.ds-theme .text-success { color:#2da040; }
+body.ds-theme .form-control:focus { border-color:#98ce87; box-shadow:inset 0 -2px 0 #2da040; }
+
+/* old header pieces the new one replaces (their elements are moved into #DSHeader, not deleted) */
+body.ds-theme #status, body.ds-theme #PulseActivityPanel { display:none !important; }
+
+/* ---------- header ---------- */
+#DSHeader { display:none; }
+body.ds-theme #DSHeader { display:flex; align-items:center; gap:28px; padding:8px 16px; border-bottom:1px solid #e3e3e3; flex-wrap:wrap; margin:0 -15px 10px; }
+#DSHeader .ds-logo { height:78px; width:auto; }
+#DSHeader .ds-hcell { text-align:center; }
+#DSHeader .ds-cap { font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.04em; display:flex; gap:14px; justify-content:center; }
+#DSHeader .ds-big { font-size:18px; font-weight:bold; font-variant-numeric:tabular-nums; }
+#DSHeader .ds-lamps { display:flex; gap:14px; justify-content:center; margin-bottom:3px; }
+#DSHeader .ds-lamps .label { display:inline-block !important; min-width:34px; height:20px; line-height:14px; font-size:12px; border-radius:3px; }
+#DSHeader .ds-alert { font-size:13px; padding:4px 10px; border-radius:4px; background:#fff8d6; border:1px solid #f9a825; color:#8a6d3b; }
+#DSHeader .ds-alert.danger { background:#fde3e3; border-color:#e53935; color:#c62828; }
+#DSHeader .ds-hvalue { margin-left:auto; text-align:right; }
+#DSHeader .ds-hvalue .ds-cap { justify-content:flex-end; }
+#DSHeader .ds-hvalue .ds-big { font-size:24px; }
+#DSHeader .ds-hvalue small { font-size:13px; color:#888; font-weight:normal; }
+@media (max-width:600px) {
+  body.ds-theme #DSHeader { gap:14px; }
+  #DSHeader .ds-logo { height:56px; }
+  #DSHeader .ds-big, #DSHeader .ds-hvalue .ds-big { font-size:16px; }
+}
+
+/* ---------- emergency banner ---------- */
+#DSEmergency .ds-emerg { background:#c62828; color:#fff; animation:dsPulse 2s ease-in-out infinite; margin:-10px -15px 10px; }
+#DSEmergency .ds-emerg.acked { animation:none; }
+@keyframes dsPulse { 0%,100% { background:#c62828; } 50% { background:#e53935; } }
+#DSEmergency .ds-in { padding:10px 16px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+#DSEmergency .ds-ic { font-size:34px; }
+#DSEmergency .ds-t { font-size:22px; font-weight:bold; line-height:1.1; }
+#DSEmergency .ds-d { font-size:13px; margin-top:3px; }
+#DSEmergency .ds-acts { margin-left:auto; }
+#DSEmergency .btn { background:rgba(255,255,255,.15); color:#fff; border:1px solid rgba(255,255,255,.6); }
+
+/* ---------- page grid: panels flow, cards and charts line up ---------- */
+body.ds-theme #EntryPoint > .row.top-buffer { display:flex; flex-wrap:wrap; }
+body.ds-theme #EntryPoint > .row.top-buffer > [class*="col-"] { float:none; margin-bottom:10px; min-width:0; }
+.ds-block { background:#fff; border:1px solid #e3e3e3; border-radius:4px; max-width:100%; overflow-x:auto; height:100%; }
+.ds-block > h5 { margin:0; padding:8px 10px; font-weight:bold; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; font-size:15px; }
+.ds-block .table { margin:0; font-size:13px; }
+.ds-block .table > tbody > tr > td, .ds-block .table > tbody > tr > th { padding:4px 8px; }
+.ds-sub { color:#999; font-size:12px; font-weight:normal; }
+.ds-mono { font-family:monospace; font-size:12px; color:#777; }
+.ds-scroll { max-height:300px; overflow:auto; }
+
+/* compact value card: one Human Interface dene chain, one row per dene */
+.ds-card { background:#fff; border:1px solid #e3e3e3; border-top:4px solid #2da040; border-radius:4px; height:100%; }
+.ds-card.warning { border-top-color:#f9a825; } .ds-card.danger { border-top-color:#e53935; }
+.ds-card h5 { margin:0; padding:7px 10px; font-weight:bold; border-bottom:1px solid #eee; font-size:16px; }
+.ds-kv { display:flex; justify-content:space-between; align-items:baseline; padding:4px 10px; border-bottom:1px solid #f4f4f4; font-size:14px; gap:6px; }
+.ds-kv:last-child { border-bottom:0; }
+.ds-kv .k { color:#666; } .ds-kv .v { font-weight:bold; font-size:16px; white-space:nowrap; }
+.ds-kv .u { color:#999; font-weight:normal; font-size:12px; margin-left:2px; }
+.ds-kv.warning { background:#fff8d6; } .ds-kv.danger { background:#fde3e3; } .ds-kv.danger .v { color:#c62828; }
+
+/* compact line chart */
+.ds-chart .ds-legend { font-size:12px; color:#777; font-weight:normal; }
+.ds-chart .ds-legend i { display:inline-block; width:10px; height:3px; vertical-align:middle; margin:0 3px 0 8px; }
+.ds-chart .ds-plot { position:relative; height:170px; }
+.ds-chart .ds-plot svg { display:block; width:100%; height:170px; }
+.ds-chart .ds-nodata { height:170px; color:#999; font-size:13px; text-align:center; padding-top:60px; }
+.ds-chart .ds-tip { position:absolute; pointer-events:none; display:none; background:rgba(0,0,0,.8); color:#fff; padding:3px 7px; border-radius:4px; font-size:12px; top:10px; }
+
+/* traffic page */
+.ds-kpis { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin-bottom:10px; }
+.ds-kpi { background:#fff; border:1px solid #e3e3e3; border-radius:4px; padding:8px 12px; }
+.ds-kpi .l { color:#777; font-size:12px; text-transform:uppercase; letter-spacing:.03em; }
+.ds-kpi .n { font-size:24px; font-weight:bold; line-height:1.2; }
+.ds-kpi .n small { font-size:13px; color:#999; font-weight:normal; }
+.ds-kpi.warning { border-left:4px solid #f9a825; }
+.ds-note { background:#fff; border:1px solid #e3e3e3; border-left:5px solid #f9a825; border-radius:4px; padding:8px 12px; margin-bottom:10px; font-size:13px; }
+.ds-cols { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+.ds-cols3 { display:grid; grid-template-columns:2fr 1fr; gap:10px; margin-bottom:10px; }
+.ds-cols > *, .ds-cols3 > *, .ds-kpis > * { min-width:0; }
+.ds-sel { background:#e3f0d2 !important; }
+#TrafficMap svg { display:block; width:100%; height:auto; }
+
+/* device table */
+.ds-dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+.ds-dot.known { background:#4caf50; } .ds-dot.unknown { background:#f9a825; } .ds-dot.gone { background:#bbb; }
+.ds-devtools { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+.ds-devtools input { width:200px; }
+.ds-iconbtn { padding:1px 6px; }
+
+/* ---------- footer: the pages, with badges and a green marker on the open one ---------- */
+body.ds-theme #footer .navbar-fixed-bottom { background:#222; border:0; padding:0 0 calc(6px + env(safe-area-inset-bottom)); }
+body.ds-theme #bottomNav { display:flex; margin:0; }
+body.ds-theme #bottomNav .LowerNavFunction { flex:1 1 0; min-width:0; width:auto; float:none; padding:0; }
+body.ds-theme #bottomNav .LowerNavFunction.active { box-shadow:inset 0 3px 0 #2da040; }
+body.ds-theme #bottomNav a { color:#bbb; font-size:12px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-decoration:none; padding-top:10px; }
+body.ds-theme #bottomNav .active a { color:#fff; }
+body.ds-theme #bottomNav .glyphicon { font-size:18px; }
+.ds-nb { position:relative; display:inline-block; height:20px; line-height:20px; }
+.ds-nb .badge { position:absolute; top:-8px; left:14px; font-size:10px; padding:2px 5px; background:#f9a825; color:#fff; }
+/* the little code pills (countries, rules) */
+body.ds-theme .ds-block .label, body.ds-theme #TrafficPanelBody .label { font-size:11px; padding:2px 5px; font-weight:normal; }
+
+@media (max-width:900px) { .ds-cols, .ds-cols3 { grid-template-columns:1fr; } }
+@media (max-width:600px) { .ds-kpis { grid-template-columns:1fr 1fr; } body.ds-theme #bottomNav a { font-size:11px; } }
+
+/* charts: index.html styles every svg path steelblue for the old charts */
+.ds-plot svg path.domain { stroke:#ddd !important; fill:none; }
+.ds-plot svg .tick line { stroke:#eee; }
+
+/* the older panels (Network Rules, Diagnostics, Pathology...) in the same light style */
+body.ds-theme .panel { border:1px solid #e3e3e3; border-radius:4px; box-shadow:none; }
+body.ds-theme .panel-default > .panel-heading { background:#fff; border-bottom:1px solid #eee; padding:8px 10px; }
+body.ds-theme .panel-default > .panel-heading h4 { font-size:15px; font-weight:bold; margin:0; }

@@ -2193,6 +2193,8 @@ function RefreshInterface(){
 	if(pageToDisplay === -1){
 		pageToDisplay = 1;
 	}
+	// compact layout (DSLayout.js): only when the denome has a "Header" dene in Control Parameters
+	if(typeof dsApplyLayout === "function") dsApplyLayout();
 
 
 	renderPageToDisplay();
@@ -2215,10 +2217,17 @@ function RefreshInterface(){
 }	
 
 function setPageToDisplay(p){
+	var changed = pageToDisplay != p;
 	pageToDisplay=p;
 	refreshActive=true;
 
 	renderPageToDisplay();
+	// compact layout: move the footer's marker to the new page, and start the new page at the top
+	if(typeof dsActive === "function" && dsActive()){
+		var cp = dsControlParameters();
+		if(cp) $("#bottomNav").empty().append(extraLowerNavInfo(cp));
+		if(changed) setTimeout(function(){ window.scrollTo(0, 0); }, 0);
+	}
 }
 
 
@@ -2272,6 +2281,7 @@ function renderPageByPointer(pagePointer, locationId){
 	// not any other locationId this function might be called with (e.g. modals), so it doesn't
 	// affect scroll behavior anywhere that isn't the main page.
 	var restoreScrollY = (locationId === "EntryPoint") ? window.pageYOffset : null;
+	if(typeof dsPendingCharts !== "undefined") dsPendingCharts = [];
 	var pageDeneChain = humanInterfaceDeneChainIndex.get(pagePointer);
 	console.log("renderPageByPointer pagePointer=" + pagePointer + " pageDeneChain=" +pageDeneChain);
 	if (!pageDeneChain) {
@@ -2778,6 +2788,19 @@ function renderPageByPointer(pagePointer, locationId){
 			panelHTML += aTrafficPanel.process();
 
 
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_COMPACT_VALUE_CARD){
+			// compact layout (DSLayout.js): Internet, WAN, Router... as small cards
+			panelHTML += new CompactValueCard().process(panelDeneChain["Name"], panelDeneChain);
+
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_COMPACT_LINE_CHART){
+			panelHTML += new CompactLineChart().process(panelDeneChain["Name"], panelDeneChain, "DSChart" + panelCounter);
+
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_DEVICE_TABLE){
+			panelHTML += new DeviceTable().process(organismIPInfoJsonData);
+
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_POWER){
+			panelHTML += new PowerPanel().process();
+
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MANUAL_ACTION_WITH_TIMER){
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MNEMOSYNE_VIEW){
@@ -2815,6 +2838,7 @@ function renderPageByPointer(pagePointer, locationId){
 	panelHTML += "</div>";// clossing class=\"row top-buffer\">";
 	//// console.log("finished rendering page " + panelHTML);
 	$("#" + locationId).append(panelHTML);
+	if(typeof dsDrawPendingCharts === "function") dsDrawPendingCharts();
 
 	//
 	// check to see if secundaryView is not empty,

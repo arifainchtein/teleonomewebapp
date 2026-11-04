@@ -440,8 +440,11 @@ function extraLowerNavInfo(deneChainPanel){
 		var shortNavTitles = {"Mnemosyne": "Mnemo", "Diagnostics": "Diag", "Pathology": "Pathos"};
 		var shortTitle = shortNavTitles[pageTitle] || pageTitle;
 		var titleHtml = '<span class="hidden-xs">' + pageTitle + '</span><span class="visible-xs">' + shortTitle + '</span>';
-		returnText+="<div class=\"col-xs-2 text-center LowerNavFunction\">";
-		returnText+="<a href=\"javascript:setPageToDisplay("+ pageInNavPosition+")\"><i class=\""+ glyphIcon +"\"></i><br>"+titleHtml+"</a>";
+		// compact layout (DSLayout.js): a badge from the page's "Nav Badge Pointer" and a marker on the open page
+		var dsBadge = (typeof dsNavBadge === "function") ? dsNavBadge(dene) : "";
+		var dsOpen = (typeof dsActive === "function" && dsActive() && pageInNavPosition == pageToDisplay) ? " active" : "";
+		returnText+="<div class=\"col-xs-2 text-center LowerNavFunction" + dsOpen + "\">";
+		returnText+="<a href=\"javascript:setPageToDisplay("+ pageInNavPosition+")\"><span class=\"ds-nb\"><i class=\""+ glyphIcon +"\"></i>" + dsBadge + "</span><br>"+titleHtml+"</a>";
 		returnText+="</div>";
 		
 	}

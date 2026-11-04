@@ -17,6 +17,7 @@
 <link href="bs/css/bootstrap-switch.css" rel="stylesheet">
 <link href="css/UpdateParams.css" rel="stylesheet">
 <link href="css/SearchPanel.css" rel="stylesheet">
+<link href="css/digitalstables.css" rel="stylesheet">
 
 
 
@@ -407,7 +408,11 @@ the css for the little box on the top right f external data
 <body>
 
 
-	<div class="container">
+ 	<div class="container">
+
+		<!-- compact layout (DSLayout.js): header and emergency banner, empty unless the denome has a Header dene -->
+		<div id="DSHeader"></div>
+		<div id="DSEmergency"></div>
 
 		<div class="container-fluid">
 			<div class="row">
@@ -690,6 +695,7 @@ the css for the little box on the top right f external data
 			src="templates/ActionEvaluationReport.js"></script>
 		<script type="text/javascript"
 			src="templates/NetworkSensorDeviceStatusReport.js"></script>
+		<script type="text/javascript" src="templates/DeviceTable.js"></script>
 		<script type="text/javascript" src="templates/OrganismView.js"></script>
 		<script type="text/javascript" src="templates/TelepathonPanel.js"></script>
 		<script type="text/javascript" src="templates/SearchPanel.js"></script>
@@ -698,6 +704,7 @@ the css for the little box on the top right f external data
 		<script type="text/javascript" src="TimeUtils.js"></script>
 
 		<!-- The templates, make sure RenderingEngine is loaded after all the templates -->
+		<script type="text/javascript" src="DSLayout.js"></script>
 		<script type="text/javascript" src="RenderingEngine.js"></script>
 		<!-- The Heart Communication is tbe the last one to be loaded -->
 		<script type="text/javascript" src="DeviceViewsTeleonomeHost.js"></script>

@@ -1248,6 +1248,22 @@ var PANEL_VISUALIZATION_STYLE_PATHOLOGY="Pathology Panel";
 var PANEL_VISUALIZATION_STYLE_DOORBELL="Doorbell Panel";
 var PANEL_VISUALIZATION_STYLE_NETWORK_RULES="Network Rules Panel";
 var PANEL_VISUALIZATION_STYLE_TRAFFIC="Traffic Panel";
+// Compact layout (Cleotilde redesign, 2026-11-04): see DSLayout.js
+var PANEL_VISUALIZATION_STYLE_COMPACT_VALUE_CARD="Compact Value Card";
+var PANEL_VISUALIZATION_STYLE_COMPACT_LINE_CHART="Compact Line Chart";
+var PANEL_VISUALIZATION_STYLE_DEVICE_TABLE="Device Table";
+var PANEL_VISUALIZATION_STYLE_POWER="Power Panel";
+// Human Interface Control Parameters: a dene with this name switches a Teleonome to the compact layout
+var DS_HEADER_DENE="Header";
+var DS_HEADER_LOGO_IMAGE="Logo Image";
+var DS_HEADER_VALUE_TITLE="Header Value Title";
+var DS_HEADER_VALUE_POINTER="Header Value Pointer";
+var DS_HEADER_STATUS_RULES_POINTER="Status Rules Pointer";
+var DS_NAV_BADGE_POINTER="Nav Badge Pointer";
+var DS_EMERGENCY_TITLE="Emergency Title";
+var DS_EMERGENCY_ADVICE="Emergency Advice";
+var DS_EMERGENCY_POSITION="Emergency Position";
+var DS_CHART_COLOR="Color";
 var PANEL_VISUALIZATION_STYLE_TELEPATHON_VISUALIZATION="Telepathon Visualization";
 var PANEL_VISUALIZATION_STYLE_LINE_CHART="Line Chart Panel";
 var PANEL_VISUALIZATION_STYLE_BAR_CHART="Bar Chart Panel";

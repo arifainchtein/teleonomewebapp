@@ -4,9 +4,12 @@
 // Suspicious Events the traffic rules raised, with Allow to silence known-good traffic.
 // Data: GetTraffic (TrafficStore tables filled by TrafficWatcher); Allow / Remove: AllowTraffic.
 // The page is redrawn every pulse, so the state lives in these globals and a 60 s timer refreshes it.
-// Two tabs (2026-11-04): Map (countries shaded by traffic, click one for who talks to it and where) and Table
-// (events, devices, domains, allowlist). The map uses d3 v7 (loaded by index.html) and
+// Compact layout (2026-11-04, Cleotilde redesign): one page, top to bottom: the period buttons, headline numbers,
+// the last suspicious event, the map with the countries list (click either: who talks to that country and where),
+// devices and suspicious events side by side (click a device: everything it talked to, narrowed by country),
+// top domains and the allowlist. The map uses d3 v7 (loaded by index.html) and
 // templates/world-countries-110m.json (Natural Earth 1:110m, public domain, only ISO code and name kept).
+// Watchlist / night-upload numbers come from the denome (Purpose:Sensor Data:Traffic Status).
 //
 var trafficData = null;
 var trafficDays = 1;
@@ -14,7 +17,7 @@ var trafficOpenMac = null;
 var trafficDeviceData = null;
 var trafficTimer = null;
 var TRAFFIC_WATCHLIST = ["CN", "RU", "KP", "IR"];
-var trafficTab = "map";
+var trafficDeviceCountry = null;	// country filter inside the device detail
 var trafficWorld = null;
 var trafficWorldLoading = false;
 var trafficMapCountry = null;
@@ -36,11 +39,8 @@ class TrafficPanel {
 	}
 
 	process() {
-		var h = "<div class=\"col-lg-12\"><div class=\"bs-component\"><div class=\"panel panel-default\">";
-		h += "<div class=\"panel-heading\"><h4><i class=\"glyphicon glyphicon-transfer\"></i> Traffic"
-			+ "<span class=\"pull-right\">" + trafficPeriodButtons() + "</span></h4></div>";
-		h += "<div class=\"panel-body\" id=\"TrafficPanelBody\">" + trafficBodyHTML() + "</div>";
-		h += "</div></div></div>";
+		// 5 divs left open for renderPageByPointer to close: col, 2 wrappers, then 2 after the body
+		var h = "<div class=\"col-lg-12\"><div><div><div id=\"TrafficPanelBody\">" + trafficBodyHTML() + "</div><div><div>";
 		if (trafficTimer == null) trafficTimer = setInterval(trafficRefresh, 60000);
 		setTimeout(trafficRefresh, 0);
 		return h;
@@ -61,7 +61,6 @@ function trafficSetDays(d) {
 	trafficDeviceData = null;
 	trafficCountryData = null;
 	trafficRender();
-	$('#TrafficPanelBody').closest('.panel').find('.panel-heading .pull-right').html(trafficPeriodButtons());
 	trafficRefresh();
 }
 
@@ -88,47 +87,56 @@ function trafficTime(ms) {
 	return trafficDays == 1 && d.toDateString() == new Date().toDateString() ? d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : d.toLocaleString();
 }
 
+function trafficStatusWord(name) {
+	try {
+		return getDeneWordByIdentityPointer("@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_SENSOR_DATA + ":Traffic Status:" + name, DENEWORD_VALUE_ATTRIBUTE);
+	} catch (e) {
+		return undefined;
+	}
+}
+
 function trafficBodyHTML() {
-	if (trafficData == null) return "<p class=\"text-muted\">Loading...</p>";
-	var h = "";
-	var devices = trafficData.Devices || [];
+	var h = "<div class=\"ds-devtools\" style=\"margin-bottom:8px\"><b>Period:</b>" + trafficPeriodButtons() + "</div>";
+	if (trafficData == null) return h + "<p class=\"text-muted\">Loading...</p>";
+	var devices = trafficData.Devices || [], events = trafficData.Events || [];
 	var up = 0, down = 0;
 	devices.forEach(function (d) { up += d.Up; down += d.Down; });
-	h += "<p><b>" + trafficBytes(up) + "</b> up, <b>" + trafficBytes(down) + "</b> down, " + devices.length + " devices";
-	var countries = trafficData.Countries || {};
-	var cc = Object.keys(countries);
-	if (cc.length > 0) {
-		h += " &middot; ";
-		cc.slice(0, 12).forEach(function (c) {
-			h += trafficCountry(c == "?" ? "" : c) + (c == "?" ? "<span class=\"label label-default\">?</span>" : "") + " <small>" + trafficBytes(countries[c].Up + countries[c].Down) + "</small> ";
-		});
-	}
-	h += "</p>";
-	h += "<ul class=\"nav nav-tabs\" style=\"margin-bottom:12px\">";
-	[["map", "glyphicon-globe", "Map"], ["table", "glyphicon-list", "Table"]].forEach(function (t) {
-		h += "<li" + (trafficTab == t[0] ? " class=\"active\"" : "") + "><a href=\"#\" onclick=\"trafficSetTab('" + t[0] + "');return false;\">"
-			+ "<i class=\"glyphicon " + t[1] + "\"></i> " + t[2] + "</a></li>";
-	});
-	h += "</ul>";
-	if (trafficTab == "map") return h + trafficMapHTML();
-	h += trafficChart(trafficData.Hours || []);
-	h += trafficEventsHTML(trafficData.Events || []);
-	h += trafficDevicesHTML(devices);
-	h += trafficDomainsHTML(trafficData.TopDomains || [], "Most looked-up domains (all devices)");
-	h += trafficAllowlistHTML(trafficData.Allowlist || []);
+	var since = trafficData.Since || 0, inPeriod = events.filter(function (e) { return e.Time >= since; }).length;
+	var night = parseFloat(trafficStatusWord("Night Upload MB")) || 0;
+	var period = trafficDays == 1 ? "today" : trafficDays + " days";
+	h += "<div class=\"ds-kpis\">"
+		+ trafficKpi("Download " + period, trafficBytes(down), "")
+		+ trafficKpi("Upload " + period, trafficBytes(up), "")
+		+ trafficKpi("Suspicious events", inPeriod, inPeriod ? "warning" : "")
+		+ trafficKpi("Watchlist today", (trafficStatusWord("Watchlist Connections Today") || 0) + " <small>conns · " + (trafficStatusWord("Watchlist MB Today") || 0) + " MB</small>", "")
+		+ trafficKpi("Night upload", night + " <small>MB " + trafficEscape(trafficStatusWord("Top Night Uploader") || "") + "</small>", night ? "warning" : "")
+		+ trafficKpi("Countries", Object.keys(trafficCountryTotals()).length, "")
+		+ "</div>";
+	var last = trafficStatusWord("Last Suspicious Event");
+	if (last) h += "<div class=\"ds-note\"><b>Last suspicious:</b> " + trafficEscape(last) + "</div>";
+
+	h += "<div class=\"ds-cols3\"><div class=\"ds-block\"><h5>Where the traffic goes <small class=\"ds-sub\">click a country for the devices that talk to it</small></h5>"
+		+ "<div id=\"TrafficMap\" style=\"position:relative;width:100%\">"
+		+ (typeof d3 === "undefined" ? "<p class=\"text-muted\">The map needs d3, which did not load (no internet?).</p>" : "")
+		+ "</div><div class=\"ds-sub\" style=\"padding:4px 10px\">Darker = more traffic. Red = a watchlist country (" + TRAFFIC_WATCHLIST.join(", ") + ").</div></div>"
+		+ "<div class=\"ds-block\"><h5>Countries</h5><div class=\"ds-scroll\" style=\"max-height:380px\">" + trafficCountryListHTML() + "</div></div></div>";
+	h += "<div id=\"TrafficCountryDetail\">" + trafficCountryDetailHTML() + "</div>";
+	h += "<div class=\"ds-cols\">" + trafficDevicesHTML(devices) + trafficEventsHTML(events) + "</div>";
+	h += "<div id=\"TrafficDeviceDetail\">" + trafficDeviceHTML() + "</div>";
+	h += "<div class=\"ds-cols\">" + trafficDomainsHTML(trafficData.TopDomains || [], "Most looked-up domains (all devices)") + trafficAllowlistHTML(trafficData.Allowlist || []) + "</div>";
 	return h;
 }
 
-// The body, and the map when it is on screen (d3 draws into the element the HTML just made).
-function trafficRender() {
-	$('#TrafficPanelBody').html(trafficBodyHTML());
-	if (trafficTab == "map" && trafficData != null) trafficDrawMap();
+function trafficKpi(label, value, level) {
+	return "<div class=\"ds-kpi " + level + "\"><div class=\"l\">" + label + "</div><div class=\"n\">" + value + "</div></div>";
 }
 
-function trafficSetTab(tab) {
-	trafficTab = tab;
-	trafficRender();
+function trafficRender() {
+	$('#TrafficPanelBody').html(trafficBodyHTML());
+	if (trafficData != null) trafficDrawMap();
 }
+
+
 
 // ------------------------------------------------------------------ the map tab
 
@@ -162,20 +170,10 @@ function trafficShade(v, max) {
 function trafficFill(cc, v, max) {
 	if (!v) return "#f2f2f2";
 	var t = trafficShade(v, max);
-	return TRAFFIC_WATCHLIST.indexOf(cc) >= 0 ? d3.interpolateReds(0.45 + 0.55 * t) : d3.interpolateBlues(0.2 + 0.8 * t);
+	return TRAFFIC_WATCHLIST.indexOf(cc) >= 0 ? d3.interpolateReds(0.45 + 0.55 * t) : d3.interpolate("#e3f0d2", "#1f6e2b")(t);
 }
 
-function trafficMapHTML() {
-	var h = "<div class=\"row\">";
-	h += "<div class=\"col-md-9\"><div id=\"TrafficMap\" style=\"position:relative;width:100%\">"
-		+ (typeof d3 === "undefined" ? "<p class=\"text-muted\">The map needs d3, which did not load (no internet?). The Table tab has everything.</p>" : "<p class=\"text-muted\">Loading the map...</p>")
-		+ "</div><p class=\"text-muted\" style=\"font-size:12px\">Darker = more traffic (log scale). Red = a watchlist country ("
-		+ TRAFFIC_WATCHLIST.join(", ") + "). Click a country for the devices that talk to it.</p></div>";
-	h += "<div class=\"col-md-3\">" + trafficCountryListHTML() + "</div>";
-	h += "</div>";
-	h += "<div id=\"TrafficCountryDetail\">" + trafficCountryDetailHTML() + "</div>";
-	return h;
-}
+
 
 function trafficCountryListHTML() {
 	var countries = (trafficData && trafficData.Countries) || {};
@@ -186,7 +184,7 @@ function trafficCountryListHTML() {
 	var h = "<table class=\"table table-condensed table-hover\" style=\"font-size:13px\"><tr><th>Country</th><th class=\"text-right\">Traffic</th><th class=\"text-right\">Devices</th></tr>";
 	ccs.slice(0, 25).forEach(function (cc) {
 		var sel = cc == trafficMapCountry;
-		h += "<tr style=\"cursor:pointer" + (sel ? ";background:#e8f0fe" : "") + "\" onclick=\"trafficSelectCountry('" + trafficEscape(cc) + "')\"><td>"
+		h += "<tr class=\"" + (sel ? "ds-sel" : "") + "\" style=\"cursor:pointer\" onclick=\"trafficSelectCountry('" + trafficEscape(cc) + "')\"><td>"
 			+ "<span style=\"display:inline-block;width:10px;height:10px;margin-right:5px;background:" + trafficFill(cc, totals[cc], max) + ";border:1px solid #999\"></span>"
 			+ trafficCountry(cc) + " " + trafficEscape(trafficCountryName(cc)) + "</td><td class=\"text-right\">" + trafficBytes(totals[cc])
 			+ "</td><td class=\"text-right\">" + (countries[cc].Devices || "") + "</td></tr>";
@@ -283,26 +281,30 @@ function trafficRefreshCountry() {
 
 function trafficCountryDetailHTML() {
 	if (trafficMapCountry == null) return "";
-	var h = "<h5 style=\"padding-top:6px\">" + trafficCountry(trafficMapCountry) + " " + trafficEscape(trafficCountryName(trafficMapCountry))
-		+ " <a href=\"#\" style=\"font-size:12px;margin-left:8px\" onclick=\"trafficSelectCountry('" + trafficEscape(trafficMapCountry) + "');return false;\">close</a></h5>";
-	if (trafficCountryData == null || trafficCountryData.Country != trafficMapCountry) return h + "<p class=\"text-muted\">Loading...</p>";
+	var h = "<div class=\"ds-block\" style=\"margin-bottom:10px\"><h5><span>" + trafficCountry(trafficMapCountry) + " " + trafficEscape(trafficCountryName(trafficMapCountry));
+	if (trafficCountryData == null || trafficCountryData.Country != trafficMapCountry) {
+		return h + "</span><a href=\"#\" style=\"font-size:12px\" onclick=\"trafficSelectCountry('" + trafficEscape(trafficMapCountry) + "');return false;\">close</a></h5><p class=\"text-muted\" style=\"padding:10px\">Loading...</p></div>";
+	}
 	var devices = trafficCountryData.Devices || [], dest = trafficCountryData.Destinations || [];
-	h += "<div class=\"row\"><div class=\"col-md-5\"><b>Devices talking to it</b>";
+	h += " <small class=\"ds-sub\">" + devices.length + " devices, " + dest.length + " destinations</small></span>"
+		+ "<a href=\"#\" style=\"font-size:12px\" onclick=\"trafficSelectCountry('" + trafficEscape(trafficMapCountry) + "');return false;\">close</a></h5>";
+	h += "<div class=\"ds-cols\" style=\"gap:0;margin:0\"><div><div style=\"padding:6px 10px\"><b>Devices talking to it</b></div><div class=\"ds-scroll\">";
 	h += "<table class=\"table table-condensed\"><tr><th>Device</th><th class=\"text-right\">Up</th><th class=\"text-right\">Down</th><th class=\"text-right\">Conns</th></tr>";
 	devices.forEach(function (d) {
-		h += "<tr><td>" + trafficEscape(d.Device) + " <small class=\"text-muted\">" + trafficEscape(d.Mac) + "</small></td><td class=\"text-right\">"
+		h += "<tr style=\"cursor:pointer\" onclick=\"trafficToggleDevice('" + trafficEscape(d.Mac) + "')\"><td>" + trafficEscape(d.Device) + " <span class=\"ds-mono\">" + trafficEscape(d.Mac) + "</span></td><td class=\"text-right\">"
 			+ trafficBytes(d.Up) + "</td><td class=\"text-right\">" + trafficBytes(d.Down) + "</td><td class=\"text-right\">" + d.Connections + "</td></tr>";
 	});
-	h += "</table></div><div class=\"col-md-7\"><b>Where there</b>";
+	h += "</table></div></div><div style=\"border-left:1px solid #eee\"><div style=\"padding:6px 10px\"><b>Where there</b></div><div class=\"ds-scroll\">";
 	h += "<table class=\"table table-condensed\"><tr><th>Domain</th><th>IP:port</th><th>Devices</th><th class=\"text-right\">Up</th><th class=\"text-right\">Down</th><th>Last</th></tr>";
 	dest.forEach(function (x) {
-		h += "<tr><td>" + trafficEscape(x.Domain) + "</td><td>" + trafficEscape(x.IP) + ":" + x.Port + "</td><td>" + trafficEscape(x.Devices)
-			+ "</td><td class=\"text-right\">" + trafficBytes(x.Up) + "</td><td class=\"text-right\">" + trafficBytes(x.Down) + "</td><td>" + trafficTime(x.Last) + "</td></tr>";
+		var who = String(x.Devices || "").split(/,\s*/).filter(Boolean);
+		h += "<tr><td>" + trafficEscape(x.Domain) + "</td><td class=\"ds-mono\">" + trafficEscape(x.IP) + ":" + x.Port + "</td><td title=\"" + trafficEscape(x.Devices) + "\" style=\"white-space:nowrap\">"
+			+ trafficEscape(who[0] || "") + (who.length > 1 ? " <span class=\"ds-sub\">+" + (who.length - 1) + "</span>" : "")
+			+ "</td><td class=\"text-right\">" + trafficBytes(x.Up) + "</td><td class=\"text-right\">" + trafficBytes(x.Down) + "</td><td class=\"ds-sub\">" + trafficTime(x.Last) + "</td></tr>";
 	});
-	return h + "</table></div></div>";
+	return h + "</table></div></div></div></div>";
 }
 
-// up (orange) and down (blue) per hour, as one small inline SVG
 function trafficChart(hours) {
 	if (hours.length == 0) return "<p class=\"text-muted\">No traffic recorded yet. Is the router helper installed?</p>";
 	var max = 1;
@@ -312,89 +314,108 @@ function trafficChart(hours) {
 	hours.forEach(function (r, i) {
 		var x = i * bw;
 		var hd = r[2] / max * hgt, hu = r[1] / max * hgt;
-		s += "<rect x=\"" + x + "\" y=\"" + (hgt - hd) + "\" width=\"" + Math.max(1, bw * 0.45) + "\" height=\"" + hd + "\" fill=\"#3a87ad\"><title>"
+		s += "<rect x=\"" + x + "\" y=\"" + (hgt - hd) + "\" width=\"" + Math.max(1, bw * 0.45) + "\" height=\"" + hd + "\" fill=\"#2da040\"><title>"
 			+ new Date(r[0]).toLocaleString() + " down " + trafficBytes(r[2]) + "</title></rect>";
 		s += "<rect x=\"" + (x + bw * 0.5) + "\" y=\"" + (hgt - hu) + "\" width=\"" + Math.max(1, bw * 0.45) + "\" height=\"" + hu + "\" fill=\"#f89406\"><title>"
 			+ new Date(r[0]).toLocaleString() + " up " + trafficBytes(r[1]) + "</title></rect>";
 	});
 	s += "<text x=\"0\" y=\"" + (hgt + 12) + "\" font-size=\"11\" fill=\"#999\">" + new Date(hours[0][0]).toLocaleString() + "</text>";
-	s += "<text x=\"" + w + "\" y=\"" + (hgt + 12) + "\" font-size=\"11\" fill=\"#999\" text-anchor=\"end\">peak " + trafficBytes(max) + "/h &middot; blue down, orange up</text>";
+	s += "<text x=\"" + w + "\" y=\"" + (hgt + 12) + "\" font-size=\"11\" fill=\"#999\" text-anchor=\"end\">peak " + trafficBytes(max) + "/h &middot; green down, orange up</text>";
 	return s + "</svg>";
 }
 
 function trafficEventsHTML(events) {
-	var h = "<h5 style=\"padding-top:10px\">Suspicious events (last " + Math.max(7, trafficDays) + " days)</h5>";
-	if (events.length == 0) return h + "<p class=\"text-muted\">None.</p>";
-	h += "<table class=\"table table-condensed\"><tr><th>When</th><th>Rule</th><th>What</th><th></th></tr>";
-	events.slice(0, 30).forEach(function (e, i) {
-		h += "<tr><td style=\"white-space:nowrap\">" + new Date(e.Time).toLocaleString() + "</td><td><span class=\"label label-danger\">" + trafficEscape(e.Rule)
+	var h = "<div class=\"ds-block\"><h5><span>Suspicious events <small class=\"ds-sub\">last " + Math.max(7, trafficDays) + " days · " + events.length + "</small></span></h5>";
+	if (events.length == 0) return h + "<p class=\"text-muted\" style=\"padding:10px\">None.</p></div>";
+	h += "<div class=\"ds-scroll\"><table class=\"table table-condensed\"><tr><th>When</th><th>Rule</th><th>What</th><th></th></tr>";
+	events.slice(0, 100).forEach(function (e, i) {
+		h += "<tr><td class=\"ds-sub\" style=\"white-space:nowrap\">" + trafficTime(e.Time) + "</td><td><span class=\"label label-warning\">" + trafficEscape(e.Rule)
 			+ "</span></td><td>" + trafficEscape(e.Detail) + "</td><td><button class=\"btn btn-xs btn-default\" title=\"Stop alerting about this\" onclick=\"trafficAllowEvent(" + i + ");return false;\">Allow</button></td></tr>";
 	});
-	return h + "</table>";
+	return h + "</table></div></div>";
 }
 
 function trafficDevicesHTML(devices) {
-	var h = "<h5 style=\"padding-top:10px\">Devices</h5>";
-	if (devices.length == 0) return h + "<p class=\"text-muted\">None yet.</p>";
-	h += "<table class=\"table table-condensed table-hover\"><tr><th>Device</th><th class=\"text-right\">Up</th><th class=\"text-right\">Down</th><th class=\"text-right\">Destinations</th><th>Countries</th><th>Last</th></tr>";
-	devices.forEach(function (d) {
-		var open = trafficOpenMac == d.Mac;
-		var cs = "";
-		Object.keys(d.Countries || {}).slice(0, 6).forEach(function (c) { cs += trafficCountry(c) + " "; });
-		h += "<tr style=\"cursor:pointer\" onclick=\"trafficToggleDevice('" + trafficEscape(d.Mac) + "')\"><td><i class=\"glyphicon glyphicon-chevron-" + (open ? "down" : "right") + "\"></i> "
-			+ trafficEscape(d.Device) + " <small class=\"text-muted\">" + trafficEscape(d.Mac) + "</small></td><td class=\"text-right\">" + trafficBytes(d.Up) + "</td><td class=\"text-right\">"
-			+ trafficBytes(d.Down) + "</td><td class=\"text-right\">" + d.Destinations + "</td><td>" + cs + "</td><td>" + trafficTime(d.Last) + "</td></tr>";
-		if (open) h += "<tr><td colspan=\"6\" style=\"background:#fafafa\">" + trafficDeviceHTML() + "</td></tr>";
+	var h = "<div class=\"ds-block\"><h5><span>Devices <small class=\"ds-sub\">" + devices.length + " · click one for everything it talked to</small></span></h5>";
+	if (devices.length == 0) return h + "<p class=\"text-muted\" style=\"padding:10px\">None yet.</p></div>";
+	h += "<div class=\"ds-scroll\"><table class=\"table table-condensed table-hover\"><tr><th>Device</th><th class=\"text-right\">Up</th><th class=\"text-right\">Down</th><th class=\"text-right\">Dest.</th><th>Countries</th><th>Last</th></tr>";
+	devices.slice().sort(function (a, b) { return (b.Up + b.Down) - (a.Up + a.Down); }).forEach(function (d) {
+		var cs = Object.keys(d.Countries || {}).sort(function (a, b) { return d.Countries[b] - d.Countries[a]; });
+		h += "<tr class=\"" + (trafficOpenMac == d.Mac ? "ds-sel" : "") + "\" style=\"cursor:pointer\" onclick=\"trafficToggleDevice('" + trafficEscape(d.Mac) + "')\"><td>"
+			+ trafficEscape(d.Device) + "</td><td class=\"text-right\">" + trafficBytes(d.Up) + "</td><td class=\"text-right\">"
+			+ trafficBytes(d.Down) + "</td><td class=\"text-right\">" + d.Destinations + "</td><td title=\"" + trafficEscape(cs.join(" ")) + "\" style=\"white-space:nowrap\">"
+			+ cs.slice(0, 4).map(trafficCountry).join(" ") + (cs.length > 4 ? " <span class=\"ds-sub\">+" + (cs.length - 4) + "</span>" : "") + "</td><td class=\"ds-sub\">" + trafficTime(d.Last) + "</td></tr>";
 	});
-	return h + "</table>";
+	return h + "</table></div></div>";
 }
 
 function trafficDeviceHTML() {
-	if (trafficDeviceData == null || trafficDeviceData.Mac != trafficOpenMac) return "<p class=\"text-muted\">Loading...</p>";
-	var h = trafficChart(trafficDeviceData.Hours || []);
-	var dest = trafficDeviceData.Destinations || [];
-	h += "<b>Where it talks to</b>";
-	if (dest.length == 0) {
-		h += "<p class=\"text-muted\">Nothing.</p>";
-	} else {
-		h += "<table class=\"table table-condensed\"><tr><th>Domain</th><th>IP:port</th><th>Country</th><th class=\"text-right\">Up</th><th class=\"text-right\">Down</th><th class=\"text-right\">Conns</th><th>Last</th></tr>";
-		dest.forEach(function (x) {
-			h += "<tr><td>" + trafficEscape(x.Domain) + "</td><td>" + trafficEscape(x.IP) + ":" + x.Port + " <small class=\"text-muted\">" + trafficEscape(x.Proto) + "</small></td><td>"
-				+ trafficCountry(x.Country) + "</td><td class=\"text-right\">" + trafficBytes(x.Up) + "</td><td class=\"text-right\">" + trafficBytes(x.Down)
-				+ "</td><td class=\"text-right\">" + x.Connections + "</td><td>" + trafficTime(x.Last) + "</td></tr>";
-		});
-		h += "</table>";
-	}
-	h += trafficDomainsHTML(trafficDeviceData.Domains || [], "What it looked up");
-	return h;
+	if (trafficOpenMac == null) return "";
+	var sum = ((trafficData && trafficData.Devices) || []).filter(function (d) { return d.Mac == trafficOpenMac; })[0] || { Device: trafficOpenMac };
+	var h = "<div class=\"ds-block\" style=\"border-left:4px solid #2da040;margin-bottom:10px\"><h5><span><i class=\"glyphicon glyphicon-phone\"></i> " + trafficEscape(sum.Device)
+		+ " <span class=\"ds-mono\">" + trafficEscape(trafficOpenMac) + "</span>"
+		+ (sum.Up != null ? " <small class=\"ds-sub\">↑ " + trafficBytes(sum.Up) + " ↓ " + trafficBytes(sum.Down) + "</small>" : "") + "</span>"
+		+ "<a href=\"#\" style=\"font-size:12px\" onclick=\"trafficToggleDevice('" + trafficEscape(trafficOpenMac) + "');return false;\">close</a></h5>";
+	if (trafficDeviceData == null || trafficDeviceData.Mac != trafficOpenMac) return h + "<p class=\"text-muted\" style=\"padding:10px\">Loading...</p></div>";
+	var dest = trafficDeviceData.Destinations || [], doms = trafficDeviceData.Domains || [];
+	h += "<div style=\"padding:4px 10px\">" + trafficChart(trafficDeviceData.Hours || []) + "</div>";
+	// the countries it talked to, as filter buttons
+	var byCc = {};
+	dest.forEach(function (x) { var c = x.Country || "?"; byCc[c] = (byCc[c] || 0) + x.Up + x.Down; });
+	var ccs = Object.keys(byCc).sort(function (a, b) { return byCc[b] - byCc[a]; });
+	h += "<div class=\"ds-devtools\" style=\"padding:4px 10px\"><b>Countries:</b> <button class=\"btn btn-xs " + (trafficDeviceCountry ? "btn-default" : "btn-primary") + "\" onclick=\"trafficDeviceCountry=null;trafficRender();return false;\">All</button>";
+	ccs.forEach(function (c) {
+		h += "<button class=\"btn btn-xs " + (trafficDeviceCountry == c ? "btn-primary" : "btn-default") + "\" onclick=\"trafficDeviceCountry='" + trafficEscape(c) + "';trafficRender();return false;\">"
+			+ trafficEscape(c == "?" ? "unknown" : trafficCountryName(c)) + " <span class=\"ds-sub\">" + trafficBytes(byCc[c]) + "</span></button>";
+	});
+	h += "</div>";
+	var shown = trafficDeviceCountry ? dest.filter(function (x) { return (x.Country || "?") == trafficDeviceCountry; }) : dest;
+	h += "<div class=\"ds-cols3\" style=\"gap:0;margin:0\"><div><div style=\"padding:6px 10px\"><b>Where it talks to</b> <span class=\"ds-sub\">" + shown.length + "</span></div><div class=\"ds-scroll\" style=\"max-height:380px\">";
+	h += "<table class=\"table table-condensed\"><tr><th>Domain</th><th>IP:port</th><th>Country</th><th class=\"text-right\">Up</th><th class=\"text-right\">Down</th><th class=\"text-right\">Conns</th><th>Last</th></tr>";
+	shown.forEach(function (x) {
+		h += "<tr><td>" + (x.Domain ? trafficEscape(x.Domain) : "<span class=\"ds-sub\">(no name)</span>") + "</td><td class=\"ds-mono\">" + trafficEscape(x.IP) + ":" + x.Port + " " + trafficEscape(x.Proto || "") + "</td><td>"
+			+ trafficCountry(x.Country) + "</td><td class=\"text-right\">" + trafficBytes(x.Up) + "</td><td class=\"text-right\">" + trafficBytes(x.Down)
+			+ "</td><td class=\"text-right\">" + x.Connections + "</td><td class=\"ds-sub\">" + trafficTime(x.Last) + "</td></tr>";
+	});
+	h += "</table></div></div><div style=\"border-left:1px solid #eee\"><div style=\"padding:6px 10px\"><b>What it looked up</b> <span class=\"ds-sub\">" + doms.length + "</span></div><div class=\"ds-scroll\" style=\"max-height:380px\">";
+	h += "<table class=\"table table-condensed\"><tr><th>Domain</th><th class=\"text-right\">Lookups</th><th>Last</th></tr>";
+	doms.forEach(function (d) {
+		h += "<tr><td>" + trafficEscape(d.Domain) + "</td><td class=\"text-right\">" + d.Queries + "</td><td class=\"ds-sub\">" + trafficTime(d.Last) + "</td></tr>";
+	});
+	return h + "</table></div></div></div></div>";
 }
 
 function trafficDomainsHTML(domains, title) {
-	var h = "<h5 style=\"padding-top:10px\">" + title + "</h5>";
-	if (domains.length == 0) return h + "<p class=\"text-muted\">None.</p>";
-	h += "<table class=\"table table-condensed\"><tr><th>Domain</th><th class=\"text-right\">Lookups</th><th>Devices</th><th>Last</th></tr>";
+	var h = "<div class=\"ds-block\"><h5><span>" + title + " <small class=\"ds-sub\">" + domains.length + "</small></span></h5>";
+	if (domains.length == 0) return h + "<p class=\"text-muted\" style=\"padding:10px\">None.</p></div>";
+	h += "<div class=\"ds-scroll\" style=\"max-height:240px\"><table class=\"table table-condensed\"><tr><th>Domain</th><th class=\"text-right\">Lookups</th><th>Devices</th><th>Last</th></tr>";
 	domains.forEach(function (d) {
 		h += "<tr><td>" + trafficEscape(d.Domain) + "</td><td class=\"text-right\">" + d.Queries + "</td><td>"
-			+ (d.Devices > 1 ? d.Devices + " devices" : trafficEscape(d.Device)) + "</td><td>" + trafficTime(d.Last) + "</td></tr>";
+			+ (d.Devices > 1 ? d.Devices + " devices" : trafficEscape(d.Device)) + "</td><td class=\"ds-sub\">" + trafficTime(d.Last) + "</td></tr>";
 	});
-	return h + "</table>";
+	return h + "</table></div></div>";
 }
 
 function trafficAllowlistHTML(list) {
-	var h = "<h5 style=\"padding-top:10px\">Allowed (no alerts)</h5>";
-	if (list.length == 0) return h + "<p class=\"text-muted\">Nothing yet. Use Allow on an event.</p>";
-	h += "<table class=\"table table-condensed\"><tr><th>Device</th><th>Rule</th><th>Country</th><th>Domain</th><th></th></tr>";
+	var h = "<div class=\"ds-block\"><h5><span>Allowed (no alerts) <small class=\"ds-sub\">" + list.length + "</small></span></h5>";
+	if (list.length == 0) return h + "<p class=\"text-muted\" style=\"padding:10px\">Nothing yet. Use Allow on an event.</p></div>";
+	h += "<div class=\"ds-scroll\" style=\"max-height:240px\"><table class=\"table table-condensed\"><tr><th>Device</th><th>Rule</th><th>Country</th><th>Domain</th><th></th></tr>";
 	list.forEach(function (a, i) {
 		h += "<tr><td>" + trafficEscape(a.Mac || "any") + "</td><td>" + trafficEscape(a.Rule || "any") + "</td><td>" + trafficEscape(a.Country || "any")
 			+ "</td><td>" + trafficEscape(a.Domain || "any") + "</td><td><button class=\"btn btn-xs btn-default\" onclick=\"trafficRemoveAllow(" + i + ");return false;\">Remove</button></td></tr>";
 	});
-	return h + "</table>";
+	return h + "</table></div></div>";
 }
 
 function trafficToggleDevice(mac) {
 	trafficOpenMac = trafficOpenMac == mac ? null : mac;
+	trafficDeviceData = null;
+	trafficDeviceCountry = null;
 	trafficRender();
-	if (trafficOpenMac != null) trafficRefreshDevice();
+	if (trafficOpenMac != null) {
+		trafficRefreshDevice();
+		setTimeout(function () { var el = document.getElementById("TrafficDeviceDetail"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 0);
+	}
 }
 
 function trafficRefresh() {
