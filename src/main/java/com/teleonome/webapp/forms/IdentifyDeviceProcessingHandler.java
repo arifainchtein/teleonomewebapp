@@ -68,8 +68,10 @@ public class IdentifyDeviceProcessingHandler extends ProcessingFormHandler {
 		long weekAgo = System.currentTimeMillis() - 7 * 86_400_000L;
 		PostgresqlPersistenceManager aDBManager = (PostgresqlPersistenceManager) getServletContext().getAttribute("DBManager");
 		TrafficStore store = new TrafficStore(aDBManager);
-		JSONArray domains = store.domains(mac, weekAgo, 15);
-		answer.put("Domains", domains);
+		JSONArray domains = store.domains(mac, weekAgo, 25);  // the guess reads 25, like the scan; the window shows 15
+		JSONArray shown = new JSONArray();
+		for (int i = 0; i < domains.length() && i < 15; i++) shown.put(domains.get(i));
+		answer.put("Domains", shown);
 		answer.put("Destinations", store.destinations(mac, weekAgo, 10));
 		String names = networkName + " " + card.optString(CleotildeMicroController.ORIGINAL_NAME, card.optString(TeleonomeConstants.DEVICE_NAME, ""));
 		JSONObject guess = DeviceIdentifier.guess(answer.getString("Vendor"), names, answer.getString("Connection"), DeviceIdentifier.domainNames(domains));
