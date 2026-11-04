@@ -53,6 +53,8 @@ body.ds-theme #DSHeader { display:flex; align-items:center; gap:28px; padding:8p
 /* ---------- page grid: panels flow, cards and charts line up ---------- */
 body.ds-theme #EntryPoint > .row.top-buffer { display:flex; flex-wrap:wrap; }
 body.ds-theme #EntryPoint > .row.top-buffer > [class*="col-"] { float:none; margin-bottom:10px; min-width:0; }
+/* older templates that wrap themselves in a plain .row (Diagnostics' button bar): full width, not shrunk to content */
+body.ds-theme #EntryPoint > .row.top-buffer > :not([class*="col-"]) { flex:0 0 100%; max-width:100%; margin-left:0; margin-right:0; }
 .ds-block { background:#fff; border:1px solid #e3e3e3; border-radius:4px; max-width:100%; overflow-x:auto; height:100%; }
 .ds-block > h5 { margin:0; padding:8px 10px; font-weight:bold; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; font-size:15px; }
 .ds-block .table { margin:0; font-size:13px; }
@@ -125,3 +127,11 @@ body.ds-theme .ds-block .label, body.ds-theme #TrafficPanelBody .label { font-si
 body.ds-theme .panel { border:1px solid #e3e3e3; border-radius:4px; box-shadow:none; }
 body.ds-theme .panel-default > .panel-heading { background:#fff; border-bottom:1px solid #eee; padding:8px 10px; }
 body.ds-theme .panel-default > .panel-heading h4 { font-size:15px; font-weight:bold; margin:0; }
+
+/* Diagnostics (and Settings) button bars: a wrapping row sized to the labels, instead of fixed phone columns */
+body.ds-theme .panel-heading > .row.top-buffer { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px 4px; margin:0; }
+body.ds-theme .panel-heading > .row.top-buffer > [class*="col-"] { float:none; width:auto; flex:0 0 auto; padding:2px 8px; }
+body.ds-theme .panel-heading > .row.top-buffer > [class*="col-"]:empty { display:none; }
+body.ds-theme .DiagnosticsPageLinksGroup .row { display:flex; margin:0; }
+body.ds-theme .DiagnosticsPageLinksGroup .row > [class*="col-"] { float:none; width:auto; padding:2px 10px; }
+@media (max-width:600px) { body.ds-theme .DiagnosticsMenu { font-size:12px; } }
