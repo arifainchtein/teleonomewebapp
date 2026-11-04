@@ -27,6 +27,7 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
  * Reads the tables TrafficWatcher fills (TrafficStore).
  *   View=overview  Days=1|7|30  -> {Devices, Countries, Hours, TopDomains, Events (last 7 days or Days), Allowlist}
  *   View=device    Days, Mac    -> {Destinations, Domains, Hours}
+ *   View=country   Days, Country -> {Devices, Destinations}  (the map tab, 2026-11-04)
  * Days=1 means since midnight. Read-only.
  */
 public class GetTrafficProcessingHandler extends ProcessingFormHandler {
@@ -54,7 +55,15 @@ public class GetTrafficProcessingHandler extends ProcessingFormHandler {
 		long since = c.getTimeInMillis() - (days - 1) * 86_400_000L;
 
 		JSONObject answer = new JSONObject().put("Since", since).put("Days", days);
-		if ("device".equals(view)) {
+		if ("country".equals(view)) {
+			// the map's country detail (2026-11-04): who talks to it, and where there
+			String country = request.getParameter("Country") == null ? "" : request.getParameter("Country").trim().toUpperCase();
+			if (!country.matches("[A-Z]{2}")) country = "";
+			answer.put("Country", country);
+			JSONObject detail = store.countryDetail(country, since, 50);
+			answer.put("Devices", detail.getJSONArray("Devices"));
+			answer.put("Destinations", detail.getJSONArray("Destinations"));
+		} else if ("device".equals(view)) {
 			String mac = request.getParameter("Mac") == null ? "" : request.getParameter("Mac");
 			answer.put("Mac", mac);
 			answer.put("Destinations", store.destinations(mac, since, 100));

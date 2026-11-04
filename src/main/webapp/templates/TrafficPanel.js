@@ -4,6 +4,9 @@
 // Suspicious Events the traffic rules raised, with Allow to silence known-good traffic.
 // Data: GetTraffic (TrafficStore tables filled by TrafficWatcher); Allow / Remove: AllowTraffic.
 // The page is redrawn every pulse, so the state lives in these globals and a 60 s timer refreshes it.
+// Two tabs (2026-11-04): Map (countries shaded by traffic, click one for who talks to it and where) and Table
+// (events, devices, domains, allowlist). The map uses d3 v7 (loaded by index.html) and
+// templates/world-countries-110m.json (Natural Earth 1:110m, public domain, only ISO code and name kept).
 //
 var trafficData = null;
 var trafficDays = 1;
@@ -11,6 +14,21 @@ var trafficOpenMac = null;
 var trafficDeviceData = null;
 var trafficTimer = null;
 var TRAFFIC_WATCHLIST = ["CN", "RU", "KP", "IR"];
+var trafficTab = "map";
+var trafficWorld = null;
+var trafficWorldLoading = false;
+var trafficMapCountry = null;
+var trafficCountryData = null;
+// countries too small for the 1:110m outlines: a dot at [longitude, latitude]
+var TRAFFIC_SMALL_COUNTRIES = {
+	SG: [103.82, 1.35], HK: [114.17, 22.32], MO: [113.55, 22.19], BH: [50.56, 26.07], MT: [14.44, 35.9],
+	LU: [6.13, 49.61], MC: [7.42, 43.74], LI: [9.55, 47.16], AD: [1.52, 42.51], SM: [12.46, 43.94], VA: [12.45, 41.9],
+	MV: [73.5, 4.17], MU: [57.55, -20.3], SC: [55.45, -4.68], GI: [-5.35, 36.14], IM: [-4.5, 54.23], JE: [-2.13, 49.21],
+	GG: [-2.58, 49.45], KY: [-81.25, 19.31], BM: [-64.75, 32.3], BB: [-59.6, 13.1], AW: [-69.97, 12.52], CW: [-68.99, 12.17],
+	PF: [-149.4, -17.65], WS: [-172.1, -13.76], TO: [-175.2, -21.18], FJ: [178.0, -17.7], KI: [173.0, 1.4], PW: [134.5, 7.5],
+	MH: [171.18, 7.13], FM: [158.2, 6.9], CV: [-23.6, 15.1], KM: [43.3, -11.7], RE: [55.5, -21.1], ST: [6.6, 0.2],
+	BN: [114.7, 4.5], TL: [125.7, -8.8], PS: [35.2, 31.9], CY: [33.4, 35.1], QA: [51.2, 25.3], AE: [54.3, 24.0]
+};
 
 class TrafficPanel {
 
@@ -41,7 +59,8 @@ function trafficSetDays(d) {
 	trafficDays = d;
 	trafficData = null;
 	trafficDeviceData = null;
-	$('#TrafficPanelBody').html(trafficBodyHTML());
+	trafficCountryData = null;
+	trafficRender();
 	$('#TrafficPanelBody').closest('.panel').find('.panel-heading .pull-right').html(trafficPeriodButtons());
 	trafficRefresh();
 }
@@ -85,12 +104,200 @@ function trafficBodyHTML() {
 		});
 	}
 	h += "</p>";
+	h += "<ul class=\"nav nav-tabs\" style=\"margin-bottom:12px\">";
+	[["map", "glyphicon-globe", "Map"], ["table", "glyphicon-list", "Table"]].forEach(function (t) {
+		h += "<li" + (trafficTab == t[0] ? " class=\"active\"" : "") + "><a href=\"#\" onclick=\"trafficSetTab('" + t[0] + "');return false;\">"
+			+ "<i class=\"glyphicon " + t[1] + "\"></i> " + t[2] + "</a></li>";
+	});
+	h += "</ul>";
+	if (trafficTab == "map") return h + trafficMapHTML();
 	h += trafficChart(trafficData.Hours || []);
 	h += trafficEventsHTML(trafficData.Events || []);
 	h += trafficDevicesHTML(devices);
 	h += trafficDomainsHTML(trafficData.TopDomains || [], "Most looked-up domains (all devices)");
 	h += trafficAllowlistHTML(trafficData.Allowlist || []);
 	return h;
+}
+
+// The body, and the map when it is on screen (d3 draws into the element the HTML just made).
+function trafficRender() {
+	$('#TrafficPanelBody').html(trafficBodyHTML());
+	if (trafficTab == "map" && trafficData != null) trafficDrawMap();
+}
+
+function trafficSetTab(tab) {
+	trafficTab = tab;
+	trafficRender();
+}
+
+// ------------------------------------------------------------------ the map tab
+
+function trafficCountryName(cc) {
+	if (trafficWorld) {
+		for (var i = 0; i < trafficWorld.features.length; i++) {
+			if (trafficWorld.features[i].properties.cc == cc) return trafficWorld.features[i].properties.name;
+		}
+	}
+	try {
+		return new Intl.DisplayNames(["en"], { type: "region" }).of(cc) || cc;
+	} catch (e) {
+		return cc;
+	}
+}
+
+// bytes per country as {cc: total}, without the unknown ("?") bucket
+function trafficCountryTotals() {
+	var countries = (trafficData && trafficData.Countries) || {}, totals = {};
+	Object.keys(countries).forEach(function (cc) {
+		if (cc != "?" && cc != "") totals[cc] = countries[cc].Up + countries[cc].Down;
+	});
+	return totals;
+}
+
+// shade 0..1 on a log scale, so a country with a few KB still shows next to one with GBs
+function trafficShade(v, max) {
+	return v <= 0 ? 0 : Math.log(1 + v) / Math.log(1 + Math.max(max, 1));
+}
+
+function trafficFill(cc, v, max) {
+	if (!v) return "#f2f2f2";
+	var t = trafficShade(v, max);
+	return TRAFFIC_WATCHLIST.indexOf(cc) >= 0 ? d3.interpolateReds(0.45 + 0.55 * t) : d3.interpolateBlues(0.2 + 0.8 * t);
+}
+
+function trafficMapHTML() {
+	var h = "<div class=\"row\">";
+	h += "<div class=\"col-md-9\"><div id=\"TrafficMap\" style=\"position:relative;width:100%\">"
+		+ (typeof d3 === "undefined" ? "<p class=\"text-muted\">The map needs d3, which did not load (no internet?). The Table tab has everything.</p>" : "<p class=\"text-muted\">Loading the map...</p>")
+		+ "</div><p class=\"text-muted\" style=\"font-size:12px\">Darker = more traffic (log scale). Red = a watchlist country ("
+		+ TRAFFIC_WATCHLIST.join(", ") + "). Click a country for the devices that talk to it.</p></div>";
+	h += "<div class=\"col-md-3\">" + trafficCountryListHTML() + "</div>";
+	h += "</div>";
+	h += "<div id=\"TrafficCountryDetail\">" + trafficCountryDetailHTML() + "</div>";
+	return h;
+}
+
+function trafficCountryListHTML() {
+	var countries = (trafficData && trafficData.Countries) || {};
+	var totals = trafficCountryTotals();
+	var ccs = Object.keys(totals).sort(function (a, b) { return totals[b] - totals[a]; });
+	if (ccs.length == 0) return "<p class=\"text-muted\">No countries yet.</p>";
+	var max = totals[ccs[0]];
+	var h = "<table class=\"table table-condensed table-hover\" style=\"font-size:13px\"><tr><th>Country</th><th class=\"text-right\">Traffic</th><th class=\"text-right\">Devices</th></tr>";
+	ccs.slice(0, 25).forEach(function (cc) {
+		var sel = cc == trafficMapCountry;
+		h += "<tr style=\"cursor:pointer" + (sel ? ";background:#e8f0fe" : "") + "\" onclick=\"trafficSelectCountry('" + trafficEscape(cc) + "')\"><td>"
+			+ "<span style=\"display:inline-block;width:10px;height:10px;margin-right:5px;background:" + trafficFill(cc, totals[cc], max) + ";border:1px solid #999\"></span>"
+			+ trafficCountry(cc) + " " + trafficEscape(trafficCountryName(cc)) + "</td><td class=\"text-right\">" + trafficBytes(totals[cc])
+			+ "</td><td class=\"text-right\">" + (countries[cc].Devices || "") + "</td></tr>";
+	});
+	if (countries["?"]) {
+		h += "<tr><td class=\"text-muted\">unknown</td><td class=\"text-right text-muted\">" + trafficBytes(countries["?"].Up + countries["?"].Down) + "</td><td></td></tr>";
+	}
+	return h + "</table>";
+}
+
+function trafficDrawMap() {
+	var el = document.getElementById("TrafficMap");
+	if (!el || typeof d3 === "undefined") return;
+	if (trafficWorld == null) {
+		if (!trafficWorldLoading) {
+			trafficWorldLoading = true;
+			$.getJSON("templates/world-countries-110m.json", function (w) {
+				trafficWorld = w;
+				trafficRender();  // country names in the list come from the map file too
+			}).fail(function () {
+				trafficWorldLoading = false;
+				$("#TrafficMap").html("<p class=\"text-muted\">Could not load the world map.</p>");
+			});
+		}
+		return;
+	}
+	var totals = trafficCountryTotals(), countries = trafficData.Countries || {};
+	var max = 0;
+	Object.keys(totals).forEach(function (cc) { max = Math.max(max, totals[cc]); });
+	var W = 960, H = 480;
+	var projection = d3.geoNaturalEarth1().fitExtent([[4, 4], [W - 4, H - 4]], { type: "Sphere" });
+	var path = d3.geoPath(projection);
+	var container = d3.select(el).html("");
+	var svg = container.append("svg").attr("viewBox", "0 0 " + W + " " + H).style("width", "100%").style("height", "auto").style("display", "block");
+	var tip = container.append("div").style("position", "absolute").style("pointer-events", "none").style("display", "none")
+		.style("background", "rgba(0,0,0,0.8)").style("color", "#fff").style("padding", "4px 8px").style("border-radius", "4px").style("font-size", "12px");
+	function showTip(event, cc) {
+		var c = countries[cc];
+		var rect = el.getBoundingClientRect();
+		tip.style("display", "block").style("left", (event.clientX - rect.left + 12) + "px").style("top", (event.clientY - rect.top + 12) + "px")
+			.html("<b>" + trafficEscape(trafficCountryName(cc)) + "</b> (" + trafficEscape(cc) + ")"
+				+ (c ? "<br>\u2191 " + trafficBytes(c.Up) + " \u2193 " + trafficBytes(c.Down) + "<br>" + c.Devices + " device" + (c.Devices == 1 ? "" : "s") : "<br>no traffic"));
+	}
+	svg.append("path").datum({ type: "Sphere" }).attr("d", path).attr("fill", "#eaf4fb").attr("stroke", "#c8d6e0");
+	svg.append("path").datum(d3.geoGraticule10()).attr("d", path).attr("fill", "none").attr("stroke", "#dde8f0").attr("stroke-width", 0.5);
+	var drawn = {};
+	svg.append("g").selectAll("path").data(trafficWorld.features).join("path")
+		.attr("d", path)
+		.attr("fill", function (f) { drawn[f.properties.cc] = true; return trafficFill(f.properties.cc, totals[f.properties.cc], max); })
+		.attr("stroke", function (f) { return f.properties.cc == trafficMapCountry ? "#000" : "#b8b8b8"; })
+		.attr("stroke-width", function (f) { return f.properties.cc == trafficMapCountry ? 1.6 : 0.5; })
+		.style("cursor", function (f) { return totals[f.properties.cc] ? "pointer" : "default"; })
+		.on("mousemove", function (event, f) { if (f.properties.cc) showTip(event, f.properties.cc); })
+		.on("mouseleave", function () { tip.style("display", "none"); })
+		.on("click", function (event, f) { if (totals[f.properties.cc]) trafficSelectCountry(f.properties.cc); });
+	// small countries without an outline, and the selected country drawn on top
+	var dots = Object.keys(totals).filter(function (cc) { return !drawn[cc] && TRAFFIC_SMALL_COUNTRIES[cc]; });
+	svg.append("g").selectAll("circle").data(dots).join("circle")
+		.attr("cx", function (cc) { return projection(TRAFFIC_SMALL_COUNTRIES[cc])[0]; })
+		.attr("cy", function (cc) { return projection(TRAFFIC_SMALL_COUNTRIES[cc])[1]; })
+		.attr("r", function (cc) { return 3 + 5 * trafficShade(totals[cc], max); })
+		.attr("fill", function (cc) { return trafficFill(cc, totals[cc], max); })
+		.attr("stroke", function (cc) { return cc == trafficMapCountry ? "#000" : "#555"; })
+		.attr("stroke-width", function (cc) { return cc == trafficMapCountry ? 1.6 : 0.7; })
+		.style("cursor", "pointer")
+		.on("mousemove", function (event, cc) { showTip(event, cc); })
+		.on("mouseleave", function () { tip.style("display", "none"); })
+		.on("click", function (event, cc) { trafficSelectCountry(cc); });
+}
+
+function trafficSelectCountry(cc) {
+	trafficMapCountry = trafficMapCountry == cc ? null : cc;
+	trafficCountryData = null;
+	trafficRender();
+	if (trafficMapCountry != null) trafficRefreshCountry();
+}
+
+function trafficRefreshCountry() {
+	var cc = trafficMapCountry;
+	$.ajax({
+		type: "GET",
+		url: "/TeleonomeServlet",
+		data: { formName: "GetTraffic", View: "country", Days: trafficDays, Country: cc },
+		dataType: "json",
+		success: function (data) {
+			if (trafficMapCountry != cc) return;
+			trafficCountryData = data;
+			$("#TrafficCountryDetail").html(trafficCountryDetailHTML());
+		}
+	});
+}
+
+function trafficCountryDetailHTML() {
+	if (trafficMapCountry == null) return "";
+	var h = "<h5 style=\"padding-top:6px\">" + trafficCountry(trafficMapCountry) + " " + trafficEscape(trafficCountryName(trafficMapCountry))
+		+ " <a href=\"#\" style=\"font-size:12px;margin-left:8px\" onclick=\"trafficSelectCountry('" + trafficEscape(trafficMapCountry) + "');return false;\">close</a></h5>";
+	if (trafficCountryData == null || trafficCountryData.Country != trafficMapCountry) return h + "<p class=\"text-muted\">Loading...</p>";
+	var devices = trafficCountryData.Devices || [], dest = trafficCountryData.Destinations || [];
+	h += "<div class=\"row\"><div class=\"col-md-5\"><b>Devices talking to it</b>";
+	h += "<table class=\"table table-condensed\"><tr><th>Device</th><th class=\"text-right\">Up</th><th class=\"text-right\">Down</th><th class=\"text-right\">Conns</th></tr>";
+	devices.forEach(function (d) {
+		h += "<tr><td>" + trafficEscape(d.Device) + " <small class=\"text-muted\">" + trafficEscape(d.Mac) + "</small></td><td class=\"text-right\">"
+			+ trafficBytes(d.Up) + "</td><td class=\"text-right\">" + trafficBytes(d.Down) + "</td><td class=\"text-right\">" + d.Connections + "</td></tr>";
+	});
+	h += "</table></div><div class=\"col-md-7\"><b>Where there</b>";
+	h += "<table class=\"table table-condensed\"><tr><th>Domain</th><th>IP:port</th><th>Devices</th><th class=\"text-right\">Up</th><th class=\"text-right\">Down</th><th>Last</th></tr>";
+	dest.forEach(function (x) {
+		h += "<tr><td>" + trafficEscape(x.Domain) + "</td><td>" + trafficEscape(x.IP) + ":" + x.Port + "</td><td>" + trafficEscape(x.Devices)
+			+ "</td><td class=\"text-right\">" + trafficBytes(x.Up) + "</td><td class=\"text-right\">" + trafficBytes(x.Down) + "</td><td>" + trafficTime(x.Last) + "</td></tr>";
+	});
+	return h + "</table></div></div>";
 }
 
 // up (orange) and down (blue) per hour, as one small inline SVG
@@ -184,7 +391,7 @@ function trafficAllowlistHTML(list) {
 
 function trafficToggleDevice(mac) {
 	trafficOpenMac = trafficOpenMac == mac ? null : mac;
-	$('#TrafficPanelBody').html(trafficBodyHTML());
+	trafficRender();
 	if (trafficOpenMac != null) trafficRefreshDevice();
 }
 
@@ -197,8 +404,9 @@ function trafficRefresh() {
 		dataType: "json",
 		success: function (data) {
 			trafficData = data;
-			$('#TrafficPanelBody').html(trafficBodyHTML());
+			trafficRender();
 			if (trafficOpenMac != null) trafficRefreshDevice();
+			if (trafficMapCountry != null) trafficRefreshCountry();
 		}
 	});
 }
@@ -213,7 +421,7 @@ function trafficRefreshDevice() {
 		success: function (data) {
 			if (trafficOpenMac != mac) return;
 			trafficDeviceData = data;
-			$('#TrafficPanelBody').html(trafficBodyHTML());
+			trafficRender();
 		}
 	});
 }
