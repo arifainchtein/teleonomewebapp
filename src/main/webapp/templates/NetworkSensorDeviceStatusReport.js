@@ -5,6 +5,8 @@
 // when it was last here and a Forget button that deletes its history).
 // IPs of present devices link to http://<ip>, in case the device has a web page.
 // Rename (2026-11-04) gives a device a nickname, kept on the Pi; the router's name shows underneath.
+// Identify (2026-11-04): unknown cards show what the device calls itself, a guess and what it looks up; the
+// Identify button opens the full picture (IdentifyDevice form). The guess rules are in DeviceIdentifier.
 // Vendor / Connection / Private MAC come from CleotildeMicroController; older Network
 // Inspector denomes don't have them and the cards just leave them out.
 // The selection lives in whiteListSelection (index.html) so it survives the re-render
@@ -80,6 +82,20 @@ class NetworkSensorDeviceStatusReport{
 		if(details.length > 0) html += "<div style=\"color:#555;font-size:17px\">" + details.join(" &middot; ") + "</div>";
 		// a nickname (Rename button): the router's own name stays visible underneath
 		if(device["Original Name"]) html += "<div style=\"color:#888;font-size:15px\">router name: " + this.escape(this.displayName(device["Original Name"])) + "</div>";
+		// identification (2026-11-04, DeviceIdentifier): the name it announces, what it probably is, what it looks up.
+		// Unknown devices get it all, so they can be named from the card; known ones just the guess, small.
+		var unknownHere = present && !known;
+		if(device["Network Name"] && device["Network Name"] !== this.displayName(name) && device["Network Name"] !== this.displayName(device["Original Name"])) {
+			html += "<div style=\"color:#555;font-size:15px\">calls itself <b>" + this.escape(device["Network Name"]) + "</b></div>";
+		}
+		if(device["Guess"]) {
+			html += unknownHere
+				? "<div style=\"font-size:17px;margin-top:2px\" title=\"because: " + this.escape(device["Guess Because"]) + "\"><span class=\"glyphicon glyphicon-search\"></span> Probably <b>" + this.escape(device["Guess"]) + "</b></div>"
+				: "<div style=\"color:#888;font-size:14px\" title=\"because: " + this.escape(device["Guess Because"]) + "\">" + this.escape(device["Guess"]) + "</div>";
+		}
+		if(unknownHere && device["Looks Up"] && device["Looks Up"].length) {
+			html += "<div style=\"color:#666;font-size:13px;overflow-wrap:anywhere\">looks up: " + device["Looks Up"].map(this.escape).join(", ") + "</div>";
+		}
 		if(mac && mac !== name) html += "<div style=\"color:#888;font-size:15px;font-family:monospace\">" + this.escape(mac) + "</div>";
 		if(!present && device["Last Seen"]) html += "<div style=\"color:#555;font-size:16px\">Last seen " + this.seen(device["Last Seen"]) + "</div>";
 		else if(present && device["First Seen"]) html += "<div style=\"color:#888;font-size:15px\">First seen " + this.seen(device["First Seen"]) + "</div>";
@@ -93,6 +109,10 @@ class NetworkSensorDeviceStatusReport{
 		}else if(mac){
 			html += "<a href=\"#\" class=\"btn btn-success wlAddBtn\" style=\"flex:none\"" + data + ">"
 				+ "<span class=\"glyphicon glyphicon-plus-sign\"></span> Add</a>";
+		}
+		if(mac){
+			html += "<a href=\"#\" class=\"btn btn-info wlIdentifyBtn\" style=\"flex:none\" data-mac=\"" + this.escape(mac) + "\">"
+				+ "<span class=\"glyphicon glyphicon-search\"></span> Identify</a>";
 		}
 		if(mac){
 			html += "<a href=\"#\" class=\"btn btn-default wlRenameBtn\" style=\"flex:none\"" + data

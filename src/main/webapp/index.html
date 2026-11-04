@@ -1824,7 +1824,7 @@ the css for the little box on the top right f external data
 					e.preventDefault();
 					var button = $(this);
 					var current = button.attr('data-nickname') || "";
-					var nickname = prompt("Nickname for " + button.attr('data-mac') + " (empty = the router's name):", current || button.attr('data-name'));
+					var nickname = prompt("Nickname for " + button.attr('data-mac') + " (empty = the router's name):", current || button.attr('data-suggest') || button.attr('data-name'));
 					if(nickname === null) return false;
 					nickname = nickname.replace(/#/g, "").trim();
 					if(nickname === current) return false;
@@ -1837,6 +1837,71 @@ the css for the little box on the top right f external data
 						data: {formName:"RenameDevice", DeviceMacAddress:button.attr('data-mac'), Nickname:nickname, CommandCode:passwd }
 					}).fail(function(data){ alert("Rename request failed: " + JSON.stringify(data)); });
 					return false;
+				});
+
+				// Identify (2026-11-04): what a device probably is, so it can be named (IdentifyDevice form)
+				function identifyEscape(s){
+					return String(s === undefined || s === null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+				}
+				function identifyBytes(b){
+					return b >= 1048576 ? (b / 1048576).toFixed(1) + " MB" : b >= 1024 ? Math.round(b / 1024) + " KB" : b + " B";
+				}
+				function identifyHTML(d){
+					var e = identifyEscape, h = "<table class=\"table table-condensed\" style=\"font-size:15px\">";
+					var row = function(k, v){ if(v !== "" && v !== undefined && v !== null) h += "<tr><th style=\"width:30%\">" + k + "</th><td>" + v + "</td></tr>"; };
+					row("Probably", d.Guess ? "<b>" + e(d.Guess) + "</b> <span class=\"text-muted\">(because: " + e(d.Because) + ")</span>" : "<span class=\"text-muted\">no idea yet: it hasn't looked anything up</span>");
+					row("Calls itself", d.NetworkName ? e(d.NetworkName) + ".local" : "<span class=\"text-muted\">doesn't announce a name</span>");
+					row("Name on the card", e(d.Name) + (d["Original Name"] ? " <span class=\"text-muted\">(router: " + e(d["Original Name"]) + ")</span>" : ""));
+					row("Maker", d["Private MAC"] ? "unknown: <b>private (random) MAC</b>, typical of phones, tablets and laptops" : e(d.Vendor));
+					row("Address", e(d.IP) + " &middot; " + e(d.Mac) + (d.Connection ? " &middot; " + e(d.Connection) : ""));
+					if(d["First Seen"]) row("First seen", new Date(d["First Seen"]).toLocaleString());
+					h += "</table>";
+					h += "<h5>What it looked up (7 days)</h5>";
+					if(!d.Domains || !d.Domains.length) h += "<p class=\"text-muted\">Nothing: it doesn't use the router's DNS, or hasn't gone online.</p>";
+					else h += "<p style=\"font-size:14px;overflow-wrap:anywhere\">" + d.Domains.map(function(x){ return e(x.Domain) + " <span class=\"text-muted\">(" + x.Queries + ")</span>"; }).join(", ") + "</p>";
+					h += "<h5>Where it talks to (7 days)</h5>";
+					if(!d.Destinations || !d.Destinations.length) h += "<p class=\"text-muted\">No internet traffic.</p>";
+					else {
+						h += "<table class=\"table table-condensed\" style=\"font-size:14px\"><tr><th>Domain / IP</th><th>Country</th><th class=\"text-right\">Traffic</th></tr>";
+						d.Destinations.forEach(function(x){ h += "<tr><td>" + e(x.Domain || x.IP) + ":" + x.Port + "</td><td>" + e(x.Country) + "</td><td class=\"text-right\">" + identifyBytes(x.Up + x.Down) + "</td></tr>"; });
+						h += "</table>";
+					}
+					h += "<p class=\"text-muted\" style=\"font-size:13px\">Still not sure? Switch the device off (or its Wi-Fi) and see which card moves to \"Not seen\" at the next scan, about 3 minutes.</p>";
+					return h;
+				}
+				$(document).on('click', '.wlIdentifyBtn', function(e){
+					e.preventDefault();
+					var mac = $(this).attr('data-mac');
+					if(!$('#identifyModal').length){
+						$('body').append('<div class="modal fade" id="identifyModal" tabindex="-1" role="dialog"><div class="modal-dialog"><div class="modal-content">'
+							+ '<div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button><h4 class="modal-title">Identify</h4></div>'
+							+ '<div class="modal-body" id="identifyModalBody"></div>'
+							+ '<div class="modal-footer"><button type="button" class="btn btn-default" id="identifyRename"><span class="glyphicon glyphicon-pencil"></span> Rename</button>'
+							+ '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div></div></div></div>');
+					}
+					$('#identifyModal .modal-title').text("Identify " + mac);
+					$('#identifyModalBody').html('<p class="text-muted">Looking...</p>');
+					$('#identifyRename').attr('data-mac', mac);
+					$('#identifyModal').modal('show');
+					$.ajax({ type: "GET", url: "/TeleonomeServlet", data: { formName: "IdentifyDevice", Mac: mac }, dataType: "json",
+						success: function(d){
+							if(d.error){ $('#identifyModalBody').html('<p class="text-danger">' + identifyEscape(d.error) + '</p>'); return; }
+							$('#identifyModal .modal-title').text("Identify " + (d.Name || mac));
+							$('#identifyModalBody').html(identifyHTML(d));
+							$('#identifyRename').data('suggest', d.NetworkName || d.Guess || "");
+						},
+						error: function(){ $('#identifyModalBody').html('<p class="text-danger">Cleotilde did not answer.</p>'); }
+					});
+					return false;
+				});
+				// Rename from the Identify window: the same as the card's Rename button, suggesting what it calls itself
+				$(document).on('click', '#identifyRename', function(){
+					var mac = $(this).attr('data-mac');
+					var card = $('.wlRenameBtn[data-mac="' + mac + '"]').first();
+					$('#identifyModal').modal('hide');
+					if(!card.length) return;
+					if(!card.attr('data-nickname') && $(this).data('suggest')) card.attr('data-suggest', $(this).data('suggest'));
+					card.trigger('click');
 				});
 
 				$(document).on('change', '.wlSelect', function(e){
