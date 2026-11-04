@@ -216,6 +216,8 @@ function trafficDrawMap() {
 	var totals = trafficCountryTotals(), countries = trafficData.Countries || {};
 	var max = 0;
 	Object.keys(totals).forEach(function (cc) { max = Math.max(max, totals[cc]); });
+	// colours as inline styles: index.html has a page-wide "path { stroke: steelblue; fill: none }" for the
+	// charts, and CSS beats SVG presentation attributes
 	var W = 960, H = 480;
 	var projection = d3.geoNaturalEarth1().fitExtent([[4, 4], [W - 4, H - 4]], { type: "Sphere" });
 	var path = d3.geoPath(projection);
@@ -230,14 +232,14 @@ function trafficDrawMap() {
 			.html("<b>" + trafficEscape(trafficCountryName(cc)) + "</b> (" + trafficEscape(cc) + ")"
 				+ (c ? "<br>\u2191 " + trafficBytes(c.Up) + " \u2193 " + trafficBytes(c.Down) + "<br>" + c.Devices + " device" + (c.Devices == 1 ? "" : "s") : "<br>no traffic"));
 	}
-	svg.append("path").datum({ type: "Sphere" }).attr("d", path).attr("fill", "#eaf4fb").attr("stroke", "#c8d6e0");
-	svg.append("path").datum(d3.geoGraticule10()).attr("d", path).attr("fill", "none").attr("stroke", "#dde8f0").attr("stroke-width", 0.5);
+	svg.append("path").datum({ type: "Sphere" }).attr("d", path).style("fill", "#eaf4fb").style("stroke", "#c8d6e0");
+	svg.append("path").datum(d3.geoGraticule10()).attr("d", path).style("fill", "none").style("stroke", "#dde8f0").style("stroke-width", 0.5);
 	var drawn = {};
 	svg.append("g").selectAll("path").data(trafficWorld.features).join("path")
 		.attr("d", path)
-		.attr("fill", function (f) { drawn[f.properties.cc] = true; return trafficFill(f.properties.cc, totals[f.properties.cc], max); })
-		.attr("stroke", function (f) { return f.properties.cc == trafficMapCountry ? "#000" : "#b8b8b8"; })
-		.attr("stroke-width", function (f) { return f.properties.cc == trafficMapCountry ? 1.6 : 0.5; })
+		.style("fill", function (f) { drawn[f.properties.cc] = true; return trafficFill(f.properties.cc, totals[f.properties.cc], max); })
+		.style("stroke", function (f) { return f.properties.cc == trafficMapCountry ? "#000" : "#b8b8b8"; })
+		.style("stroke-width", function (f) { return f.properties.cc == trafficMapCountry ? 1.6 : 0.5; })
 		.style("cursor", function (f) { return totals[f.properties.cc] ? "pointer" : "default"; })
 		.on("mousemove", function (event, f) { if (f.properties.cc) showTip(event, f.properties.cc); })
 		.on("mouseleave", function () { tip.style("display", "none"); })
@@ -248,9 +250,9 @@ function trafficDrawMap() {
 		.attr("cx", function (cc) { return projection(TRAFFIC_SMALL_COUNTRIES[cc])[0]; })
 		.attr("cy", function (cc) { return projection(TRAFFIC_SMALL_COUNTRIES[cc])[1]; })
 		.attr("r", function (cc) { return 3 + 5 * trafficShade(totals[cc], max); })
-		.attr("fill", function (cc) { return trafficFill(cc, totals[cc], max); })
-		.attr("stroke", function (cc) { return cc == trafficMapCountry ? "#000" : "#555"; })
-		.attr("stroke-width", function (cc) { return cc == trafficMapCountry ? 1.6 : 0.7; })
+		.style("fill", function (cc) { return trafficFill(cc, totals[cc], max); })
+		.style("stroke", function (cc) { return cc == trafficMapCountry ? "#000" : "#555"; })
+		.style("stroke-width", function (cc) { return cc == trafficMapCountry ? 1.6 : 0.7; })
 		.style("cursor", "pointer")
 		.on("mousemove", function (event, cc) { showTip(event, cc); })
 		.on("mouseleave", function () { tip.style("display", "none"); })

@@ -1769,13 +1769,32 @@ the css for the little box on the top right f external data
 				// command code (the code is a TOTP and stays valid for its time window, so the
 				// requests can share it).
 				//
+				// 2026-11-04: the code is remembered for 14 minutes (Cleotilde's board, firmware 14+, accepts the
+				// same code for 15), so a run of Add / Rename / Forget asks only once. A command that comes back
+				// "Invalid Code" forgets it (forgetCommandCode, called from RenderingEngine), so the next asks again.
+				// Kept in sessionStorage: gone when the tab closes.
+				var COMMAND_CODE_REMEMBER_MILLIS = 14 * 60 * 1000;
+				function rememberedCommandCode(){
+					try {
+						var saved = JSON.parse(sessionStorage.getItem("commandCode") || "null");
+						if(saved && Date.now() - saved.at < COMMAND_CODE_REMEMBER_MILLIS) return saved.code;
+					} catch(e) {}
+					return null;
+				}
+				function forgetCommandCode(){
+					try { sessionStorage.removeItem("commandCode"); } catch(e) {}
+				}
 				function askCommandCode(){
-					var passwd = prompt("Please enter the password", "");
+					var remembered = rememberedCommandCode();
+					if(remembered) return remembered;
+					var passwd = prompt("Please enter the password (remembered for 14 minutes)", "");
 					if(passwd === null) return null;
+					passwd = passwd.trim();
 					if(isNaN(passwd) || passwd.length != 6){
 						alert("Password must be 6 numbers");
 						return null;
 					}
+					try { sessionStorage.setItem("commandCode", JSON.stringify({code: passwd, at: Date.now()})); } catch(e) {}
 					return passwd;
 				}
 

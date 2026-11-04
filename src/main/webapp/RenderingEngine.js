@@ -1084,6 +1084,7 @@ function receivedCommandResponse(cr){
 						alert("Shutting down ....");
 					}
 				}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
+					if(typeof forgetCommandCode === "function") forgetCommandCode();
 					alert("Invalid Code");
 					$("#MainPowerButton").attr("disabled", false);
 					$("#MainPowerButton").addClass('btn-success').removeClass('btn-warning');
@@ -1098,6 +1099,8 @@ function receivedCommandResponse(cr){
 						$("#MainPowerButton").addClass('btn-danger').removeClass('btn-success');
 					}
 				}else if(commandResponse.Status==COMMAND_REQUEST_INVALID_CODE){
+					// a remembered code that went stale: ask for a new one next time (index.html askCommandCode)
+					if(typeof forgetCommandCode === "function") forgetCommandCode();
 					result="danger";
 					commandResultText=commandResponse.commandCode + " was not correct";
 				}
