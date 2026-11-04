@@ -5,6 +5,8 @@
 // The buttons keep the card's classes and data attributes (wlAddBtn, wlRemoveBtn, wlIdentifyBtn, wlRenameBtn,
 // wlForgetBtn, wlSelect, wlAddSelectedBtn...), so index.html's handlers do the work, code prompt included.
 // The ⇄ button opens the device on the Traffic page (Traffic Panel's device detail).
+// The ☆ button (2026-11-05) puts it on the critical list (wlCriticalBtn, DevicePresence.js keeps it current); tapping a
+// name opens the device under the Network Map.
 // Leaves 5 divs open: renderPageByPointer closes them.
 //
 var dsDevFilter = "all";
@@ -72,6 +74,8 @@ class DeviceTable extends NetworkSensorDeviceStatusReport {
 
 		var acts = "";
 		if (mac) {
+			var crit = typeof dsIsCritical === "function" && dsIsCritical(mac);
+			acts += '<a href="#" class="btn btn-xs ds-iconbtn ds-critbtn wlCriticalBtn' + (crit ? ' on' : '') + '" title="' + (crit ? 'Critical: remove from the critical list' : 'Mark critical (must always be online)') + '"' + data + ' data-critical="' + (!crit) + '"><i class="glyphicon glyphicon-star' + (crit ? '' : '-empty') + '"></i></a> ';
 			acts += d._k === "known"
 				? '<a href="#" class="btn btn-xs btn-danger ds-iconbtn wlRemoveBtn" title="Remove from the known list"' + data + '><i class="glyphicon glyphicon-minus-sign"></i></a> '
 				: '<a href="#" class="btn btn-xs btn-success ds-iconbtn wlAddBtn" title="Add to the known list"' + data + '><i class="glyphicon glyphicon-plus-sign"></i></a> ';
@@ -84,7 +88,7 @@ class DeviceTable extends NetworkSensorDeviceStatusReport {
 			? '<input type="checkbox" class="wlSelect"' + data + (whiteListSelection[mac] ? ' checked' : '') + '>' : '';
 		var search = (shown + " " + ip + " " + mac + " " + (d["Vendor"] || "") + " " + (d["Guess"] || "")).toLowerCase();
 		return '<tr data-k="' + d._k + '" data-s="' + this.escape(search) + '"><td>' + check + '</td>'
-			+ '<td><span class="ds-dot ' + d._k + '"></span><b>' + this.escape(shown === mac ? "(no name)" : shown) + '</b>'
+			+ '<td><span class="ds-dot ' + d._k + '"></span><b' + (mac && typeof dsMapSelect === "function" ? ' class="ds-click" title="Everything about it, under the map" onclick="dsMapSelect(\'' + this.escape(mac) + '\')"' : '') + '>' + this.escape(shown === mac ? "(no name)" : shown) + '</b>'
 			+ (teleonome ? ' <a href="http://' + this.escape(teleonome) + '.local" target="_new" class="label label-info">' + this.escape(teleonome) + '</a>' : '')
 			+ (sub.length ? '<div class="ds-sub">' + sub.join(" · ") + '</div>' : '') + '</td>'
 			+ '<td>' + (ip && d._k !== "gone" ? '<a href="http://' + this.escape(ip) + '" target="_blank">' + this.escape(ip) + '</a>' : '<span class="ds-sub">' + this.escape(ip) + '</span>') + '</td>'

@@ -696,6 +696,8 @@ the css for the little box on the top right f external data
 		<script type="text/javascript"
 			src="templates/NetworkSensorDeviceStatusReport.js"></script>
 		<script type="text/javascript" src="templates/DeviceTable.js"></script>
+		<script type="text/javascript" src="templates/NetworkMap.js"></script>
+		<script type="text/javascript" src="templates/DevicePresence.js"></script>
 		<script type="text/javascript" src="templates/OrganismView.js"></script>
 		<script type="text/javascript" src="templates/TelepathonPanel.js"></script>
 		<script type="text/javascript" src="templates/SearchPanel.js"></script>
@@ -1823,6 +1825,31 @@ the css for the little box on the top right f external data
 					button.addClass('disabled').text('Pending');
 					whiteListRequest(formName, button.attr('data-name'), button.attr('data-mac'), passwd)
 						.fail(function(data){ alert("Whitelist request failed: " + JSON.stringify(data)); });
+					return false;
+				});
+
+				// Critical star (2026-11-05): on/off the critical list (devices that must always be online), code-protected
+				$(document).on('click', '.wlCriticalBtn', function(e){
+					e.preventDefault();
+					var button = $(this), critical = button.attr('data-critical') === "true", minutes = 10;
+					if(critical){
+						var answer = prompt("Mark " + button.attr('data-name') + " critical: its absence is an alarm.\nDown after how many minutes unseen? (longer for an ESP32 that sleeps)", "10");
+						if(answer === null) return false;
+						minutes = parseInt(answer, 10);
+						if(!(minutes > 0)) minutes = 10;
+					}else if(!confirm("Take " + button.attr('data-name') + " off the critical list?")) return false;
+					var passwd = askCommandCode();
+					if(passwd === null) return false;
+					button.addClass('disabled').text('Pending');
+					$.ajax({
+						type: "GET",
+						url: "/TeleonomeServlet",
+						data: {formName:"SetCriticalDevice", DeviceName:button.attr('data-name'), DeviceMacAddress:button.attr('data-mac'), Critical:critical, OfflineMinutes:minutes, CommandCode:passwd }
+					}).done(function(){
+						// the heart runs it with the next pulse
+						setTimeout(dsPresenceRefresh, 20000);
+						setTimeout(dsPresenceRefresh, 70000);
+					}).fail(function(data){ alert("Critical list request failed: " + JSON.stringify(data)); });
 					return false;
 				});
 

@@ -135,3 +135,75 @@ body.ds-theme .panel-heading > .row.top-buffer > [class*="col-"]:empty { display
 body.ds-theme .DiagnosticsPageLinksGroup .row { display:flex; margin:0; }
 body.ds-theme .DiagnosticsPageLinksGroup .row > [class*="col-"] { float:none; width:auto; padding:2px 10px; }
 @media (max-width:600px) { body.ds-theme .DiagnosticsMenu { font-size:12px; } }
+
+/* ---------- Devices page, phase 2 (2026-11-05): Network Map, Critical Devices, Arrivals, Who was here ---------- */
+/* icons: index.html paints every svg path steelblue for the old charts, hence the !important */
+.ds-ico { fill:none; flex:none; vertical-align:middle; }
+.ds-ico *, #DSMap .ico * { fill:none !important; stroke:#333 !important; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.ds-ico .f, #DSMap .ico .f { fill:#333 !important; stroke:none !important; }
+.ds-map .btn svg.ds-ico * { stroke:currentColor !important; } .ds-map .btn svg.ds-ico .f { fill:currentColor !important; }
+.ds-mapbox { display:grid; grid-template-columns:1fr 290px; }
+.ds-mapbox > svg { width:100%; height:auto; display:block; }
+.ds-mapside { border-left:1px solid #eee; padding:10px; font-size:13px; }
+@media (max-width:991px) { .ds-mapbox { grid-template-columns:1fr; } .ds-mapside { border-left:0; border-top:1px solid #eee; } }
+.ds-mapcard { background:#f7f8f7; border-radius:4px; padding:10px; }
+.ds-cardhead { display:flex; gap:8px; align-items:center; } .ds-cardhead b { font-size:16px; overflow-wrap:anywhere; }
+.ds-mapcard table { width:100%; margin-top:6px; } .ds-mapcard td { padding:2px 0; vertical-align:top; } .ds-mapcard td:first-child { color:#999; width:36%; }
+.ds-mapacts { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.ds-amber { color:#e8a33d; }
+.ds-critbtn { background:#fff; color:#b8860b; border:1px solid #e0c060; } .ds-critbtn:hover { color:#8a6d00; }
+.ds-critbtn.on { background:#f5c518; color:#333; border-color:#d4a800; }
+.ds-mapkey { margin-top:12px; } .ds-mapkey summary { cursor:pointer; color:#999; font-size:12px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px; }
+.ds-maplegend { display:grid; grid-template-columns:1fr 1fr; gap:4px 8px; margin-bottom:8px; }
+.ds-maplegend > div { display:flex; align-items:center; gap:6px; }
+.ds-maplegend .ring { width:12px; height:12px; border-radius:50%; border:3px solid #2DA040; flex:none; }
+.ds-maplegend .ring.unknown { border-color:#e8a33d; } .ds-maplegend .ring.gone { border-color:#aaa; border-style:dashed; }
+#DSMap .node { cursor:pointer; }
+#DSMap .halo { fill:#fff; stroke-width:3; }
+#DSMap .known .halo { stroke:#2DA040; } #DSMap .unknown .halo { stroke:#e8a33d; }
+#DSMap .gone { opacity:.38; } #DSMap .gone .halo { stroke:#aaa; stroke-dasharray:3 3; }
+#DSMap .sel .halo { stroke-width:5; } #DSMap .dim { opacity:.12; }
+#DSMap text { font-size:11px; fill:#333; text-anchor:middle; } #DSMap text.t2 { fill:#999; font-size:10px; }
+#DSMap .sector { font-size:12px; font-weight:bold; fill:#999; letter-spacing:.06em; text-transform:uppercase; }
+#DSMap .link { stroke:#ccc; stroke-width:1.4; } #DSMap .link.wifi { stroke:#9fd3a8; stroke-dasharray:4 4; }
+#DSMap .link.sweep { stroke:#e5b3b1; stroke-dasharray:1 4; } #DSMap .link.gone { stroke:#eee; } #DSMap .link.dim { opacity:.15; }
+#DSMap .router .halo { fill:#2DA040; stroke:#1f7a2f; } #DSMap .router .ico * { stroke:#fff !important; } #DSMap .router .ico .f { fill:#fff !important; }
+#DSMap .router text { font-weight:bold; font-size:13px; }
+#DSMap path.star, .ds-maplegend path.star { fill:#f5c518 !important; stroke:#8a6d00 !important; stroke-width:.8; }
+.ds-pad { padding:10px; }
+/* arrivals feed */
+.ds-feed { max-height:640px; overflow-y:auto; font-size:13px; }
+.ds-feedday { background:#f7f8f7; color:#777; font-size:12px; padding:3px 10px; position:sticky; top:0; }
+.ds-feedrow { display:flex; gap:8px; align-items:center; padding:4px 10px; border-bottom:1px solid #f3f3f3; }
+.ds-feedrow.warn { background:#fff8e6; } .ds-feedrow.bad { background:#fdf1f0; }
+.ds-feedtime { font-family:monospace; color:#777; width:40px; flex:none; }
+.ds-feeddir { width:14px; text-align:center; font-weight:bold; flex:none; } .ds-feeddir.in { color:#2DA040; } .ds-feeddir.out { color:#999; }
+.ds-feedname { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ds-staricon { color:#e0b000; }
+/* who was here */
+.ds-tl { padding:6px 10px 10px; font-size:12px; max-height:620px; overflow-y:auto; }
+.ds-tlrow { display:flex; align-items:center; height:19px; }
+.ds-tlname { width:150px; flex:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:flex; gap:4px; align-items:center; }
+@media (max-width:600px) { .ds-tlname { width:105px; } }
+.ds-tlbar { position:relative; flex:1; height:12px; background:#f5f5f5; border-radius:2px; }
+.ds-tlbar i { position:absolute; top:0; bottom:0; border-radius:2px; }
+.ds-tlbar i.known { background:#2DA040; } .ds-tlbar i.unknown { background:#e8a33d; }
+.ds-tlbar i.gap { background:repeating-linear-gradient(45deg, #ddd 0 3px, transparent 3px 6px); }
+.ds-tlaxis { position:sticky; top:0; background:#fff; z-index:1; height:16px; }
+.ds-tlaxis .ds-tlbar { background:none; } .ds-tlaxis .ds-tlbar span { position:absolute; transform:translateX(-50%); color:#999; font-size:10px; }
+/* under the map: the overview, or everything about the selected device */
+#DSMapDetail { border-top:1px solid #eee; padding:10px; }
+#DSMapDetail h6 { font-size:13px; font-weight:bold; margin:4px 0 8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.ds-overview { gap:16px; }
+.ds-click { cursor:pointer; } .ds-click:hover { background:#f2f8f0; } b.ds-click:hover { text-decoration:underline; background:none; }
+.ds-devhead { display:flex; gap:12px; align-items:center; }
+.ds-devtitle { flex:1; min-width:0; } .ds-devtitle > b { font-size:20px; overflow-wrap:anywhere; margin-right:6px; }
+.ds-devtitle .label { vertical-align:middle; font-weight:normal; }
+.ds-critlabel { background:#f5c518; color:#333; }
+.ds-devclose { flex:none; }
+.ds-facts { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:6px 16px; margin:12px 0; font-size:13px; }
+.ds-facts .k { display:block; color:#999; font-size:11px; text-transform:uppercase; letter-spacing:.03em; }
+.ds-devsec { border-top:1px solid #eee; padding-top:8px; margin-top:10px; }
+.ds-devsec .table { font-size:13px; margin:0; }
+.ds-tlone { padding:0; max-height:none; } .ds-tlone .ds-tlrow { height:22px; } .ds-tlone .ds-tlbar { height:16px; }
+@media (max-width:600px) { .ds-devtitle > b { font-size:17px; } #DSMapDetail { padding:8px; } .ds-dev .ds-xs-hide { display:none; } .ds-dev .table td { overflow-wrap:anywhere; } .ds-dev .table td.text-right, .ds-dev .table td.ds-sub { white-space:nowrap; overflow-wrap:normal; } .ds-dev .ds-cols { grid-template-columns:1fr; } }

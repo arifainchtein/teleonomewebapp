@@ -1253,6 +1253,8 @@ var PANEL_VISUALIZATION_STYLE_COMPACT_VALUE_CARD="Compact Value Card";
 var PANEL_VISUALIZATION_STYLE_COMPACT_LINE_CHART="Compact Line Chart";
 var PANEL_VISUALIZATION_STYLE_DEVICE_TABLE="Device Table";
 var PANEL_VISUALIZATION_STYLE_POWER="Power Panel";
+// Cleotilde Devices page, phase 2 (2026-11-05): templates/NetworkMap.js (+ templates/DevicePresence.js under it)
+var PANEL_VISUALIZATION_STYLE_NETWORK_MAP="Network Map";
 // Human Interface Control Parameters: a dene with this name switches a Teleonome to the compact layout
 var DS_HEADER_DENE="Header";
 var DS_HEADER_LOGO_IMAGE="Logo Image";

@@ -2798,6 +2798,9 @@ function renderPageByPointer(pagePointer, locationId){
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_DEVICE_TABLE){
 			panelHTML += new DeviceTable().process(organismIPInfoJsonData);
 
+		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_NETWORK_MAP){
+			panelHTML += new NetworkMap().process(organismIPInfoJsonData);
+
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_POWER){
 			panelHTML += new PowerPanel().process();
 
