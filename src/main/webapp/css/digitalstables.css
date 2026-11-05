@@ -235,3 +235,7 @@ body.ds-theme .DiagnosticsPageLinksGroup .row > [class*="col-"] { float:none; wi
 .dg-heartlog { background:#0d1117; font-family:monospace; font-size:11px; padding:8px 10px; max-height:320px; overflow-y:auto; }
 @media (max-width:700px) { .dg-power { margin-left:0; border-left:0; padding-left:0; width:100%; border-top:1px solid #eee; padding-top:10px; }
 	.dg-btn { min-width:0; flex:1 1 70px; font-size:11px; padding:7px 4px 5px; overflow-wrap:anywhere; } .dg-organ { flex:1 1 100%; } }
+/* index.html's inline style lifts glyphicon-signal/-time/-flash/-dashboard/-off by 25px (for the old menus): not in the bar */
+.dg-bar .glyphicon.glyphicon { margin-top:0; }
+.dg-btn .glyphicon.glyphicon { font-size:18px; }
+.dg-power .glyphicon.glyphicon { font-size:inherit; }

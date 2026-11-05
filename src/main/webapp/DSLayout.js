@@ -163,8 +163,10 @@ function dsRenderStatusRules() {
 	} else {
 		el.empty();
 		document.title = teleonomeName;
-		if (notes.length) $('#DSAlert').removeClass('danger').addClass(level === "danger" ? "danger" : "").text(notes.join(" · ")).show();
-		else $('#DSAlert').hide();
+		// the reasons go in the Status lamp's tooltip, not a pill: the pill (e.g. "Packet Loss 30 above 20") broke the
+		// header onto two lines on a phone (Ari, 2026-11-05)
+		$('#DSAlert').hide();
+		$('#DSLamps').attr('title', notes.length ? notes.join(" · ") : "");
 	}
 }
 
