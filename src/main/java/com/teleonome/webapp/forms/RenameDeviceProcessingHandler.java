@@ -19,8 +19,7 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
  * Rename button on Cleotilde's device cards (added 2026-11-04): gives a device a nickname
  * (CleotildeMicroController.renameDevice, kept in DeviceNicknames.json on the Pi); an empty Nickname goes
  * back to the router's name. Code-protected like the whitelist buttons, since on a security page a rename
- * could make an intruder look like a known device. Same route as Forget: the existing "Remove Device From
- * WhiteList" mutation carries "RenameDevice#mac#nickname", so no denome change is needed.
+ * could make an intruder look like a known device. Same route as Forget: the "Cleotilde Command" mutation (denome v12; before 2026-11-05 "Remove Device From WhiteList") carries "RenameDevice#mac#nickname".
  */
 public class RenameDeviceProcessingHandler extends ProcessingFormHandler {
 
@@ -46,7 +45,7 @@ public class RenameDeviceProcessingHandler extends ProcessingFormHandler {
 
 			JSONObject payLoadParentJSONObject = new JSONObject();
 			JSONObject payLoadJSONObject = new JSONObject();
-			payLoadParentJSONObject.put("Mutation Name", "Remove Device From WhiteList");
+			payLoadParentJSONObject.put("Mutation Name", "Cleotilde Command");
 			payLoadParentJSONObject.put("Payload", payLoadJSONObject);
 			JSONArray updatesArray = new JSONArray();
 			payLoadJSONObject.put("Updates", updatesArray);

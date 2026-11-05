@@ -290,7 +290,8 @@ function dsDoorSectionHTML(n) {
 	}
 	if (!dsDoors.Home) return h + '<span class="ds-sub">' + (mine.length ? '' : 'No door. ') + 'A door can only be opened from the home network (you are on ' + e(dsDoors.ClientIp) + ').</span></div>';
 	// the form
-	var defaults = { teleonome: "80", nas: "5000,5001", printer: "80", telepathon: "80" };
+	// a Teleonome page needs 9999 too: its live data comes from the Heart (MQTT over WebSocket)
+	var defaults = { teleonome: "80,9999", nas: "5000,5001", printer: "80", telepathon: "80" };
 	var f = dsDoorForm[n.mac] || (dsDoorForm[n.mac] = { Ports: defaults[n.kind] || "80,443", Minutes: "120", Source: "" });
 	var peers = {};
 	rules.forEach(function (r) { if (r.Kind === "Door" && r.From) peers[r.From] = r.FromName || r.From; });

@@ -18,7 +18,7 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
 /**
  * Forget button on the "Not seen" device cards (added 2026-10-18 for Cleotilde): deletes the
  * device's scan history so it leaves the list (CleotildeMicroController.forgetDevice).
- * It goes through the existing "Remove Device From WhiteList" mutation, which just sets its
+ * It goes through the "Cleotilde Command" mutation (denome v12; before 2026-11-05 "Remove Device From WhiteList"), which just sets its
  * action's command to the value sent here, so no denome change is needed; the writer tells the
  * commands apart by their first token.
  */
@@ -40,7 +40,7 @@ public class ForgetDeviceProcessingHandler extends ProcessingFormHandler {
 
 		JSONObject payLoadParentJSONObject = new JSONObject();
 		JSONObject payLoadJSONObject = new JSONObject();
-		payLoadParentJSONObject.put("Mutation Name","Remove Device From WhiteList");
+		payLoadParentJSONObject.put("Mutation Name","Cleotilde Command");
 		payLoadParentJSONObject.put("Payload", payLoadJSONObject);
 		JSONArray updatesArray = new JSONArray();
 		payLoadJSONObject.put("Updates"	, updatesArray);

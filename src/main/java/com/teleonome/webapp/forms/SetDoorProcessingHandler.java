@@ -24,7 +24,7 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
  *   Action=remove  Mac, CommandCode
  * Opening widens access, so it is refused unless the request comes from the home network (192.168.1.x): from the
  * tunnel you can look and close, not open. Closing works from anywhere. Both need the 6-digit code.
- * The command goes the same way as Rename and the critical star: the "Remove Device From WhiteList" mutation carries
+ * The command goes the same way as Rename and the critical star: the "Cleotilde Command" mutation (denome v12) carries
  * "Door#open#name#dest#ports#minutes#src#label", CleotildeWriter runs the router's cleotilde-doors, which checks
  * every field again and only touches firewall sections named cleotilde_*. The door's name is the MAC without colons.
  */
@@ -85,7 +85,7 @@ public class SetDoorProcessingHandler extends ProcessingFormHandler {
 		} else {
 			JSONObject payLoadParentJSONObject = new JSONObject();
 			JSONObject payLoadJSONObject = new JSONObject();
-			payLoadParentJSONObject.put("Mutation Name", "Remove Device From WhiteList");
+			payLoadParentJSONObject.put("Mutation Name", "Cleotilde Command");
 			payLoadParentJSONObject.put("Payload", payLoadJSONObject);
 			JSONArray updatesArray = new JSONArray();
 			payLoadJSONObject.put("Updates", updatesArray);

@@ -662,6 +662,7 @@ the css for the little box on the top right f external data
 		<!-- The templates, make sure they are loaded after the two Functions files -->
 		<script type="text/javascript" src="templates/SettingsInfo.js"></script>
 		<script type="text/javascript" src="templates/DiagnosticsInfo.js"></script>
+		<script type="text/javascript" src="templates/DiagnosticsBar.js"></script>
 		<script type="text/javascript" src="templates/SystemDiagnostics.js"></script>
 		<script type="text/javascript"
 			src="templates/AsynchronousDiagnostics.js"></script>
@@ -2290,6 +2291,21 @@ the css for the little box on the top right f external data
 					});	
 				});
 				
+				// Stop Hypothalamus (Diagnostics, 2026-11-05): the KillPulse command. MappedBusThread checks the code, marks the
+				// command done and exits between pulses, so the denome isn't cut mid-write. Nothing restarts it while the Medula
+				// is off; start it again with StartHypothalamusBG.sh.
+				$(document).on('click', '#StopHypothalamusButton', function(e){
+					e.preventDefault();
+					if(!confirm("Stop the Hypothalamus? The pulse stops until you start it again (StartHypothalamusBG.sh).")) return false;
+					var passwd = askCommandCode();
+					if(passwd === null) return false;
+					var b = $(this);
+					b.addClass('disabled').text('Stopping at the end of this cycle…');
+					$.ajax({ type: "GET", url: "/TeleonomeServlet", data: {formName:"ReSignal", action:"KillPulse", CommandCode:passwd } })
+						.fail(function(x){ alert("Stop request failed: " + x.status); b.removeClass('disabled').text('Stop Hypothalamus'); });
+					return false;
+				});
+
 				$(document).on('click', '#RestartButton',function(e){
 					e.preventDefault();
 

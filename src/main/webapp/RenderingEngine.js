@@ -2542,7 +2542,8 @@ function renderPageByPointer(pagePointer, locationId){
 
 			localStorage.setItem("DiagnosticInfo", JSON.stringify(systemInfoDeneChainPanelJSON));
 
-			var diagnosticsInfo = new DiagnosticsInfo();
+			// compact layout (2026-11-05): one bar with the buttons, Stop/Restart/Turn off and the Organs (DiagnosticsBar.js)
+			var diagnosticsInfo = (typeof dsActive === "function" && dsActive()) ? new DiagnosticsBar() : new DiagnosticsInfo();
 			panelHTML += diagnosticsInfo.process();
 
 

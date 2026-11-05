@@ -19,9 +19,8 @@ import com.teleonome.webapp.servlet.ProcessingFormHandler;
  * The star on Cleotilde's Devices page (added 2026-11-05; design: OpenWrtOne 05-teleonome-design.md section 8):
  * puts a device on, or takes it off, the critical list (devices that must always be online).
  *   DeviceMacAddress, DeviceName, Critical=true|false, OfflineMinutes (default 10), CommandCode
- * Code-protected like the whitelist buttons. Same route as Rename and Forget: the existing "Remove Device From
- * WhiteList" mutation carries "AddDeviceToCriticalList#name#mac#minutes" or "RemoveDeviceFromCriticalList#mac",
- * which CleotildeWriter hands to CleotildeMicroController, so no denome change is needed.
+ * Code-protected like the whitelist buttons. Same route as Rename and Forget: the "Cleotilde Command" mutation (denome v12; before 2026-11-05 "Remove Device From WhiteList") carries "AddDeviceToCriticalList#name#mac#minutes" or "RemoveDeviceFromCriticalList#mac",
+ * which CleotildeWriter hands to CleotildeMicroController.
  */
 public class SetCriticalDeviceProcessingHandler extends ProcessingFormHandler {
 
@@ -55,7 +54,7 @@ public class SetCriticalDeviceProcessingHandler extends ProcessingFormHandler {
 
 			JSONObject payLoadParentJSONObject = new JSONObject();
 			JSONObject payLoadJSONObject = new JSONObject();
-			payLoadParentJSONObject.put("Mutation Name", "Remove Device From WhiteList");
+			payLoadParentJSONObject.put("Mutation Name", "Cleotilde Command");
 			payLoadParentJSONObject.put("Payload", payLoadJSONObject);
 			JSONArray updatesArray = new JSONArray();
 			payLoadJSONObject.put("Updates", updatesArray);

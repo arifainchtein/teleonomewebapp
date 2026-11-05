@@ -113,6 +113,10 @@ public class ReSignalProcessingHandler extends ProcessingFormHandler {
 					command = action;
 				}
 			} 
+		}else if(action.equals(TeleonomeConstants.COMMAND_KILL_PULSE)){
+			// Stop Hypothalamus (Diagnostics page, 2026-11-05): MappedBusThread checks the code, marks the command done
+			// and exits between pulses, so the denome isn't cut in the middle of a write (unlike kill)
+			command = TeleonomeConstants.COMMAND_KILL_PULSE;
 		}else{
 		}
 
