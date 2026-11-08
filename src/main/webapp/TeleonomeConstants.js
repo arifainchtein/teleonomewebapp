@@ -245,6 +245,10 @@ var DENEWORD_SELF_DEACTIVATE                     = "Self Deactivate";
 var HEART_TOPIC_CEREBELLUM_REQUEST  = "Cerebellum_Request";
 var HEART_TOPIC_CEREBELLUM_RESPONSE = "Cerebellum_Response";
 var HEART_TOPIC_CEREBELLUM_STATUS   = "Cerebellum_Status";
+// On-demand telepathon diagnosis (red cross on a late card in the Hippocampus Telepathons tab):
+// request {RequestId, Telepathon} -> Cerebellum's TelepathonDiagnosisService -> progress/report.
+var HEART_TOPIC_CEREBELLUM_TELEPATHON_DIAGNOSE        = "Cerebellum_Telepathon_Diagnose";
+var HEART_TOPIC_CEREBELLUM_TELEPATHON_DIAGNOSE_REPORT = "Cerebellum_Telepathon_Diagnose_Report";
 var PATHOLOGY_CEREBELLUM_DIED       = "Cerebellum died";
 var PATHOLOGY_CEREBELLUM_LATE       = "Cerebellum Late";
 

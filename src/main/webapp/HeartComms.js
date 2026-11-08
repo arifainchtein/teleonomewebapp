@@ -64,6 +64,7 @@ function onConnect() {
 	mqtt.subscribe(HEART_TOPIC_HIPPOCAMPUS_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(responseChanel, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_EMERGENCY_CHANNEL, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
+	mqtt.subscribe(HEART_TOPIC_CEREBELLUM_TELEPATHON_DIAGNOSE_REPORT, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:1});
 	mqtt.subscribe(HEART_TOPIC_HEART_HEALTH_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:0});
 	mqtt.subscribe(HEART_TOPIC_HYPOTHALAMUS_HEALTH_STATUS, {"onSuccess":subscribeSucessFcn,"onFailure":subscribeFailureFcn,qos:0});
 	
@@ -131,6 +132,8 @@ function onMessageArrived(message) {
 		displayHippocampusResponse(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_EMERGENCY_CHANNEL){
 		handleEmergencyChannelMessage(payload);
+	}else if(lastMessageTopic==HEART_TOPIC_CEREBELLUM_TELEPATHON_DIAGNOSE_REPORT){
+		handleTelepathonDiagnoseReport(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_RESPONSE){
 		hippocampusReady=true;
 	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_STATUS){

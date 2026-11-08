@@ -385,7 +385,167 @@ function buildRegistryCard(telepathonData, isCurrent) {
 	var cardHtml = buildTelepathonCardView(telepathonData, '_registry');
 	var $card = $(cardHtml);
 	$card.attr('data-registry-status', isCurrent ? 'current' : 'stale');
+	addDiagnoseButtonIfLate($card, telepathonData["Name"]);
 	return $card;
+}
+
+// Red cross on a card whose "seconds since last heard" the card itself drew red
+// (deviceviews-card.js, #e74c3c on the tpAge_ span) - read back from the rendered
+// card rather than re-deriving the per-device-type thresholds here. Sits beside the
+// card's clickable body, not inside it, so it doesn't also open the detail popup.
+var DIAGNOSE_LATE_COLOR = '#e74c3c';
+function addDiagnoseButtonIfLate($card, telepathonName) {
+	var ageStyle = ($card.find('[id^="tpAge_"]').attr('style') || '').toLowerCase();
+	if (!telepathonName || ageStyle.indexOf(DIAGNOSE_LATE_COLOR) === -1) return;
+	$card.css('position', 'relative');
+	var $btn = $('<button type="button" title="Ask the Cerebellum to diagnose ' + telepathonName + '" ' +
+		'style="position:absolute;top:12px;right:14px;z-index:2;width:30px;height:30px;padding:0;border:none;' +
+		'border-radius:50%;background:' + DIAGNOSE_LATE_COLOR + ';color:#fff;font-size:22px;font-weight:bold;' +
+		'line-height:30px;box-shadow:0 1px 4px rgba(0,0,0,0.3);cursor:pointer;">+</button>');
+	$btn.on('click', function(e) {
+		e.stopPropagation();
+		requestTelepathonDiagnosis(telepathonName);
+	});
+	$card.append($btn);
+}
+
+// ── Telepathon diagnosis (Cerebellum TelepathonDiagnosisService) ─────────────
+// One request at a time from this browser: publish {RequestId, Telepathon} on
+// HEART_TOPIC_CEREBELLUM_TELEPATHON_DIAGNOSE, then show the "progress" messages and
+// the final "complete"/"error" one from ..._DIAGNOSE_REPORT carrying our RequestId.
+var telepathonDiagnosis = null; // {requestId, name, timer}
+var DIAGNOSE_SILENCE_TIMEOUT_MS = 30000;
+
+function ensureDiagnoseModal() {
+	if ($('#telepathon-diagnose-modal').length) return;
+	$('body').append(
+		'<div class="modal fade" id="telepathon-diagnose-modal" tabindex="-1" role="dialog">' +
+		'<div class="modal-dialog modal-lg"><div class="modal-content">' +
+		'<div class="modal-header"><button type="button" class="close" onclick="closeModal(\'telepathon-diagnose-modal\')">&times;</button>' +
+		'<h4 class="modal-title" id="telepathon-diagnose-title">Diagnosis</h4></div>' +
+		'<div class="modal-body" id="telepathon-diagnose-body"></div>' +
+		'<div class="modal-footer"><button type="button" class="btn btn-default" onclick="closeModal(\'telepathon-diagnose-modal\')">Close</button></div>' +
+		'</div></div></div>'
+	);
+}
+
+function requestTelepathonDiagnosis(name) {
+	ensureDiagnoseModal();
+	var requestId = browserId + '-' + Date.now();
+	if (telepathonDiagnosis && telepathonDiagnosis.timer) clearTimeout(telepathonDiagnosis.timer);
+	telepathonDiagnosis = { requestId: requestId, name: name, timer: null };
+	$('#telepathon-diagnose-title').text('Diagnosis: ' + name);
+	renderDiagnoseProgress(0, 'Sending request to the Cerebellum…');
+	openModal('telepathon-diagnose-modal');
+	try {
+		var message = new Paho.MQTT.Message(JSON.stringify({ "RequestId": requestId, "Telepathon": name }));
+		message.destinationName = HEART_TOPIC_CEREBELLUM_TELEPATHON_DIAGNOSE;
+		message.qos = 1;
+		mqtt.send(message);
+	} catch (e) {
+		renderDiagnoseError('Could not send the request: ' + e);
+		return;
+	}
+	armDiagnoseTimeout();
+}
+
+// Restarted on every message: the Cerebellum reports progress continuously, so
+// silence means it isn't running (or stopped mid-way), not that it's slow.
+function armDiagnoseTimeout() {
+	if (!telepathonDiagnosis) return;
+	if (telepathonDiagnosis.timer) clearTimeout(telepathonDiagnosis.timer);
+	var requestId = telepathonDiagnosis.requestId;
+	telepathonDiagnosis.timer = setTimeout(function() {
+		if (telepathonDiagnosis && telepathonDiagnosis.requestId === requestId) {
+			renderDiagnoseError('No answer from the Cerebellum for ' + (DIAGNOSE_SILENCE_TIMEOUT_MS / 1000) + ' s - is it running?');
+			telepathonDiagnosis = null;
+		}
+	}, DIAGNOSE_SILENCE_TIMEOUT_MS);
+}
+
+function handleTelepathonDiagnoseReport(payload) {
+	var msg;
+	try { msg = JSON.parse(payload); } catch (e) { return; }
+	if (!telepathonDiagnosis || msg["RequestId"] !== telepathonDiagnosis.requestId) return; // someone else's
+	var stage = msg["Stage"];
+	if (stage === 'progress') {
+		renderDiagnoseProgress(msg["Percent"] || 0, msg["Message"] || '');
+		armDiagnoseTimeout();
+		return;
+	}
+	if (telepathonDiagnosis.timer) clearTimeout(telepathonDiagnosis.timer);
+	telepathonDiagnosis = null;
+	if (stage === 'complete') renderDiagnoseReport(msg);
+	else renderDiagnoseError(msg["Message"] || 'Diagnosis failed.');
+}
+
+function renderDiagnoseProgress(percent, text) {
+	$('#telepathon-diagnose-body').html(
+		'<div class="progress" style="margin:20px 0 10px;"><div class="progress-bar progress-bar-striped active" role="progressbar" ' +
+		'style="width:' + Math.max(3, Math.min(100, percent)) + '%;">' + Math.round(percent) + '%</div></div>' +
+		'<p class="text-muted text-center">' + text + '</p>'
+	);
+}
+
+function renderDiagnoseError(text) {
+	$('#telepathon-diagnose-body').html('<p class="text-danger text-center" style="padding:20px;">' + text + '</p>');
+}
+
+var DIAGNOSE_RESULT_STYLE = {
+	PROBLEM_LIKELY:   { label: 'Problem likely',   color: '#c62828' },
+	PROBLEM_POSSIBLE: { label: 'Possible problem', color: '#e67e22' },
+	OK:               { label: 'OK',               color: '#27ae60' },
+	INCONCLUSIVE:     { label: 'Inconclusive',     color: '#7f8c8d' },
+	NOT_APPLICABLE:   { label: 'Not applicable',   color: '#bdc3c7' }
+};
+
+function renderDiagnoseReport(report) {
+	var html = '<p class="text-muted small">' + report["Samples"] + ' readings over the last ' + report["Days"] + ' days' +
+		(report["LastMessageSeconds"] ? ', last message ' + new Date(report["LastMessageSeconds"] * 1000).toLocaleString() : '') + '.</p>';
+	(report["Tests"] || []).forEach(function(test) {
+		var style = DIAGNOSE_RESULT_STYLE[test["Result"]] || DIAGNOSE_RESULT_STYLE.INCONCLUSIVE;
+		html += '<div style="border:1px solid #ddd;border-left:6px solid ' + style.color + ';border-radius:6px;padding:12px 14px;margin-bottom:14px;">';
+		html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">' +
+			'<strong style="font-size:15px;">' + test["Name"] + '</strong>' +
+			'<span style="background:' + style.color + ';color:#fff;border-radius:4px;padding:2px 10px;font-weight:bold;font-size:12px;">' + style.label + '</span></div>';
+		html += '<p style="margin-bottom:8px;">' + (test["Summary"] || '') + '</p>';
+		var findings = test["Findings"] || [];
+		if (findings.length) {
+			html += '<ul style="padding-left:18px;margin-bottom:8px;">';
+			findings.forEach(function(f) { html += '<li>' + f + '</li>'; });
+			html += '</ul>';
+		}
+		// Generic tables a test can return: [{Columns: [...], Rows: [[...], ...]}] (e.g. the LoRa
+		// test's baseline-vs-recent comparison) - the first column is the row label.
+		(test["Comparison"] || []).forEach(function(table) {
+			html += '<table class="table table-condensed" style="font-size:12px;margin-bottom:8px;"><thead><tr>';
+			(table["Columns"] || []).forEach(function(c) { html += '<th>' + c + '</th>'; });
+			html += '</tr></thead><tbody>';
+			(table["Rows"] || []).forEach(function(r) {
+				html += '<tr>';
+				r.forEach(function(cell, ci) { html += ci === 0 ? '<td>' + cell + '</td>' : '<td><strong>' + cell + '</strong></td>'; });
+				html += '</tr>';
+			});
+			html += '</tbody></table>';
+		});
+		var nights = test["Nights"] || [];
+		if (nights.length) {
+			html += '<table class="table table-condensed" style="font-size:12px;margin-bottom:0;">' +
+				'<thead><tr><th>Night</th><th>Hours</th><th>Battery</th><th>Discharge</th><th>Current</th><th>Readings</th></tr></thead><tbody>';
+			nights.forEach(function(n) {
+				html += '<tr' + (n["Latest"] ? ' style="font-weight:bold;background:#fdf2f2;"' : '') + '>' +
+					'<td>' + n["Start"] + ' → ' + n["End"] + '</td>' +
+					'<td>' + n["Hours"] + '</td>' +
+					'<td>' + n["Start Voltage"] + ' → ' + n["End Voltage"] + ' V</td>' +
+					'<td>' + n["Discharge mV/h"] + ' mV/h</td>' +
+					'<td>' + (n["Mean Current mA"] === null ? '-' : n["Mean Current mA"] + ' mA') + '</td>' +
+					'<td>' + n["Samples"] + '</td></tr>';
+			});
+			html += '</tbody></table>';
+		}
+		html += '</div>';
+	});
+	$('#telepathon-diagnose-body').html(html);
 }
 
 function buildRegistryNoDataCard(name, isCurrent) {
