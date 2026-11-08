@@ -211,6 +211,39 @@ public class TeleonomeDataGateway {
         }
     }
 
+    /**
+     * Every Cerebellum-registry telepathon's last message + current/stale, answered
+     * from the hippocampus's memory (see Hippocampus TelepathonRegistryMemory) - backs
+     * the Hippocampus modal's "Telepathons" tab. Deliberately no Postgres fallback:
+     * if the hippocampus doesn't answer, that is the problem worth surfacing.
+     *
+     * @return JSONObject with Devices (JSONArray), Pending (JSONArray), RegistryStatus, DaysBeforeStale, ...
+     */
+    public JSONObject queryTelepathonRegistry() throws Exception {
+        if (!client.isConnected()) {
+            throw new IllegalStateException("TeleonomeDataGateway is not connected to MQTT broker");
+        }
+        String requestId = UUID.randomUUID().toString();
+        CompletableFuture<JSONObject> future = new CompletableFuture<>();
+        pending.put(requestId, future);
+        try {
+            JSONObject payload = new JSONObject();
+            payload.put("Type", "TelepathonRegistry");
+            payload.put("RequestId", requestId);
+
+            MqttMessage msg = new MqttMessage(payload.toString().getBytes());
+            msg.setQos(1);
+            client.publish("Hippocampus_Request", msg);
+            return future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            pending.remove(requestId);
+            throw new TimeoutException("Hippocampus did not respond within " + TIMEOUT_SECONDS + "s to the telepathon registry request");
+        } catch (Exception e) {
+            pending.remove(requestId);
+            throw e;
+        }
+    }
+
     public boolean isConnected() {
         return client != null && client.isConnected();
     }

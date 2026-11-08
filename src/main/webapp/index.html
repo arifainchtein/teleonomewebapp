@@ -55,11 +55,12 @@
     margin: 0.5rem;
 }
 
-/* Registry Status shows a row of telepathon cards (see buildRegistryCard() in
-   RenderingEngine.js) - the stock .modal-lg (900px) only comfortably fits two
-   at the card grid's col-md-4 width, not three. 20% wider than modal-lg. */
+/* The Hippocampus modal's Telepathons tab shows a row of telepathon cards (see
+   buildRegistryCard() in RenderingEngine.js) - the stock .modal-lg (900px) only
+   comfortably fits two at the card grid's col-md-4 width, not three. 20% wider
+   than modal-lg. */
 @media (min-width: 992px) {
-    #registry-status-modal .modal-dialog {
+    #hippocampusModal .modal-dialog {
         width: 1080px;
     }
 }
@@ -573,40 +574,6 @@ the css for the little box on the top right f external data
 				</div>
 			</div>
 		</div>
-
-		<div id="registry-status-modal" class="modal fade" tabindex="-1" role="dialog">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" onclick="closeModal('registry-status-modal')"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title">Telepathon Registry Status</h4>
-					</div>
-					<div class="modal-body">
-						<ul class="nav nav-pills" style="margin-bottom:12px;">
-							<li class="active" onclick="return teleonomeShowTab('registry-view-pane', this)"><a href="#">Registry</a></li>
-							<li onclick="return teleonomeShowTab('registry-pending-pane', this)"><a href="#">Temporary List</a></li>
-						</ul>
-						<div class="tab-content">
-							<div class="tab-pane active" id="registry-view-pane">
-								<div style="margin-bottom:12px;">
-									<label style="margin-right:16px;font-weight:normal;"><input type="radio" name="registryStatusFilter" value="all" onchange="filterRegistryStatusTable('all')"> Show All</label>
-									<label style="margin-right:16px;font-weight:normal;"><input type="radio" name="registryStatusFilter" value="current" checked onchange="filterRegistryStatusTable('current')"> Show Current</label>
-									<label style="font-weight:normal;"><input type="radio" name="registryStatusFilter" value="stale" onchange="filterRegistryStatusTable('stale')"> Show Stale</label>
-								</div>
-								<div id="registry-status-modal-body"></div>
-							</div>
-							<div class="tab-pane" id="registry-pending-pane"></div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" onclick="closeModal('registry-status-modal')">Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-
-
 
 		 
 		

@@ -369,30 +369,14 @@ function buildPendingListContent(pending) {
 	return html;
 }
 
-function computeRegistryStatusButtonColor() {
-	var statusPointer = "@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM + ":" + DENE_TELEPATHON_REGISTRY + ":" + DENEWORD_TELEPATHON_REGISTRY_STATUS;
-	var status = getDeneWordByIdentityPointer(statusPointer, DENEWORD_VALUE_ATTRIBUTE);
-	if (status === "CRITICAL") return '#e74c3c';
-	if (status === "WARNING") return '#f39c12';
-	if (status === "OK") return '#27ae60';
-	return '#777';
-}
-
-function refreshRegistryStatusButton() {
-	var $btn = $('#registryStatusBtn');
-	if (!$btn.length) return;
-	var color = computeRegistryStatusButtonColor();
-	$btn.css({'background-color': color, 'border-color': color, 'color': '#fff'});
-}
-
 // Renders the registry as the same card grid the main Telepathons view uses -
 // reuses buildTelepathonCardView() itself rather than a bespoke summary table,
 // so clicking a card opens the identical full Configuration/Sensors/Purpose
 // detail modal a live telepathon gets. Fed by each device's LAST KNOWN reading
-// from Postgres (GetLastTelepathonRecords), not the live denome - the whole
-// point being a device still shows up here after the live denome has pruned it
-// (anything idle over an hour disappears from the main view entirely, even
-// though the database still has its last reading).
+// as remembered by the hippocampus (GetHippocampusTelepathonRegistry), not the
+// live denome - the whole point being a device still shows up here after the
+// live denome has pruned it (anything idle over an hour disappears from the
+// main view entirely).
 //
 // '_registry' idSuffix keeps this grid's DOM ids (tpModal_/tpText_/tpCardCol_)
 // distinct from the main view's, since a device can legitimately be rendered in
@@ -460,72 +444,82 @@ function filterRegistryStatusTable(filter) {
 	}
 }
 
-// Fetches each registered device's last-known full reading in one round trip
-// and renders the card grid - separate from openRegistryStatusModal() so the
-// modal opens immediately (with a loading placeholder) rather than waiting on
-// the AJAX call before showing anything.
-function loadRegistryCards(devices) {
-	if (!devices.length) {
-		$('#registry-status-loading').text('No telepathon registry data found.');
-		return;
-	}
-	var names = devices.map(function (d) { return d["Name"]; });
+// Hippocampus modal tabs: show one pane of a group, hide the others, move the
+// pill's "active" class. Plain show/hide (not Bootstrap .tab-pane) because the
+// Data pane is re-rendered every pulse by renderOrgansPanel().
+function hippoShowPane(li, showId, hideIds) {
+	$('#' + showId).show();
+	hideIds.forEach(function(id) { $('#' + id).hide(); });
+	$(li).addClass('active').siblings().removeClass('active');
+	return false;
+}
+
+// Hippocampus button: opens on the Telepathons tab and (re)loads it.
+function openHippocampusModal() {
+	hippoShowPane($('#hippo-top-tabs > li').first(), 'hippo-telepathons-pane', ['hippo-data-pane']);
+	loadHippocampusTelepathonsTab();
+	openModal('hippocampusModal');
+}
+
+// Telepathons tab (replaced the old Registry Status popup): every Cerebellum
+// registry device's last message and current/stale classification, plus the
+// temporary list, all answered by the hippocampus from memory in one request -
+// it subscribes to TelepathonStatus and Cerebellum_Status itself (see
+// TelepathonRegistryMemory in the hippocampus repo). No database fallback: if the
+// hippocampus doesn't answer, that is what gets shown.
+var hippoTelepathonsRequestSeq = 0;
+function loadHippocampusTelepathonsTab() {
+	var seq = ++hippoTelepathonsRequestSeq;
+	$('input[name="registryStatusFilter"][value="current"]').prop('checked', true);
+	hippoShowPane($('#hippo-telepathons-tabs > li').first(), 'hippo-registry-pane', ['registry-pending-pane']);
+	$('#registry-status-modal-body').html(
+		'<div id="registry-status-cards" class="row"></div>' +
+		'<p id="registry-status-loading" class="text-muted text-center" style="padding:20px;">Loading from Hippocampus…</p>'
+	);
+	$('#registry-pending-pane').html('<p class="text-muted text-center" style="padding:20px;">Loading from Hippocampus…</p>');
+
 	$.ajax({
 		type: "GET",
 		url: "/TeleonomeServlet",
-		data: { formName: "GetLastTelepathonRecords", telepathonNames: names.join(",") },
+		data: { formName: "GetHippocampusTelepathonRegistry" },
 		dataType: "json",
-		success: function (records) {
+		timeout: 35000,
+		success: function (resp) {
+			if (seq !== hippoTelepathonsRequestSeq) return; // a newer open superseded this one
+			if (!resp || resp.error) {
+				showHippocampusTelepathonsError(resp && resp.error);
+				return;
+			}
+			var devices = resp["Devices"] || [];
+			$('#registry-pending-pane').html(buildPendingListContent(resp["Pending"] || []));
+			if (!devices.length) {
+				$('#registry-status-loading').text('No telepathon registry received yet - the Hippocampus is waiting for the Cerebellum\'s next registry sweep.');
+				return;
+			}
 			$('#registry-status-loading').remove();
 			var $container = $('#registry-status-cards');
-			devices = devices.slice().sort(function (a, b) {
-				return (a["Name"] || "").localeCompare(b["Name"] || "");
-			});
 			for (var i = 0; i < devices.length; i++) {
 				var device = devices[i];
-				var name = device["Name"];
-				var record = records ? records[name] : null;
-				var isCurrent = isRegistryDeviceCurrent(device);
+				var record = device["LastRecord"];
+				var isCurrent = device["Current"] === true;
 				var $card = (record && record["data"])
 					? buildRegistryCard(record["data"], isCurrent)
-					: buildRegistryNoDataCard(name, isCurrent);
+					: buildRegistryNoDataCard(device["Name"], isCurrent);
 				$container.append($card);
 			}
 			filterRegistryStatusTable($('input[name="registryStatusFilter"]:checked').val() || 'current');
 		},
-		error: function () {
-			$('#registry-status-loading').text('Error loading last known telepathon data.');
+		error: function (xhr) {
+			if (seq !== hippoTelepathonsRequestSeq) return;
+			showHippocampusTelepathonsError(xhr && xhr.responseJSON && xhr.responseJSON.error);
 		}
 	});
 }
 
-function openRegistryStatusModal() {
-	$('input[name="registryStatusFilter"][value="current"]').prop('checked', true);
-	// Reset to the Registry tab every time the modal is (re)opened, rather than
-	// leaving it wherever the user last clicked away from.
-	var $modal = $('#registry-status-modal');
-	$modal.find('.nav-pills > li').first().addClass('active').siblings().removeClass('active');
-	$modal.find('.tab-pane').first().addClass('active').siblings('.tab-pane').removeClass('active');
-
-	var devices = getTelepathonRegistryDeviceList();
-	if (devices === null) {
-		$('#registry-status-modal-body').html('<p class="text-danger text-center" style="padding:20px;">Error loading registry status.</p>');
-	} else {
-		$('#registry-status-modal-body').html(
-			'<div id="registry-status-cards" class="row"></div>' +
-			'<p id="registry-status-loading" class="text-muted text-center" style="padding:20px;">Loading last known data…</p>'
-		);
-		loadRegistryCards(devices);
-	}
-
-	var pending = getTelepathonRegistryPendingList();
-	$('#registry-pending-pane').html(
-		pending === null
-			? '<p class="text-danger text-center" style="padding:20px;">Error loading temporary list.</p>'
-			: buildPendingListContent(pending)
-	);
-
-	openModal('registry-status-modal');
+function showHippocampusTelepathonsError(message) {
+	var html = '<p class="text-danger text-center" style="padding:20px;">' + (message || 'Hippocampus not responding.') + '</p>';
+	$('#registry-status-modal-body').html(html);
+	$('#registry-pending-pane').html(html);
 }
 
 var organismInfoJsonData;
@@ -1624,7 +1618,30 @@ function renderOrgansPanel() {
 			'<div class="modal fade" id="hippocampusModal" tabindex="-1" role="dialog">' +
 			'<div class="modal-dialog modal-lg"><div class="modal-content">' +
 			'<div class="modal-header">' + mkClose('hippocampusModal') + '<h4 class="modal-title">Hippocampus</h4></div>' +
-			'<div class="modal-body" id="hippocampusModalBody"></div>' +
+			'<div class="modal-body" id="hippocampusModalBody">' +
+				'<ul class="nav nav-pills" id="hippo-top-tabs" style="margin-bottom:12px;">' +
+					'<li class="active" onclick="return hippoShowPane(this, \'hippo-telepathons-pane\', [\'hippo-data-pane\'])"><a href="#">Telepathons</a></li>' +
+					'<li onclick="return hippoShowPane(this, \'hippo-data-pane\', [\'hippo-telepathons-pane\'])"><a href="#">Data</a></li>' +
+				'</ul>' +
+				// Telepathons: filled on open by loadHippocampusTelepathonsTab(), never by the per-pulse render below
+				'<div id="hippo-telepathons-pane">' +
+					'<ul class="nav nav-pills nav-sm" id="hippo-telepathons-tabs" style="margin-bottom:12px;font-size:12px;">' +
+						'<li class="active" onclick="return hippoShowPane(this, \'hippo-registry-pane\', [\'registry-pending-pane\'])"><a href="#">Registry</a></li>' +
+						'<li onclick="return hippoShowPane(this, \'registry-pending-pane\', [\'hippo-registry-pane\'])"><a href="#">Temporary List</a></li>' +
+					'</ul>' +
+					'<div id="hippo-registry-pane">' +
+						'<div style="margin-bottom:12px;">' +
+							'<label style="margin-right:16px;font-weight:normal;"><input type="radio" name="registryStatusFilter" value="all" onchange="filterRegistryStatusTable(\'all\')"> Show All</label>' +
+							'<label style="margin-right:16px;font-weight:normal;"><input type="radio" name="registryStatusFilter" value="current" checked onchange="filterRegistryStatusTable(\'current\')"> Show Current</label>' +
+							'<label style="font-weight:normal;"><input type="radio" name="registryStatusFilter" value="stale" onchange="filterRegistryStatusTable(\'stale\')"> Show Stale</label>' +
+						'</div>' +
+						'<div id="registry-status-modal-body"></div>' +
+					'</div>' +
+					'<div id="registry-pending-pane" style="display:none;"></div>' +
+				'</div>' +
+				// Data: the original Hippocampus content, re-rendered every pulse
+				'<div id="hippo-data-pane" style="display:none;"></div>' +
+			'</div>' +
 			'<div class="modal-footer">' + mkFooter('hippocampusModal') + '</div>' +
 			'</div></div></div>'
 		);
@@ -1802,7 +1819,7 @@ function renderOrgansPanel() {
 			}
 		}
 	}
-	$('#hippocampusModalBody').html(hippoContent);
+	$('#hippo-data-pane').html(hippoContent);
 	if (hippoSpaceSlices) {
 		drawHippocampusPieChart('hippo-space-chart', hippoSpaceSlices, ['#4e79a7', '#d9d9d9']);
 	}
@@ -1989,7 +2006,7 @@ function renderOrgansPanel() {
 	html += '<div>';
 	html += '<div class="row" style="margin:8px 0;">';
 	html += '<div class="col-xs-12 col-sm-4 text-center" style="margin-bottom:10px;">';
-	html += '<button class="btn btn-lg btn-block ' + statusClass + '" onclick="openModal(\'hippocampusModal\')">Hippocampus</button>';
+	html += '<button class="btn btn-lg btn-block ' + statusClass + '" onclick="openHippocampusModal()">Hippocampus</button>';
 	html += '</div>';
 	html += '<div class="col-xs-12 col-sm-4 text-center" style="margin-bottom:10px;">';
 	html += '<button class="btn btn-lg btn-block ' + statusClass + '" onclick="openModal(\'cerebellumModal\')">Cerebellum</button>';
@@ -2004,7 +2021,6 @@ function renderOrgansPanel() {
 // (moved to deviceviews, 2026-10-31)
 
 function refreshTelepathonsView(){
-	refreshRegistryStatusButton();
 	var telepathonsNuclei=getTelepathonsDeneChains();
 	if(!telepathonsNuclei) return "";
 	var deneChains = telepathonsNuclei['DeneChains'];
