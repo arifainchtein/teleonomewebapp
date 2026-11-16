@@ -2718,8 +2718,10 @@ function renderPageByPointer(pagePointer, locationId){
 
 			localStorage.setItem("DiagnosticInfo", JSON.stringify(systemInfoDeneChainPanelJSON));
 
-			// compact layout (2026-11-05): one bar with the buttons, Stop/Restart/Turn off and the Organs (DiagnosticsBar.js)
-			var diagnosticsInfo = (typeof dsActive === "function" && dsActive()) ? new DiagnosticsBar() : new DiagnosticsInfo();
+			// compact layout (2026-11-05): one bar with the buttons, Stop/Restart/Turn off and the Organs (DiagnosticsBar.js).
+			// Every Teleonome since 2026-11-13 (Annabelle too, not only the ds-theme ones): Restart/Turn off live here now,
+			// so the Settings page can leave the footer
+			var diagnosticsInfo = new DiagnosticsBar();
 			panelHTML += diagnosticsInfo.process();
 
 
