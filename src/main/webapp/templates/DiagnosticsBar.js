@@ -5,7 +5,9 @@
 //            handlers draw into #DiagnosticsWorkArea as before), Stop Hypothalamus / Restart / Turn off on the right
 //            (#StopHypothalamusButton, #RestartButton, #ShutdownButton: index.html asks for the 6-digit code)
 //   line 2   Organs: Cerebellum, Hippocampus, Heart, each with a dot from its status file (GetOrganStatus form);
-//            their views are drawn here
+//            their views are drawn here; the Hippocampus view is the Organs panel's (hippocampusViewBodyHTML(),
+//            RenderingEngine.js: Telepathons Registry/Temporary List + Data), kept alive across the pulse redraws;
+//            the Cerebellum view is the Organs panel's too (cerebellumViewHTML(): one pill per task)
 //   below    #DiagnosticsWorkArea: empty until a button is pressed; the same button again hides it
 // Leaves 5 divs open: renderPageByPointer closes them.
 //
@@ -48,6 +50,8 @@ class DiagnosticsBar extends DiagnosticsInfo {
 		// the page is redrawn every pulse: a diagnostic view (not an organ) is drawn by its handler, so draw it again
 		if (dsDiagCurrent && !DS_ORGAN_VIEWS[dsDiagCurrent] && dsDiagCurrent !== "JsonDenome") setTimeout(function () { $("#" + dsDiagCurrent).trigger("click", [true]); }, 0);
 		if (dsDiagCurrent === "Heart") setTimeout(dsHeartViewReady, 0);
+		if (dsDiagCurrent === "Hippocampus") setTimeout(function () { dsHippocampusViewReady(false); }, 0);
+		if (dsDiagCurrent === "Cerebellum") setTimeout(dsCerebellumRestoreTab, 0);
 		return h;
 	}
 }
@@ -73,7 +77,8 @@ function dsOrganRefresh() {
 		success: function (data) {
 			dsOrganStatus = data;
 			$("#DSOrganButtons").html(dsOrganButtonsHTML());
-			if (dsDiagCurrent === "Cerebellum" || dsDiagCurrent === "Hippocampus") $("#DiagnosticsWorkArea").html(DS_ORGAN_VIEWS[dsDiagCurrent]());
+			if (dsDiagCurrent === "Cerebellum") { $("#DiagnosticsWorkArea").html(DS_ORGAN_VIEWS.Cerebellum()); dsCerebellumRestoreTab(); }
+			if (dsDiagCurrent === "Hippocampus") $("#dg-hippo-head").html(dsHippocampusHeadHTML());
 		} });
 }
 
@@ -89,6 +94,8 @@ $(document).on("click", ".dg-btn", function (e, redraw) {
 	if (DS_ORGAN_VIEWS[which]) {
 		$("#DiagnosticsWorkArea").html(closing ? "" : DS_ORGAN_VIEWS[which]()).toggle(!closing);
 		if (!closing && which === "Heart") dsHeartViewReady();
+		if (which === "Hippocampus") { if (closing) dsHippoNode = null; else dsHippocampusViewReady(true); }
+		if (which === "Cerebellum") dsCerebTab = null;
 		if (!closing) dsOrganRefresh();
 	} else if (closing) {
 		setTimeout(function () { $("#DiagnosticsWorkArea").hide().empty(); }, 0);
@@ -100,35 +107,17 @@ function dsKv(rows) {
 }
 
 var DS_ORGAN_VIEWS = {
+	// the Organs panel's Cerebellum (one pill per task and what it found), under a line with the process status
 	Cerebellum: function () {
 		var e = dsEsc, s = dsOrganStatus && dsOrganStatus.Cerebellum, st = dsOrganState("Cerebellum");
-		var tasks = ((getDeneChainByIdentityPointer("@" + teleonomeName + ":" + NUCLEI_INTERNAL + ":" + DENECHAIN_INTERNAL_CEREBELLUM) || {}).Denes || [])
-			.filter(function (d) { return d.DeneType === DENE_TYPE_CEREBELLUM_TASK || d["Dene Type"] === DENE_TYPE_CEREBELLUM_TASK; });
-		var outputs = ((getDeneChainByIdentityPointer("@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + DENECHAIN_PURPOSE_CEREBELLUM) || {}).Denes || []);
-		var h = '<h4><span class="dg-dot ' + st[0] + '"></span>Cerebellum <small>analyses the data and reports what it finds</small></h4>';
-		h += dsKv([["Process", s ? "running, pid " + e(s.cerebellumPid) : "no status file"], ["Last sign of life", st[1]], ["Tasks", "<b>" + tasks.length + "</b>"]]);
-		if (!tasks.length) return h + '<div class="dg-note">The Cerebellum is running but has no tasks in the denome yet, so it analyses nothing. Once tasks are added, each one shows here with what it found.</div>';
-		h += '<table class="table table-condensed"><tr><th>Task</th><th>Active</th><th>Runs</th><th>Output</th></tr>';
-		tasks.forEach(function (t) {
-			var w = {};
-			(t.DeneWords || []).forEach(function (x) { w[x.Name] = x.Value; });
-			var out = outputs.find(function (o) { return o.Name === w["Telepathon Type"] || o.Name === t.Name; });
-			var outHtml = out ? '<table class="table table-condensed dg-out">' + (out.DeneWords || []).map(function (x) { return '<tr><td>' + e(x.Name) + '</td><td><b>' + e(x.Value) + '</b></td></tr>'; }).join("") + '</table>' : '<span class="ds-sub">nothing yet</span>';
-			h += '<tr><td><b>' + e(t.Name) + '</b></td><td>' + e(w.Active) + '</td><td class="ds-sub">' + e(w["Execution Frequency"] || w["Execution Time"] || w.Expression || "") + '</td><td>' + outHtml + '</td></tr>';
-		});
-		return h + '</table>';
+		var h = '<h4><span class="dg-dot ' + st[0] + '"></span>Cerebellum <small>analyses the data and reports what it finds'
+			+ (s ? ' · pid ' + e(s.cerebellumPid) + ' · ' + st[1] : ' · no status file') + '</small></h4>';
+		$("#cerebellumModal").remove();	// same pane ids as this view
+		return h + '<div id="dg-cereb-view">' + (typeof cerebellumViewHTML === "function" ? cerebellumViewHTML() : "") + '</div>';
 	},
+	// the Organs panel's Hippocampus: dsHippocampusViewReady() puts the view itself into #dg-hippo-body
 	Hippocampus: function () {
-		var e = dsEsc, s = dsOrganStatus && dsOrganStatus.Hippocampus, st = dsOrganState("Hippocampus"), w = {};
-		((s && s.DeneWords) || []).forEach(function (x) { w[x.Name] = x.Value; });
-		var h = '<h4><span class="dg-dot ' + st[0] + '"></span>Hippocampus <small>keeps recent Telepathon data in memory, for the charts</small></h4>';
-		if (!s) return h + '<p class="ds-sub">No status file.</p>';
-		h += dsKv([["Status", e(w.Status)], ["Process", "running, pid " + e(s.hippocampusPid)], ["Last sign of life", st[1]],
-			["Points used", e(w.PointsUsed) + " of " + Number(w.PointsAvailable || 0).toLocaleString() + " (" + e(w.PercentageUsed) + "%)"],
-			["Preload", w["Preload Data"] ? "yes, " + e(w["Preload Hours"]) + " h · took " + e(w["Pre Load Duration"]) : "no"],
-			["Recommended -Xmx", w["Recommended XMX"] ? e(w["Recommended XMX"]) + " MB" : ""], ["Sacrificed points", e(w["Sacrificed Points"])]]);
-		if (!Number(w.PointsUsed)) h += '<div class="dg-note">Empty: the Hippocampus holds Telepathon history (Annabelle, Daffodil…), and this Teleonome has none. Its own charts come from the database.</div>';
-		return h;
+		return '<div id="dg-hippo-head">' + dsHippocampusHeadHTML() + '</div><div id="dg-hippo-body"></div>';
 	},
 	Heart: function () {
 		return '<h4><span class="dg-dot"></span>Heart <small>the messages this page has received from the organs</small>'
@@ -146,3 +135,44 @@ function dsHeartViewReady() {
 	heartLogUpdateFilterOptions();
 	refreshHeartStatsView();
 }
+
+// Hippocampus organ view (2026-11-17): the same view as the Organs panel's Hippocampus button (Telepathons:
+// Registry/Temporary List from the Hippocampus itself, Data: memory charts, Stats, Contents). The page is redrawn
+// every pulse, so the view's node is kept (dsHippoNode) and put back after each redraw: tabs, filters and the
+// loaded registry survive, and only the Data pane is filled again from the new pulse.
+var dsHippoNode = null;
+
+function dsHippocampusHeadHTML() {
+	var e = dsEsc, s = dsOrganStatus && dsOrganStatus.Hippocampus, st = dsOrganState("Hippocampus"), w = {};
+	((s && s.DeneWords) || []).forEach(function (x) { w[x.Name] = x.Value; });
+	return '<h4><span class="dg-dot ' + st[0] + '"></span>Hippocampus <small>keeps recent Telepathon data in memory, for the charts'
+		+ (s ? ' · ' + e(w.Status) + ' · pid ' + e(s.hippocampusPid) + ' · ' + st[1] : ' · no status file') + '</small></h4>';
+}
+
+function dsHippocampusViewReady(fresh) {
+	if (typeof hippocampusViewBodyHTML !== "function") return;
+	// the Organs panel's modal uses the same ids: only one of the two may be in the page
+	$("#hippocampusModal").remove();
+	if (fresh || !dsHippoNode) {
+		dsHippoNode = $('<div id="dg-hippo-view">' + hippocampusViewBodyHTML() + '</div>');
+		$("#dg-hippo-body").empty().append(dsHippoNode);
+		loadHippocampusTelepathonsTab();
+	} else {
+		$("#dg-hippo-body").empty().append(dsHippoNode);
+	}
+	renderHippocampusDataPane();
+}
+
+// Cerebellum organ view: the page is redrawn every pulse, which would put the task pills back on the first task;
+// remember the one chosen and choose it again after each redraw
+var dsCerebTab = null;
+$(document).on("click", "#dg-cereb-view .nav-pills > li", function () {
+	var m = /teleonomeShowTab\('([^']+)'/.exec(this.getAttribute("onclick") || "");
+	if (m) dsCerebTab = m[1];
+});
+function dsCerebellumRestoreTab() {
+	if (!dsCerebTab || !$("#" + dsCerebTab).length) return;
+	var li = $("#dg-cereb-view .nav-pills > li").filter(function () { return (this.getAttribute("onclick") || "").indexOf("'" + dsCerebTab + "'") !== -1; }).first();
+	if (li.length) teleonomeShowTab(dsCerebTab, li);
+}
+

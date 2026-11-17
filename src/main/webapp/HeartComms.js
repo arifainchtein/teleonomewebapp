@@ -131,7 +131,7 @@ function onMessageArrived(message) {
 	}else if(lastMessageTopic==responseChanel){
 		displayHippocampusResponse(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_EMERGENCY_CHANNEL){
-		handleEmergencyChannelMessage(payload);
+		DeviceViewsEmergency.receive(payload);	// deviceviews-emergency.js: the banner under the header, on every page
 	}else if(lastMessageTopic==HEART_TOPIC_CEREBELLUM_TELEPATHON_DIAGNOSE_REPORT){
 		handleTelepathonDiagnoseReport(payload);
 	}else if(lastMessageTopic==HEART_TOPIC_HIPPOCAMPUS_RESPONSE){

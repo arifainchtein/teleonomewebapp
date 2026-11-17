@@ -606,7 +606,7 @@ function filterRegistryStatusTable(filter) {
 
 // Hippocampus modal tabs: show one pane of a group, hide the others, move the
 // pill's "active" class. Plain show/hide (not Bootstrap .tab-pane) because the
-// Data pane is re-rendered every pulse by renderOrgansPanel().
+// Data pane is re-rendered every pulse by renderHippocampusDataPane().
 function hippoShowPane(li, showId, hideIds) {
 	$('#' + showId).show();
 	hideIds.forEach(function(id) { $('#' + id).hide(); });
@@ -1711,74 +1711,13 @@ function renderMnemosyneViewPanel() {
 	return html;
 }
 
-// ── Emergency Channel ──────────────────────────────────────────────────────
-// A banner shown above the Organs panel whenever something publishes to
-// HEART_TOPIC_EMERGENCY_CHANNEL ("Emergency Channel") -- e.g. the Cerebellum discovering a
-// telepathon has gone missing. Nothing publishes to this topic yet; this is the receiving half
-// of the contract (see the constant's comment in TeleonomeConstants.js for the expected payload).
-// Messages persist (across pulse-driven re-renders of renderOrgansPanel, since this array lives
-// outside of it) until the operator dismisses them individually.
-var emergencyChannelMessages = [];
-var emergencyChannelMessageCounter = 0;
+// Emergency Channel: moved to deviceviews (deviceviews-emergency.js, 2026-11-17), drawn under the header on every page
 
-function handleEmergencyChannelMessage(payload) {
-	var sender = 'Unknown', msgText = payload, timeStr;
-	try {
-		var parsed = JSON.parse(payload);
-		sender = parsed.Sender || parsed.sender || 'Unknown';
-		msgText = parsed.Message || parsed.message || payload;
-		if (parsed.TimestampMillis || parsed.timestampMillis) {
-			timeStr = new Date(parseInt(parsed.TimestampMillis || parsed.timestampMillis)).toLocaleString();
-		} else if (parsed.Timestamp || parsed.timestamp) {
-			timeStr = parsed.Timestamp || parsed.timestamp;
-		}
-	} catch (e) {
-		// Not JSON -- treat the raw payload as the message text.
-	}
-	if (!timeStr) timeStr = new Date().toLocaleString();
-
-	emergencyChannelMessageCounter++;
-	emergencyChannelMessages.unshift({ id: emergencyChannelMessageCounter, sender: sender, message: msgText, timeStr: timeStr });
-
-	$('#emergency-channel-banner').html(buildEmergencyBannerHtml());
-}
-
-function dismissEmergencyMessage(id) {
-	emergencyChannelMessages = emergencyChannelMessages.filter(function(m) { return m.id !== id; });
-	$('#emergency-channel-banner').html(buildEmergencyBannerHtml());
-}
-
-function buildEmergencyBannerHtml() {
-	if (emergencyChannelMessages.length === 0) return '';
-	var html = '';
-	emergencyChannelMessages.forEach(function(m) {
-		html += '<div class="alert alert-danger" style="margin:8px 0;padding:10px 34px 10px 14px;position:relative;" role="alert">' +
-			'<button type="button" class="close" onclick="dismissEmergencyMessage(' + m.id + ')" style="position:absolute;top:8px;right:12px;">&times;</button>' +
-			'<strong>&#9888; Emergency:</strong> ' + m.message +
-			'<div style="font-size:12px;margin-top:4px;opacity:0.8;">From <strong>' + m.sender + '</strong> at ' + m.timeStr + '</div>' +
-			'</div>';
-	});
-	return html;
-}
-
-function renderOrgansPanel() {
-	if (organsRenderedThisCycle) {
-		return '<div style="display:none;"><div><div><div><div>';
-	}
-	organsRenderedThisCycle = true;
-
-	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
-	var statusClass = ageSeconds < 60 ? 'btn-success' : (ageSeconds < 120 ? 'btn-warning' : 'btn-danger');
-	var mkClose = function(id) { return '<button type="button" class="close" onclick="closeModal(\'' + id + '\')">&times;</button>'; };
-	var mkFooter = function(id) { return '<button type="button" class="btn btn-default" onclick="closeModal(\'' + id + '\')">Close</button>'; };
-
-	// Hippocampus modal
-	if (!$('#hippocampusModal').length) {
-		$('body').append(
-			'<div class="modal fade" id="hippocampusModal" tabindex="-1" role="dialog">' +
-			'<div class="modal-dialog modal-lg"><div class="modal-content">' +
-			'<div class="modal-header">' + mkClose('hippocampusModal') + '<h4 class="modal-title">Hippocampus</h4></div>' +
-			'<div class="modal-body" id="hippocampusModalBody">' +
+// The Hippocampus view (2026-11-17): the Telepathons (Registry, Temporary List) and Data tabs. Drawn in the
+// Organs panel's modal and in the Diagnostics page's Hippocampus organ view (DiagnosticsBar.js); the ids are fixed,
+// so only one of the two may be in the page at a time (DiagnosticsBar removes the modal when it draws its own).
+function hippocampusViewBodyHTML() {
+	return (
 				'<ul class="nav nav-pills" id="hippo-top-tabs" style="margin-bottom:12px;">' +
 					'<li class="active" onclick="return hippoShowPane(this, \'hippo-telepathons-pane\', [\'hippo-data-pane\'])"><a href="#">Telepathons</a></li>' +
 					'<li onclick="return hippoShowPane(this, \'hippo-data-pane\', [\'hippo-telepathons-pane\'])"><a href="#">Data</a></li>' +
@@ -1800,12 +1739,12 @@ function renderOrgansPanel() {
 					'<div id="registry-pending-pane" style="display:none;"></div>' +
 				'</div>' +
 				// Data: the original Hippocampus content, re-rendered every pulse
-				'<div id="hippo-data-pane" style="display:none;"></div>' +
-			'</div>' +
-			'<div class="modal-footer">' + mkFooter('hippocampusModal') + '</div>' +
-			'</div></div></div>'
-		);
-	}
+				'<div id="hippo-data-pane" style="display:none;"></div>'
+	);
+}
+
+// fills #hippo-data-pane (charts, Stats, Contents) from the current pulse; called every pulse by whichever view is shown
+function renderHippocampusDataPane() {
 	var hippoContent = '';
 	var hippoSpaceSlices = null;
 	var hippoBreakdownSlices = null;
@@ -1986,18 +1925,12 @@ function renderOrgansPanel() {
 	if (hippoBreakdownSlices && hippoBreakdownSlices.length > 0) {
 		filterHippoBreakdownChart('all');
 	}
+}
 
-	// Cerebellum modal
-	if (!$('#cerebellumModal').length) {
-		$('body').append(
-			'<div class="modal fade" id="cerebellumModal" tabindex="-1" role="dialog">' +
-			'<div class="modal-dialog"><div class="modal-content">' +
-			'<div class="modal-header">' + mkClose('cerebellumModal') + '<h4 class="modal-title">Cerebellum</h4></div>' +
-			'<div class="modal-body" id="cerebellumModalBody"></div>' +
-			'<div class="modal-footer">' + mkFooter('cerebellumModal') + '</div>' +
-			'</div></div></div>'
-		);
-	}
+// The Cerebellum view (2026-11-17): one pill per Cerebellum task with what it found (Purpose:Cerebellum). Drawn in
+// the Organs panel's modal and in the Diagnostics page's Cerebellum organ view (DiagnosticsBar.js); the pane ids are
+// fixed (cereb-task-N), so only one of the two may be in the page at a time.
+function cerebellumViewHTML() {
 	var cerebModalContent = '';
 	var cerebInternalPointer = "@" + teleonomeName + ":" + NUCLEI_INTERNAL + ":" + DENECHAIN_INTERNAL_CEREBELLUM;
 	var cerebPurposePointer  = "@" + teleonomeName + ":" + NUCLEI_PURPOSE  + ":" + DENECHAIN_PURPOSE_CEREBELLUM;
@@ -2129,7 +2062,47 @@ function renderOrgansPanel() {
 	} else {
 		cerebModalContent = '<p class="text-muted text-center" style="padding:20px;">No tasks available.</p>';
 	}
-	$('#cerebellumModalBody').html(cerebModalContent);
+	return cerebModalContent;
+}
+
+function renderOrgansPanel() {
+	if (organsRenderedThisCycle) {
+		return '<div style="display:none;"><div><div><div><div>';
+	}
+	organsRenderedThisCycle = true;
+
+	var ageSeconds = (Date.now() - pulseTimestampMilliseconds) / 1000;
+	var statusClass = ageSeconds < 60 ? 'btn-success' : (ageSeconds < 120 ? 'btn-warning' : 'btn-danger');
+	var mkClose = function(id) { return '<button type="button" class="close" onclick="closeModal(\'' + id + '\')">&times;</button>'; };
+	var mkFooter = function(id) { return '<button type="button" class="btn btn-default" onclick="closeModal(\'' + id + '\')">Close</button>'; };
+
+	// Hippocampus modal
+	if (!$('#hippocampusModal').length) {
+		$('body').append(
+			'<div class="modal fade" id="hippocampusModal" tabindex="-1" role="dialog">' +
+			'<div class="modal-dialog modal-lg"><div class="modal-content">' +
+			'<div class="modal-header">' + mkClose('hippocampusModal') + '<h4 class="modal-title">Hippocampus</h4></div>' +
+			'<div class="modal-body" id="hippocampusModalBody">' +
+			hippocampusViewBodyHTML() +
+			'</div>' +
+			'<div class="modal-footer">' + mkFooter('hippocampusModal') + '</div>' +
+			'</div></div></div>'
+		);
+	}
+	renderHippocampusDataPane();
+
+	// Cerebellum modal
+	if (!$('#cerebellumModal').length) {
+		$('body').append(
+			'<div class="modal fade" id="cerebellumModal" tabindex="-1" role="dialog">' +
+			'<div class="modal-dialog"><div class="modal-content">' +
+			'<div class="modal-header">' + mkClose('cerebellumModal') + '<h4 class="modal-title">Cerebellum</h4></div>' +
+			'<div class="modal-body" id="cerebellumModalBody"></div>' +
+			'<div class="modal-footer">' + mkFooter('cerebellumModal') + '</div>' +
+			'</div></div></div>'
+		);
+	}
+	$('#cerebellumModalBody').html(cerebellumViewHTML());
 
 	// Heart modal
 	if (!$('#heartModal').length) {
@@ -2158,8 +2131,7 @@ function renderOrgansPanel() {
 	}
 	refreshHeartStatsView();
 
-	var html = '<div class="col-lg-12" id="emergency-channel-banner">' + buildEmergencyBannerHtml() + '</div>';
-	html += '<div class="col-lg-12">';
+	var html = '<div class="col-lg-12">';
 	html += '<div class="bs-component"><div class="panel panel-default">';
 	html += '<div class="panel-heading"><h4>Organs</h4></div>';
 	html += '<div class="panel-body">';

@@ -1195,8 +1195,8 @@ var HEART_TOPIC_EXECUTE_MANUAL_ACTION="Manual Action";
 var HEART_TOPIC_RESIGNAL="Resignal";
 // Expected payload (JSON): {"Sender": "...", "Message": "...", "TimestampMillis": <epoch ms>}
 // ("Timestamp" as a preformatted string is also accepted in place of TimestampMillis).
-// Not yet published by anything server-side -- see handleEmergencyChannelMessage in
-// RenderingEngine.js for the webapp half of this contract.
+// Published by the Cerebellum (publishEmergency: a registry telepathon gone missing, the Hypothalamus silent);
+// drawn by deviceviews-emergency.js (DeviceViewsEmergency.receive, called from HeartComms.js).
 var HEART_TOPIC_EMERGENCY_CHANNEL="Emergency Channel";
 
 // Heart's own self-reported health (Metaspace/GC pressure, session-loop thread
