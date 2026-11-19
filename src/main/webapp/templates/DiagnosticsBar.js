@@ -24,6 +24,7 @@ var DS_DIAG_BUTTONS = [
 	["SystemDiagnostics", "System Diagnostics Panel", "dashboard", "System"]
 ];
 var DS_ORGANS = [
+	["Hypothalamus", "flash", "the pulse"],
 	["Cerebellum", "cog", "analysis"],
 	["Hippocampus", "hdd", "Telepathon memory"],
 	["Heart", "heart", "messages between organs"]
@@ -59,8 +60,19 @@ class DiagnosticsBar extends DiagnosticsInfo {
 	}
 }
 
+function dsHM(ms) { var d = new Date(ms); return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); }
+
 function dsOrganState(name) {
 	if (name === "Heart") return ["", "running"];
+	if (name === "Hypothalamus") {
+		var hy = dsOrganStatus && dsOrganStatus.Hypothalamus;
+		if (!hy) return ["bad", dsOrganStatus ? "no status" : "…"];
+		var since = hy["Last Pulse Milliseconds"] ? (dsOrganStatus.Now - hy["Last Pulse Milliseconds"]) / 1000 : null;
+		var last = since === null ? "" : " · last pulse " + (since < 90 ? Math.round(since) + " s ago" : Math.round(since / 60) + " min ago");
+		if (hy["Stopped Until"]) return ["warn", (hy.Running ? "stopping" : "stopped for maintenance until " + dsHM(hy["Stopped Until"])) + last];
+		if (!hy.Running) return ["bad", "not running" + last];
+		return [since !== null && since > 600 ? "warn" : "", "pulsing" + last];
+	}
 	var s = dsOrganStatus && dsOrganStatus[name];
 	if (!s) return ["bad", dsOrganStatus ? "no status file" : "…"];
 	var age = (dsOrganStatus.Now - s["Timestamp Milliseconds"]) / 1000;
@@ -82,6 +94,7 @@ function dsOrganRefresh() {
 			$("#DSOrganButtons").html(dsOrganButtonsHTML());
 			if (dsDiagCurrent === "Cerebellum") { $("#DiagnosticsWorkArea").html(DS_ORGAN_VIEWS.Cerebellum()); dsCerebellumRestoreTab(); }
 			if (dsDiagCurrent === "Hippocampus") $("#dg-hippo-head").html(dsHippocampusHeadHTML());
+			if (dsDiagCurrent === "Hypothalamus") $("#DiagnosticsWorkArea").html(DS_ORGAN_VIEWS.Hypothalamus());
 		} });
 }
 
@@ -110,6 +123,14 @@ function dsKv(rows) {
 }
 
 var DS_ORGAN_VIEWS = {
+	// the Hypothalamus: its state, and while stopped for maintenance the same buttons as in the bar
+	Hypothalamus: function () {
+		var hy = (dsOrganStatus && dsOrganStatus.Hypothalamus) || {}, st = dsOrganState("Hypothalamus");
+		return '<h4><span class="dg-dot ' + st[0] + '"></span>Hypothalamus <small>runs the pulse: reads the microcontrollers, evaluates, acts, writes the Denome</small></h4>'
+			+ dsKv([["State", dsEsc(st[1])], ["Process", hy.Running ? "pid " + dsEsc(hy.Pid) : "not running"],
+				["Last pulse", hy["Last Pulse Milliseconds"] ? new Date(hy["Last Pulse Milliseconds"]).toLocaleString() : ""],
+				["Stopped until", hy["Stopped Until"] ? new Date(hy["Stopped Until"]).toLocaleString() + " (then the Medula starts it again)" : ""]]);
+	},
 	// the Organs panel's Cerebellum (one pill per task and what it found), under a line with the process status
 	Cerebellum: function () {
 		var e = dsEsc, s = dsOrganStatus && dsOrganStatus.Cerebellum, st = dsOrganState("Cerebellum");
@@ -179,3 +200,11 @@ function dsCerebellumRestoreTab() {
 	if (li.length) teleonomeShowTab(dsCerebTab, li);
 }
 
+
+// The page is redrawn by the pulse; with the Hypothalamus stopped there is none, so while the Diagnostics bar is on the
+// page its organ boxes and the maintenance buttons are refreshed every 15 s as well (2026-11-19)
+setInterval(function () {
+	if (document.hidden || !document.getElementById("DSOrganButtons")) return;
+	dsOrganRefresh();
+	if (typeof dsMaintRefresh === "function") dsMaintRefresh();
+}, 15000);
