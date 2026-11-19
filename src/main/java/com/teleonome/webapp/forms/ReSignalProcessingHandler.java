@@ -117,6 +117,17 @@ public class ReSignalProcessingHandler extends ProcessingFormHandler {
 			// Stop Hypothalamus (Diagnostics page, 2026-11-05): MappedBusThread checks the code, marks the command done
 			// and exits between pulses, so the denome isn't cut in the middle of a write (unlike kill)
 			command = TeleonomeConstants.COMMAND_KILL_PULSE;
+			// stopped for maintenance (2026-11-19): the page's token goes with the code; the Hypothalamus, having checked
+			// the code, writes HypothalamusStopped.info with it, so the Medula leaves it stopped and the page may fertilize
+			String maintenanceToken = request.getParameter("MaintenanceToken");
+			if(maintenanceToken!=null && maintenanceToken.matches("[0-9a-f]{32}")) {
+				try {
+					payload = new JSONObject().put(TeleonomeConstants.MAINTENANCE_TOKEN, maintenanceToken)
+							.put(TeleonomeConstants.MAINTENANCE_MINUTES, TeleonomeConstants.MAINTENANCE_DEFAULT_MINUTES).toString();
+				} catch (JSONException e) {
+					logger.warn("maintenance token not added: " + e.getMessage());
+				}
+			}
 		}else{
 		}
 

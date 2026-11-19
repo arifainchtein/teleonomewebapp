@@ -1214,6 +1214,8 @@ function receivedCommandResponse(cr){
 	// updated.  Note that this will come from tomcat
 	// not the heart
 	var commandResponse = JSON.parse(cr);
+	// a tab saved from the Home Page Pills waits for its own answer (HomePagePillsTeleonomeHost.js)
+	if(typeof homePagePillsCommandAnswer === "function") homePagePillsCommandAnswer(commandResponse);
 	$.ajax({
 		type: "GET",
 		url: "/TeleonomeServlet",
@@ -2959,6 +2961,10 @@ function renderPageByPointer(pagePointer, locationId){
 
 		}else if(mainPanelVisualStyle===PANEL_VISUALIZATION_STYLE_MNEMOSYNE_VIEW){
 			panelHTML += renderMnemosyneViewPanel();
+
+		}else if(typeof HOME_PAGE_PILLS_STYLE !== "undefined" && mainPanelVisualStyle===HOME_PAGE_PILLS_STYLE){
+			// the pills of devices.digitalstables.com: Map, Weather, the pages a person makes (HomePagePillsTeleonomeHost.js)
+			panelHTML += homePagePillsPanelHTML(panelDeneChain);
 
 		}else{
 

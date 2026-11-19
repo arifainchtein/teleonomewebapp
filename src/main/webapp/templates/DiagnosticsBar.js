@@ -39,6 +39,7 @@ class DiagnosticsBar extends DiagnosticsInfo {
 				+ '<i class="glyphicon glyphicon-' + b[2] + '"></i>' + b[3] + '</div>';
 		}).join("") + '</div>'
 			+ '<div class="dg-power">'
+			+ '<span id="DSMaintenance" class="dg-maint"></span>'
 			+ '<button id="StopHypothalamusButton" class="btn btn-warning" title="Stops the Hypothalamus cleanly between pulses, so you can work on it without corrupting the denome"><i class="glyphicon glyphicon-stop"></i> Stop Hypothalamus</button>'
 			+ '<button id="RestartButton" class="btn btn-default"><i class="glyphicon glyphicon-repeat"></i> Restart</button>'
 			+ '<button id="ShutdownButton" class="btn btn-danger"><i class="glyphicon glyphicon-off"></i> Turn off</button>'
@@ -52,6 +53,8 @@ class DiagnosticsBar extends DiagnosticsInfo {
 		if (dsDiagCurrent === "Heart") setTimeout(dsHeartViewReady, 0);
 		if (dsDiagCurrent === "Hippocampus") setTimeout(function () { dsHippocampusViewReady(false); }, 0);
 		if (dsDiagCurrent === "Cerebellum") setTimeout(dsCerebellumRestoreTab, 0);
+		if (dsDiagCurrent === "Fertilizer") dsDiagCurrent = null;   // pulses again: the Hypothalamus runs, nothing to fertilize
+		if (typeof dsMaintRefresh === "function") setTimeout(dsMaintRefresh, 0);   // stopped for maintenance? (MaintenancePanel.js)
 		return h;
 	}
 }

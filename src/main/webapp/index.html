@@ -18,6 +18,8 @@
 <link href="css/UpdateParams.css" rel="stylesheet">
 <link href="css/SearchPanel.css" rel="stylesheet">
 <link href="css/digitalstables.css" rel="stylesheet">
+<!-- Leaflet (2026-11-19): the Map pill of the Home Page Pills, as on devices.digitalstables.com -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" rel="stylesheet">
 
 
 
@@ -613,6 +615,9 @@ the css for the little box on the top right f external data
 		<script type="text/javascript" src="/deviceviews/deviceviews-detail.js"></script>
 		<script type="text/javascript" src="/deviceviews/deviceviews-card.js"></script>
 		<script type="text/javascript" src="/deviceviews/deviceviews-emergency.js"></script>
+		<!-- the Home Page Pills (2026-11-19): pills and custom tabs, the same code as devices.digitalstables.com -->
+		<script type="text/javascript" src="/deviceviews/deviceviews-tabs.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 		<script type="text/javascript" src="TeleonomeConstants.js"></script>
 		<script type="text/javascript" src="bs/js/bootstrap-switch.js"></script>
 
@@ -634,6 +639,7 @@ the css for the little box on the top right f external data
 		<script type="text/javascript" src="templates/SettingsInfo.js"></script>
 		<script type="text/javascript" src="templates/DiagnosticsInfo.js"></script>
 		<script type="text/javascript" src="templates/DiagnosticsBar.js"></script>
+		<script type="text/javascript" src="templates/MaintenancePanel.js"></script>
 		<script type="text/javascript" src="templates/SystemDiagnostics.js"></script>
 		<script type="text/javascript"
 			src="templates/AsynchronousDiagnostics.js"></script>
@@ -682,6 +688,7 @@ the css for the little box on the top right f external data
 		<script type="text/javascript" src="RenderingEngine.js"></script>
 		<!-- The Heart Communication is tbe the last one to be loaded -->
 		<script type="text/javascript" src="DeviceViewsTeleonomeHost.js"></script>
+		<script type="text/javascript" src="HomePagePillsTeleonomeHost.js"></script>
 		<script type="text/javascript" src="HeartComms.js"></script>
 
 		<script>
@@ -2267,12 +2274,15 @@ the css for the little box on the top right f external data
 				// is off; start it again with StartHypothalamusBG.sh.
 				$(document).on('click', '#StopHypothalamusButton', function(e){
 					e.preventDefault();
-					if(!confirm("Stop the Hypothalamus? The pulse stops until you start it again (StartHypothalamusBG.sh).")) return false;
+					if(!confirm("Stop the Hypothalamus? It stays stopped (the Medula leaves it alone) until you press Start Hypothalamus, or for 2 hours at most. While it is stopped you can fertilize its Denome.")) return false;
 					var passwd = askCommandCode();
 					if(passwd === null) return false;
 					var b = $(this);
 					b.addClass('disabled').text('Stopping at the end of this cycle…');
-					$.ajax({ type: "GET", url: "/TeleonomeServlet", data: {formName:"ReSignal", action:"KillPulse", CommandCode:passwd } })
+					// the token (MaintenancePanel.js) lets this tab fertilize and start it again once it has stopped
+					var token = (typeof dsMaintNewToken === "function") ? dsMaintNewToken() : "";
+					$.ajax({ type: "GET", url: "/TeleonomeServlet", data: {formName:"ReSignal", action:"KillPulse", CommandCode:passwd, MaintenanceToken: token } })
+						.done(function(){ if(typeof dsMaintStopRequested === "function") dsMaintStopRequested(); })
 						.fail(function(x){ alert("Stop request failed: " + x.status); b.removeClass('disabled').text('Stop Hypothalamus'); });
 					return false;
 				});

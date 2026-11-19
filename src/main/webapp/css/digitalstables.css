@@ -239,3 +239,16 @@ body.ds-theme .DiagnosticsPageLinksGroup .row > [class*="col-"] { float:none; wi
 .dg-bar .glyphicon.glyphicon { margin-top:0; }
 .dg-btn .glyphicon.glyphicon { font-size:18px; }
 .dg-power .glyphicon.glyphicon { font-size:inherit; }
+
+/* Maintenance: stop, fertilize, start (MaintenancePanel.js, 2026-11-19) */
+.dg-maint{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;margin-right:6px}
+.dg-maint-note{font-size:13px;font-weight:600;color:#9a7d0a;background:#fcf3cf;border-radius:6px;padding:4px 8px}
+.dg-fert h4 small{display:block;margin-top:2px}
+.dg-sperms{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.dg-sperm{display:flex;gap:8px;align-items:flex-start;font-weight:normal;border:1px solid #d5dbd7;border-radius:8px;padding:8px 10px;cursor:pointer;margin:0}
+.dg-sperm span{display:flex;flex-direction:column;min-width:0}
+.dg-sperm small{color:#5f6b64;overflow-wrap:anywhere}
+.dg-fert-actions{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+.dg-fert-log{background:#d5f5e3;border-radius:6px;padding:6px 10px}
+.dg-fert-table td{overflow-wrap:anywhere}
+.dg-fert-pre{max-height:240px;overflow:auto;font-size:12px}
