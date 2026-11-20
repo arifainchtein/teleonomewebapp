@@ -276,12 +276,52 @@ function dsRemoveWaterNetwork(chainName, code) {
 	return dsSendStructural(s.remove, {"Updates": [], "DeneChain Deletions": ["@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + chainName]}, code);
 }
 
+// "Update Digital Stables" (2026-11-20): the Hypothalamus sends the networks to devices.digitalstables.com by itself
+// when they change; the button asks for them all again at the next Publish To DigitalStables (WaterNetworksSync form).
+function dsWaterSyncText(r) {
+	if (!r || r.error) return (r && r.error) || "Could not ask the Teleonome.";
+	function at(ms) { return new Date(ms).toLocaleString(); }
+	if (r["Requested At"] && r["Requested At"] > (r["Sent At"] || 0)) return "Asked: they go to Digital Stables at the next pulse.";
+	if (r["Acked At"] && r["Acked At"] >= (r["Sent At"] || 0)) return "Digital Stables has them (" + at(r["Acked At"]) + ").";
+	if (r["Sent At"]) return "Sent " + at(r["Sent At"]) + (r.Outcome && r.Outcome !== "stored" ? ", Digital Stables said: " + r.Outcome : ", waiting for Digital Stables to answer.");
+	return "Not sent to Digital Stables yet.";
+}
+function dsWaterSync(action) {
+	return new Promise(function(resolve) {
+		$.ajax({type: "POST", url: "/TeleonomeServlet", dataType: "json", data: {formName: "WaterNetworksSync", action: action},
+			success: function(r) { resolve(dsWaterSyncText(r)); },
+			error: function() { resolve("Could not reach the Teleonome."); }});
+	});
+}
+var DS_WATER_SYNC = {label: "Update Digital Stables", status: function() { return dsWaterSync("status"); }, send: function() { return dsWaterSync("send"); }};
+
 // ---- the telepathons, as deviceviews wants them ----
 
 function dsPillTelepathons() {
 	var chains = getTelepathonsDeneChains();
 	return ((chains && chains.DeneChains) || []).filter(function(c) { return c.Name !== DENECHAIN_ANNABELLE_QUEUE_STATUS; })
-		.map(function(c) { return telepathonCardDataCache[c.Name] || c; });
+		.map(function(c) { return dsMergeTelepathon(c, telepathonCardDataCache[c.Name]); });
+}
+
+// The Denome's telepathon with the live packet's values on top, word by word (2026-11-20): a live packet carries only
+// what the device sent, so words the Denome adds (Pool's "Trough Level", the units) would be lost if it replaced it.
+function dsMergeTelepathon(denomeChain, livePacket) {
+	if (!livePacket) return denomeChain;
+	var denes = (denomeChain.Denes || []).map(function(d) {
+		var liveDene = (livePacket.Denes || []).filter(function(x) { return x.Name === d.Name; })[0];
+		if (!liveDene) return d;
+		var words = (d.DeneWords || []).map(function(w) {
+			var lw = (liveDene.DeneWords || []).filter(function(x) { return x.Name === w.Name; })[0];
+			if (!lw) return w;
+			var merged = $.extend({}, w, lw);
+			if (!lw.Units && w.Units) merged.Units = w.Units;
+			return merged;
+		});
+		(liveDene.DeneWords || []).forEach(function(lw) { if (!(d.DeneWords || []).some(function(w) { return w.Name === lw.Name; })) words.push(lw); });
+		return $.extend({}, d, {DeneWords: words});
+	});
+	(livePacket.Denes || []).forEach(function(ld) { if (!(denomeChain.Denes || []).some(function(d) { return d.Name === ld.Name; })) denes.push(ld); });
+	return $.extend({}, denomeChain, {Name: livePacket.Name || denomeChain.Name, Denes: denes});
 }
 
 function dsTelepathonAgeSeconds(name) {
@@ -402,7 +442,7 @@ function homePagePillsReady() {
 			storageKey: "ds_pill_teleonome_" + teleonomeName,
 			waterNetworks: dsReadWaterNetworks(),
 			waterNetwork: dsWaterSettings() ? {teleonomeName: teleonomeName, chainPrefix: dsWaterSettings().prefix,
-				canCreate: dsWaterSettings().allowNew, needsCode: true,
+				canCreate: dsWaterSettings().allowNew, needsCode: true, sync: DS_WATER_SYNC,
 				save: dsSaveWaterNetwork, remove: dsRemoveWaterNetwork} : null
 		});
 	} else {
