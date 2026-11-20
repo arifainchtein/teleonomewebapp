@@ -616,6 +616,7 @@ the css for the little box on the top right f external data
 		<script type="text/javascript" src="/deviceviews/deviceviews-card.js"></script>
 		<script type="text/javascript" src="/deviceviews/deviceviews-emergency.js"></script>
 		<!-- the Home Page Pills (2026-11-19): pills and custom tabs, the same code as devices.digitalstables.com -->
+		<script type="text/javascript" src="/deviceviews/deviceviews-waternetwork.js"></script>
 		<script type="text/javascript" src="/deviceviews/deviceviews-tabs.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 		<script type="text/javascript" src="TeleonomeConstants.js"></script>
@@ -2282,7 +2283,11 @@ the css for the little box on the top right f external data
 					// the token (MaintenancePanel.js) lets this tab fertilize and start it again once it has stopped
 					var token = (typeof dsMaintNewToken === "function") ? dsMaintNewToken() : "";
 					$.ajax({ type: "GET", url: "/TeleonomeServlet", data: {formName:"ReSignal", action:"KillPulse", CommandCode:passwd, MaintenanceToken: token } })
-						.done(function(){ if(typeof dsMaintStopRequested === "function") dsMaintStopRequested(); })
+						.done(function(){
+							if(typeof dsMaintStopRequested === "function") dsMaintStopRequested();
+							// show the Asynchronous Cycle log, as if Asynchronous had been pressed: the stop happens there (2026-11-20)
+							if(typeof dsDiagCurrent === "undefined" || dsDiagCurrent !== "Asynchronous") $('#Asynchronous').trigger('click');
+						})
 						.fail(function(x){ alert("Stop request failed: " + x.status); b.removeClass('disabled').text('Stop Hypothalamus'); });
 					return false;
 				});

@@ -321,8 +321,8 @@ class PowerPanel {
 	process() {
 		return '<div class="col-lg-12"><div class="ds-block"><h5><span><i class="glyphicon glyphicon-off"></i> Power</span></h5>'
 			+ '<div style="padding:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
-			+ '<button id="RestartButton" class="btn btn-default"><i class="glyphicon glyphicon-repeat"></i> Restart</button>'
-			+ '<button id="ShutdownButton" class="btn btn-danger"><i class="glyphicon glyphicon-off"></i> Turn off safely</button>'
+			+ '<button id="RestartButton" class="btn btn-default"><i class="glyphicon glyphicon-repeat"></i> Restart Pi</button>'
+			+ '<button id="ShutdownButton" class="btn btn-danger"><i class="glyphicon glyphicon-off"></i> Turn Off Pi</button>'
 			+ '<span class="ds-sub">Both ask for the 6-digit code.</span><div><div>';   // 5 open: col, block, button row, 2 here
 	}
 }

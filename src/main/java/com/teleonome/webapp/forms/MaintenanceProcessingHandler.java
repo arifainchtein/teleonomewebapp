@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -190,8 +192,22 @@ public class MaintenanceProcessingHandler extends ProcessingFormHandler {
 
 	private static void writeDenome(String dir, String content) throws IOException {
 		File tmp = new File(dir + "Teleonome.denome.fertilizing");
+		File target = new File(dir + "Teleonome.denome");
 		FileUtils.writeStringToFile(tmp, content, StandardCharsets.UTF_8);
-		Files.move(tmp.toPath(), new File(dir + "Teleonome.denome").toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+		// keep the old file's owner, group and permissions: Tomcat runs as root with umask 0027, so the new file
+		// would otherwise be root:root 640 and nothing running as pi could read the Denome any more (2026-11-20)
+		if (target.isFile()) {
+			try {
+				PosixFileAttributes was = Files.readAttributes(target.toPath(), PosixFileAttributes.class);
+				PosixFileAttributeView now = Files.getFileAttributeView(tmp.toPath(), PosixFileAttributeView.class);
+				now.setPermissions(was.permissions());
+				now.setOwner(was.owner());
+				now.setGroup(was.group());
+			} catch (IOException | UnsupportedOperationException e) {
+				// not a POSIX file system, or not allowed: the move below still happens
+			}
+		}
+		Files.move(tmp.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
 	}
 
 	// the newest backup made since the stop began

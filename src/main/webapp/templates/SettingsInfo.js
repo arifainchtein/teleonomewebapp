@@ -47,8 +47,8 @@ class SettingsInfo{
         panelHtml +='                               <i class="glyphicon glyphicon-off"></i><br>Power';
         panelHtml +='                             </button>';
         panelHtml +='                             <ul class="dropdown-menu">';
-        panelHtml +='                               <li><a id="RestartButton" class="dropdown-item" href="#">Restart</a></li>';
-        panelHtml +='                               <li><a id="ShutdownButton" class="dropdown-item" href="#">Turn Off</a></li>';
+        panelHtml +='                               <li><a id="RestartButton" class="dropdown-item" href="#">Restart Pi</a></li>';
+        panelHtml +='                               <li><a id="ShutdownButton" class="dropdown-item" href="#">Turn Off Pi</a></li>';
         panelHtml +='                             </ul>';
         panelHtml +='                           </div>';
 

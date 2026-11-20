@@ -227,6 +227,55 @@ function dsRemoveTab(id, code) {
 		.then(function() { return {tabs: dsReadPillTabs().filter(function(t) { return t.id !== id; })}; });
 }
 
+// ---- water networks (2026-11-20, sperm WaterNetworks, deviceviews-waternetwork.js) ----
+//   Purpose:Water Networks:Water Network Settings   the mutations' names, the chains' prefix, Allow New Water Networks
+//   Human Interface:Home Page Pills:Water Networks  the pill source (Visible false hides them)
+//   Purpose:Water Network <name>                    one network; saved whole with Create / Update Water Network
+
+function dsPurposeChains() {
+	var nuclei = (denomeJSONObject && denomeJSONObject.Nuclei) || [];
+	var p = nuclei.filter(function(n) { return n.Name === NUCLEI_PURPOSE; })[0];
+	return (p && p.DeneChains) || [];
+}
+
+function dsWaterSettings() {
+	var chain = dsPurposeChains().filter(function(c) { return c.Name === "Water Networks"; })[0];
+	if (!chain) return null;
+	var source = dsDene(dsPillsChain, "Water Networks");
+	if (source && dsWord(source, "Visible") === false) return null;
+	var s = dsDene(chain, "Water Network Settings");
+	return {
+		allowNew: dsWord(s, "Allow New Water Networks") !== false,
+		create: dsWord(s, "Create Mutation") || "Create Water Network",
+		update: dsWord(s, "Update Mutation") || "Update Water Network",
+		remove: dsWord(s, "Delete Mutation") || "Delete Water Network",
+		prefix: dsWord(s, "Network DeneChain Prefix") || "Water Network "
+	};
+}
+
+function dsReadWaterNetworks() {
+	var s = dsWaterSettings();
+	if (!s) return [];
+	return dsPurposeChains().filter(function(c) { return c.Name.indexOf(s.prefix) === 0; }).map(function(c) {
+		var settings = dsDene(c, "Water Network Settings");
+		return {id: c.Name, name: dsWord(settings, "Network Name") || c.Name.substring(s.prefix.length), chain: c};
+	});
+}
+
+function dsSaveWaterNetwork(chain, oldChainName, code) {
+	var s = dsWaterSettings(), P = "@" + teleonomeName + ":" + NUCLEI_PURPOSE;
+	if (!s) return Promise.reject(new Error("This Teleonome has no Water Networks."));
+	var payload = {"Updates": [], "DeneChain Injections": [{"Injection Target": P, "DeneChain": chain}]};
+	if (oldChainName) payload["DeneChain Deletions"] = [P + ":" + oldChainName];
+	return dsSendStructural(oldChainName ? s.update : s.create, payload, code);
+}
+
+function dsRemoveWaterNetwork(chainName, code) {
+	var s = dsWaterSettings();
+	if (!s) return Promise.reject(new Error("This Teleonome has no Water Networks."));
+	return dsSendStructural(s.remove, {"Updates": [], "DeneChain Deletions": ["@" + teleonomeName + ":" + NUCLEI_PURPOSE + ":" + chainName]}, code);
+}
+
 // ---- the telepathons, as deviceviews wants them ----
 
 function dsPillTelepathons() {
@@ -251,6 +300,38 @@ function dsPlaced() {
 	}).filter(Boolean);
 }
 
+// A pin as on devices.digitalstables.com (devicepage-common.js logoPin): the device's logo in a white disc,
+// ringed green when heard in the last 2 hours, amber within a day, grey otherwise; its name above it.
+var DS_LOGOS = ["Daffodil", "Langley", "Gloria", "Chinampa", "Annabelle", "Pancho", "Wally", "Rosie", "Ruth",
+	"Valentino", "Tucci", "Nitro", "Paula", "Cleotilde"];
+function dsLogoFor(t) {
+	var conf = (t.Denes || []).filter(function(d) { return d.Name === "Configuration"; })[0];
+	var texts = [(DeviceViewsHost.deviceType && DeviceViewsHost.deviceType(t.Name)) || "", String(dsWord(conf, "Device Type Id") || ""), t.Name || ""];
+	for (var i = 0; i < texts.length; i++) {
+		var text = texts[i].toLowerCase();
+		for (var j = 0; j < DS_LOGOS.length; j++) if (text.indexOf(DS_LOGOS[j].toLowerCase()) >= 0) return "/deviceviews/logos/" + DS_LOGOS[j] + ".svg";
+	}
+	return "/deviceviews/logos/Digital_Stables_1.svg";
+}
+function dsPinStyles() {
+	if (document.getElementById("dsPinStyles")) return;
+	var st = document.createElement("style");
+	st.id = "dsPinStyles";
+	st.textContent = ".ds-pin-holder{background:none;border:0}"
+		+ ".ds-pin{display:flex;width:100%;height:100%;border-radius:50%;background:#fff;border:3px solid #95a5a6;box-shadow:0 1px 4px rgba(0,0,0,.45);overflow:hidden;box-sizing:border-box}"
+		+ ".ds-pin.fresh{border-color:#27ae60}.ds-pin.late{border-color:#e67e22}"
+		+ ".ds-pin img{width:100%;height:100%;object-fit:contain;padding:3px;box-sizing:border-box}";
+	document.head.appendChild(st);
+}
+function dsPinIcon(t) {
+	var age = dsTelepathonAgeSeconds(t.Name), size = 44;
+	var ring = document.createElement("span"), img = document.createElement("img");
+	ring.className = "ds-pin " + (age === null ? "silent" : age < 7200 ? "fresh" : age < 86400 ? "late" : "silent");
+	img.src = dsLogoFor(t); img.alt = "";
+	ring.appendChild(img);
+	return L.divIcon({className: "ds-pin-holder", html: ring, iconSize: [size, size], iconAnchor: [size / 2, size / 2], tooltipAnchor: [0, -size / 2]});
+}
+
 function dsMapPill() {
 	var d = dsDene(dsPillsChain, "Map");
 	if (!d || dsWord(d, "Visible") === false) return [];
@@ -261,16 +342,25 @@ function dsMapPill() {
 			var placed = dsPlaced(), all = dsPillTelepathons().length;
 			document.getElementById("dsMapUnplaced").textContent = all > placed.length ? (all - placed.length) + " of " + all + " devices have no Latitude and Longitude in their Configuration." : "";
 			if (!dsPillsMap) {
-				dsPillsMap = L.map("dsTelepathonMap", {scrollWheelZoom: false});
-				L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19, attribution: "&copy; OpenStreetMap"}).addTo(dsPillsMap);
+				dsPinStyles();
+				dsPillsMap = L.map("dsTelepathonMap", {scrollWheelZoom: false, zoomSnap: 0.25});
+				// satellite first, streets to switch to (as on devices.digitalstables.com)
+				var satellite = L.layerGroup([
+					L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {maxZoom: 19, maxNativeZoom: 18, attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics"}),
+					L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {maxZoom: 19, maxNativeZoom: 18})
+				]).addTo(dsPillsMap);
+				var streets = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19, attribution: "&copy; OpenStreetMap"});
+				L.control.layers({"Satellite": satellite, "Streets": streets}, null, {position: "topright"}).addTo(dsPillsMap);
 				dsPillsMap.dsLayer = L.layerGroup().addTo(dsPillsMap);
 			}
 			dsPillsMap.dsLayer.clearLayers();
-			placed.forEach(function(p) { L.marker([p.lat, p.lon]).bindPopup(document.createTextNode(p.t.Name)).addTo(dsPillsMap.dsLayer); });
+			placed.forEach(function(p) {
+				L.marker([p.lat, p.lon], {icon: dsPinIcon(p.t), title: p.t.Name}).bindTooltip(p.t.Name, {permanent: placed.length <= 8, direction: "top"}).addTo(dsPillsMap.dsLayer);
+			});
 			setTimeout(function() {
 				dsPillsMap.invalidateSize();
-				if (placed.length === 1) dsPillsMap.setView([placed[0].lat, placed[0].lon], 16);
-				else dsPillsMap.fitBounds(placed.map(function(p) { return [p.lat, p.lon]; }), {padding: [30, 30], maxZoom: 17});
+				if (placed.length === 1) dsPillsMap.setView([placed[0].lat, placed[0].lon], 17);
+				else dsPillsMap.fitBounds(placed.map(function(p) { return [p.lat, p.lon]; }), {paddingTopLeft: [50, 70], paddingBottomRight: [70, 50], maxZoom: 18});
 			}, 0);
 		},
 		hide: function() { var box = document.getElementById("dsMapBox"); if (box) box.hidden = true; }
@@ -309,12 +399,17 @@ function homePagePillsReady() {
 			remove: dsRemoveTab,
 			ageSeconds: dsTelepathonAgeSeconds,
 			canChart: function() { return true; },
-			storageKey: "ds_pill_teleonome_" + teleonomeName
+			storageKey: "ds_pill_teleonome_" + teleonomeName,
+			waterNetworks: dsReadWaterNetworks(),
+			waterNetwork: dsWaterSettings() ? {teleonomeName: teleonomeName, chainPrefix: dsWaterSettings().prefix,
+				canCreate: dsWaterSettings().allowNew, needsCode: true,
+				save: dsSaveWaterNetwork, remove: dsRemoveWaterNetwork} : null
 		});
 	} else {
 		holder.appendChild(dsPillsNode);
 		if (dsPillsMap) dsPillsMap.invalidateSize();
 		dsPillsTabs.setTabs(dsReadPillTabs());   // keeps the editor if one is open
+		if (dsPillsTabs.setWaterNetworks) dsPillsTabs.setWaterNetworks(dsReadWaterNetworks());   // keeps a network being edited
 		dsPillsTabs.refresh();
 	}
 }

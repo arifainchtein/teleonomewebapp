@@ -42,8 +42,8 @@ class DiagnosticsBar extends DiagnosticsInfo {
 			+ '<div class="dg-power">'
 			+ '<span id="DSMaintenance" class="dg-maint"></span>'
 			+ '<button id="StopHypothalamusButton" class="btn btn-warning" title="Stops the Hypothalamus cleanly between pulses, so you can work on it without corrupting the denome"><i class="glyphicon glyphicon-stop"></i> Stop Hypothalamus</button>'
-			+ '<button id="RestartButton" class="btn btn-default"><i class="glyphicon glyphicon-repeat"></i> Restart</button>'
-			+ '<button id="ShutdownButton" class="btn btn-danger"><i class="glyphicon glyphicon-off"></i> Turn off</button>'
+			+ '<button id="RestartButton" class="btn btn-default"><i class="glyphicon glyphicon-repeat"></i> Restart Pi</button>'
+			+ '<button id="ShutdownButton" class="btn btn-danger"><i class="glyphicon glyphicon-off"></i> Turn Off Pi</button>'
 			+ '</div></div>';
 		h += '<h5 class="dg-organhead"><span>Organs <small class="ds-sub">the processes beside the Hypothalamus</small></span></h5>';
 		h += '<div class="dg-bar" id="DSOrganButtons">' + dsOrganButtonsHTML() + '</div>';
