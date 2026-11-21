@@ -2188,6 +2188,7 @@ function refreshTelepathonsView(){
 		}
 	}
 	if (panelHTML) $('#TelepathonsView').append(panelHTML);
+	if (typeof dsAddMapToggles === 'function') dsAddMapToggles();   // "Hide on map" under the cards (HomePagePillsTeleonomeHost.js)
 	return panelHTML;
 }
 

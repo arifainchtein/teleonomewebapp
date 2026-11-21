@@ -332,12 +332,52 @@ function dsTelepathonAgeSeconds(name) {
 
 // ---- the Map pill: a pin per telepathon with a Latitude and Longitude in its Configuration ----
 
-function dsPlaced() {
+// every telepathon with a location, hidden from the map or not
+function dsPlacedAll() {
 	return dsPillTelepathons().map(function(t) {
 		var conf = (t.Denes || []).filter(function(d) { return d.Name === "Configuration"; })[0], lat, lon;
 		((conf && conf.DeneWords) || []).forEach(function(w) { var n = String(w.Name).toLowerCase(); if (n === "latitude") lat = parseFloat(w.Value); if (n === "longitude") lon = parseFloat(w.Value); });
 		return isNaN(lat) || isNaN(lon) || (lat === 0 && lon === 0) || lat === undefined ? null : {t: t, lat: lat, lon: lon};
 	}).filter(Boolean);
+}
+// the pins on the map: those not hidden with "Hide on map"
+function dsPlaced() {
+	return dsPlacedAll().filter(function(p) { return !dsPinHidden(p.t.Name); });
+}
+
+// ---- "Hide on map" / "Show on map" under each telepathon card that has a location (as on devices.digitalstables.com,
+// 2026-11-21). Kept in this browser only, like there: it changes what one person sees, not the Teleonome.
+function dsHiddenKey() { return "ds_hidden_pins_" + teleonomeName; }
+function dsHiddenPins() {
+	try { return JSON.parse(localStorage.getItem(dsHiddenKey()) || "[]") || []; } catch (e) { return []; }
+}
+function dsPinHidden(name) { return dsHiddenPins().indexOf(name) >= 0; }
+function dsSetPinHidden(name, hidden) {
+	var list = dsHiddenPins().filter(function(n) { return n !== name; });
+	if (hidden) list.push(name);
+	try { localStorage.setItem(dsHiddenKey(), JSON.stringify(list)); } catch (e) {}
+}
+// RenderingEngine.js calls this after it draws the telepathon cards: a link under each card with a location
+// (the card's own text is redrawn every pulse, so the link sits outside it, in the card's column)
+function dsAddMapToggles() {
+	dsPlacedAll().forEach(function(p) {
+		var name = p.t.Name, col = document.getElementById("tpCardCol_" + name.replace(/[^a-zA-Z0-9]/g, "_"));
+		if (!col || col.querySelector(".ds-map-toggle")) return;
+		var row = document.createElement("div"), a = document.createElement("a");
+		row.style.cssText = "display:flex;justify-content:flex-end;margin-top:4px";
+		a.className = "ds-map-toggle"; a.href = "#";
+		a.style.cssText = "font-size:12px;font-weight:600;color:#777";
+		a.textContent = dsPinHidden(name) ? "Show on map" : "Hide on map";
+		a.addEventListener("click", function(e) {
+			e.preventDefault(); e.stopPropagation();
+			dsSetPinHidden(name, !dsPinHidden(name));
+			a.textContent = dsPinHidden(name) ? "Show on map" : "Hide on map";
+			var box = document.getElementById("dsMapBox");
+			if (box && !box.hidden && dsPlaced().length) dsDrawMap();
+			if (dsPillsTabs) dsPillsTabs.refresh();   // no pins left: the Map pill goes
+		});
+		row.appendChild(a); col.appendChild(row);
+	});
 }
 
 // A pin as on devices.digitalstables.com (devicepage-common.js logoPin): the device's logo in a white disc,
@@ -377,34 +417,37 @@ function dsMapPill() {
 	if (!d || dsWord(d, "Visible") === false) return [];
 	return [{id: "map", name: dsWord(d, "Pill Name") || "Map",
 		available: function() { return typeof L !== "undefined" && dsPlaced().length > 0; },
-		show: function() {
-			var box = document.getElementById("dsMapBox"); box.hidden = false;
-			var placed = dsPlaced(), all = dsPillTelepathons().length;
-			document.getElementById("dsMapUnplaced").textContent = all > placed.length ? (all - placed.length) + " of " + all + " devices have no Latitude and Longitude in their Configuration." : "";
-			if (!dsPillsMap) {
-				dsPinStyles();
-				dsPillsMap = L.map("dsTelepathonMap", {scrollWheelZoom: false, zoomSnap: 0.25});
-				// satellite first, streets to switch to (as on devices.digitalstables.com)
-				var satellite = L.layerGroup([
-					L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {maxZoom: 19, maxNativeZoom: 18, attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics"}),
-					L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {maxZoom: 19, maxNativeZoom: 18})
-				]).addTo(dsPillsMap);
-				var streets = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19, attribution: "&copy; OpenStreetMap"});
-				L.control.layers({"Satellite": satellite, "Streets": streets}, null, {position: "topright"}).addTo(dsPillsMap);
-				dsPillsMap.dsLayer = L.layerGroup().addTo(dsPillsMap);
-			}
-			dsPillsMap.dsLayer.clearLayers();
-			placed.forEach(function(p) {
-				L.marker([p.lat, p.lon], {icon: dsPinIcon(p.t), title: p.t.Name}).bindTooltip(p.t.Name, {permanent: placed.length <= 8, direction: "top"}).addTo(dsPillsMap.dsLayer);
-			});
-			setTimeout(function() {
-				dsPillsMap.invalidateSize();
-				if (placed.length === 1) dsPillsMap.setView([placed[0].lat, placed[0].lon], 17);
-				else dsPillsMap.fitBounds(placed.map(function(p) { return [p.lat, p.lon]; }), {paddingTopLeft: [50, 70], paddingBottomRight: [70, 50], maxZoom: 18});
-			}, 0);
-		},
+		show: dsDrawMap,
 		hide: function() { var box = document.getElementById("dsMapBox"); if (box) box.hidden = true; }
 	}];
+}
+
+function dsDrawMap() {
+	var box = document.getElementById("dsMapBox"); box.hidden = false;
+	var placed = dsPlaced(), all = dsPillTelepathons().length, hidden = dsPlacedAll().length - placed.length, unplaced = all - placed.length - hidden;
+	document.getElementById("dsMapUnplaced").textContent = (unplaced > 0 ? unplaced + " of " + all + " devices have no Latitude and Longitude in their Configuration. " : "")
+		+ (hidden > 0 ? hidden + " hidden with Hide on map (under its card)." : "");
+	if (!dsPillsMap) {
+		dsPinStyles();
+		dsPillsMap = L.map("dsTelepathonMap", {scrollWheelZoom: false, zoomSnap: 0.25});
+		// satellite first, streets to switch to (as on devices.digitalstables.com)
+		var satellite = L.layerGroup([
+			L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {maxZoom: 19, maxNativeZoom: 18, attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics"}),
+			L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {maxZoom: 19, maxNativeZoom: 18})
+		]).addTo(dsPillsMap);
+		var streets = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19, attribution: "&copy; OpenStreetMap"});
+		L.control.layers({"Satellite": satellite, "Streets": streets}, null, {position: "topright"}).addTo(dsPillsMap);
+		dsPillsMap.dsLayer = L.layerGroup().addTo(dsPillsMap);
+	}
+	dsPillsMap.dsLayer.clearLayers();
+	placed.forEach(function(p) {
+		L.marker([p.lat, p.lon], {icon: dsPinIcon(p.t), title: p.t.Name}).bindTooltip(p.t.Name, {permanent: placed.length <= 8, direction: "top"}).addTo(dsPillsMap.dsLayer);
+	});
+	setTimeout(function() {
+		dsPillsMap.invalidateSize();
+		if (placed.length === 1) dsPillsMap.setView([placed[0].lat, placed[0].lon], 17);
+		else dsPillsMap.fitBounds(placed.map(function(p) { return [p.lat, p.lon]; }), {paddingTopLeft: [50, 70], paddingBottomRight: [70, 50], maxZoom: 18});
+	}, 0);
 }
 
 // ---- the panel ----
